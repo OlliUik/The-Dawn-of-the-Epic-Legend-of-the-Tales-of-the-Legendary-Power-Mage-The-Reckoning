@@ -1,0 +1,2 @@
+# olliuikkasenmaageilupeli
+-- Game Of Magic --
