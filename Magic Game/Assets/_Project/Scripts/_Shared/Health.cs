@@ -4,15 +4,14 @@ public class Health : MonoBehaviour
 {
     #region VARIABLES
 
-    public bool bIsDead { get; private set; }   = false;
+    [SerializeField] private float maxHealth = 100.0f;
+    [SerializeField] private float iFrameTime = 0.5f;
 
-    [SerializeField] private float maxHealth       = 100.0f;
-    [SerializeField] private float iFrameTime   = 0.5f;
-
+    public bool bIsDead { get; private set; } = false;
     public float health { get; private set; } = 0.0f;
 
-    private bool bIsPlayer                       = false;
-    private float iftTimer                      = 0.0f;
+    private bool bIsPlayer = false;
+    private float iftTimer = 0.0f;
 
     #endregion
 
@@ -29,10 +28,7 @@ public class Health : MonoBehaviour
 
     void Update()
     {
-        if (iftTimer > 0.0f)
-        {
-            iftTimer -= Time.deltaTime;
-        }
+        iftTimer -= iftTimer > 0.0f ? Time.deltaTime : 0.0f;
     }
 
     #endregion

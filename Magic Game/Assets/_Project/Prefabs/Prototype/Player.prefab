@@ -360,6 +360,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 368e2e80e621e1845886116163085d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accelerationMultiplier: 1
+  midAirJumps: 0
   acceleration: 100
   airAcceleration: 20
   friction: 5.5
@@ -367,12 +369,12 @@ MonoBehaviour:
   gravity: -30
   smoothStepDown: 0.5
   jumpForce: 15
-  jumpGraceTime: 0.1
+  jumpGraceTime: 0.2
   dashSpeed: 20
   dashJumpForce: 8
   dashDuration: 0.2
   dashCooldown: 1
-  gravityWallSliding: -10
+  gravityWallSliding: -1
   wallSlidingTime: 2
 --- !u!114 &1718355860
 MonoBehaviour:
