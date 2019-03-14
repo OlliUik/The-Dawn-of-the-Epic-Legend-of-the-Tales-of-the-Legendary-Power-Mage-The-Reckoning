@@ -7556,7 +7556,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh12588
+  m_Name: pb_Mesh31318
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -8195,7 +8195,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh12356
+  m_Name: pb_Mesh31232
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -9596,11 +9596,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5842370426496370377, guid: dc52bd3097fe7d145952a6fdd92c5726,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemyRanged (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 5842370426496370352, guid: dc52bd3097fe7d145952a6fdd92c5726,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9660,6 +9655,11 @@ PrefabInstance:
         type: 3}
       propertyPath: searchPlayerAfterAttack
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5842370426496370377, guid: dc52bd3097fe7d145952a6fdd92c5726,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyRanged (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc52bd3097fe7d145952a6fdd92c5726, type: 3}
@@ -14489,7 +14489,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh12344
+  m_Name: pb_Mesh31220
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -20140,6 +20140,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyMelee
       objectReference: {fileID: 0}
+    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
+        type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
+        type: 3}
+      propertyPath: patrolPoints.Array.data[0].x
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
+        type: 3}
+      propertyPath: patrolPoints.Array.data[0].z
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
+        type: 3}
+      propertyPath: patrolPoints.Array.data[1].x
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
+        type: 3}
+      propertyPath: patrolPoints.Array.data[1].z
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
+        type: 3}
+      propertyPath: patrolPoints.Array.data[2].z
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2399024491650031595, guid: d4de159ad2c91524492af984812a9792,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -20195,36 +20225,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
-        type: 3}
-      propertyPath: patrolPoints.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
-        type: 3}
-      propertyPath: patrolPoints.Array.data[0].x
-      value: -5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
-        type: 3}
-      propertyPath: patrolPoints.Array.data[0].z
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
-        type: 3}
-      propertyPath: patrolPoints.Array.data[1].x
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
-        type: 3}
-      propertyPath: patrolPoints.Array.data[1].z
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 2399024491650031592, guid: d4de159ad2c91524492af984812a9792,
-        type: 3}
-      propertyPath: patrolPoints.Array.data[2].z
-      value: 10
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4de159ad2c91524492af984812a9792, type: 3}
 --- !u!1001 &5842370425012142839
@@ -20234,11 +20234,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5842370426496370377, guid: dc52bd3097fe7d145952a6fdd92c5726,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemyRanged
-      objectReference: {fileID: 0}
     - target: {fileID: 5842370426496370352, guid: dc52bd3097fe7d145952a6fdd92c5726,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -20348,6 +20343,11 @@ PrefabInstance:
         type: 3}
       propertyPath: searchPlayerAfterAttack
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5842370426496370377, guid: dc52bd3097fe7d145952a6fdd92c5726,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyRanged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc52bd3097fe7d145952a6fdd92c5726, type: 3}
