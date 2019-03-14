@@ -16,12 +16,12 @@ public class PlayerCore : MonoBehaviour
     public Mana cMana { get; private set; }                     = null;
     public ThirdPersonCamera cTPCamera { get; private set; }    = null;
     public CharacterController cCharacter { get; private set; } = null;
+    public PlayerMovement cMovement { get; private set; }       = null;
     public LayerMask physicsLayerMask { get; private set; }     = 1;
 
     private bool bInputEnabled                                  = true;
     private bool bIsDead                                        = false;
     private bool bShotFired                                     = false;
-    private PlayerMovement cMovement                            = null;
     private PlayerSpellCaster cSpellCaster                      = null;
 
     #endregion

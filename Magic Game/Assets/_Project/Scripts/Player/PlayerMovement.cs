@@ -4,7 +4,9 @@
 public class PlayerMovement : MonoBehaviour
 {
     #region VARIABLES
-    
+
+    [HideInInspector] public float accelerationMultiplier = 1.0f;
+
     [SerializeField] private float acceleration         = 100.0f;
     [SerializeField] private float airAcceleration      = 20.0f;
     [SerializeField] private float friction             = 5.5f;
@@ -179,8 +181,8 @@ public class PlayerMovement : MonoBehaviour
             if (dDurationTimer <= 0.0f)
             {
                 tempVector += isGrounded ?
-                    moveDirection * moveSpeed * acceleration * dt
-                    : moveDirection * moveSpeed * airAcceleration * dt;
+                    moveDirection * moveSpeed * acceleration * accelerationMultiplier * dt
+                    : moveDirection * moveSpeed * airAcceleration * accelerationMultiplier * dt;
             }
 
             //Calculate friction
@@ -232,7 +234,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 dDurationTimer = dashDuration;
                 dCooldownTimer = dashCooldown;
-                tempVector = moveDirection * dashSpeed;
+                tempVector = moveDirection * dashSpeed * accelerationMultiplier;
                 tempVector.y = dashJumpForce;
             }
 
