@@ -22,6 +22,7 @@ public class PlayerCore : MonoBehaviour
     private bool bIsDead                                        = false;
     private bool bShotFired                                     = false;
     private PlayerSpellCaster cSpellCaster                      = null;
+    private Spellbook cSpellBook = null;
 
     #endregion
 
@@ -36,6 +37,7 @@ public class PlayerCore : MonoBehaviour
         cTPCamera       = GetComponent<ThirdPersonCamera>();
         cMovement       = GetComponent<PlayerMovement>();
         cCharacter      = GetComponent<CharacterController>();
+        cSpellBook = GetComponent<Spellbook>();
 
         if (GetComponent<Mana>() != null)
         {
