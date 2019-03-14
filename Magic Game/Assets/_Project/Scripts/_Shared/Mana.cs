@@ -4,6 +4,8 @@ public class Mana : MonoBehaviour
 {
     #region VARIABLES
 
+    [HideInInspector] public float regenerationMultiplier = 1.0f;
+
     [SerializeField] private float maxMana = 100.0f;
     [SerializeField] private float regenerationPerSecond = 1.0f;
 
@@ -28,14 +30,17 @@ public class Mana : MonoBehaviour
     {
         if (mana < maxMana)
         {
-            mana += regenerationPerSecond * Time.deltaTime;
+            mana += regenerationPerSecond * regenerationMultiplier * Time.deltaTime;
         }
         else
         {
             mana = maxMana;
         }
 
-        GetComponent<PlayerCore>().GetHUD().SetMana(mana, maxMana);
+        if (bIsPlayer)
+        {
+            GetComponent<PlayerCore>().GetHUD().SetMana(mana, maxMana);
+        }
     }
 
     #endregion
