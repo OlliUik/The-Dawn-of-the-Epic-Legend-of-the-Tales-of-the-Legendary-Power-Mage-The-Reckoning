@@ -5,7 +5,7 @@ using UnityEngine;
 public class Haste : OnSelfModifier
 {
 
-    [SerializeField] private float speedIncreaseAmount = 20f;
+    [SerializeField] private float speedIncreaseAmount = 0.2f;
     private Spellbook spellbook;
 
     public override void Apply(GameObject go)
@@ -16,13 +16,13 @@ public class Haste : OnSelfModifier
     private void Start()
     {
         spellbook = GetComponentInParent<Spellbook>();
-        //spellbook.playerCore.speed += speedIncreaseAmount;
+        spellbook.playerCore.cMovement.accelerationMultiplier += speedIncreaseAmount;
         print("INCREASE SPEED");
     }
 
     private void OnDestroy()
     {
-        //spellbook.playerCore.speed -= speedIncreaseAmount;
+        spellbook.playerCore.cMovement.accelerationMultiplier -= speedIncreaseAmount;
         print("DECREASE SPEED");
     }
 
