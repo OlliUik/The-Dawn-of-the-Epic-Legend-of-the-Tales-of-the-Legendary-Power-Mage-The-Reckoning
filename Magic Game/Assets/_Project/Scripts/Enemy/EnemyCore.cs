@@ -75,14 +75,13 @@ public class EnemyCore : MonoBehaviour
     public Health cHealth { get; private set; } = null;
     public bool targetPlayer { get; private set; } = true;
 
-    private bool bIsAttacking = false;
+    //private bool bIsAttacking = false;
     private float radiusCheckTimer = 0.0f;
     private float alertedTimer = 0.0f;
     private float paranoidTimer = 0.0f;
     private float shootIntervalTimer = 0.0f;
     private Vector3 playerPosition = Vector3.zero;
     private Vector3 playerOffset = Vector3.zero;
-    private EState previousState = EState.DISABLED;
 
     #endregion
 
@@ -117,32 +116,37 @@ public class EnemyCore : MonoBehaviour
         AdvanceTimers();
         playerPosition = GlobalVariables.player.transform.position + playerOffset;
 
-        if (currentState == EState.IDLE
+        if (radiusCheckTimer <= 0.0f)
+        {
+            radiusCheckTimer = radiusCheckInterval;
+
+            if (currentState == EState.IDLE
             || currentState == EState.PATROL
             || currentState == EState.SEARCH
             || currentState == EState.PARANOID)
-        {
-            if (Vector3.Distance(transform.position, playerPosition) < hearingRadius)
             {
-                RaycastHit hit;
-                if (Physics.Raycast(
-                    transform.position,
-                    Vector3.Normalize(playerPosition - transform.position),
-                    out hit,
-                    hearingRadius,
-                    1
-                    ))
+                if (Vector3.Distance(transform.position, playerPosition) < hearingRadius)
                 {
-                    if (hit.transform.tag == "Player")
+                    RaycastHit hit;
+                    if (Physics.Raycast(
+                        transform.position,
+                        Vector3.Normalize(playerPosition - transform.position),
+                        out hit,
+                        hearingRadius,
+                        1
+                        ))
                     {
-                        if (Vector3.Distance(transform.position, playerPosition) < instantSightRadius)
+                        if (hit.transform.tag == "Player")
                         {
-                            currentState = EState.ATTACK;
-                        }
-                        else
-                        {
-                            currentState = EState.PARANOID;
-                            paranoidTimer = paranoidDuration;
+                            if (Vector3.Distance(transform.position, playerPosition) < instantSightRadius)
+                            {
+                                currentState = EState.ATTACK;
+                            }
+                            else
+                            {
+                                currentState = EState.PARANOID;
+                                paranoidTimer = paranoidDuration;
+                            }
                         }
                     }
                 }

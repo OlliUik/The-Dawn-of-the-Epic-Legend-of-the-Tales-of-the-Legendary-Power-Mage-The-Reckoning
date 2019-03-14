@@ -9,7 +9,7 @@ public class EnemyNavigation : MonoBehaviour
 
     [SerializeField] private float navigationInterval = 1.0f;
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
-    [SerializeField] private Vector3[] patrolPoints;
+    [SerializeField] private Vector3[] patrolPoints = null;
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
 

@@ -4,7 +4,6 @@
 [RequireComponent(typeof(ThirdPersonCamera))]
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(PlayerSpellCaster))]
 public class PlayerCore : MonoBehaviour
 {
     #region VARIABLES
@@ -37,11 +36,14 @@ public class PlayerCore : MonoBehaviour
         cTPCamera       = GetComponent<ThirdPersonCamera>();
         cMovement       = GetComponent<PlayerMovement>();
         cCharacter      = GetComponent<CharacterController>();
-        cSpellCaster    = GetComponent<PlayerSpellCaster>();
 
         if (GetComponent<Mana>() != null)
         {
             cMana = GetComponent<Mana>();
+        }
+        if (GetComponent<PlayerSpellCaster>() != null)
+        {
+            cSpellCaster = GetComponent<PlayerSpellCaster>();
         }
     }
 
@@ -63,7 +65,7 @@ public class PlayerCore : MonoBehaviour
                     //Don't allow repeated input from controller axis
                     if (!bShotFired)
                     {
-                        cSpellCaster.CastSpell();
+                        //cSpellCaster.CastSpell();
                         bShotFired = true;
                     }
                 }
@@ -130,7 +132,11 @@ public class PlayerCore : MonoBehaviour
         Cursor.visible = !b;
 
         bInputEnabled = b;
-        cSpellCaster.CastBeamActive(b);
+
+        if (cSpellCaster != null)
+        {
+            cSpellCaster.CastBeamActive(b);
+        }
     }
 
     public void OnHurt()
