@@ -12,6 +12,8 @@ public class PlayerCore : MonoBehaviour
     [SerializeField] private HUDManager canvasManager           = null;
     [SerializeField] private GameObject playerModel             = null;
 
+    public Health cHealth { get; private set; }                 = null;
+    public Mana cMana { get; private set; }                     = null;
     public ThirdPersonCamera cTPCamera { get; private set; }    = null;
     public CharacterController cCharacter { get; private set; } = null;
     public LayerMask physicsLayerMask { get; private set; }     = 1;
@@ -19,7 +21,6 @@ public class PlayerCore : MonoBehaviour
     private bool bInputEnabled                                  = true;
     private bool bIsDead                                        = false;
     private bool bShotFired                                     = false;
-    private Health cHealth                                      = null;
     private PlayerMovement cMovement                            = null;
     private PlayerSpellCaster cSpellCaster                      = null;
 
@@ -37,6 +38,11 @@ public class PlayerCore : MonoBehaviour
         cMovement       = GetComponent<PlayerMovement>();
         cCharacter      = GetComponent<CharacterController>();
         cSpellCaster    = GetComponent<PlayerSpellCaster>();
+
+        if (GetComponent<Mana>() != null)
+        {
+            cMana = GetComponent<Mana>();
+        }
     }
 
     void Update()
