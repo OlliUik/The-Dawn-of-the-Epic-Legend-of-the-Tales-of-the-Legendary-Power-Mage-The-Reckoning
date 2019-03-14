@@ -171,12 +171,13 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = Vector3.Normalize(lookVector * inputY + sideLookVector * inputX);
 
         //Get a vector pointing downwards a slope
-        Vector2 slopeTemp = Vector2.Perpendicular(new Vector2(slopeNormal.x, slopeNormal.z));
-        Vector3 slopeTemp2 = Vector3.Normalize(Vector3.Cross(slopeNormal, new Vector3(slopeTemp.x, 0.0f, slopeTemp.y)));
+        Vector2 slopeNormalPerpendicular = Vector2.Perpendicular(new Vector2(slopeNormal.x, slopeNormal.z));
+        Vector3 slopeDownDirection = Vector3.Normalize(Vector3.Cross(slopeNormal, new Vector3(slopeNormalPerpendicular.x, 0.0f, slopeNormalPerpendicular.y)));
         
         //Allow normal movement if not on a slope
         if (Vector3.Angle(Vector3.up, slopeNormal) < cCharacter.slopeLimit)
         {
+            /*----------------------------------------------------------------------------------------*/
             //Calculate movement on XZ plane
             Vector3 tempVector = moveVector;
             tempVector.y = 0.0f;
@@ -187,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
                     moveDirection * moveSpeed * acceleration * accelerationMultiplier * dt
                     : moveDirection * moveSpeed * airAcceleration * accelerationMultiplier * dt;
             }
-
+            /*----------------------------------------------------------------------------------------*/
             //Calculate friction
             if (dDurationTimer <= 0.0f)
             {
@@ -195,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
                     tempVector * friction * dt
                     : tempVector * airFriction * dt;
             }
-
+            /*----------------------------------------------------------------------------------------*/
             //Calculate movement in Y direction
             if (isGrounded)
             {
@@ -231,7 +232,7 @@ public class PlayerMovement : MonoBehaviour
             tempVector.y = isGrounded ?
                 tempVector.y + gravity * dt
                 : moveVector.y + tempGravity * dt;
-
+            /*----------------------------------------------------------------------------------------*/
             //Dashing
             if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
             {
@@ -240,22 +241,21 @@ public class PlayerMovement : MonoBehaviour
                 tempVector = moveDirection * dashSpeed * accelerationMultiplier;
                 tempVector.y = dashJumpForce;
             }
-
-            moveVector = tempVector;
-            
+            /*----------------------------------------------------------------------------------------*/
+            //Jumping
             if (inputJump)
             {
                 //Jumping (normal)
                 if (jgtTimer > 0.0f || midAirJumpsLeft > 0)
                 {
-                    moveVector.y = jumpForce;
+                    tempVector.y = jumpForce;
                     midAirJumpsLeft--;
                 }
 
                 //Jumping (wallsliding)
                 if (bIsWallSliding)
                 {
-                    moveVector.y = jumpForce;
+                    tempVector.y = jumpForce;
                     if (midAirJumpsLeft > 0)
                     {
                         midAirJumpsLeft--;
@@ -266,6 +266,9 @@ public class PlayerMovement : MonoBehaviour
                     }
                 }
             }
+            /*----------------------------------------------------------------------------------------*/
+            //Move temporary values back to final variable
+            moveVector = tempVector;
         }
         //Do something else when on a steep slope
         else
@@ -273,7 +276,7 @@ public class PlayerMovement : MonoBehaviour
             Vector3 tempVector = moveDirection * airAcceleration * dt;
             tempVector = Vector3.ProjectOnPlane(tempVector, slopeNormal);
             moveVector = Vector3.ProjectOnPlane(moveVector, slopeNormal);
-            moveVector += tempVector + slopeTemp2 * -gravity * dt;
+            moveVector += tempVector + slopeDownDirection * -gravity * dt;
 
             RaycastHit hit;
             if (!Physics.Raycast(
