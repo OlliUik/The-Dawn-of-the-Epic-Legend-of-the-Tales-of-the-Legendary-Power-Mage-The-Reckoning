@@ -268,13 +268,18 @@ public class PlayerMovement : MonoBehaviour
                 //Jumping (normal)
                 if (jgtTimer > 0.0f || midAirJumpsLeft > 0)
                 {
+                    jgtTimer = 0.0f;
                     tempVector.y = jumpForce;
-                    midAirJumpsLeft--;
+                    if (midAirJumpsLeft > 0)
+                    {
+                        midAirJumpsLeft--;
+                    }
                 }
 
                 //Jumping (wallsliding)
                 if (bIsWallSliding)
                 {
+                    jgtTimer = 0.0f;
                     tempVector.y = jumpForce;
                     if (midAirJumpsLeft > 0)
                     {
