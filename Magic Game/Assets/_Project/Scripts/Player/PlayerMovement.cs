@@ -251,6 +251,11 @@ public class PlayerMovement : MonoBehaviour
             //Dashing
             if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
             {
+                if (moveSpeed < 0.1f)
+                {
+                    moveDirection = -lookVector;
+                }
+                GetComponent<Health>().AddInvulnerability(dashDuration);
                 dDurationTimer = dashDuration;
                 dCooldownTimer = dashCooldown;
                 tempVector = moveDirection * dashSpeed * accelerationMultiplier;
