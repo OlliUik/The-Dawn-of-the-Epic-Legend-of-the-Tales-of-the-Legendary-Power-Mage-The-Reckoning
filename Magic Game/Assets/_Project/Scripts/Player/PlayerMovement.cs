@@ -299,15 +299,26 @@ public class PlayerMovement : MonoBehaviour
             moveVector += tempVector + slopeDownDirection * -gravity * dt;
 
             RaycastHit hit;
+            //if (!Physics.Raycast(
+            //    transform.position + slopeNormal + moveVector * dt,
+            //    -slopeNormal,
+            //    out hit,
+            //    1.0f + 0.5f,
+            //    physicsLayerMask
+            //    ))
             if (!Physics.Raycast(
-                transform.position + slopeNormal + moveVector * dt,
+                transform.position,
                 -slopeNormal,
                 out hit,
-                1.0f + 0.5f,
+                cCharacter.skinWidth + 0.1f,
                 physicsLayerMask
                 ))
             {
                 slopeNormal = Vector3.up;
+            }
+            else
+            {
+                Debug.DrawLine(hit.point, hit.point + hit.normal * 5.0f, Color.yellow);
             }
         }
 
