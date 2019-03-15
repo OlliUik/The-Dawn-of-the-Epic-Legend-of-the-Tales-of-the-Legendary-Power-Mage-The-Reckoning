@@ -254,21 +254,7 @@ public class EnemyVision : MonoBehaviour
                     {
                         bCanSeeTarget = true;
                         raycastGraceTimer = 0.2f;
-
-                        if (Physics.Raycast(
-                            entityPosition,
-                            Vector3.down,
-                            out hit,
-                            Mathf.Infinity,
-                            1
-                            ))
-                        {
-                            targetLocation = hit.point + Vector3.up * 0.5f;
-                        }
-                        else
-                        {
-                            targetLocation = entityPosition;
-                        }
+                        targetLocation = entityPosition;
                     }
                     else
                     {
@@ -278,6 +264,23 @@ public class EnemyVision : MonoBehaviour
                         }
                         else
                         {
+                            if (bCanSeeTarget)
+                            {
+                                if (Physics.Raycast(
+                                    entityPosition,
+                                    Vector3.down,
+                                    out hit,
+                                    Mathf.Infinity,
+                                    1
+                                    ))
+                                {
+                                    targetLocation = hit.point + Vector3.up * 0.5f;
+                                }
+                                else
+                                {
+                                    targetLocation = entityPosition;
+                                }
+                            }
                             bCanSeeTarget = false;
                         }
                     }

@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     #region VARIABLES
 
     [HideInInspector] public float accelerationMultiplier = 1.0f;
+    [HideInInspector] public int midAirJumps            = 0;
 
     [SerializeField] private float acceleration         = 100.0f;
     [SerializeField] private float airAcceleration      = 20.0f;
@@ -14,12 +15,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravity              = -30.0f;
     [SerializeField] private float smoothStepDown       = 0.5f;
     [SerializeField] private float jumpForce            = 15.0f;
-    [SerializeField] private float jumpGraceTime        = 0.1f;
+    [SerializeField] private float jumpGraceTime        = 0.2f;
     [SerializeField] private float dashSpeed            = 20.0f;
     [SerializeField] private float dashJumpForce        = 8.0f;
     [SerializeField] private float dashDuration         = 0.2f;
     [SerializeField] private float dashCooldown         = 1.0f;
-    [SerializeField] private float gravityWallSliding   = -10.0f;
+    [SerializeField] private float gravityWallSliding   = -1.0f;
     [SerializeField] private float wallSlidingTime      = 2.0f;
 
     private ThirdPersonCamera cTPCamera                 = null;
@@ -41,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private float dDurationTimer                        = 0.0f;
     private float dCooldownTimer                        = 0.0f;
     private float wstTimer                              = 0.0f;
+    private int midAirJumpsLeft                         = 0;
     private Transform movingPlatform                    = null;
     private Vector3 movingPlatformPrevPosition          = Vector3.zero;
     private Vector3 movingPlatformPrevRotation          = Vector3.zero;
@@ -160,6 +162,7 @@ public class PlayerMovement : MonoBehaviour
         {
             bIsWallSliding = false;
             wstTimer = wallSlidingTime;
+            midAirJumpsLeft = midAirJumps;
         }
 
         //Get the desired movement unit vector based on where the player is looking at
@@ -168,12 +171,13 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = Vector3.Normalize(lookVector * inputY + sideLookVector * inputX);
 
         //Get a vector pointing downwards a slope
-        Vector2 slopeTemp = Vector2.Perpendicular(new Vector2(slopeNormal.x, slopeNormal.z));
-        Vector3 slopeTemp2 = Vector3.Normalize(Vector3.Cross(slopeNormal, new Vector3(slopeTemp.x, 0.0f, slopeTemp.y)));
+        Vector2 slopeNormalPerpendicular = Vector2.Perpendicular(new Vector2(slopeNormal.x, slopeNormal.z));
+        Vector3 slopeDownDirection = Vector3.Normalize(Vector3.Cross(slopeNormal, new Vector3(slopeNormalPerpendicular.x, 0.0f, slopeNormalPerpendicular.y)));
         
         //Allow normal movement if not on a slope
         if (Vector3.Angle(Vector3.up, slopeNormal) < cCharacter.slopeLimit)
         {
+            /*----------------------------------------------------------------------------------------*/
             //Calculate movement on XZ plane
             Vector3 tempVector = moveVector;
             tempVector.y = 0.0f;
@@ -184,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
                     moveDirection * moveSpeed * acceleration * accelerationMultiplier * dt
                     : moveDirection * moveSpeed * airAcceleration * accelerationMultiplier * dt;
             }
-
+            /*----------------------------------------------------------------------------------------*/
             //Calculate friction
             if (dDurationTimer <= 0.0f)
             {
@@ -192,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
                     tempVector * friction * dt
                     : tempVector * airFriction * dt;
             }
-
+            /*----------------------------------------------------------------------------------------*/
             //Calculate movement in Y direction
             if (isGrounded)
             {
@@ -228,7 +232,7 @@ public class PlayerMovement : MonoBehaviour
             tempVector.y = isGrounded ?
                 tempVector.y + gravity * dt
                 : moveVector.y + tempGravity * dt;
-
+            /*----------------------------------------------------------------------------------------*/
             //Dashing
             if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
             {
@@ -237,24 +241,34 @@ public class PlayerMovement : MonoBehaviour
                 tempVector = moveDirection * dashSpeed * accelerationMultiplier;
                 tempVector.y = dashJumpForce;
             }
-
-            moveVector = tempVector;
-            
+            /*----------------------------------------------------------------------------------------*/
+            //Jumping
             if (inputJump)
             {
                 //Jumping (normal)
-                if (jgtTimer > 0.0f)
+                if (jgtTimer > 0.0f || midAirJumpsLeft > 0)
                 {
-                    moveVector.y = jumpForce;
+                    tempVector.y = jumpForce;
+                    midAirJumpsLeft--;
                 }
 
                 //Jumping (wallsliding)
                 if (bIsWallSliding)
                 {
-                    moveVector.y = jumpForce;
-                    wstTimer = 0.0f;
+                    tempVector.y = jumpForce;
+                    if (midAirJumpsLeft > 0)
+                    {
+                        midAirJumpsLeft--;
+                    }
+                    else
+                    {
+                        wstTimer = 0.0f;
+                    }
                 }
             }
+            /*----------------------------------------------------------------------------------------*/
+            //Move temporary values back to final variable
+            moveVector = tempVector;
         }
         //Do something else when on a steep slope
         else
@@ -262,7 +276,7 @@ public class PlayerMovement : MonoBehaviour
             Vector3 tempVector = moveDirection * airAcceleration * dt;
             tempVector = Vector3.ProjectOnPlane(tempVector, slopeNormal);
             moveVector = Vector3.ProjectOnPlane(moveVector, slopeNormal);
-            moveVector += tempVector + slopeTemp2 * -gravity * dt;
+            moveVector += tempVector + slopeDownDirection * -gravity * dt;
 
             RaycastHit hit;
             if (!Physics.Raycast(
@@ -339,33 +353,40 @@ public class PlayerMovement : MonoBehaviour
 
     void CalculateCooldowns()
     {
-        if (jgtTimer > 0.0f)
-        {
-            jgtTimer -= dt;
-        }
+        jgtTimer -= jgtTimer > 0.0f ? dt : 0.0f;
+        dDurationTimer -= dDurationTimer > 0.0f ? dt : 0.0f;
+        dCooldownTimer -= (dDurationTimer <= 0.0f && dCooldownTimer > 0.0f) ? dt : 0.0f;
 
         if (cCharacter.isGrounded)
         {
             jgtTimer = jumpGraceTime;
         }
 
-        if (dDurationTimer > 0.0f)
-        {
-            dDurationTimer -= dt;
-        }
-        else
-        {
-            if (dCooldownTimer > 0.0f)
-            {
-                dCooldownTimer -= dt;
-            }
-        }
+        //if (jgtTimer > 0.0f)
+        //{
+        //    jgtTimer -= dt;
+        //}
+
+        //if (dDurationTimer > 0.0f)
+        //{
+        //    dDurationTimer -= dt;
+        //}
+        //else
+        //{
+        //    if (dCooldownTimer > 0.0f)
+        //    {
+        //        dCooldownTimer -= dt;
+        //    }
+        //}
     }
 
     bool AlmostEqual(Vector3 v1, Vector3 v2, float precision)
     {
         bool equal = true;
-        if (Mathf.Abs(Vector3.Angle(v1, v2)) > precision) { equal = false; }
+        if (Mathf.Abs(Vector3.Angle(v1, v2)) > precision)
+        {
+            equal = false;
+        }
         return equal;
     }
 
