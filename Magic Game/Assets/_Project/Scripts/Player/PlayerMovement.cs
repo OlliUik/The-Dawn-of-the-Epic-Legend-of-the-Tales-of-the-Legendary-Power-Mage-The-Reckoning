@@ -96,7 +96,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (hit.gameObject.tag == "MovingPlatform")
         {
-            movingPlatform = hit.transform;
+            if (movingPlatform == null)
+            {
+                movingPlatform = hit.transform;
+            }
+            else if (hit.transform != movingPlatform)
+            {
+                //Uh oh, we're hitting multiple moving platforms at the same time!
+                //Reset platform movement values to avoid warping.
+
+                //NOTE: This solution is not perfect, warping still occurs during unknown edge cases.
+                //If possible, avoid using multiple moving platforms close to each other!
+                movingPlatform = null;
+                movingPlatformPrevPosition = Vector3.zero;
+                movingPlatformPrevRotation = Vector3.zero;
+                movingPlatformVelocity = Vector3.zero;
+            }
         }
         else
         {
