@@ -54,6 +54,7 @@ public class PlayerCore : MonoBehaviour
         if (bIsDead)
         {
             Camera.main.transform.LookAt(playerModel.transform);
+            cMovement.GetInput(0.0f, 0.0f, false, false);
         }
         else
         {
