@@ -46,6 +46,14 @@ ModelImporter:
     100080: UpArm_R
     100082: UpLeg_L
     100084: UpLeg_R
+    100086: Leg_IK_R
+    100088: Leg_IK_R_end
+    100090: LegIK_L
+    100092: LegIK_L_end
+    100094: PoleTarget_L
+    100096: PoleTarget_L_end
+    100098: PoleTarget_R
+    100100: PoleTarget_R_end
     400000: Armature
     400002: Book
     400004: Book_end
@@ -89,6 +97,14 @@ ModelImporter:
     400080: UpArm_R
     400082: UpLeg_L
     400084: UpLeg_R
+    400086: Leg_IK_R
+    400088: Leg_IK_R_end
+    400090: LegIK_L
+    400092: LegIK_L_end
+    400094: PoleTarget_L
+    400096: PoleTarget_L_end
+    400098: PoleTarget_R
+    400100: PoleTarget_R_end
     2100000: Player
     2100002: Book
     4300000: Player_Body
@@ -104,6 +120,8 @@ ModelImporter:
     7400016: Armature|T-Pose
     7400018: Armature|W.I.P_LargeAoe
     7400020: Armature|Jump
+    7400022: Armature|StrafeRight
+    7400024: Armature|StrafeLeft
     9500000: //RootNode
     13700000: Plane.005
     13700002: Player_Body
@@ -343,8 +361,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Strafe
-      takeName: Armature|Strafe
+      name: Armature|StrafeRight
+      takeName: Armature|StrafeRight
       firstFrame: 0
       lastFrame: 44
       wrapMode: 0
@@ -538,6 +556,120 @@ ModelImporter:
       - path: Player_Body
         weight: 0
       maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|StrafeLeft
+      takeName: Armature|StrafeLeft
+      firstFrame: 0
+      lastFrame: 44
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Book
+        weight: 1
+      - path: Armature/Book/Book_end
+        weight: 1
+      - path: Armature/RootBone
+        weight: 1
+      - path: Armature/RootBone/Hips
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head/Head_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L/FingersEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L/ThumbEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R/FingersEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R/ThumbEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L/Toe_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R/Toe_R_end
+        weight: 1
+      - path: Plane.005
+        weight: 0
+      - path: Player_Body
+        weight: 0
+      maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     isReadable: 1
