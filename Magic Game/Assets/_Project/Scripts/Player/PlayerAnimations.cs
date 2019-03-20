@@ -53,7 +53,7 @@ public class PlayerAnimations : MonoBehaviour
 
         cAnimator.SetFloat("Movement Speed", (velocityRotated.magnitude) * animationSpeedMultiplier);
         cAnimator.SetFloat("Movement Forward", velocityRotated.y * animationBlendingMultiplier);
-        //cAnimator.SetFloat("Movement Right", velocityRotated.x * animationBlendingMultiplier);
+        cAnimator.SetFloat("Movement Right", velocityRotated.x * animationBlendingMultiplier);
 
         cAnimator.SetBool("Is Jumping", !cCharacter.isGrounded);
     }
