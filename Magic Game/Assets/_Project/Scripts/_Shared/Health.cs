@@ -80,6 +80,11 @@ public class Health : MonoBehaviour
         }
     }
 
+    public void AddInvulnerability(float amount)
+    {
+        iftTimer += amount;
+    }
+
     public void Kill()
     {
         if (!bIsDead)

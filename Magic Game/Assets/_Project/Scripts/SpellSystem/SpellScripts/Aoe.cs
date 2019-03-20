@@ -29,6 +29,8 @@ public class Aoe : Spell
         Aoe aoe = Instantiate(this, spellbook.transform.position, spellbook.transform.rotation);
         aoe.transform.parent = spellbook.transform;
 
+        aoe.ApplyModifiers(aoe.gameObject, spellIndex, spellbook);
+
         aoe.StartCoroutine(DestroyAoe(aoe.gameObject, spellbook, duration));
         spellbook.StopCasting();
         spellbook.SetCooldown();
@@ -54,6 +56,18 @@ public class Aoe : Spell
             //}
         }
 
+    }
+
+    public void AddRange(float amount)
+    {
+        radius += amount;
+        print("Radius increased to " + radius);
+    }
+
+    public void AddDuration(float amount)
+    {
+        duration += amount;
+        print("Duration increased to " + duration);
     }
 
     // Destroying spell here

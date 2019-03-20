@@ -15,7 +15,6 @@ public class Bounce : OnCollision
     {
         if (!ready)
         {
-            print("BOUNCE");
             GetComponent<Projectile>().direction = collision.contacts[0].normal; // this changes the direction the projectile is moving
             transform.rotation = Quaternion.FromToRotation(transform.forward, collision.contacts[0].normal); // also rotate the whole thing for graphics to face the right direction
             bounceCount--;
