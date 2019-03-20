@@ -7756,6 +7756,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477685266}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &586639682 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 366472666253240096, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 366472666166418844}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &658781938
 GameObject:
   m_ObjectHideFlags: 0
@@ -7926,7 +7932,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh26730
+  m_Name: pb_Mesh14186
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -9320,7 +9326,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh26302
+  m_Name: pb_Mesh14000
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -11459,7 +11465,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh26282
+  m_Name: pb_Mesh13988
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -12495,6 +12501,36 @@ Transform:
   m_Father: {fileID: 1737206198}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2063962847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2063962848}
+  m_Layer: 0
+  m_Name: SpellPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2063962848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2063962847}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.0542, z: 0.0455}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 586639682}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2087287852
 GameObject:
   m_ObjectHideFlags: 0
@@ -12725,5 +12761,33 @@ PrefabInstance:
       propertyPath: gravityWallSliding
       value: -0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].cards.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spellPos
+      value: 
+      objectReference: {fileID: 2063962848}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].spell
+      value: 
+      objectReference: {fileID: 2094128997949180105, guid: a132b3a128a4175488526976ad4d8d29,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].cards.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9a5d6531e2713004caa3b432b48c053e,
+        type: 2}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].cards.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 246cf9d7846c6c6448058eabb7596f07,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fceb9effa83d094a96cd97b4a2a67e9, type: 3}
