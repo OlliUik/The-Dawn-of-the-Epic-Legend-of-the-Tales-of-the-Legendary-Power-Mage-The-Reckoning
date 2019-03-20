@@ -105,6 +105,7 @@ public class PlayerSpellCaster : MonoBehaviour
                 ProjectileTemp spell = Instantiate(projectile).GetComponent<ProjectileTemp>();
                 spell.Initialize(transform.position + charPositionOffset, direction, this.gameObject);
                 cMana.UseMana(spell.GetManaCost());
+                GetComponent<PlayerAnimations>().CastSpell(0);
             }
         }
     }

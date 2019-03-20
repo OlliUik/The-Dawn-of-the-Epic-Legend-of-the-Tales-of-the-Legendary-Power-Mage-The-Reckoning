@@ -16,8 +16,6 @@ public class MultiProjectile : OnCast
     {
         if (ready) return;
 
-        print("Multi projectile");
-
         // create two instances of the current projectile
         GameObject copy1 = Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation);
         GameObject copy2 = Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation);

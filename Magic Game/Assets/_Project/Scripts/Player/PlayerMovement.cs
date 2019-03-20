@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     private Transform movingPlatform                    = null;
     private Vector3 movingPlatformPrevPosition          = Vector3.zero;
     private Vector3 movingPlatformPrevRotation          = Vector3.zero;
-    private Vector3 movingPlatformVelocity              = Vector3.zero;
+    public Vector3 movingPlatformVelocity { get; private set; } = Vector3.zero;
 
     #endregion
 
@@ -96,7 +96,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (hit.gameObject.tag == "MovingPlatform")
         {
-            movingPlatform = hit.transform;
+            if (movingPlatform == null)
+            {
+                movingPlatform = hit.transform;
+            }
+            else if (hit.transform != movingPlatform)
+            {
+                //Uh oh, we're hitting multiple moving platforms at the same time!
+                //Reset platform movement values to avoid warping.
+
+                //NOTE: This solution is not perfect, warping still occurs during unknown edge cases.
+                //If possible, avoid using multiple moving platforms close to each other!
+                movingPlatform = null;
+                movingPlatformPrevPosition = Vector3.zero;
+                movingPlatformPrevRotation = Vector3.zero;
+                movingPlatformVelocity = Vector3.zero;
+            }
         }
         else
         {
@@ -236,6 +251,11 @@ public class PlayerMovement : MonoBehaviour
             //Dashing
             if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
             {
+                if (moveSpeed < 0.1f)
+                {
+                    moveDirection = -lookVector;
+                }
+                GetComponent<Health>().AddInvulnerability(dashDuration);
                 dDurationTimer = dashDuration;
                 dCooldownTimer = dashCooldown;
                 tempVector = moveDirection * dashSpeed * accelerationMultiplier;
@@ -248,13 +268,18 @@ public class PlayerMovement : MonoBehaviour
                 //Jumping (normal)
                 if (jgtTimer > 0.0f || midAirJumpsLeft > 0)
                 {
+                    jgtTimer = 0.0f;
                     tempVector.y = jumpForce;
-                    midAirJumpsLeft--;
+                    if (midAirJumpsLeft > 0)
+                    {
+                        midAirJumpsLeft--;
+                    }
                 }
 
                 //Jumping (wallsliding)
                 if (bIsWallSliding)
                 {
+                    jgtTimer = 0.0f;
                     tempVector.y = jumpForce;
                     if (midAirJumpsLeft > 0)
                     {
@@ -279,15 +304,26 @@ public class PlayerMovement : MonoBehaviour
             moveVector += tempVector + slopeDownDirection * -gravity * dt;
 
             RaycastHit hit;
+            //if (!Physics.Raycast(
+            //    transform.position + slopeNormal + moveVector * dt,
+            //    -slopeNormal,
+            //    out hit,
+            //    1.0f + 0.5f,
+            //    physicsLayerMask
+            //    ))
             if (!Physics.Raycast(
-                transform.position + slopeNormal + moveVector * dt,
+                transform.position,
                 -slopeNormal,
                 out hit,
-                1.0f + 0.5f,
+                cCharacter.skinWidth + 0.1f,
                 physicsLayerMask
                 ))
             {
                 slopeNormal = Vector3.up;
+            }
+            else
+            {
+                Debug.DrawLine(hit.point, hit.point + hit.normal * 5.0f, Color.yellow);
             }
         }
 

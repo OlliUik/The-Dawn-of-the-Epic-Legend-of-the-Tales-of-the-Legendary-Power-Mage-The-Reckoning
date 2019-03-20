@@ -19,6 +19,6 @@ public class PlayerModelRotator : MonoBehaviour
     void Update()
     {
         Vector3 temp = cameraLockTarget.localRotation.eulerAngles;
-        transform.localRotation = Quaternion.Euler(offset.x, offset.y, offset.z + temp.y);
+        transform.localRotation = Quaternion.Euler(offset.x, offset.y + temp.y, offset.z);
     }
 }
