@@ -79,7 +79,7 @@ public class Projectile : Spell
         /// 
         /// </summary>
 
-        direction = spellbook.GetDirection2();
+        direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Projectile proj = Instantiate(this, spellbook.spellPos.position, rot);
         proj.direction = direction;
