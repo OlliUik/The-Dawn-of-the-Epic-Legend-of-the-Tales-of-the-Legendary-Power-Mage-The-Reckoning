@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     private Transform movingPlatform                    = null;
     private Vector3 movingPlatformPrevPosition          = Vector3.zero;
     private Vector3 movingPlatformPrevRotation          = Vector3.zero;
-    private Vector3 movingPlatformVelocity              = Vector3.zero;
+    public Vector3 movingPlatformVelocity { get; private set; } = Vector3.zero;
 
     #endregion
 
