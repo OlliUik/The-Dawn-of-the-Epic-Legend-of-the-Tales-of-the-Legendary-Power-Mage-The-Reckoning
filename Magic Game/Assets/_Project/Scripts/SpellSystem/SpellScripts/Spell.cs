@@ -58,15 +58,15 @@ public class Spell : MonoBehaviour
     {
         foreach (Card card in spellbook.spells[spellIndex].cards)
         {
-            foreach (GameObject gameObject in card.spellModifiers)
-            {
-                SpellModifier[] mods = gameObject.GetComponents<SpellModifier>();
-                foreach (SpellModifier mod in mods)
-                {
-                    mod.Apply(go);
-                    print("Added: " + mod.name);
-                }
-            }
+            //foreach (GameObject go in card.spellModifiers)
+            //{
+            //    SpellModifier[] mods = gameObject.GetComponents<SpellModifier>();
+            //    foreach (SpellModifier mod in mods)
+            //    {
+            //        mod.Apply(go);
+            //        print("Added: " + mod.name);
+            //    }
+            //}
         }
     }
 }
