@@ -6,15 +6,22 @@ public class CameraWallChecker : MonoBehaviour
     [SerializeField] private Transform cameraClosePosition = null;
     [SerializeField] private LayerMask physicsLayerMask = 1;
 
-    private bool checkingForWalls = false;
-
+    public bool checkingForWalls { get; private set; } = false;
+    
     void OnTriggerStay(Collider other)
     {
-        checkingForWalls = true;
+        if (physicsLayerMask == (physicsLayerMask | (1 << other.gameObject.layer)))
+        {
+            if (other.tag != "Player")
+            {
+                checkingForWalls = true;
+            }
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
+        cameraTransform.position = transform.position;
         checkingForWalls = false;
     }
 
@@ -23,10 +30,6 @@ public class CameraWallChecker : MonoBehaviour
         if (checkingForWalls)
         {
             cameraTransform.position = cameraClosePosition.position;
-        }
-        else
-        {
-            cameraTransform.position = transform.position;
         }
     }
 }

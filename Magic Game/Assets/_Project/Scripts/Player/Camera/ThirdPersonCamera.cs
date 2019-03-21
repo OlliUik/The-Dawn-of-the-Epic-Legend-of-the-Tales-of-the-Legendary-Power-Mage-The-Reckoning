@@ -6,12 +6,14 @@ public class ThirdPersonCamera : MonoBehaviour
     
     public bool invertY                                 = false;
     public Vector2 sensitivity                          = new Vector2(1.0f, 1.0f);
-    public Vector3 lookDirection = Vector3.zero;
-
-    public bool bRightSide { get; private set; } = true;
+    public Vector3 lookDirection                        = Vector3.zero;
 
     [SerializeField] private Transform cameraPivot      = null;
+    [SerializeField] private CameraWallChecker wallChecker = null;
 
+    private Transform cameraOriginalPosition = null;
+    private Transform cameraTransform = null;
+    private bool bSwitchingSide = false;
     private Vector2 minMaxPitch                         = new Vector2(-85.0f, 85.0f);
 
     #endregion
@@ -23,6 +25,34 @@ public class ThirdPersonCamera : MonoBehaviour
         if (cameraPivot == null)
         {
             Debug.LogWarning(this + " is missing a camera pivot!");
+        }
+        else
+        {
+            cameraOriginalPosition = cameraPivot.GetChild(0);
+            cameraTransform = cameraOriginalPosition.GetChild(0);
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (bSwitchingSide && cameraTransform != null)
+        {
+            if (wallChecker.checkingForWalls)
+            {
+                cameraTransform.localPosition = Vector3.zero;
+                bSwitchingSide = false;
+                return;
+            }
+
+            if (Vector3.Distance(cameraTransform.localPosition, Vector3.zero) > 0.05f)
+            {
+                cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, Vector3.zero, Time.deltaTime * 8.0f);
+            }
+            else
+            {
+                cameraTransform.localPosition = Vector3.zero;
+                bSwitchingSide = false;
+            }
         }
     }
 
@@ -57,11 +87,11 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         if (cameraPivot != null)
         {
-            Transform camera = cameraPivot.GetChild(0);
-            Vector3 camPos = camera.localPosition;
+            Vector3 camPos = cameraOriginalPosition.localPosition;
             camPos.x *= -1;
-            camera.localPosition = camPos;
-            bRightSide = !bRightSide;
+            cameraOriginalPosition.localPosition = camPos;
+            cameraTransform.localPosition = new Vector3(-cameraOriginalPosition.localPosition.x * 2, 0.0f, 0.0f);
+            bSwitchingSide = true;
         }
     }
 

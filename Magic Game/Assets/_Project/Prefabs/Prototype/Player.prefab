@@ -430,6 +430,7 @@ MonoBehaviour:
   sensitivity: {x: 2, y: 2}
   lookDirection: {x: 0, y: 0, z: 0}
   cameraPivot: {fileID: 366472666649033832}
+  wallChecker: {fileID: 1515368706}
 --- !u!114 &366472666550424867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -770,10 +771,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 3
+  m_Radius: 0.6
+  m_Height: 3.5
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 1}
+  m_Center: {x: 0, y: 0, z: 1.25}
 --- !u!114 &1515368706
 MonoBehaviour:
   m_ObjectHideFlags: 0
