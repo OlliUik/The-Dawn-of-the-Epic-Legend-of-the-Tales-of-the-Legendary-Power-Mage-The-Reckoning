@@ -6,8 +6,9 @@ public class ThirdPersonCamera : MonoBehaviour
     
     public bool invertY                                 = false;
     public Vector2 sensitivity                          = new Vector2(1.0f, 1.0f);
+    public Vector3 lookDirection = Vector3.zero;
 
-    public Vector3 lookDirection { get; private set; }  = Vector3.zero;
+    public bool bRightSide { get; private set; } = true;
 
     [SerializeField] private Transform cameraPivot      = null;
 
@@ -60,6 +61,7 @@ public class ThirdPersonCamera : MonoBehaviour
             Vector3 camPos = camera.localPosition;
             camPos.x *= -1;
             camera.localPosition = camPos;
+            bRightSide = !bRightSide;
         }
     }
 

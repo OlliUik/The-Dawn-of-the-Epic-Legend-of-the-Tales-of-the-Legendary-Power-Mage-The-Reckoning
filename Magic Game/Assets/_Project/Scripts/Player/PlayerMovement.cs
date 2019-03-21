@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float accelerationMultiplier = 1.0f;
     [HideInInspector] public int midAirJumps            = 0;
 
+    [SerializeField] private bool bAllowMidairDashing = true;
     [SerializeField] private float acceleration         = 100.0f;
     [SerializeField] private float airAcceleration      = 20.0f;
     [SerializeField] private float friction             = 5.5f;
@@ -251,15 +252,18 @@ public class PlayerMovement : MonoBehaviour
             //Dashing
             if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
             {
-                if (moveSpeed < 0.1f)
+                if (isGrounded || bAllowMidairDashing)
                 {
-                    moveDirection = -lookVector;
+                    if (moveSpeed < 0.1f)
+                    {
+                        moveDirection = -lookVector;
+                    }
+                    GetComponent<Health>().AddInvulnerability(dashDuration);
+                    dDurationTimer = dashDuration;
+                    dCooldownTimer = dashCooldown;
+                    tempVector = moveDirection * dashSpeed * accelerationMultiplier;
+                    tempVector.y = dashJumpForce;
                 }
-                GetComponent<Health>().AddInvulnerability(dashDuration);
-                dDurationTimer = dashDuration;
-                dCooldownTimer = dashCooldown;
-                tempVector = moveDirection * dashSpeed * accelerationMultiplier;
-                tempVector.y = dashJumpForce;
             }
             /*----------------------------------------------------------------------------------------*/
             //Jumping

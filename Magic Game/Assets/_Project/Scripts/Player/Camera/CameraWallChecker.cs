@@ -2,28 +2,31 @@
 
 public class CameraWallChecker : MonoBehaviour
 {
-    [SerializeField] private Transform cameraOriginalPos = null;
+    [SerializeField] private Transform cameraTransform = null;
+    [SerializeField] private Transform cameraClosePosition = null;
     [SerializeField] private LayerMask physicsLayerMask = 1;
 
-    void Update()
+    private bool checkingForWalls = false;
+
+    void OnTriggerStay(Collider other)
     {
-        if (cameraOriginalPos != null)
+        checkingForWalls = true;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        checkingForWalls = false;
+    }
+
+    void LateUpdate()
+    {
+        if (checkingForWalls)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(
-                cameraOriginalPos.position + transform.forward * 4.0f,
-                -transform.forward,
-                out hit,
-                4.0f,
-                physicsLayerMask
-                ))
-            {
-                transform.position = hit.point;
-            }
-            else
-            {
-                transform.position = cameraOriginalPos.position;
-            }
+            cameraTransform.position = cameraClosePosition.position;
+        }
+        else
+        {
+            cameraTransform.position = transform.position;
         }
     }
 }

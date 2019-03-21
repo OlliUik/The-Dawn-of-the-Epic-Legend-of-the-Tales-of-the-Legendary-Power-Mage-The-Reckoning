@@ -49,6 +49,13 @@ public class PlayerCore : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        Quaternion spawnRotation = transform.localRotation;
+        transform.localRotation = Quaternion.Euler(Vector3.zero);
+        cTPCamera.lookDirection = spawnRotation.eulerAngles;
+    }
+
     void Update()
     {
         if (bIsDead)
