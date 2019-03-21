@@ -6,7 +6,6 @@ public class Spell : MonoBehaviour
 {
 
     [Header("-- Spell --")]
-    [SerializeField] protected float amount = 5.0f;
     [SerializeField] protected float cooldown = 5.0f;
     [SerializeField] protected float castTime = 5.0f;
     [SerializeField] protected float manaCost = 5.0f;
@@ -28,7 +27,7 @@ public class Spell : MonoBehaviour
     }
 
     // most spells override this cause they require different logic
-    public virtual void CastSpell(Spellbook spellbook, int spellIndex, Vector3 direction)
+    public virtual void CastSpell(Spellbook spellbook, int spellIndex)
     {
         ///<summary>
         ///
@@ -63,6 +62,13 @@ public class Spell : MonoBehaviour
                 SpellModifier mod = modifier.GetComponent<SpellModifier>();
                 mod.Apply(go);
                 print("Added: " + mod.name);
+            }
+
+            // check if card has graphics assained if so add them to the spell
+            if(card.graphics != null)
+            {
+                GameObject graphics = Instantiate(card.graphics, go.transform.position, go.transform.rotation);
+                graphics.transform.parent = go.transform;
             }
         }
     }

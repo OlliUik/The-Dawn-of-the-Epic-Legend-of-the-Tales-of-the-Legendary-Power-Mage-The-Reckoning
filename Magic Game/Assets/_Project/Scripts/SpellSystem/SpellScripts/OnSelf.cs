@@ -6,9 +6,10 @@ using UnityEngine;
 public class OnSelf : Spell
 {
 
+    [Header("OnSelf variables")]
     [SerializeField] private float dur = 0f;
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex, Vector3 direction)
+    public override void CastSpell(Spellbook spellbook, int spellIndex)
     {
 
         ///<summary>
