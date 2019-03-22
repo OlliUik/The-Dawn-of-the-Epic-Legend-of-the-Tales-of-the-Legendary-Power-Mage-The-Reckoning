@@ -55,13 +55,13 @@ public class Aoe : Spell
         }
     }
 
-    public void AddRange(float amount)
+    public void ModifyRange(float amount)
     {
         radius += amount;
         print("Radius increased to " + radius);
     }
 
-    public void AddDuration(float amount)
+    public void ModifyDuration(float amount)
     {
         duration += amount;
         print("Duration increased to " + duration);

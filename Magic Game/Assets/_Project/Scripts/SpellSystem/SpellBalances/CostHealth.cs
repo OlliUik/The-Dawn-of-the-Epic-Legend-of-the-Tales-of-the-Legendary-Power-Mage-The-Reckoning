@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CostHealth ", menuName = "Balance/Cost/Health")]
+[CreateAssetMenu(fileName = "CostHealth ", menuName = "SpellSystem/Balances/Cost/Health")]
 public class CostHealth : SpellBalance
 {
 
