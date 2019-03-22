@@ -5,7 +5,7 @@ using UnityEngine;
 public class PushBack : SpellModifier
 {
 
-    [SerializeField] private float pushbackForce = 15.0f;
+    public float pushbackForce = 15.0f;
     private Spellbook spellbook;
     private Camera cam;
 

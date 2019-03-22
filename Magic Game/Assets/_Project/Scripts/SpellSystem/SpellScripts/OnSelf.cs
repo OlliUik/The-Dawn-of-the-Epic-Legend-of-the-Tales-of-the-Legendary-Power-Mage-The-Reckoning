@@ -6,9 +6,7 @@ using UnityEngine;
 public class OnSelf : Spell
 {
 
-    [SerializeField] private float dur = 0f;
-
-    public override void CastSpell(Spellbook spellbook, int spellIndex, Vector3 direction)
+    public override void CastSpell(Spellbook spellbook, int spellIndex)
     {
 
         ///<summary>
@@ -30,47 +28,9 @@ public class OnSelf : Spell
         self.transform.parent = spellbook.transform;
 
         ApplyModifiers(self.gameObject, spellIndex, spellbook);
-        self.dur = GetDuration(spellbook, spellIndex);
 
         spellbook.StopCasting();
 
-    }
-
-    private float GetDuration(Spellbook spellbook, int spellIndex)
-    {
-        dur = 0f;
-
-        Card[] cards = spellbook.spells[spellIndex].cards.ToArray();
-        foreach (Card card in cards)
-        {
-            SpellBalance[] balances = card.balances.ToArray();
-            foreach (SpellBalance balance in balances)
-            {
-                if(balance.GetType() == typeof(Duration))
-                {
-                    Duration duration = (Duration)balance;
-                    if(duration.GetDuration() > dur)
-                    {
-                        dur = duration.GetDuration();
-                    }
-                }
-            }
-        }
-        print("Longest duration: " + dur);
-        return dur;
-    }
-
-    // destroy whole gameObject after longest duration has passed
-    private void Update()
-    {
-        if(dur > 0f)
-        {
-            dur -= Time.deltaTime;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
     }
 
 }

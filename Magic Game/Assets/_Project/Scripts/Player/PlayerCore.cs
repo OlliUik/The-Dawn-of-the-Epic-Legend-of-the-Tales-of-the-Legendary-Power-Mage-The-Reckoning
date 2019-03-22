@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Mana))]
 [RequireComponent(typeof(ThirdPersonCamera))]
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(CharacterController))]
@@ -8,21 +9,21 @@ public class PlayerCore : MonoBehaviour
 {
     #region VARIABLES
 
-    [SerializeField] private HUDManager canvasManager           = null;
-    [SerializeField] private GameObject playerModel             = null;
+    [SerializeField] private HUDManager canvasManager = null;
+    [SerializeField] private GameObject playerModel = null;
 
-    public Health cHealth { get; private set; }                 = null;
-    public Mana cMana { get; private set; }                     = null;
-    public ThirdPersonCamera cTPCamera { get; private set; }    = null;
+    public Health cHealth { get; private set; } = null;
+    public Mana cMana { get; private set; } = null;
+    public ThirdPersonCamera cTPCamera { get; private set; } = null;
     public CharacterController cCharacter { get; private set; } = null;
-    public PlayerMovement cMovement { get; private set; }       = null;
-    public LayerMask physicsLayerMask { get; private set; }     = 1;
+    public PlayerMovement cMovement { get; private set; } = null;
+    public PlayerSpellCaster cSpellCaster { get; private set; } = null;
+    public Spellbook cSpellBook { get; private set; } = null;
+    public LayerMask physicsLayerMask { get; private set; } = 1;
 
-    private bool bInputEnabled                                  = true;
-    private bool bIsDead                                        = false;
-    private bool bShotFired                                     = false;
-    private PlayerSpellCaster cSpellCaster                      = null;
-    private Spellbook cSpellBook = null;
+    private bool bInputEnabled = true;
+    private bool bIsDead = false;
+    private bool bShotFired = false;
 
     #endregion
 
@@ -30,23 +31,30 @@ public class PlayerCore : MonoBehaviour
 
     void Awake()
     {
-        GlobalVariables.player = this;
         GlobalVariables.entityList.Add(this.gameObject);
+        GlobalVariables.bAnyPlayersAlive = true;
 
         cHealth         = GetComponent<Health>();
+        cMana           = GetComponent<Mana>();
         cTPCamera       = GetComponent<ThirdPersonCamera>();
         cMovement       = GetComponent<PlayerMovement>();
         cCharacter      = GetComponent<CharacterController>();
-        cSpellBook = GetComponent<Spellbook>();
 
-        if (GetComponent<Mana>() != null)
+        if (GetComponent<Spellbook>() != null)
         {
-            cMana = GetComponent<Mana>();
+            cSpellBook = GetComponent<Spellbook>();
         }
         if (GetComponent<PlayerSpellCaster>() != null)
         {
             cSpellCaster = GetComponent<PlayerSpellCaster>();
         }
+    }
+
+    void Start()
+    {
+        Quaternion spawnRotation = transform.localRotation;
+        transform.localRotation = Quaternion.Euler(Vector3.zero);
+        cTPCamera.lookDirection = spawnRotation.eulerAngles;
     }
 
     void Update()
@@ -150,6 +158,16 @@ public class PlayerCore : MonoBehaviour
     {
         bIsDead = true;
         GlobalVariables.entityList.Remove(this.gameObject);
+
+        GlobalVariables.bAnyPlayersAlive = false;
+        foreach (GameObject item in GlobalVariables.entityList)
+        {
+            if (item.tag == "Player")
+            {
+                GlobalVariables.bAnyPlayersAlive = true;
+            }
+        }
+
         canvasManager.OnPlayerDeath();
         EnableControls(false);
 

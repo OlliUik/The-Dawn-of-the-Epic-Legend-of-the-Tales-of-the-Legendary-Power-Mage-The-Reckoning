@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MinMana ", menuName = "CastRequirement/MinManaRequirement")]
+[CreateAssetMenu(fileName = "MinMana ", menuName = "SpellSystem/CastRequirements/MinManaRequirement")]
 public class MinManaRequirement : CastRequirement
 {
     [SerializeField] private float requiredAmount = 10.0f;

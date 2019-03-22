@@ -8,6 +8,7 @@ public struct SpellData
 {
     public Spell spell;         // determinates how spell is casted and what happens on cast
     public List<Card> cards;    // all modifiers are here
+    // TODO:: keep track of cooldown here
 }
 
 [RequireComponent(typeof(PlayerCore))]
@@ -16,17 +17,17 @@ public class Spellbook : MonoBehaviour
 
     #region Variables
 
-    [SerializeField] public bool isCasting = false;
-    public Transform spellPos;
+    [SerializeField] public bool isCasting              = false;
+    public Transform spellPos                           = null;
 
-    public SpellData[] spells = new SpellData[4];
-    private float[] cooldowns = new float[4];
+    public SpellData[] spells                           = new SpellData[4];
+    private float[] cooldowns                           = new float[4];
 
-    public PlayerCore playerCore { get; private set; }
+    public PlayerCore playerCore                        { get; private set; }
 
-    private Camera cam;
-    private Vector3 charPositionOffset = Vector3.up * 1.0f;
-    private Vector3 castPoint = Vector3.zero;
+    private Camera cam                                  = null;
+    private Vector3 charPositionOffset                  = Vector3.up * 1.0f;
+    private Vector3 castPoint                           = Vector3.zero;
 
     #endregion
 
@@ -47,7 +48,7 @@ public class Spellbook : MonoBehaviour
     void Update()
     {
 
-        Vector3 direction = GetDirection2();
+        Vector3 direction = GetDirection();
 
         if (Input.GetKeyDown(KeyCode.Alpha1) && CanCast(0))
         {
@@ -102,24 +103,24 @@ public class Spellbook : MonoBehaviour
     }
 
     // fires directly towards mouse cursor
-    public Vector3 GetDirection2()
-    {
-        Vector3 direction = Vector3.zero;
+    //public Vector3 GetDirection2()
+    //{
+    //    Vector3 direction = Vector3.zero;
 
-        RaycastHit hit;
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+    //    RaycastHit hit;
+    //    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out hit))
-        {
-            direction = (hit.point - spellPos.position).normalized;
-        }
-        else
-        {
-            direction = ray.direction.normalized;
-        }
+    //    if(Physics.Raycast(ray, out hit))
+    //    {
+    //        direction = (hit.point - spellPos.position).normalized;
+    //    }
+    //    else
+    //    {
+    //        direction = ray.direction.normalized;
+    //    }
 
-        return direction;
-    }
+    //    return direction;
+    //}
 
     private bool CanCast(int spellIndex)
     {
@@ -191,9 +192,10 @@ public class Spellbook : MonoBehaviour
 
         // check if something modifies speed etc. while casting and apply effect here
         // also save them in temp list and remove effects after casting
+        // do casting animation here
         yield return new WaitForSeconds(castingTime);
 
-        spells[spellIndex].spell.CastSpell(this, spellIndex, direction);
+        spells[spellIndex].spell.CastSpell(this, spellIndex);
         lastCastedSpell = spellIndex;
     }
 

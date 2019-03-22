@@ -7,13 +7,13 @@ public class Projectile : Spell
 {
 
     [Header("-- Projectile --")]
-    [SerializeField] protected float range = 1000.0f;
-    [SerializeField] protected float speed = 15.0f;
-    [SerializeField] GameObject explosionVfx = null;
+    [SerializeField] protected float baseDamage         = 50.0f;
+    [SerializeField] protected float baseRange          = 1000.0f;
+    [SerializeField] protected float baseSpeed          = 15.0f;
 
-    public Vector3 direction { get; set; }
-    private Vector3 lastPos = Vector3.zero;
-    private float distanceTravelled = 0.0f;
+    public Vector3 direction                            { get; set; }
+    private Vector3 lastPos                             = Vector3.zero;
+    private float distanceTravelled                     = 0.0f;
 
     void Start()
     {
@@ -23,13 +23,12 @@ public class Projectile : Spell
 
     void FixedUpdate()
     {
-
         distanceTravelled += Vector3.Distance(transform.position, lastPos);
         lastPos = transform.position;
 
-        if(distanceTravelled < range)
+        if(distanceTravelled < baseRange)
         {
-            transform.position += direction * speed * Time.deltaTime;
+            transform.position += direction * baseSpeed * Time.deltaTime;
         }
         else
         {
@@ -40,32 +39,35 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.GetComponent<Health>() != null)
+        // collided with player or enemy deal damage
+        if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
-            // collided with player or enemy
-            collision.gameObject.GetComponent<Health>().Hurt(amount);
-            Instantiate(explosionVfx, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            collision.gameObject.GetComponent<Health>().Hurt(baseDamage);
         }
 
-        OnCollision[] collMods = GetComponents<OnCollision>();
-        for (int i = 0; i < collMods.Length; i++)
+        // if some collision modifier is not ready yet...apply all and return 
+        // if all collisions modifiers are ready destroy the projectile
+        OnCollision[] collisionModifiers = GetComponents<OnCollision>();
+        for (int i = 0; i < collisionModifiers.Length; i++)
         {
-            if (!collMods[i].ready)
+            if (!collisionModifiers[i].ready)
             {
-                foreach (OnCollision mod in collMods)
+                foreach (OnCollision modifier in collisionModifiers)
                 {
-                    mod.OnCollide(collision);
+                    modifier.OnCollide(collision);
                     return;
                 }
             }
+
+            print("All collision modifiers ready...destroying");
+            Destroy(gameObject);
         }
 
         print("No collision modifiers...destroying");
         Destroy(gameObject);
     }
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex, Vector3 direction)
+    public override void CastSpell(Spellbook spellbook, int spellIndex)
     {
 
         ///<summary>
@@ -79,15 +81,35 @@ public class Projectile : Spell
         /// 
         /// </summary>
 
+
+        // get the direction from the spellbook and spawn projectile accodring to that
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
-        Projectile proj = Instantiate(this, spellbook.spellPos.position, rot);
-        proj.direction = direction;
+        Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
+        projectile.direction = direction;
 
-        ApplyModifiers(proj.gameObject, spellIndex, spellbook);
+        // apply all modifiers to the projectile ( this is inherited from spell class )
+        ApplyModifiers(projectile.gameObject, spellIndex, spellbook);
 
+        // casting is done
         spellbook.StopCasting();
 
+    }
+
+
+    public void ModifyDamage(float amount)
+    {
+        baseDamage += amount;
+    }
+
+    public void ModifyRange(float amount)
+    {
+        baseRange += amount;
+    }
+
+    public void ModifySpeed(float amount)
+    {
+        baseSpeed += amount;
     }
 
 }

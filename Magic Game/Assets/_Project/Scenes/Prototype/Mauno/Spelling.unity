@@ -7932,7 +7932,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14186
+  m_Name: pb_Mesh14444
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -8812,7 +8812,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1175843103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9059,7 +9059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1265521321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9326,7 +9326,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14000
+  m_Name: pb_Mesh14258
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10629,6 +10629,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391169820}
   m_Mesh: {fileID: 727388342}
+--- !u!4 &1414259712 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6953763851940780089, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 366472666166418844}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1430657210
 GameObject:
   m_ObjectHideFlags: 0
@@ -10849,7 +10855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1485341759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11198,7 +11204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1609891692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11465,7 +11471,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh13988
+  m_Name: pb_Mesh14246
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -12689,6 +12695,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106006297}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2134162022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2134162023}
+  m_Layer: 0
+  m_Name: SpellPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2134162023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2134162022}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1414259712}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &366472666166418844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12768,14 +12804,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
+      propertyPath: spells.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].cards.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].cards.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
       propertyPath: spellPos
       value: 
-      objectReference: {fileID: 2063962848}
+      objectReference: {fileID: 2134162023}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
       propertyPath: spells.Array.data[0].spell
       value: 
-      objectReference: {fileID: 2094128997949180105, guid: a132b3a128a4175488526976ad4d8d29,
+      objectReference: {fileID: 5489485157920764430, guid: d62ef5013ca69e741ae08acded91b356,
         type: 3}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
@@ -12789,5 +12840,23 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 246cf9d7846c6c6448058eabb7596f07,
         type: 2}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].spell
+      value: 
+      objectReference: {fileID: 1585267717480757627, guid: d080b7929b4a1134180f18ad72d70a37,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].cards.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 9a5d6531e2713004caa3b432b48c053e,
+        type: 2}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].spell
+      value: 
+      objectReference: {fileID: 1874960764304840051, guid: 3dde67cb60224dd45ab9be309846317c,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fceb9effa83d094a96cd97b4a2a67e9, type: 3}

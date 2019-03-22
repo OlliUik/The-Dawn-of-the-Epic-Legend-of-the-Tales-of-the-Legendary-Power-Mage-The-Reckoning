@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Bounce : OnCollision
 {
-    [SerializeField] private int bounceCount = 2;
+
+    public int bounceCount = 2;
 
     public override void Apply(GameObject go)
     {

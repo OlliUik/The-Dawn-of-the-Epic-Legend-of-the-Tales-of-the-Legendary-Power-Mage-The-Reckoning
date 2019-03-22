@@ -5,7 +5,7 @@ using UnityEngine;
 public class KnockBack : OnCollision
 {
 
-    [SerializeField] private float knockbackForce = 10.0f;
+    public float knockbackForce = 10.0f;
 
     public override void Apply(GameObject go)
     {
@@ -16,4 +16,5 @@ public class KnockBack : OnCollision
     {
         go.transform.position += (go.transform.position - spellbook.transform.position).normalized * knockbackForce * Time.deltaTime;
     }
+
 }

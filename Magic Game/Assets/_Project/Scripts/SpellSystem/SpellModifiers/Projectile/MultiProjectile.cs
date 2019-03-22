@@ -2,30 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MultiProjectile : OnCast
+public class MultiProjectile : MonoBehaviour
 {
 
-    private bool ready = false;
-
-    public override void Apply(GameObject go)
-    {
-        go.AddComponent<MultiProjectile>();
-    }
+    private bool ready                  = false;
+    public int projectileCount          = 2;
+    public Vector2 upDownRotation       = Vector2.zero;
+    public Vector2 leftRightRotation    = Vector2.zero;
 
     private void Start()
     {
         if (ready) return;
 
-        // create two instances of the current projectile
-        GameObject copy1 = Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation);
-        GameObject copy2 = Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation);
+        for (int i = 0; i < projectileCount; i++)
+        {
+            GameObject copy = Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation);
+            copy.GetComponent<MultiProjectile>().ready = true;
 
-        // rotate direction 45 deg and other -45 deg etc.
-        copy1.transform.Rotate(Vector3.up * 45f);
-        copy2.transform.Rotate(Vector3.up * -45f);
-
-        copy1.GetComponent<MultiProjectile>().ready = true;
-        copy2.GetComponent<MultiProjectile>().ready = true;
+            copy.transform.Rotate(Vector3.up * Random.Range(upDownRotation.x, upDownRotation.y));    // randomize left-right rotation
+            copy.transform.Rotate(Vector3.right * Random.Range(leftRightRotation.x, leftRightRotation.y)); // randomize up-down rotation
+        }
         ready = true;
     }
 }

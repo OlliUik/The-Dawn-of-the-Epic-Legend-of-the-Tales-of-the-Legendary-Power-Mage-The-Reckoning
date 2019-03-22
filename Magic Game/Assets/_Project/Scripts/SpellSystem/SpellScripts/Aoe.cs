@@ -5,11 +5,11 @@ using UnityEngine;
 public class Aoe : Spell
 {
 
-    [Header("-- AoE --")]
+    [Header("AoE varialbes")]
     [SerializeField] protected float radius = 7.0f;
     [SerializeField] protected float duration = 5.0f;
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex, Vector3 direction)
+    public override void CastSpell(Spellbook spellbook, int spellIndex)
     {
 
         ///<summary>
@@ -31,9 +31,8 @@ public class Aoe : Spell
 
         aoe.ApplyModifiers(aoe.gameObject, spellIndex, spellbook);
 
-        aoe.StartCoroutine(DestroyAoe(aoe.gameObject, spellbook, duration));
+        aoe.StartCoroutine(DestroyAoe(aoe.gameObject, duration));
         spellbook.StopCasting();
-        spellbook.SetCooldown();
 
     }
 
@@ -43,35 +42,33 @@ public class Aoe : Spell
         var auraArea = Physics.OverlapSphere(transform.position, radius);
         foreach (var objectHit in auraArea)
         {
-            // if object has health component / rb do something
-            //Character character = objectHit.GetComponent<Character>();
-            //if (character != null)
-            //{
-            //    // apply all modifiers here to the enemy inside radius
-            //    AoeModifier[] spellModifiers = GetComponents<AoeModifier>();
-            //    foreach (AoeModifier mod in spellModifiers)
-            //    {
-            //        mod.Apply(character);
-            //    }
-            //}
+            // check if objectHit is enemy
+            if (objectHit.gameObject.CompareTag("Enemy"))
+            {
+                // apply all modifiers here to the enemy inside radius
+                OnCollision[] collisionModifiers = GetComponents<OnCollision>();
+                foreach (OnCollision modifier in collisionModifiers)
+                {
+                    modifier.Apply(objectHit.gameObject);
+                }
+            }
         }
-
     }
 
-    public void AddRange(float amount)
+    public void ModifyRange(float amount)
     {
         radius += amount;
         print("Radius increased to " + radius);
     }
 
-    public void AddDuration(float amount)
+    public void ModifyDuration(float amount)
     {
         duration += amount;
         print("Duration increased to " + duration);
     }
 
     // Destroying spell here
-    private IEnumerator DestroyAoe(GameObject self, Spellbook spellbook, float duration)
+    private IEnumerator DestroyAoe(GameObject self, float duration)
     {
         yield return new WaitForSeconds(duration);
         Destroy(self);
