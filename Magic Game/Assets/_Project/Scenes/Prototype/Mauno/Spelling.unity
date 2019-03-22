@@ -798,9 +798,10 @@ GameObject:
   - component: {fileID: 251516339}
   - component: {fileID: 251516345}
   - component: {fileID: 251516348}
-  m_Layer: 0
+  - component: {fileID: 251516349}
+  m_Layer: 10
   m_Name: EnemyMelee
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -819,6 +820,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &251516340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -993,6 +995,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &251516349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251516338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 300d5648be4716345bf598929c4c2992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &284768050
 GameObject:
   m_ObjectHideFlags: 0
@@ -7932,7 +7946,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14444
+  m_Name: pb_Mesh6260
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -8433,7 +8447,7 @@ GameObject:
   - component: {fileID: 1027641407}
   - component: {fileID: 1027641410}
   - component: {fileID: 1027641409}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8844,6 +8858,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 500
   iFrameTime: 0
+  health: 0
 --- !u!114 &1175843105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9091,6 +9106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &1265521323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9326,7 +9342,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14258
+  m_Name: pb_Mesh6074
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10739,7 +10755,7 @@ GameObject:
   - component: {fileID: 1465997852}
   - component: {fileID: 1465997854}
   - component: {fileID: 1465997851}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: TriggerKill
   m_Icon: {fileID: 0}
@@ -10887,6 +10903,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &1485341761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11236,6 +11253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &1609891694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11471,7 +11489,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14246
+  m_Name: pb_Mesh6062
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -12832,13 +12850,13 @@ PrefabInstance:
         type: 3}
       propertyPath: spells.Array.data[0].cards.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 9a5d6531e2713004caa3b432b48c053e,
+      objectReference: {fileID: 11400000, guid: 8840b275fa257134fbe55c0faa5ee55a,
         type: 2}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
       propertyPath: spells.Array.data[0].cards.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: 246cf9d7846c6c6448058eabb7596f07,
+      objectReference: {fileID: 11400000, guid: 9a5d6531e2713004caa3b432b48c053e,
         type: 2}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}

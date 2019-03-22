@@ -49,7 +49,7 @@ public class Aoe : Spell
                 OnCollision[] collisionModifiers = GetComponents<OnCollision>();
                 foreach (OnCollision modifier in collisionModifiers)
                 {
-                    modifier.Apply(objectHit.gameObject);
+                    //modifier.Apply(objectHit.gameObject);
                 }
             }
         }

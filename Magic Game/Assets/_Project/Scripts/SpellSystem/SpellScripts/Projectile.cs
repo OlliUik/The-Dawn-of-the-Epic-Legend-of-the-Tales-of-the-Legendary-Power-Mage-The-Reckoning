@@ -43,6 +43,12 @@ public class Projectile : Spell
         if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<Health>().Hurt(baseDamage);
+
+            foreach (ScriptableEffect effect in effects)
+            {
+                print("Applied: " + effect.name);
+                collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
+            }
         }
 
         // if some collision modifier is not ready yet...apply all and return 

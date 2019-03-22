@@ -9,6 +9,7 @@ public class Card : ScriptableObject
     public List<CastRequirement> castRequirements       = new List<CastRequirement>();
     public List<SpellBalance> balances                  = new List<SpellBalance>();
     public List<SpellScriptableModifier> modifiers      = new List<SpellScriptableModifier>();
+    public List<ScriptableEffect> effects               = new List<ScriptableEffect>();
 
     [Space(10)]
     public GameObject graphics                          = null;
