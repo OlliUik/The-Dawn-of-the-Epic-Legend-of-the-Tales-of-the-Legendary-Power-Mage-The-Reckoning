@@ -57,17 +57,27 @@ public class Spell : MonoBehaviour
     {
         foreach (Card card in spellbook.spells[spellIndex].cards)
         {
-            foreach (GameObject modifier in card.spellModifiers)
+            foreach (SpellScriptableModifier modifier in card.modifiers)
             {
-                SpellModifier mod = modifier.GetComponent<SpellModifier>();
-                mod.Apply(go);
-                print("Added: " + mod.name);
+                modifier.AddSpellModifier(go);
+                print("Added: " + modifier.name);
             }
-
+        
             // check if card has graphics assained if so add them to the spell
             if(card.graphics != null)
             {
+                // first check if spell has primary graphics
+        
+                // if not add these 
                 GameObject graphics = Instantiate(card.graphics, go.transform.position, go.transform.rotation);
+                graphics.transform.parent = go.transform;
+                break; // if primary graphics get added don't and secendary of the same ( fire particles on fire projectile )
+            }
+        
+            if(card.secendaryGraphics != null)
+            {
+                // card has some secendary graphics
+                GameObject graphics = Instantiate(card.secendaryGraphics, go.transform.position, go.transform.rotation);
                 graphics.transform.parent = go.transform;
             }
         }

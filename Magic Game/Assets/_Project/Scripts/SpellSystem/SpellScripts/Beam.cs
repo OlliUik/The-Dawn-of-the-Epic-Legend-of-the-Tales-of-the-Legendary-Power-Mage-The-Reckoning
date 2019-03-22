@@ -45,14 +45,14 @@ public class Beam : Spell
                 Debug.DrawRay(spellbook.spellPos.position, (hit.point - spellbook.spellPos.position), Color.red);
 
                 // apply beam effects here to target we hit
-                if (hit.collider.gameObject.CompareTag("Enemy") /* || hit.collider.gameObject.CompareTag("Player") */)
+                if (hit.collider.gameObject.CompareTag("Enemy") || hit.collider.gameObject.CompareTag("Player"))
                 {
                     // deal damage to the enemy and apply all collision modifiers ( knockback, burn, etc )
                     hit.collider.GetComponent<Health>().Hurt(baseDamage);
-                    OnCollision[] collisionMods = GetComponents<OnCollision>();
-                    foreach (OnCollision mod in collisionMods)
+                    OnCollision[] collisionModifiers = GetComponents<OnCollision>();
+                    foreach (OnCollision modifier in collisionModifiers)
                     {
-                        mod.Hit(hit.collider.gameObject, spellbook);
+                        modifier.Hit(hit.collider.gameObject, spellbook);
                     }
                 }
             }
@@ -76,6 +76,22 @@ public class Beam : Spell
         spellbook.StopCasting();
         Destroy(self);
 
+    }
+
+
+    public void ModifyDamage(float amount)
+    {
+        baseDamage += amount;
+    }
+
+    public void ModifyRange(float amount)
+    {
+        baseRange += amount;
+    }
+
+    public void ModifyRadius(float amount)
+    {
+        baseRadius += amount;
     }
 
 }

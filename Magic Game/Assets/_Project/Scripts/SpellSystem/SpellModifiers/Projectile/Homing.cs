@@ -10,7 +10,7 @@ public class Homing : SpellModifier
         go.AddComponent<Homing>();
     }
 
-    [SerializeField] private float rotationSpeed = 2.0f;
+    public float rotationSpeed = 2.0f;
     private Transform target = null;
 
     void Start()

@@ -18,6 +18,7 @@ public class Projectile : Spell
     void Start()
     {
         lastPos = transform.position;
+        direction = transform.forward;
     }
 
     void FixedUpdate()
@@ -93,6 +94,22 @@ public class Projectile : Spell
         // casting is done
         spellbook.StopCasting();
 
+    }
+
+
+    public void ModifyDamage(float amount)
+    {
+        baseDamage += amount;
+    }
+
+    public void ModifyRange(float amount)
+    {
+        baseRange += amount;
+    }
+
+    public void ModifySpeed(float amount)
+    {
+        baseSpeed += amount;
     }
 
 }
