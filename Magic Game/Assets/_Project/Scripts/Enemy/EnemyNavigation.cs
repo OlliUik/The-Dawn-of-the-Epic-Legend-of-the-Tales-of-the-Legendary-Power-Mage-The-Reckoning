@@ -12,12 +12,12 @@ public class EnemyNavigation : MonoBehaviour
     [SerializeField] private Vector3[] patrolPoints = null;
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
+    public NavMeshAgent agent { get; private set; } = null;
 
     private int navCurrentPoint = 0;
     private float navTimer = 0.0f;
     private float waitTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
-    private NavMeshAgent agent = null;
 
     #endregion
 
@@ -32,6 +32,18 @@ public class EnemyNavigation : MonoBehaviour
 
     void Update()
     {
+        if (cEnemyCore.currentState == EnemyCore.EState.CASTING)
+        {
+            if (agent.hasPath)
+            {
+                agent.ResetPath();
+                if (cEnemyCore.currentEnemyType == EnemyCore.EEnemyType.MELEE)
+                {
+                    agent.velocity = new Vector3(0.0f, agent.velocity.y, 0.0f);
+                }
+            }
+        }
+
         if (navTimer <= 0.0f)
         {
             navTimer = navigationInterval;
@@ -45,9 +57,7 @@ public class EnemyNavigation : MonoBehaviour
                 case EnemyCore.EState.ATTACK: AIAttack(); break;
                 case EnemyCore.EState.ESCAPE: AIEscape(); break;
                 case EnemyCore.EState.PANIC: AIPanic(); break;
-                case EnemyCore.EState.CONFUSED: AIConfused(); break;
                 case EnemyCore.EState.RAGDOLLED: break;
-                case EnemyCore.EState.VICTORY: break;
                 default: if (agent.hasPath) agent.ResetPath(); break;
             }
         }
@@ -137,7 +147,7 @@ public class EnemyNavigation : MonoBehaviour
 
     void AISearch()
     {
-        agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
+        agent.SetDestination(cEnemyCore.vision.targetLocation);
     }
 
     void AIAttack()
@@ -154,18 +164,13 @@ public class EnemyNavigation : MonoBehaviour
 
     void AIEscape()
     {
-        if (Vector3.Distance(transform.position, GlobalVariables.player.transform.position) < 20.0f)
+        if (Vector3.Distance(transform.position, cEnemyCore.vision.targetLocation) < 20.0f)
         {
-            agent.SetDestination(transform.position + Vector3.Normalize(transform.position - GlobalVariables.player.transform.position) * 5.0f);
+            agent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.vision.targetLocation) * 5.0f);
         }
     }
 
     void AIPanic()
-    {
-
-    }
-
-    void AIConfused()
     {
 
     }

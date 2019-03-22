@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.AI;
+//using UnityEngine.AI;
 
 [RequireComponent(typeof(EnemyCore))]
 public class EnemyVision : MonoBehaviour
@@ -20,8 +20,6 @@ public class EnemyVision : MonoBehaviour
     private float raycastGraceTimer = 0.0f;
     private GameObject targetGO = null;
     private EnemyCore cEnemyCore = null;
-    //private Vector3 playerPosition = Vector3.zero;
-    //private Vector3 playerOffset = Vector3.zero;
 
     #endregion
 
@@ -62,7 +60,6 @@ public class EnemyVision : MonoBehaviour
 
     void Start()
     {
-        //playerOffset = Vector3.up * (GlobalVariables.player.GetComponent<CharacterController>().height / 2);
         checkTimer = Random.Range(0.0f, checkIntervalRandomRangeMax);
 
         for (int i = 0; i < visionVertices.Length; i++)
@@ -211,7 +208,7 @@ public class EnemyVision : MonoBehaviour
             {
                 foreach (GameObject entity in GlobalVariables.entityList)
                 {
-                    if (entity.tag == (cEnemyCore.targetPlayer ? "Player" : "Enemy"))
+                    if (entity.tag == (cEnemyCore.status.isConfused ? "Enemy" : "Player"))
                     {
                         if (Vector3.Distance(headTransform.position, entity.transform.position) < sightDistance)
                         {
@@ -233,62 +230,81 @@ public class EnemyVision : MonoBehaviour
                 if (targetGO.tag == "Player")
                 {
                     entityPosition = targetGO.transform.position + Vector3.up * targetGO.GetComponent<CharacterController>().height / 2;
-                    entityDirection = -Vector3.Normalize(transform.position - entityPosition);
+                    entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
                 }
                 else
                 {
                     entityPosition = targetGO.transform.position + Vector3.up * 0.5f;
-                    entityDirection = -Vector3.Normalize(transform.position - entityPosition);
+                    entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
                 }
 
-                RaycastHit hit;
-                if (Physics.Raycast(
-                    transform.position,
-                    entityDirection,
-                    out hit,
-                    sightDistance,
-                    1
-                    ))
+                if (IsPointInside(mesh, entityPosition))
                 {
-                    if (hit.transform == targetGO.transform)
+                    RaycastHit hit;
+                    if (Physics.Raycast(
+                        headTransform.position,
+                        entityDirection,
+                        out hit,
+                        sightDistance,
+                        1
+                        ))
                     {
-                        bCanSeeTarget = true;
-                        raycastGraceTimer = 0.2f;
-                        targetLocation = entityPosition;
-                    }
-                    else
-                    {
-                        if (raycastGraceTimer > 0.0f)
+                        if (hit.transform == targetGO.transform)
                         {
-                            raycastGraceTimer -= Time.fixedDeltaTime;
+                            bCanSeeTarget = true;
+                            raycastGraceTimer = 0.2f;
+                            targetLocation = entityPosition;
                         }
                         else
                         {
-                            if (bCanSeeTarget)
+                            if (raycastGraceTimer > 0.0f)
                             {
-                                if (Physics.Raycast(
-                                    entityPosition,
-                                    Vector3.down,
-                                    out hit,
-                                    Mathf.Infinity,
-                                    1
-                                    ))
-                                {
-                                    targetLocation = hit.point + Vector3.up * 0.5f;
-                                }
-                                else
-                                {
-                                    targetLocation = entityPosition;
-                                }
+                                raycastGraceTimer -= Time.fixedDeltaTime;
                             }
-                            bCanSeeTarget = false;
+                            else
+                            {
+                                if (bCanSeeTarget)
+                                {
+                                    if (Physics.Raycast(
+                                        entityPosition,
+                                        Vector3.down,
+                                        out hit,
+                                        Mathf.Infinity,
+                                        1
+                                        ))
+                                    {
+                                        targetLocation = hit.point + Vector3.up * 0.5f;
+                                    }
+                                    else
+                                    {
+                                        targetLocation = entityPosition;
+                                    }
+                                }
+                                bCanSeeTarget = false;
+                            }
                         }
                     }
+                    else
+                    {
+                        bCanSeeTarget = false;
+                    }
+                }
+                else
+                {
+                    bCanSeeTarget = false;
                 }
 
                 //Draw the pyramid with debug lines
                 {
-                    Debug.DrawLine(transform.position, transform.position + entityDirection * sightDistance, bCanSeeTarget ? Color.green : Color.red);
+                    if (IsPointInside(mesh, entityPosition))
+                    {
+                        Debug.DrawLine(headTransform.position, headTransform.position + entityDirection * sightDistance, bCanSeeTarget ? Color.green : Color.red);
+                        if (cEnemyCore.currentEnemyType != EnemyCore.EEnemyType.MELEE)
+                        {
+                            Debug.DrawLine(headTransform.position, headTransform.position + entityDirection * cEnemyCore.RangedEscapeRadius * 2, Color.yellow);
+                            Debug.DrawLine(headTransform.position, headTransform.position + entityDirection * cEnemyCore.RangedEscapeRadius, Color.red);
+                        }
+                    }
                     Debug.DrawLine(vvTemp[0], vvTemp[1], bCanSeeTarget ? Color.green : Color.yellow);
                     Debug.DrawLine(vvTemp[0], vvTemp[2], bCanSeeTarget ? Color.green : Color.yellow);
                     Debug.DrawLine(vvTemp[0], vvTemp[3], bCanSeeTarget ? Color.green : Color.yellow);
@@ -316,21 +332,21 @@ public class EnemyVision : MonoBehaviour
         }
 
         //Look at the player (IMPLEMENT THIS BETTER LATER)
-        Quaternion headRotation = headTransform.rotation;
+        //Quaternion headRotation = headTransform.rotation;
 
-        if (bCanSeeTarget)
-        {
-            if (targetGO != null)
-            {
-                headTransform.LookAt(targetGO.transform.position + Vector3.up * 0.5f);
-            }
-        }
-        else
-        {
-            headTransform.LookAt(headTransform.position + Vector3.Normalize(GetComponent<NavMeshAgent>().velocity));
-        }
+        //if (bCanSeeTarget)
+        //{
+        //    if (targetGO != null)
+        //    {
+        //        headTransform.LookAt(targetGO.transform.position + Vector3.up * 0.5f);
+        //    }
+        //}
+        //else
+        //{
+        //    headTransform.LookAt(headTransform.position + Vector3.Normalize(GetComponent<NavMeshAgent>().velocity));
+        //}
 
-        headTransform.rotation = Quaternion.Lerp(headTransform.rotation, headRotation, 0.9f);
+        //headTransform.rotation = Quaternion.Lerp(headTransform.rotation, headRotation, 0.9f);
     }
 
     void OnDrawGizmosSelected()

@@ -6,47 +6,47 @@ public class PlayerMovement : MonoBehaviour
     #region VARIABLES
 
     [HideInInspector] public float accelerationMultiplier = 1.0f;
-    [HideInInspector] public int midAirJumps            = 0;
+    [HideInInspector] public int midAirJumps = 0;
 
     [SerializeField] private bool bAllowMidairDashing = true;
-    [SerializeField] private float acceleration         = 100.0f;
-    [SerializeField] private float airAcceleration      = 20.0f;
-    [SerializeField] private float friction             = 5.5f;
-    [SerializeField] private float airFriction          = 1.5f;
-    [SerializeField] private float gravity              = -30.0f;
-    [SerializeField] private float smoothStepDown       = 0.5f;
-    [SerializeField] private float jumpForce            = 15.0f;
-    [SerializeField] private float jumpGraceTime        = 0.2f;
-    [SerializeField] private float dashSpeed            = 20.0f;
-    [SerializeField] private float dashJumpForce        = 8.0f;
-    [SerializeField] private float dashDuration         = 0.2f;
-    [SerializeField] private float dashCooldown         = 1.0f;
-    [SerializeField] private float gravityWallSliding   = -1.0f;
-    [SerializeField] private float wallSlidingTime      = 2.0f;
+    [SerializeField] private float acceleration = 100.0f;
+    [SerializeField] private float airAcceleration = 20.0f;
+    [SerializeField] private float friction = 5.5f;
+    [SerializeField] private float airFriction = 1.5f;
+    [SerializeField] private float gravity = -30.0f;
+    [SerializeField] private float smoothStepDown = 0.5f;
+    [SerializeField] private float jumpForce = 15.0f;
+    [SerializeField] private float jumpGraceTime = 0.2f;
+    [SerializeField] private float dashSpeed = 20.0f;
+    [SerializeField] private float dashJumpForce = 8.0f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1.0f;
+    [SerializeField] private float gravityWallSliding = -1.0f;
+    [SerializeField] private float wallSlidingTime = 2.0f;
 
-    private ThirdPersonCamera cTPCamera                 = null;
-    private CharacterController cCharacter              = null;
-    private LayerMask physicsLayerMask                  = 1;
+    private ThirdPersonCamera cTPCamera = null;
+    private CharacterController cCharacter = null;
+    private LayerMask physicsLayerMask = 1;
 
     //Input
     private Vector2 movementInput = Vector2.zero;
     private bool bJumpingActivated = false;
     private bool bDashingActivated = false;
-    
+
     //Temporary values
-    private float dt                                    = 0.0f;
-    private bool bIsWallSliding                         = false;
-    private Vector3 moveDirection                       = Vector3.zero;
-    private Vector3 moveVector                          = Vector3.zero;
-    private Vector3 slopeNormal                         = Vector3.zero;
-    private float jgtTimer                              = 0.0f;
-    private float dDurationTimer                        = 0.0f;
-    private float dCooldownTimer                        = 0.0f;
-    private float wstTimer                              = 0.0f;
-    private int midAirJumpsLeft                         = 0;
-    private Transform movingPlatform                    = null;
-    private Vector3 movingPlatformPrevPosition          = Vector3.zero;
-    private Vector3 movingPlatformPrevRotation          = Vector3.zero;
+    private float dt = 0.0f;
+    private bool bIsWallSliding = false;
+    private Vector3 moveDirection = Vector3.zero;
+    private Vector3 moveVector = Vector3.zero;
+    private Vector3 slopeNormal = Vector3.zero;
+    private float jgtTimer = 0.0f;
+    private float dDurationTimer = 0.0f;
+    private float dCooldownTimer = 0.0f;
+    private float wstTimer = 0.0f;
+    private int midAirJumpsLeft = 0;
+    private Transform movingPlatform = null;
+    private Vector3 movingPlatformPrevPosition = Vector3.zero;
+    private Vector3 movingPlatformPrevRotation = Vector3.zero;
     public Vector3 movingPlatformVelocity { get; private set; } = Vector3.zero;
 
     #endregion
@@ -55,8 +55,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        cCharacter       = GetComponent<PlayerCore>().cCharacter;
-        cTPCamera        = GetComponent<PlayerCore>().cTPCamera;
+        cCharacter = GetComponent<PlayerCore>().cCharacter;
+        cTPCamera = GetComponent<PlayerCore>().cTPCamera;
         physicsLayerMask = GetComponent<PlayerCore>().physicsLayerMask;
     }
 

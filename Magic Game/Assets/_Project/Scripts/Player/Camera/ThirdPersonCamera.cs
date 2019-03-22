@@ -3,18 +3,18 @@
 public class ThirdPersonCamera : MonoBehaviour
 {
     #region VARIABLES
-    
-    public bool invertY                                 = false;
-    public Vector2 sensitivity                          = new Vector2(1.0f, 1.0f);
-    public Vector3 lookDirection                        = Vector3.zero;
 
-    [SerializeField] private Transform cameraPivot      = null;
+    public bool invertY = false;
+    public Vector2 sensitivity = new Vector2(1.0f, 1.0f);
+    public Vector3 lookDirection = Vector3.zero;
+
+    [SerializeField] private Transform cameraPivot = null;
     [SerializeField] private CameraWallChecker wallChecker = null;
 
     private Transform cameraOriginalPosition = null;
     private Transform cameraTransform = null;
     private bool bSwitchingSide = false;
-    private Vector2 minMaxPitch                         = new Vector2(-85.0f, 85.0f);
+    private Vector2 minMaxPitch = new Vector2(-85.0f, 85.0f);
 
     #endregion
 
