@@ -292,6 +292,17 @@ public class EnemyVision : MonoBehaviour
                 else
                 {
                     bCanSeeTarget = false;
+                    RaycastHit hit;
+                    if (Physics.Raycast(
+                                        entityPosition,
+                                        Vector3.down,
+                                        out hit,
+                                        Mathf.Infinity,
+                                        1
+                                        ))
+                    {
+                        targetLocation = hit.point + Vector3.up * 0.5f;
+                    }
                 }
 
                 //Draw the pyramid with debug lines
