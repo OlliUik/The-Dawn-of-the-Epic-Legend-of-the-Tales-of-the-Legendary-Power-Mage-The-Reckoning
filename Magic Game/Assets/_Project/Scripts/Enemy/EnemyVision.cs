@@ -14,11 +14,11 @@ public class EnemyVision : MonoBehaviour
     [SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
 
     public bool bCanSeeTarget { get; private set; } = false;
+    public GameObject targetGO { get; private set; } = null;
     public Vector3 targetLocation { get; private set; } = Vector3.zero;
 
     private float checkTimer = 0.0f;
     private float raycastGraceTimer = 0.0f;
-    private GameObject targetGO = null;
     private EnemyCore cEnemyCore = null;
 
     #endregion
