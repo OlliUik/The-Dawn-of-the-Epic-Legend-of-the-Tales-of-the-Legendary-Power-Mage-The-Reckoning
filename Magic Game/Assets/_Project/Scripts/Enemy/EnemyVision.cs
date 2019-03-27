@@ -8,6 +8,8 @@ public class EnemyVision : MonoBehaviour
 
     public Transform headTransform = null;
 
+    [HideInInspector] public Vector3 targetLocation = Vector3.zero;
+
     [SerializeField] private float sightDistance = 30.0f;
     [SerializeField] private float sightRadius = 45.0f;
     [SerializeField] private float checkInterval = 0.5f;
@@ -15,7 +17,6 @@ public class EnemyVision : MonoBehaviour
 
     public bool bCanSeeTarget { get; private set; } = false;
     public GameObject targetGO { get; private set; } = null;
-    public Vector3 targetLocation { get; private set; } = Vector3.zero;
 
     private float checkTimer = 0.0f;
     private float raycastGraceTimer = 0.0f;
@@ -291,7 +292,32 @@ public class EnemyVision : MonoBehaviour
                 }
                 else
                 {
-                    bCanSeeTarget = false;
+                    if (raycastGraceTimer > 0.0f)
+                    {
+                        targetLocation = entityPosition;
+                        raycastGraceTimer -= Time.fixedDeltaTime;
+                    }
+                    else
+                    {
+                        if (bCanSeeTarget)
+                        {
+                            RaycastHit hit;
+                            if (Physics.Raycast(
+                                                targetLocation,
+                                                Vector3.down,
+                                                out hit,
+                                                Mathf.Infinity,
+                                                1
+                                                ))
+                            {
+                                if (Vector3.Distance(targetLocation, hit.point) > 0.5f)
+                                {
+                                    targetLocation = hit.point + Vector3.up * 0.5f;
+                                }
+                            }
+                            bCanSeeTarget = false;
+                        }
+                    }
                 }
 
                 //Draw the pyramid with debug lines

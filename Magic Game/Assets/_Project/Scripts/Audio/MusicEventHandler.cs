@@ -62,7 +62,7 @@ public class MusicEventHandler : MonoBehaviour
 
     private IEnumerator WaitAudio()
     {
-        yield return new WaitForSeconds(source.clip.length);
+        yield return new WaitForSecondsRealtime(source.clip.length);
         GetComponent<AudioClipRandomizer>().Randomize();
         source.Play();
         StartCoroutine(WaitAudio());

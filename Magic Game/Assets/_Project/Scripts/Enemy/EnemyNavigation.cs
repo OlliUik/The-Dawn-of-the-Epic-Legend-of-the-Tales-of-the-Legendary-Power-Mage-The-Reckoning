@@ -8,6 +8,7 @@ public class EnemyNavigation : MonoBehaviour
     #region VARIABLES
 
     [SerializeField] private float navigationInterval = 1.0f;
+    [SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
     [SerializeField] private Vector3[] patrolPoints = null;
 
@@ -46,7 +47,7 @@ public class EnemyNavigation : MonoBehaviour
 
         if (navTimer <= 0.0f)
         {
-            navTimer = navigationInterval;
+            navTimer = cEnemyCore.vision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
             switch (cEnemyCore.currentState)
             {
                 case EnemyCore.EState.IDLE: AIIdle(); break;
