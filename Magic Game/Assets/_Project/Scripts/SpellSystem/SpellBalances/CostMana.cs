@@ -10,6 +10,7 @@ public class CostMana : SpellBalance
 
     public override void ApplyBalance(Spellbook spellbook)
     {
-        spellbook.playerCore.cMana.UseMana(amount);
+        Mana mana = spellbook.GetComponent<Mana>();
+        mana.UseMana(amount);
     }
 }

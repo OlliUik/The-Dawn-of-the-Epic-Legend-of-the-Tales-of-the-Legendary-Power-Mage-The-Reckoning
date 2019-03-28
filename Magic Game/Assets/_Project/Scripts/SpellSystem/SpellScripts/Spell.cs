@@ -5,7 +5,7 @@ using UnityEngine;
 public class Spell : MonoBehaviour
 {
 
-    [Header("-- Spell --")]
+    [Header("Spell")]
     [SerializeField] protected float cooldown = 5.0f;
     [SerializeField] protected float castTime = 5.0f;
     [SerializeField] protected float manaCost = 5.0f;
@@ -29,7 +29,7 @@ public class Spell : MonoBehaviour
     }
 
     // most spells override this cause they require different logic
-    public virtual void CastSpell(Spellbook spellbook, int spellIndex)
+    public virtual void CastSpell(Spellbook spellbook, SpellData data)
     {
         ///<summary>
         ///
@@ -42,8 +42,8 @@ public class Spell : MonoBehaviour
         /// 
         /// </summary>
 
-        Spell spell = Instantiate(spellbook.spells[spellIndex].spell, spellbook.spellPos.position, spellbook.transform.rotation);
-        foreach (Card card in spellbook.spells[spellIndex].cards)
+        Spell spell = Instantiate(data.spell, spellbook.spellPos.position, spellbook.transform.rotation);
+        foreach (Card card in data.cards)
         {
             foreach (SpellBalance balance in card.balances)
             {
@@ -55,13 +55,13 @@ public class Spell : MonoBehaviour
 
     }    
 
-    public void ApplyModifiers(GameObject go, int spellIndex, Spellbook spellbook)
+    public void ApplyModifiers(GameObject go, SpellData data)
     {
         Spell spell = go.GetComponent<Spell>();
         spell.effects.Clear(); // this makes sure all previous effects will be removed from the list
         spell.effects.Clear();
 
-        foreach (Card card in spellbook.spells[spellIndex].cards)
+        foreach (Card card in data.cards)
         {
             // add all modifiers to spell
             foreach (SpellScriptableModifier modifier in card.modifiers)
@@ -100,4 +100,5 @@ public class Spell : MonoBehaviour
             }
         }
     }
+
 }
