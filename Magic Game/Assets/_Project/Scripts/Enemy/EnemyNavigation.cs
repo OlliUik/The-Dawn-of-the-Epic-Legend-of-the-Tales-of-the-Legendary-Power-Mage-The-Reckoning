@@ -8,6 +8,7 @@ public class EnemyNavigation : MonoBehaviour
     #region VARIABLES
 
     [SerializeField] private float navigationInterval = 1.0f;
+    [SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
     [SerializeField] private Vector3[] patrolPoints = null;
 
@@ -17,6 +18,7 @@ public class EnemyNavigation : MonoBehaviour
     private int navCurrentPoint = 0;
     private float navTimer = 0.0f;
     private float waitTimer = 0.0f;
+    private int validPathAttempts = 10;
     private EnemyCore cEnemyCore = null;
 
     #endregion
@@ -46,7 +48,7 @@ public class EnemyNavigation : MonoBehaviour
 
         if (navTimer <= 0.0f)
         {
-            navTimer = navigationInterval;
+            navTimer = cEnemyCore.vision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
             switch (cEnemyCore.currentState)
             {
                 case EnemyCore.EState.IDLE: AIIdle(); break;
@@ -59,6 +61,22 @@ public class EnemyNavigation : MonoBehaviour
                 case EnemyCore.EState.PANIC: AIPanic(); break;
                 case EnemyCore.EState.RAGDOLLED: break;
                 default: if (agent.hasPath) agent.ResetPath(); break;
+            }
+
+            if (!agent.hasPath && !cEnemyCore.vision.bCanSeeTarget && cEnemyCore.vision.targetLocation != Vector3.zero)
+            {
+                if (validPathAttempts > 0)
+                {
+                    validPathAttempts--;
+                }
+                else
+                {
+                    cEnemyCore.vision.targetLocation = Vector3.zero;
+                }
+            }
+            else
+            {
+                validPathAttempts = 10;
             }
         }
         else

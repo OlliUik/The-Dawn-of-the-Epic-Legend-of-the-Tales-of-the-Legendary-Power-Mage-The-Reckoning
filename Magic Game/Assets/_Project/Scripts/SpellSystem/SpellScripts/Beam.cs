@@ -12,7 +12,7 @@ public class Beam : Spell
 
     private Vector3 direction                       = Vector3.zero;
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex)
+    public override void CastSpell(Spellbook spellbook, SpellData data)
     {
         // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
         direction = spellbook.GetDirection();
@@ -21,16 +21,26 @@ public class Beam : Spell
         beam.transform.parent = spellbook.transform;
 
         // apply all spellmodifiers to the beam
-        ApplyModifiers(beam.gameObject, spellIndex, spellbook);
+        ApplyModifiers(beam.gameObject, data);
 
         // keep casting beam as long as the beam button is held down TODO:: change this
-        beam.StartCoroutine(CastBeam(beam.gameObject, spellbook, spellIndex));
+        beam.StartCoroutine(CastBeam(beam.gameObject, spellbook, data));
     }
 
-    IEnumerator CastBeam(GameObject self, Spellbook spellbook, int spellIndex)
+    IEnumerator CastBeam(GameObject self, Spellbook spellbook, SpellData data)
     {
 
         print("Started beam cast");
+
+        int spellIndex = 0;
+        for (int i = 0; i < spellbook.spells.Length; i++)
+        {
+            if(spellbook.spells[i].spell == data.spell)
+            {
+                spellIndex = i;
+                break;
+            }
+        }
 
         while (true)
         {
@@ -62,12 +72,14 @@ public class Beam : Spell
                 Debug.DrawRay(spellbook.spellPos.position, ray.direction * baseRange, Color.green);
             }
 
+
             // if player is not pressing or releases the beam key stop the cast
             if(Input.GetKeyUp((spellIndex + 1).ToString()) || !Input.GetKey((spellIndex + 1).ToString()))
             {
                 print("Beam cast ended");
                 break;
             }
+
 
             yield return null;
         }

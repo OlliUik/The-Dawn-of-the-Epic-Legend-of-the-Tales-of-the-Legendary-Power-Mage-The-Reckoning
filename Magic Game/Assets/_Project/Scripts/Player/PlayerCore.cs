@@ -75,7 +75,9 @@ public class PlayerCore : MonoBehaviour
                     //Don't allow repeated input from controller axis
                     if (!bShotFired)
                     {
-                        cSpellCaster.CastSpell();
+                        //cSpellCaster.CastSpell();
+                        cSpellBook.CastSpell(0);
+                        GetComponent<PlayerAnimations>().CastSpell(0);
                         bShotFired = true;
                     }
                 }
@@ -152,6 +154,7 @@ public class PlayerCore : MonoBehaviour
     public void OnHurt()
     {
         canvasManager.OnPlayerHurt();
+        GetComponent<PlayerAnimations>().TakeDamage();
     }
 
     public void OnDeath()

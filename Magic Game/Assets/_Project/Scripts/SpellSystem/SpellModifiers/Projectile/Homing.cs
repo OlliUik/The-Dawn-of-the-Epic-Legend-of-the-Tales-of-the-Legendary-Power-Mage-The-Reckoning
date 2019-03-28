@@ -5,11 +5,6 @@ using UnityEngine;
 public class Homing : SpellModifier
 {
 
-    public override void Apply(GameObject go)
-    {
-        go.AddComponent<Homing>();
-    }
-
     public float rotationSpeed = 2.0f;
     private Transform target = null;
 
