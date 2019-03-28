@@ -10,6 +10,7 @@ public class Spell : MonoBehaviour
     [SerializeField] protected float castTime = 5.0f;
     [SerializeField] protected float manaCost = 5.0f;
     [SerializeField] protected List<ScriptableEffect> effects = new List<ScriptableEffect>();
+    [SerializeField] protected List<StatusEffectBase> statusEffects = new List<StatusEffectBase>();
 
     public float Cooldown
     {
@@ -57,6 +58,7 @@ public class Spell : MonoBehaviour
     public void ApplyModifiers(GameObject go, int spellIndex, Spellbook spellbook)
     {
         Spell spell = go.GetComponent<Spell>();
+        spell.effects.Clear(); // this makes sure all previous effects will be removed from the list
         spell.effects.Clear();
 
         foreach (Card card in spellbook.spells[spellIndex].cards)
@@ -72,6 +74,11 @@ public class Spell : MonoBehaviour
             foreach (ScriptableEffect effect in card.effects)
             {
                 spell.effects.Add(effect);
+            }
+
+            foreach (StatusEffectBase statusEffect in card.statusEffects)
+            {
+                spell.statusEffects.Add(statusEffect);
             }
 
             // check if card has graphics assained if so add them to the spell

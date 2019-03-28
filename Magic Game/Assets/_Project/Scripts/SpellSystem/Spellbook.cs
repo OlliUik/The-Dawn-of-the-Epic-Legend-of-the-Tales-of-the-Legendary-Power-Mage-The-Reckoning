@@ -3,14 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct SpellData 
-{
-    public Spell spell;         // determinates how spell is casted and what happens on cast
-    public List<Card> cards;    // all modifiers are here
-    // TODO:: keep track of cooldown here
-}
-
 [RequireComponent(typeof(PlayerCore))]
 public class Spellbook : MonoBehaviour
 {
@@ -20,8 +12,14 @@ public class Spellbook : MonoBehaviour
     [SerializeField] public bool isCasting              = false;
     public Transform spellPos                           = null;
 
-    public SpellData[] spells                           = new SpellData[4];
-    private float[] cooldowns                           = new float[4];
+    public SpellData[] spells                           = new SpellData[3];
+    private float[] cooldowns;
+
+    public OnSelf[] selfSpells                          = new OnSelf[2];
+    [HideInInspector] public float onSelfCooldown       = 0.0f;
+    [HideInInspector] public int selfIndex              = 0;
+    public KeyCode onSelfKey                            = KeyCode.None;
+    public KeyCode onSelfSwapKey                        = KeyCode.None;
 
     public PlayerCore playerCore                        { get; private set; }
 
@@ -31,51 +29,76 @@ public class Spellbook : MonoBehaviour
 
     #endregion
 
-    private void Start()
+    private void Awake()
     {
         cam = Camera.main;
         playerCore = GetComponent<PlayerCore>();
+    }
+
+    private void Start()
+    {
+        isCasting = false;
+        cooldowns = new float[spells.Length];
 
         for (int i = 0; i < cooldowns.Length; i++)
         {
             cooldowns[i] = 0.0f;
         }
-
-        isCasting = false;
     }
 
     // Inputs
     void Update()
     {
-
-        Vector3 direction = GetDirection();
-
-        if (Input.GetKeyDown(KeyCode.Alpha1) && CanCast(0))
+        // COMBAT SPELLS
+        for (int i = 0; i < spells.Length; i++)
         {
-            float castingTime = GetCastingTime(0);
-            StartCoroutine(StartCastingSpell(0, castingTime, direction));            
+            if(Input.GetKeyDown(spells[i].castKey) && CanCast(i))
+            {
+                StartCoroutine(StartCastingSpell(i));
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && CanCast(1))
+        // ON_SELF SPELLS
+        if(Input.GetKeyDown(onSelfKey) && Time.time > onSelfCooldown)
         {
-            float castingTime = GetCastingTime(1);
-            StartCoroutine(StartCastingSpell(1, castingTime, direction));
+            // check if OnSelf is not on cooldown
+            if(selfSpells[selfIndex] != null)
+            {
+                selfSpells[selfIndex].CastSpell(this, selfIndex);
+            }
+        }
+        else if(Input.GetKeyDown(onSelfSwapKey))
+        {
+            if(selfSpells[1] != null)
+            {
+                selfIndex += 1;
+
+                if(selfIndex > 1)
+                {
+                    selfIndex = 0;
+                }
+
+                print("OnSelf swapped to " + selfSpells[selfIndex].name);
+                return;
+            }
+
+            print("Only one OnSelf spell");
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3) && CanCast(2))
-        {
-            float castingTime = GetCastingTime(2);
-            StartCoroutine(StartCastingSpell(2, castingTime, direction));
-        }
+        // check if some self spell is invoking and cancel if needed
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    if(activeOnSelfSpell.IsInvoking())
+        //    {
+        //        activeOnSelfSpell.RemoveEffect();
+        //        activeOnSelfSpell.CancelInvoke();
+        //        print(activeOnSelfSpell + " effect ended early");
+        //    }
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Alpha4) && CanCast(3))
-        {
-            float castingTime = GetCastingTime(3);
-            StartCoroutine(StartCastingSpell(3, castingTime, direction));
-        }
     }
 
-    // works but not centered
+    // works but not centered --> // spells can get this by calling spellbook.GetDirection()
     public Vector3 GetDirection()
     {
         Vector3 direction = Vector3.zero;
@@ -101,7 +124,6 @@ public class Spellbook : MonoBehaviour
         return direction;
 
     }
-
     // fires directly towards mouse cursor
     //public Vector3 GetDirection2()
     //{
@@ -121,6 +143,7 @@ public class Spellbook : MonoBehaviour
 
     //    return direction;
     //}
+
 
     private bool CanCast(int spellIndex)
     {
@@ -153,6 +176,36 @@ public class Spellbook : MonoBehaviour
 
         return true;
     }
+    //private bool CanCastOnSelf()
+    //{
+    //    foreach (Card card in onSelfSpell.collectedOnSelfSpells[onSelfIndex].cards)
+    //    {
+    //        // check that every cards requirements are met before doing anything
+    //        foreach (CastRequirement requirement in card.castRequirements)
+    //        {
+    //            if (!requirement.isMet(this))
+    //            {
+    //                print(requirement.name + " was not met");
+    //                return false;
+    //            }
+    //        }
+    //    }
+
+    //    // check cooldown
+    //    if(activeOnSelfSpell.Cooldown > Time.time)
+    //    {
+    //        print("OnSelf on cooldown");
+    //        return false;
+    //    }
+
+    //    // check if player is already casting something
+    //    if (isCasting)
+    //    {
+    //        return false;
+    //    }
+
+    //    return true;
+    //}
 
     private float GetCastingTime(int spellIndex)
     {
@@ -174,9 +227,10 @@ public class Spellbook : MonoBehaviour
         return castingTime;
     }
 
-    private IEnumerator StartCastingSpell(int spellIndex, float castingTime, Vector3 direction)
+    private IEnumerator StartCastingSpell(int spellIndex)
     {
         isCasting = true;
+        float castingTime = GetCastingTime(spellIndex);
 
         // use players mana 
         playerCore.cMana.UseMana(spells[spellIndex].spell.ManaCost);

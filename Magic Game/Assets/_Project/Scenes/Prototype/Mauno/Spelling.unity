@@ -799,6 +799,7 @@ GameObject:
   - component: {fileID: 251516345}
   - component: {fileID: 251516348}
   - component: {fileID: 251516349}
+  - component: {fileID: 251516350}
   m_Layer: 10
   m_Name: EnemyMelee
   m_TagString: Enemy
@@ -843,6 +844,10 @@ MonoBehaviour:
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &251516341
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1007,6 +1012,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300d5648be4716345bf598929c4c2992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  appliedOnSelfSpells: []
+--- !u!114 &251516350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251516338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ba8de23ee8dc6d47b812240c8ed3c65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusEffects: []
 --- !u!1 &284768050
 GameObject:
   m_ObjectHideFlags: 0
@@ -7946,7 +7965,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh6260
+  m_Name: pb_Mesh25040
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -8881,6 +8900,10 @@ MonoBehaviour:
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 0.05
+  castingTime: 2
+  castingStandstill: 4
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1175843106
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9130,6 +9153,10 @@ MonoBehaviour:
   projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
     type: 3}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1265521324
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9342,7 +9369,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh6074
+  m_Name: pb_Mesh24854
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10927,6 +10954,10 @@ MonoBehaviour:
   projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
     type: 3}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1485341762
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11276,6 +11307,10 @@ MonoBehaviour:
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1609891695
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11489,7 +11524,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh6062
+  m_Name: pb_Mesh24842
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -12837,6 +12872,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
+      propertyPath: OnSelf.onSelves.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
       propertyPath: spellPos
       value: 
       objectReference: {fileID: 2134162023}
@@ -12850,7 +12890,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spells.Array.data[0].cards.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 8840b275fa257134fbe55c0faa5ee55a,
+      objectReference: {fileID: 11400000, guid: 44d777d1ef2a4b341bc468ea4b8b6340,
         type: 2}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
@@ -12875,6 +12915,152 @@ PrefabInstance:
       propertyPath: spells.Array.data[2].spell
       value: 
       objectReference: {fileID: 1874960764304840051, guid: 3dde67cb60224dd45ab9be309846317c,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[3].spell
+      value: 
+      objectReference: {fileID: 1874960764304840051, guid: 3dde67cb60224dd45ab9be309846317c,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: OnSelf.OnSelfCastKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: OnSelf.OnSelfSwapKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.onSelves.Array.data[0]
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.onSelves.Array.data[1]
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.OnSelfCastKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.OnSelfSwapKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.onSelves.Array.data[0]
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.onSelves.Array.data[1]
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfCastKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfSwapKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfSpells.Array.data[0].spell
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfSpells.Array.data[1].spell
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].castKey
+      value: 49
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].castKey
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].castKey
+      value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[0].spell
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[1].spell
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[0].castKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[1].castKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.swapOnSelfSpellKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSwapKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: selfSpells.Array.data[0]
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: selfSpells.Array.data[1]
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fceb9effa83d094a96cd97b4a2a67e9, type: 3}

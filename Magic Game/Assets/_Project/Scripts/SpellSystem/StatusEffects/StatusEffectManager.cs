@@ -6,7 +6,7 @@ public class StatusEffectManager : MonoBehaviour
 {
 
     public List<StatusEffect> appliedEffects = new List<StatusEffect>();
-
+    public List<OnSelf> appliedOnSelfSpells = new List<OnSelf>();
 
     void Update()
     {
@@ -32,6 +32,7 @@ public class StatusEffectManager : MonoBehaviour
             return;
         }
 
+        // stack and other options
     }
 
     private void RemoveStatusEffect(StatusEffect effect)
@@ -42,6 +43,7 @@ public class StatusEffectManager : MonoBehaviour
             {
                 effect.OnLeaveEffect();
                 appliedEffects.Remove(appliedEffects[i]);
+                // validate onselfs
                 return;
             }
         }

@@ -49,6 +49,11 @@ public class Projectile : Spell
                 print("Applied: " + effect.name);
                 collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
             }
+
+            foreach (StatusEffectBase effectBase in statusEffects)
+            {
+                collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
+            }
         }
 
         // if some collision modifier is not ready yet...apply all and return 
