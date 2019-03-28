@@ -836,16 +836,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 2
   enemyType: 0
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 1
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 5
   castingTime: 2
   castingStandstill: 4
+  castingSpellType: 0
   animator: {fileID: 0}
   meleeHitbox: {fileID: 0}
 --- !u!136 &251516341
@@ -935,6 +936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 1027641407}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -974,6 +976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 1
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints:
   - {x: 7.32, y: 0, z: 39.05}
@@ -8859,6 +8862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 34479360}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -8892,16 +8896,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 1
   enemyType: 0
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 1
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 0.05
   castingTime: 2
   castingStandstill: 4
+  castingSpellType: 0
   animator: {fileID: 0}
   meleeHitbox: {fileID: 0}
 --- !u!136 &1175843106
@@ -8953,6 +8958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 0.2
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints: []
 --- !u!23 &1175843109
@@ -9111,6 +9117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2087287853}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 150
   sightRadius: 75
   checkInterval: 0.1
@@ -9144,10 +9151,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 2
   enemyType: 1
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 0
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
@@ -9155,6 +9162,7 @@ MonoBehaviour:
   shootInterval: 5
   castingTime: 2
   castingStandstill: 4
+  castingSpellType: 0
   animator: {fileID: 0}
   meleeHitbox: {fileID: 0}
 --- !u!136 &1265521324
@@ -9206,6 +9214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 0.5
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 5
   patrolPoints:
   - {x: -15.5, y: 3.5, z: 16.5}
@@ -10912,6 +10921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 658781939}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 50
   sightRadius: 45
   checkInterval: 0.5
@@ -10945,10 +10955,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 2
   enemyType: 1
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 0
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
@@ -10956,6 +10966,7 @@ MonoBehaviour:
   shootInterval: 5
   castingTime: 2
   castingStandstill: 4
+  castingSpellType: 0
   animator: {fileID: 0}
   meleeHitbox: {fileID: 0}
 --- !u!136 &1485341762
@@ -11007,6 +11018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 1
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints:
   - {x: -50, y: 0, z: 50}
@@ -11266,6 +11278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2106006298}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -11299,16 +11312,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 1
   enemyType: 0
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 1
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 5
   castingTime: 2
   castingStandstill: 4
+  castingSpellType: 0
   animator: {fileID: 0}
   meleeHitbox: {fileID: 0}
 --- !u!136 &1609891695
@@ -11360,6 +11374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 1
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints: []
 --- !u!23 &1609891698

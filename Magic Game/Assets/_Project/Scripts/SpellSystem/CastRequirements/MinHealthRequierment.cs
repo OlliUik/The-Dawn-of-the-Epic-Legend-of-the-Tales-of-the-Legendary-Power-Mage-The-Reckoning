@@ -9,9 +9,14 @@ public class MinHealthRequierment : CastRequirement
 
     public override bool isMet(Spellbook spellbook)
     {
-        if(spellbook.playerCore.cHealth.health >= reuiqredAmount)
+        Health health = spellbook.GetComponent<Health>();
+
+        if(health != null)
         {
-            return true;
+            if(health.health >= reuiqredAmount)
+            {
+                return true;
+            }
         }
         return false;
     }

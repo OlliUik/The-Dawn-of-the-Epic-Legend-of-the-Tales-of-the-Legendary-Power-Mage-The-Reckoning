@@ -10,6 +10,7 @@ public class CostHealth : SpellBalance
 
     public override void ApplyBalance(Spellbook spellbook)
     {
-        spellbook.playerCore.cHealth.Hurt(amount);
+        Health health = spellbook.GetComponent<Health>();
+        health.Hurt(amount);
     }
 }
