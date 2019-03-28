@@ -77,6 +77,7 @@ public class PlayerCore : MonoBehaviour
                     {
                         //cSpellCaster.CastSpell();
                         cSpellBook.CastSpell(0);
+                        GetComponent<PlayerAnimations>().CastSpell(0);
                         bShotFired = true;
                     }
                 }

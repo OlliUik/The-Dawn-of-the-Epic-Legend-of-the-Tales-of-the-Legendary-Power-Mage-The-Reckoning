@@ -48,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 movingPlatformPrevPosition = Vector3.zero;
     private Vector3 movingPlatformPrevRotation = Vector3.zero;
     public Vector3 movingPlatformVelocity { get; private set; } = Vector3.zero;
+    private ControllerColliderHit currentHit = null;
 
     #endregion
 
@@ -69,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        currentHit = hit;
         RaycastHit rcHit;
         if (Physics.Raycast(
             transform.position + Vector3.up * (cCharacter.height / 2),
@@ -283,8 +285,13 @@ public class PlayerMovement : MonoBehaviour
                 //Jumping (wallsliding)
                 if (bIsWallSliding)
                 {
+                    Vector3 wallHorizontalNormal = Vector3.Normalize(new Vector3(currentHit.normal.x, 0.0f, currentHit.normal.z));
+
+                    tempVector.y = 0.0f;
+                    tempVector += Vector3.Normalize(wallHorizontalNormal + Vector3.up * 0.5f) * jumpForce;
+
                     jgtTimer = 0.0f;
-                    tempVector.y = jumpForce;
+                    //tempVector.y = jumpForce;
                     if (midAirJumpsLeft > 0)
                     {
                         midAirJumpsLeft--;
