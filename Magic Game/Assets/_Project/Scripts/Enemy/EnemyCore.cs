@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -62,16 +63,18 @@ public class EnemyCore : MonoBehaviour
 
     [SerializeField] private EDefaultState defaultState = EDefaultState.IDLE;
     [SerializeField] private EEnemyType enemyType = EEnemyType.MELEE;
+    [SerializeField] private float meleeAttackDistance = 2.0f;
     [SerializeField] private bool searchPlayerAfterAttack = true;
     [SerializeField] private float hearingRadius = 10.0f;
-    [SerializeField] private float instantSightRadius = 3.0f;
-    [SerializeField] private float rangedEscapeRadius = 10.0f;
+    //[SerializeField] private float instantSightRadius = 3.0f;
+    [SerializeField] private float rangedEscapeDistance = 10.0f;
     [SerializeField] private float radiusCheckInterval = 1.0f;
     [SerializeField] private float paranoidDuration = 5.0f;
     [SerializeField] private GameObject projectile = null;
     [SerializeField] private float shootInterval = 5.0f;
     [SerializeField] private float castingTime = 2.0f;
     [SerializeField] private float castingStandstill = 4.0f;
+    [SerializeField] private int castingSpellType = 0; //Check the animator controller to find out the desired number!
     [SerializeField] private Animator animator = null;
     [SerializeField] private BoxCollider meleeHitbox = null;
 
@@ -83,6 +86,7 @@ public class EnemyCore : MonoBehaviour
     public EnemyNavigation navigation { get; private set; } = null;
     public Health cHealth { get; private set; } = null;
     public StatusEffects status { get; private set; } = new StatusEffects(false, false, false, false);
+    public Spellbook cSpellBook { get; private set; } = null;
 
     //Temporary values
     private bool bCastedProjectile = false;
@@ -99,7 +103,7 @@ public class EnemyCore : MonoBehaviour
     {
         get
         {
-            return rangedEscapeRadius;
+            return rangedEscapeDistance;
         }
     }
 
@@ -117,6 +121,7 @@ public class EnemyCore : MonoBehaviour
         vision = GetComponent<EnemyVision>();
         navigation = GetComponent<EnemyNavigation>();
         cHealth = GetComponent<Health>();
+        cSpellBook = GetComponent<Spellbook>();
 
         spawnPosition = transform.position;
         spawnRotation = transform.rotation.eulerAngles;
@@ -188,7 +193,11 @@ public class EnemyCore : MonoBehaviour
         paranoidTimer -= paranoidTimer > 0.0f ? time : 0.0f;
         alertedTimer -= alertedTimer > 0.0f ? time : 0.0f;
         castingTimer -= castingTimer > 0.0f ? time : 0.0f;
-        castingStandstillTimer -= castingStandstillTimer > 0.0f ? time : 0.0f;
+
+        if (castingTimer <= 0.0f)
+        {
+            castingStandstillTimer -= castingStandstillTimer > 0.0f ? time : 0.0f;
+        }
     }
 
     void NoiseChecker()
@@ -196,35 +205,42 @@ public class EnemyCore : MonoBehaviour
         if (radiusCheckTimer <= 0.0f)
         {
             radiusCheckTimer = radiusCheckInterval;
+            
+            GameObject[] soundObjects = GameObject.FindGameObjectsWithTag("SFX");
 
-            bool isParanoid = currentState == EState.PARANOID ? true : false;
-
-            if (Vector3.Distance(transform.position, targetPosition) < (isParanoid ? instantSightRadius : hearingRadius))
+            foreach (GameObject go in soundObjects)
             {
-                RaycastHit hit;
-                if (Physics.Raycast(
-                        transform.position,
-                        Vector3.Normalize(targetPosition - transform.position),
-                        out hit,
-                        isParanoid ? instantSightRadius : hearingRadius,
-                        1
-                        ))
+                if (go.activeInHierarchy && Vector3.Distance(transform.position, go.transform.position) < hearingRadius)
                 {
-                    if (hit.transform.tag == (status.isConfused ? "Enemy" : "Player"))
+                    if (go.GetComponent<AudioSourceIdentifier>() != null)
                     {
-                        if (isParanoid)
+                        if (go.GetComponent<AudioSourceIdentifier>().isPlayer)
                         {
-                            currentState = EState.ATTACK;
-                        }
-                        else
-                        {
-                            paranoidTimer = paranoidDuration;
-                            currentState = EState.PARANOID;
+                            if (go.GetComponent<AudioSourceIdentifier>().madeNoise)
+                            {
+                                vision.targetLocation = go.transform.position;
+                                currentState = EState.SEARCH;
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    public Vector3 PredictTargetPosition(Vector3 selfPosition, float spellSpeed, Vector3 targetPosition, Vector3 targetVelocity)
+    {
+        Vector3 predictedPosition = targetPosition;
+
+        if (!status.isConfused)
+        {
+            float distance = Vector3.Distance(selfPosition, targetPosition);
+            float timeUntilImpact = distance / spellSpeed;
+            predictedPosition = targetPosition + targetVelocity * timeUntilImpact;
+            predictedPosition.y = targetPosition.y;
+        }
+
+        return predictedPosition;
     }
 
     void CastProjectile()
@@ -242,6 +258,8 @@ public class EnemyCore : MonoBehaviour
 
     public void OnHurt()
     {
+        animator.SetTrigger("Take Damage");
+
         switch (currentState)
         {
             case EState.IDLE:       currentState = EState.PARANOID; paranoidTimer = paranoidDuration; break;
@@ -309,6 +327,7 @@ public class EnemyCore : MonoBehaviour
                 currentState = (EState)defaultState;
             }
         }
+        NoiseChecker();
     }
 
     void AISearch()
@@ -321,7 +340,8 @@ public class EnemyCore : MonoBehaviour
             }
             else
             {
-                if (Vector3.Distance(transform.position, vision.targetLocation) < navigation.navigationErrorMargin || vision.targetLocation == Vector3.zero)
+                if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(vision.targetLocation.x, vision.targetLocation.z)) < navigation.navigationErrorMargin 
+                    || vision.targetLocation == Vector3.zero)
                 {
                     currentState = EState.PARANOID;
                     paranoidTimer = paranoidDuration;
@@ -342,7 +362,7 @@ public class EnemyCore : MonoBehaviour
             {
                 case EEnemyType.MELEE:
                     {
-                        if (Vector3.Distance(transform.position, vision.targetLocation) < 2.0f)
+                        if (Vector3.Distance(transform.position, vision.targetLocation) < meleeAttackDistance)
                         {
                             if (castingStandstillTimer > 0.0f)
                             {
@@ -351,14 +371,14 @@ public class EnemyCore : MonoBehaviour
                             }
                             castingStandstillTimer = castingStandstill;
                             animator.SetTrigger("Cast Spell");
-                            animator.SetInteger("Spell Type", 1);
+                            animator.SetInteger("Spell Type", castingSpellType);
                             currentState = EState.CASTING;
                         }
                         break;
                     }
                 case EEnemyType.RANGED:
                     {
-                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeRadius)
+                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeDistance)
                         {
                             currentState = EState.ESCAPE;
                             return;
@@ -370,14 +390,14 @@ public class EnemyCore : MonoBehaviour
                             castingTimer = castingTime;
                             castingStandstillTimer = castingStandstill;
                             animator.SetTrigger("Cast Spell");
-                            animator.SetInteger("Spell Type", 3);
+                            animator.SetInteger("Spell Type", castingSpellType);
                             currentState = EState.CASTING;
                         }
                         break;
                     }
                 case EEnemyType.MAGIC:
                     {
-                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeRadius)
+                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeDistance)
                         {
                             currentState = EState.ESCAPE;
                             return;
@@ -387,6 +407,7 @@ public class EnemyCore : MonoBehaviour
                         {
                             shootIntervalTimer = shootInterval;
                             castingTimer = castingTime;
+                            castingStandstillTimer = castingStandstill;
                             animator.SetTrigger("Cast Spell");
                             animator.SetInteger("Spell Type", 3);
                             currentState = EState.CASTING;
@@ -418,7 +439,8 @@ public class EnemyCore : MonoBehaviour
             {
                 if (!bCastedProjectile)
                 {
-                    CastProjectile();
+                    //CastProjectile();
+                    cSpellBook.CastSpell(0);
                     bCastedProjectile = true;
                 }
 
@@ -433,9 +455,16 @@ public class EnemyCore : MonoBehaviour
 
     void AIEscape()
     {
-        if (Vector3.Distance(transform.position, targetPosition) > rangedEscapeRadius * 2)
+        if (vision.bCanSeeTarget)
         {
-            currentState = EState.ATTACK;
+            if (Vector3.Distance(transform.position, targetPosition) > rangedEscapeDistance * 2)
+            {
+                currentState = EState.ATTACK;
+            }
+        }
+        else
+        {
+            currentState = EState.SEARCH;
         }
     }
 

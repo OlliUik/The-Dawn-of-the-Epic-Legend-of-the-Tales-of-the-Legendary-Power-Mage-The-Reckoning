@@ -11,12 +11,13 @@ public class PlayerSpellCaster : MonoBehaviour
     [SerializeField] private GameObject blockedReticle  = null;
     [SerializeField] private LineRenderer blockedLine   = null;
 
+    public Vector3 castPoint { get; private set; } = Vector3.zero;
+
     private bool bIsEnabled                             = true;
     private Mana cMana                                  = null;
     private LayerMask physicsLayerMask                  = 1;
     private new Transform camera                        = null;
     private Vector3 charPositionOffset                  = Vector3.up * 1.0f;
-    private Vector3 castPoint                           = Vector3.zero;
 
     #endregion
 

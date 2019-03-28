@@ -9,7 +9,7 @@ public class Aoe : Spell
     [SerializeField] protected float radius = 7.0f;
     [SerializeField] protected float duration = 5.0f;
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex)
+    public override void CastSpell(Spellbook spellbook, SpellData data)
     {
 
         ///<summary>
@@ -29,7 +29,7 @@ public class Aoe : Spell
         Aoe aoe = Instantiate(this, spellbook.transform.position, spellbook.transform.rotation);
         aoe.transform.parent = spellbook.transform;
 
-        aoe.ApplyModifiers(aoe.gameObject, spellIndex, spellbook);
+        aoe.ApplyModifiers(aoe.gameObject, data);
 
         aoe.StartCoroutine(DestroyAoe(aoe.gameObject, duration));
         spellbook.StopCasting();
@@ -49,7 +49,7 @@ public class Aoe : Spell
                 OnCollision[] collisionModifiers = GetComponents<OnCollision>();
                 foreach (OnCollision modifier in collisionModifiers)
                 {
-                    modifier.Apply(objectHit.gameObject);
+                    //modifier.Apply(objectHit.gameObject);
                 }
             }
         }

@@ -7,11 +7,6 @@ public class Bounce : OnCollision
 
     public int bounceCount = 2;
 
-    public override void Apply(GameObject go)
-    {
-        go.AddComponent<Bounce>();
-    }
-
     public override void OnCollide(Collision collision)
     {
         if (!ready)

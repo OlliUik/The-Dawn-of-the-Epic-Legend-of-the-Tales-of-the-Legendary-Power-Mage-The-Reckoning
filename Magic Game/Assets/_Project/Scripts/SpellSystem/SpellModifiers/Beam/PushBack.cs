@@ -9,11 +9,6 @@ public class PushBack : SpellModifier
     private Spellbook spellbook;
     private Camera cam;
 
-    public override void Apply(GameObject go)
-    {
-        go.AddComponent<PushBack>();
-    }
-
     private void Start()
     {
         cam = Camera.main;
