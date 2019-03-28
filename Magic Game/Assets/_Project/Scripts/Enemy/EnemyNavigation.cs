@@ -18,6 +18,7 @@ public class EnemyNavigation : MonoBehaviour
     private int navCurrentPoint = 0;
     private float navTimer = 0.0f;
     private float waitTimer = 0.0f;
+    private int validPathAttempts = 10;
     private EnemyCore cEnemyCore = null;
 
     #endregion
@@ -60,6 +61,22 @@ public class EnemyNavigation : MonoBehaviour
                 case EnemyCore.EState.PANIC: AIPanic(); break;
                 case EnemyCore.EState.RAGDOLLED: break;
                 default: if (agent.hasPath) agent.ResetPath(); break;
+            }
+
+            if (!agent.hasPath && !cEnemyCore.vision.bCanSeeTarget && cEnemyCore.vision.targetLocation != Vector3.zero)
+            {
+                if (validPathAttempts > 0)
+                {
+                    validPathAttempts--;
+                }
+                else
+                {
+                    cEnemyCore.vision.targetLocation = Vector3.zero;
+                }
+            }
+            else
+            {
+                validPathAttempts = 10;
             }
         }
         else

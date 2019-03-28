@@ -11,7 +11,7 @@ public class Projectile : Spell
     [Header("Projectile variables")]
     [SerializeField] protected float baseDamage         = 50.0f;
     [SerializeField] protected float baseRange          = 1000.0f;
-    [SerializeField] protected float baseSpeed          = 15.0f;
+    public float baseSpeed          = 15.0f;
 
     public Vector3 direction                            { get; set; }
     private Vector3 lastPos                             = Vector3.zero;
@@ -34,7 +34,7 @@ public class Projectile : Spell
 
         if(distanceTravelled < baseRange)
         {
-            transform.position += direction * baseSpeed * Time.deltaTime;
+            transform.position += direction * baseSpeed * Time.fixedDeltaTime;
         }
         else
         {

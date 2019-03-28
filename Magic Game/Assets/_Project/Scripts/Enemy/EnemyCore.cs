@@ -228,6 +228,21 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
+    public Vector3 PredictTargetPosition(Vector3 selfPosition, float spellSpeed, Vector3 targetPosition, Vector3 targetVelocity)
+    {
+        Vector3 predictedPosition = targetPosition;
+
+        if (!status.isConfused)
+        {
+            float distance = Vector3.Distance(selfPosition, targetPosition);
+            float timeUntilImpact = distance / spellSpeed;
+            predictedPosition = targetPosition + targetVelocity * timeUntilImpact;
+            predictedPosition.y = targetPosition.y;
+        }
+
+        return predictedPosition;
+    }
+
     void CastProjectile()
     {
         if (projectile != null)
@@ -243,6 +258,8 @@ public class EnemyCore : MonoBehaviour
 
     public void OnHurt()
     {
+        animator.SetTrigger("Take Damage");
+
         switch (currentState)
         {
             case EState.IDLE:       currentState = EState.PARANOID; paranoidTimer = paranoidDuration; break;

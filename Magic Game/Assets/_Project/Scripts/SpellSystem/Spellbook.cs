@@ -127,24 +127,39 @@ public class Spellbook : MonoBehaviour
     {
         Vector3 direction = Vector3.zero;
 
-        RaycastHit hitFromCamera;
-        RaycastHit hitFromPlayer;
-
-        if (!Physics.Raycast(lookTransform.transform.position, lookTransform.transform.forward, out hitFromCamera, Mathf.Infinity))
+        if (isPlayer)
         {
-            hitFromCamera.point = transform.position + charPositionOffset + (lookTransform.transform.position + lookTransform.transform.forward * 5000.0f);
-        }
+            RaycastHit hitFromCamera;
+            RaycastHit hitFromPlayer;
 
-        if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity))
-        {
-            castPoint = hitFromPlayer.point;
+            if (!Physics.Raycast(lookTransform.transform.position, lookTransform.transform.forward, out hitFromCamera, Mathf.Infinity, 1))
+            {
+                hitFromCamera.point = transform.position + charPositionOffset + (lookTransform.transform.position + lookTransform.transform.forward * 5000.0f);
+            }
+
+            if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity, 1))
+            {
+                castPoint = hitFromPlayer.point;
+            }
+            else
+            {
+                castPoint = hitFromCamera.point;
+            }
+
+            direction = -Vector3.Normalize(spellPos.position - castPoint);
         }
         else
         {
-            castPoint = hitFromCamera.point;
+            //direction = -Vector3.Normalize(lookTransform.position - GetComponent<EnemyCore>().vision.targetLocation);
+            Vector3 prediction = GetComponent<EnemyCore>().vision.targetLocation;
+            Projectile proj = spells[0].spell as Projectile;
+            if (proj != null)
+            {
+                prediction = GetComponent<EnemyCore>().PredictTargetPosition(spellPos.position, proj.baseSpeed, GetComponent<EnemyCore>().vision.targetLocation, GetComponent<EnemyCore>().vision.targetGO.GetComponent<CharacterController>().velocity);
+            }
+            direction = -Vector3.Normalize(lookTransform.position - prediction);
         }
-
-        direction = -Vector3.Normalize(transform.position + charPositionOffset - castPoint);
+        
         return direction;
 
     }

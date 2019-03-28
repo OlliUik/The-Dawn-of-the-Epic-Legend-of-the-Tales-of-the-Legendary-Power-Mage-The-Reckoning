@@ -32,6 +32,11 @@ public class PlayerAnimations : MonoBehaviour
         cAnimator.SetTrigger("Cast Spell");
     }
 
+    public void TakeDamage()
+    {
+        cAnimator.SetTrigger("Take Damage");
+    }
+
     void Update()
     {
         Vector3 lookDirection = cTPCamera.lookDirection;

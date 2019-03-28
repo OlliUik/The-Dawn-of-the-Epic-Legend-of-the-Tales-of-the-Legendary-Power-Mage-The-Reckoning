@@ -154,6 +154,7 @@ public class PlayerCore : MonoBehaviour
     public void OnHurt()
     {
         canvasManager.OnPlayerHurt();
+        GetComponent<PlayerAnimations>().TakeDamage();
     }
 
     public void OnDeath()
