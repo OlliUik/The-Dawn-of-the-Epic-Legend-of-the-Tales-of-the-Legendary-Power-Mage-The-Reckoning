@@ -75,7 +75,8 @@ public class PlayerCore : MonoBehaviour
                     //Don't allow repeated input from controller axis
                     if (!bShotFired)
                     {
-                        cSpellCaster.CastSpell();
+                        //cSpellCaster.CastSpell();
+                        cSpellBook.CastSpell(0);
                         bShotFired = true;
                     }
                 }

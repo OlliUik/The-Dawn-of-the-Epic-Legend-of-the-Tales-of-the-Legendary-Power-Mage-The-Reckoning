@@ -46,6 +46,14 @@ public class Spellbook : MonoBehaviour
         }
     }
 
+    public void CastSpell(int spellIndex)
+    {
+        if (CanCast(spellIndex))
+        {
+            StartCoroutine(StartCastingSpell(spellIndex));
+        }
+    }
+
     // Inputs
     void Update()
     {
