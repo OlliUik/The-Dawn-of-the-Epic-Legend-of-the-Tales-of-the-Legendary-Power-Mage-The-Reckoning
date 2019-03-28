@@ -6,14 +6,20 @@ using UnityEngine;
 public class Projectile : Spell
 {
 
-    [Header("-- Projectile --")]
+    #region Variables
+
+    [Header("Projectile variables")]
     [SerializeField] protected float baseDamage         = 50.0f;
     [SerializeField] protected float baseRange          = 1000.0f;
-    [SerializeField] protected float baseSpeed          = 15.0f;
+    public float baseSpeed          = 15.0f;
 
     public Vector3 direction                            { get; set; }
     private Vector3 lastPos                             = Vector3.zero;
     private float distanceTravelled                     = 0.0f;
+
+    #endregion
+
+    #region Unitys_Methods
 
     void Start()
     {
@@ -28,11 +34,12 @@ public class Projectile : Spell
 
         if(distanceTravelled < baseRange)
         {
-            transform.position += direction * baseSpeed * Time.deltaTime;
+            transform.position += direction * baseSpeed * Time.fixedDeltaTime;
         }
         else
         {
             print("Out of range");
+            // explosion particle ??
             Destroy(gameObject);
         }
     }
@@ -43,6 +50,17 @@ public class Projectile : Spell
         if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<Health>().Hurt(baseDamage);
+
+            foreach (ScriptableEffect effect in effects)
+            {
+                print("Applied: " + effect.name);
+                collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
+            }
+
+            foreach (StatusEffectBase effectBase in statusEffects)
+            {
+                collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
+            }
         }
 
         // if some collision modifier is not ready yet...apply all and return 
@@ -67,7 +85,11 @@ public class Projectile : Spell
         Destroy(gameObject);
     }
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex)
+    #endregion
+
+    #region Custom_Methods
+
+    public override void CastSpell(Spellbook spellbook, SpellData data)
     {
 
         ///<summary>
@@ -89,7 +111,7 @@ public class Projectile : Spell
         projectile.direction = direction;
 
         // apply all modifiers to the projectile ( this is inherited from spell class )
-        ApplyModifiers(projectile.gameObject, spellIndex, spellbook);
+        ApplyModifiers(projectile.gameObject, data);
 
         // casting is done
         spellbook.StopCasting();
@@ -97,6 +119,7 @@ public class Projectile : Spell
     }
 
 
+    // THESE ARE USED TO MODIFY PROJECTILES BASE VALUES
     public void ModifyDamage(float amount)
     {
         baseDamage += amount;
@@ -111,5 +134,7 @@ public class Projectile : Spell
     {
         baseSpeed += amount;
     }
+
+    #endregion
 
 }

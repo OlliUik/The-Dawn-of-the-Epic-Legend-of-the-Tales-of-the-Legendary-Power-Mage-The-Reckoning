@@ -798,9 +798,11 @@ GameObject:
   - component: {fileID: 251516339}
   - component: {fileID: 251516345}
   - component: {fileID: 251516348}
-  m_Layer: 0
+  - component: {fileID: 251516349}
+  - component: {fileID: 251516350}
+  m_Layer: 10
   m_Name: EnemyMelee
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -819,6 +821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &251516340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -833,14 +836,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 2
   enemyType: 0
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 1
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  castingSpellType: 0
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &251516341
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -928,6 +936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 1027641407}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -967,6 +976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 1
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints:
   - {x: 7.32, y: 0, z: 39.05}
@@ -993,6 +1003,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &251516349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251516338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 300d5648be4716345bf598929c4c2992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appliedOnSelfSpells: []
+--- !u!114 &251516350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251516338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ba8de23ee8dc6d47b812240c8ed3c65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusEffects: []
 --- !u!1 &284768050
 GameObject:
   m_ObjectHideFlags: 0
@@ -7932,7 +7968,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14444
+  m_Name: pb_Mesh25040
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -8433,7 +8469,7 @@ GameObject:
   - component: {fileID: 1027641407}
   - component: {fileID: 1027641410}
   - component: {fileID: 1027641409}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8826,6 +8862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 34479360}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -8844,6 +8881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 500
   iFrameTime: 0
+  health: 0
 --- !u!114 &1175843105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8858,14 +8896,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 1
   enemyType: 0
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 1
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 0.05
+  castingTime: 2
+  castingStandstill: 4
+  castingSpellType: 0
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1175843106
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8915,6 +8958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 0.2
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints: []
 --- !u!23 &1175843109
@@ -9073,6 +9117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2087287853}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 150
   sightRadius: 75
   checkInterval: 0.1
@@ -9091,6 +9136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &1265521323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9105,15 +9151,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 2
   enemyType: 1
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 0
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
     type: 3}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  castingSpellType: 0
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1265521324
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9163,6 +9214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 0.5
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 5
   patrolPoints:
   - {x: -15.5, y: 3.5, z: 16.5}
@@ -9326,7 +9378,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14258
+  m_Name: pb_Mesh24854
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10739,7 +10791,7 @@ GameObject:
   - component: {fileID: 1465997852}
   - component: {fileID: 1465997854}
   - component: {fileID: 1465997851}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: TriggerKill
   m_Icon: {fileID: 0}
@@ -10869,6 +10921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 658781939}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 50
   sightRadius: 45
   checkInterval: 0.5
@@ -10887,6 +10940,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &1485341761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10901,15 +10955,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 2
   enemyType: 1
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 0
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
     type: 3}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  castingSpellType: 0
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1485341762
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10959,6 +11018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 1
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints:
   - {x: -50, y: 0, z: 50}
@@ -11218,6 +11278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2106006298}
+  targetLocation: {x: 0, y: 0, z: 0}
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -11236,6 +11297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
+  health: 0
 --- !u!114 &1609891694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11250,14 +11312,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultState: 1
   enemyType: 0
+  meleeAttackDistance: 2
   searchPlayerAfterAttack: 1
   hearingRadius: 10
-  instantSightRadius: 3
-  rangedEscapeRadius: 10
+  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   projectile: {fileID: 0}
   shootInterval: 5
+  castingTime: 2
+  castingStandstill: 4
+  castingSpellType: 0
+  animator: {fileID: 0}
+  meleeHitbox: {fileID: 0}
 --- !u!136 &1609891695
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11307,6 +11374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigationInterval: 1
+  navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
   patrolPoints: []
 --- !u!23 &1609891698
@@ -11471,7 +11539,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14246
+  m_Name: pb_Mesh24842
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -12819,6 +12887,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
+      propertyPath: OnSelf.onSelves.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
       propertyPath: spellPos
       value: 
       objectReference: {fileID: 2134162023}
@@ -12832,13 +12905,13 @@ PrefabInstance:
         type: 3}
       propertyPath: spells.Array.data[0].cards.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 9a5d6531e2713004caa3b432b48c053e,
+      objectReference: {fileID: 11400000, guid: 44d777d1ef2a4b341bc468ea4b8b6340,
         type: 2}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
       propertyPath: spells.Array.data[0].cards.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: 246cf9d7846c6c6448058eabb7596f07,
+      objectReference: {fileID: 11400000, guid: 9a5d6531e2713004caa3b432b48c053e,
         type: 2}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
@@ -12857,6 +12930,152 @@ PrefabInstance:
       propertyPath: spells.Array.data[2].spell
       value: 
       objectReference: {fileID: 1874960764304840051, guid: 3dde67cb60224dd45ab9be309846317c,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[3].spell
+      value: 
+      objectReference: {fileID: 1874960764304840051, guid: 3dde67cb60224dd45ab9be309846317c,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: OnSelf.OnSelfCastKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: OnSelf.OnSelfSwapKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.onSelves.Array.data[0]
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.onSelves.Array.data[1]
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.OnSelfCastKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelf.OnSelfSwapKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.onSelves.Array.data[0]
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.onSelves.Array.data[1]
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfCastKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfSwapKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfSpells.Array.data[0].spell
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.OnSelfSpells.Array.data[1].spell
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].castKey
+      value: 49
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].castKey
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].castKey
+      value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[0].spell
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[1].spell
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[0].castKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.collectedOnSelfSpells.Array.data[1].castKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSpell.swapOnSelfSpellKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfKey
+      value: 113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: onSelfSwapKey
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: selfSpells.Array.data[0]
+      value: 
+      objectReference: {fileID: 3948852890612982284, guid: 35addc630833d23419eb6c86c9830494,
+        type: 3}
+    - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: selfSpells.Array.data[1]
+      value: 
+      objectReference: {fileID: 1679257768275626027, guid: 7c982248dea3e7b4e8207fb70414661e,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fceb9effa83d094a96cd97b4a2a67e9, type: 3}

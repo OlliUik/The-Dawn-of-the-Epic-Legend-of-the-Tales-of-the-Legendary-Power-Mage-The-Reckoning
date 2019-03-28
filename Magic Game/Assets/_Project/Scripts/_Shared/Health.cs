@@ -8,7 +8,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float iFrameTime = 0.5f;
 
     public bool bIsDead { get; private set; } = false;
-    public float health { get; private set; } = 0.0f;
+    public float health /*{ get; private set; }*/ = 0.0f;
 
     private bool bIsPlayer = false;
     private float iftTimer = 0.0f;
