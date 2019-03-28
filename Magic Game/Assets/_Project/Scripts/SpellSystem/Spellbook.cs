@@ -15,7 +15,7 @@ public class Spellbook : MonoBehaviour
     public SpellData[] spells = new SpellData[3];
     private float[] cooldowns;
 
-    private Transform lookTransform = null;
+    public Transform lookTransform = null;
     private Vector3 charPositionOffset = Vector3.up * 1.0f;
     private Vector3 castPoint = Vector3.zero;
 

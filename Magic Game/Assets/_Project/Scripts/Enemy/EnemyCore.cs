@@ -86,7 +86,7 @@ public class EnemyCore : MonoBehaviour
     public EnemyNavigation navigation { get; private set; } = null;
     public Health cHealth { get; private set; } = null;
     public StatusEffects status { get; private set; } = new StatusEffects(false, false, false, false);
-    //public Spellbook cSpellBook { get; private set; } = null;
+    public Spellbook cSpellBook { get; private set; } = null;
 
     //Temporary values
     private bool bCastedProjectile = false;
@@ -121,7 +121,7 @@ public class EnemyCore : MonoBehaviour
         vision = GetComponent<EnemyVision>();
         navigation = GetComponent<EnemyNavigation>();
         cHealth = GetComponent<Health>();
-        //cSpellBook = GetComponent<Spellbook>();
+        cSpellBook = GetComponent<Spellbook>();
 
         spawnPosition = transform.position;
         spawnRotation = transform.rotation.eulerAngles;
@@ -193,7 +193,11 @@ public class EnemyCore : MonoBehaviour
         paranoidTimer -= paranoidTimer > 0.0f ? time : 0.0f;
         alertedTimer -= alertedTimer > 0.0f ? time : 0.0f;
         castingTimer -= castingTimer > 0.0f ? time : 0.0f;
-        castingStandstillTimer -= castingStandstillTimer > 0.0f ? time : 0.0f;
+
+        if (castingTimer <= 0.0f)
+        {
+            castingStandstillTimer -= castingStandstillTimer > 0.0f ? time : 0.0f;
+        }
     }
 
     void NoiseChecker()
@@ -386,6 +390,7 @@ public class EnemyCore : MonoBehaviour
                         {
                             shootIntervalTimer = shootInterval;
                             castingTimer = castingTime;
+                            castingStandstillTimer = castingStandstill;
                             animator.SetTrigger("Cast Spell");
                             animator.SetInteger("Spell Type", 3);
                             currentState = EState.CASTING;
@@ -417,8 +422,8 @@ public class EnemyCore : MonoBehaviour
             {
                 if (!bCastedProjectile)
                 {
-                    CastProjectile();
-                    //cSpellBook.CastSpell(0);
+                    //CastProjectile();
+                    cSpellBook.CastSpell(0);
                     bCastedProjectile = true;
                 }
 

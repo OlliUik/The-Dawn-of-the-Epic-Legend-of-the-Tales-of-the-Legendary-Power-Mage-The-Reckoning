@@ -66,7 +66,7 @@ public class EnemyAnimations : MonoBehaviour
             if (cEnemyCore.vision.bCanSeeTarget)
             {
                 cAnimator.SetLookAtWeight(1.0f);
-                cAnimator.SetLookAtPosition(cEnemyCore.vision.targetLocation + Vector3.up * 0.8f);
+                cAnimator.SetLookAtPosition(cEnemyCore.vision.targetLocation);
             }
             else
             {
@@ -75,7 +75,7 @@ public class EnemyAnimations : MonoBehaviour
                     if (Vector3.Distance(transform.position, cEnemyCore.vision.targetLocation) > 2.0f)
                     {
                         cAnimator.SetLookAtWeight(1.0f);
-                        cAnimator.SetLookAtPosition(cEnemyCore.vision.targetLocation + Vector3.up * 0.3f);
+                        cAnimator.SetLookAtPosition(cEnemyCore.vision.targetLocation);
 
                     }
                     else

@@ -14,6 +14,7 @@ public class EnemyVision : MonoBehaviour
     [SerializeField] private float sightRadius = 45.0f;
     [SerializeField] private float checkInterval = 0.5f;
     [SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
+    [SerializeField] private float checkHeightOffset = 0.5f;
 
     public bool bCanSeeTarget { get; private set; } = false;
     public GameObject targetGO { get; private set; } = null;
@@ -211,9 +212,9 @@ public class EnemyVision : MonoBehaviour
                 {
                     if (entity.tag == (cEnemyCore.status.isConfused ? "Enemy" : "Player"))
                     {
-                        if (Vector3.Distance(headTransform.position, entity.transform.position) < sightDistance)
+                        if (Vector3.Distance(headTransform.position, entity.transform.position + Vector3.up * checkHeightOffset) < sightDistance)
                         {
-                            if (IsPointInside(mesh, entity.transform.position))
+                            if (IsPointInside(mesh, entity.transform.position + Vector3.up * checkHeightOffset))
                             {
                                 targetGO = entity;
                                 break;
@@ -225,19 +226,18 @@ public class EnemyVision : MonoBehaviour
 
             if (targetGO != null)
             {
-                Vector3 entityPosition = Vector3.zero;
-                Vector3 entityDirection = Vector3.zero;
+                Vector3 entityPosition = targetGO.transform.position + Vector3.up * checkHeightOffset;
+                Vector3 entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
 
-                if (targetGO.tag == "Player")
-                {
-                    entityPosition = targetGO.transform.position + Vector3.up * targetGO.GetComponent<CharacterController>().height / 2;
-                    entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
-                }
-                else
-                {
-                    entityPosition = targetGO.transform.position + Vector3.up * 0.5f;
-                    entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
-                }
+                //if (targetGO.tag == "Player")
+                //{
+                //    entityPosition = targetGO.transform.position + Vector3.up * targetGO.GetComponent<CharacterController>().height / 2;
+                //}
+                //else
+                //{
+                //    entityPosition = targetGO.transform.position + Vector3.up * checkHeightOffset;
+                //}
+                //entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
 
                 if (IsPointInside(mesh, entityPosition))
                 {
@@ -274,11 +274,11 @@ public class EnemyVision : MonoBehaviour
                                         1
                                         ))
                                     {
-                                        targetLocation = hit.point + Vector3.up * 0.5f;
+                                        targetLocation = hit.point + Vector3.up * checkHeightOffset;
                                     }
                                     else
                                     {
-                                        targetLocation = entityPosition;
+                                        targetLocation = entityPosition + Vector3.up * checkHeightOffset;
                                     }
                                 }
                                 bCanSeeTarget = false;
@@ -294,7 +294,7 @@ public class EnemyVision : MonoBehaviour
                 {
                     if (raycastGraceTimer > 0.0f)
                     {
-                        targetLocation = entityPosition;
+                        targetLocation = entityPosition + Vector3.up * checkHeightOffset;
                         raycastGraceTimer -= Time.fixedDeltaTime;
                     }
                     else
@@ -312,7 +312,7 @@ public class EnemyVision : MonoBehaviour
                             {
                                 if (Vector3.Distance(targetLocation, hit.point) > 0.5f)
                                 {
-                                    targetLocation = hit.point + Vector3.up * 0.5f;
+                                    targetLocation = hit.point + Vector3.up * checkHeightOffset;
                                 }
                             }
                             bCanSeeTarget = false;
@@ -356,23 +356,6 @@ public class EnemyVision : MonoBehaviour
         {
             checkTimer -= Time.fixedDeltaTime;
         }
-
-        //Look at the player (IMPLEMENT THIS BETTER LATER)
-        //Quaternion headRotation = headTransform.rotation;
-
-        //if (bCanSeeTarget)
-        //{
-        //    if (targetGO != null)
-        //    {
-        //        headTransform.LookAt(targetGO.transform.position + Vector3.up * 0.5f);
-        //    }
-        //}
-        //else
-        //{
-        //    headTransform.LookAt(headTransform.position + Vector3.Normalize(GetComponent<NavMeshAgent>().velocity));
-        //}
-
-        //headTransform.rotation = Quaternion.Lerp(headTransform.rotation, headRotation, 0.9f);
     }
 
     void OnDrawGizmosSelected()
