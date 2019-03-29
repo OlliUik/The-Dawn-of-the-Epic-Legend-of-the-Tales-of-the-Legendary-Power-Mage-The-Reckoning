@@ -65,7 +65,9 @@ public class CrystalSpawner : MonoBehaviour
 
         foreach (Vector3 spawn in spawns)
         {
-            Gizmos.DrawWireCube(spawn, new Vector3(1, 1, 1));
+            Vector3 newGizmoPosition = transform.position + spawn;
+
+            Gizmos.DrawWireCube(newGizmoPosition, new Vector3(1, 1, 1));
         }
     }
 }
