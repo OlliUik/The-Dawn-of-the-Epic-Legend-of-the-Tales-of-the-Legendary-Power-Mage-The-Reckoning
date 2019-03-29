@@ -56,6 +56,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(physicsLayerMask.value);
+
         cCharacter = GetComponent<PlayerCore>().cCharacter;
         cTPCamera = GetComponent<PlayerCore>().cTPCamera;
         physicsLayerMask = GetComponent<PlayerCore>().physicsLayerMask;
@@ -144,6 +146,13 @@ public class PlayerMovement : MonoBehaviour
         {
             bDashingActivated = true;
         }
+    }
+
+    public void Teleport(Vector3 position)
+    {
+        cCharacter.gameObject.layer = 31;
+        cCharacter.Move(position - transform.position);
+        cCharacter.gameObject.layer = 0;
     }
 
     void Move(float inputX, float inputY, bool inputJump, bool inputDash)
