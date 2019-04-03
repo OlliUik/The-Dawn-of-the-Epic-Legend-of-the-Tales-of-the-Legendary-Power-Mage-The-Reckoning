@@ -12,6 +12,10 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image healthBar = null;
     [SerializeField] private Image manaBar = null;
     [SerializeField] private Image hurtFlash = null;
+
+    [SerializeField] private GameObject spellEditingUI = null;
+    private SpellEditorController controller = null;
+    public bool bIsEditingSpells { get; private set; } = false;
     
     public bool bIsPaused { get; private set; } = false;
 
@@ -22,6 +26,11 @@ public class HUDManager : MonoBehaviour
     #endregion
 
     #region UNITY_DEFAULT_METHODS
+
+    private void Start()
+    {
+        controller = spellEditingUI.GetComponent<SpellEditorController>();
+    }
 
     void Update()
     {
@@ -58,6 +67,21 @@ public class HUDManager : MonoBehaviour
         goHPAndManaBars.SetActive(!bIsPaused);
         Time.timeScale = bIsPaused ? 0.0f : 1.0f;
         return bIsPaused;
+    }
+
+    public bool FlipSpellEditingState(PlayerCore pc)
+    {
+        cPlayerCore = pc;
+        bIsEditingSpells = !bIsEditingSpells;
+        spellEditingUI.SetActive(bIsEditingSpells);
+        crosshair.SetActive(!bIsEditingSpells);
+        goHPAndManaBars.SetActive(!bIsEditingSpells);
+        Time.timeScale = bIsEditingSpells ? 0.0f : 1.0f;
+
+        controller.useCrystalButton.gameObject.SetActive(true);
+        controller.useCrystalButton.interactable = controller.crystalsLeft > 0 ? true : false;
+
+        return bIsEditingSpells;
     }
 
     //Use previous caller if no PlayerInput is specified

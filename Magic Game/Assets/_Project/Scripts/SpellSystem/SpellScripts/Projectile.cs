@@ -63,25 +63,12 @@ public class Projectile : Spell
             }
         }
 
-        // if some collision modifier is not ready yet...apply all and return 
-        // if all collisions modifiers are ready destroy the projectile
         OnCollision[] collisionModifiers = GetComponents<OnCollision>();
-        for (int i = 0; i < collisionModifiers.Length; i++)
+        foreach (OnCollision modifier in collisionModifiers)
         {
-            if (!collisionModifiers[i].ready)
-            {
-                foreach (OnCollision modifier in collisionModifiers)
-                {
-                    modifier.OnCollide(collision);
-                    return;
-                }
-            }
-
-            print("All collision modifiers ready...destroying");
-            Destroy(gameObject);
+            modifier.ProjectileCollide(collision, direction);
         }
 
-        print("No collision modifiers...destroying");
         Destroy(gameObject);
     }
 

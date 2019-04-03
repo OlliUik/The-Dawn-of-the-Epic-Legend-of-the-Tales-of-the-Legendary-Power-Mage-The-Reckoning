@@ -8,7 +8,7 @@ public class Spellbook : MonoBehaviour
 
     #region Variables
 
-    public bool isPlayer = false;
+    private bool isPlayer = false;
     public bool isCasting = false;
     public Transform spellPos = null;
 
@@ -122,6 +122,14 @@ public class Spellbook : MonoBehaviour
     //}
 
     // works but not centered --> // spells can get this by calling spellbook.GetDirection()
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            spells[2].spell.CastSpell(this, spells[2]);
+        }
+    }
 
     public Vector3 GetDirection()
     {

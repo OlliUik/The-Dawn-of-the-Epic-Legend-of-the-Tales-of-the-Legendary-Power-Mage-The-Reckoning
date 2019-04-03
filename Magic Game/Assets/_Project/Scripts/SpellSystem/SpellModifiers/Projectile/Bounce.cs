@@ -7,7 +7,7 @@ public class Bounce : OnCollision
 
     public int bounceCount = 2;
 
-    public override void OnCollide(Collision collision, Vector3 direction)
+    public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
         if(bounceCount > 0)
         {

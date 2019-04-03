@@ -9,7 +9,7 @@ public class Split : OnCollision
     public int splitCount = 4;
 
 
-    public override void OnCollide(Collision collision, Vector3 direction)
+    public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
         
         if(!splitted)

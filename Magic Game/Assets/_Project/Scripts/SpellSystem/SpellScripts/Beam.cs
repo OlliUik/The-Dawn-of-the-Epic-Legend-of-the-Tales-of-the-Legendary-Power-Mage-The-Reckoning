@@ -64,7 +64,7 @@ public class Beam : Spell
                 OnCollision[] collisionModifiers = self.GetComponents<OnCollision>();
                 foreach (OnCollision modifier in collisionModifiers)
                 {
-                    modifier.BeamHit(hit, direction);
+                    modifier.BeamCollide(hit, direction);
                 }
 
             }
