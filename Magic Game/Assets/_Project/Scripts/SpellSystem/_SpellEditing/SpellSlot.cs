@@ -5,14 +5,18 @@ using UnityEngine.UI;
 
 public class SpellSlot : MonoBehaviour
 {
-    public SpellType type = SpellType.GENERIC;
-    public List<Card> cards = new List<Card>();
 
+    public SpellData data;
     private Text spellSlotText;
 
-    private void Start()
+    // called from SpellEditorController
+    public void Init(SpellData data)
     {
+        this.data.type = data.type;
+        this.data.cards = data.cards;
+        this.data.spell = data.spell;
         spellSlotText = GetComponentInChildren<Text>();
-        spellSlotText.text = type.ToString();
+        spellSlotText.text = this.data.type.ToString();
     }
+
 }

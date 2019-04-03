@@ -94,6 +94,11 @@ public class PlayerCore : MonoBehaviour
             {
                 EnableControls(!canvasManager.FlipPauseState(this));
             }
+
+            if(Input.GetKeyDown(KeyCode.Return))
+            {
+                EnableControls(!canvasManager.FlipSpellEditingState(this));
+            }
         }
     }
 

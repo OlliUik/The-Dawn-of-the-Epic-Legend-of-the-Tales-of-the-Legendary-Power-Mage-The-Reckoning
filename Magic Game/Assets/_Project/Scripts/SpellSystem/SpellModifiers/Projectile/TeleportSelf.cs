@@ -5,7 +5,7 @@ using UnityEngine;
 public class TeleportSelf : OnCollision
 {
 
-    public override void OnCollide(Collision collision, Vector3 direction)
+    public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
 
         Spell spell = gameObject.GetComponent<Spell>();

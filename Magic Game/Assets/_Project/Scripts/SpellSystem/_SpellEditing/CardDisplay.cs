@@ -44,11 +44,15 @@ public class CardDisplay : MonoBehaviour
             }
 
             // ADD THE CARD TO THE SELECTED SPELL
-            editorController.highlighedSpell.cards.Add(card);
+            editorController.highlighedSpell.data.cards.Add(card);
 
             // DESTROY THE REMAINING CARDS AND GENERATE NEW 3
             editorController.DestroyCards();
-            editorController.StartCoroutine(editorController.GenerateCards());
+
+            // IF PLAYER HAS MORE CRYSTALS ALLOW MORE CARDS
+            editorController.useCrystalButton.gameObject.SetActive(true);
+            editorController.useCrystalButton.interactable = editorController.crystalsLeft > 0 ? true : false;
+
         }
         else
         {
@@ -66,16 +70,11 @@ public class CardDisplay : MonoBehaviour
 
         for (int i = 0; i < card.types.Count; i++)
         {
-            if(card.types[i] == editorController.highlighedSpell.type)
+            if(card.types[i] == editorController.highlighedSpell.data.type)
             {
                 return true;
             }
         }
-
-        //if(card.type == SpellType.GENERIC || card.type == editorController.highlighedSpell.type)
-        //{
-        //    return true;
-        //}
 
         print("Cards type is not fitting for the spell...");
         return false;

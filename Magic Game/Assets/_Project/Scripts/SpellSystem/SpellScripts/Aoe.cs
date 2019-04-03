@@ -43,13 +43,13 @@ public class Aoe : Spell
         foreach (var objectHit in auraArea)
         {
             // check if objectHit is enemy
-            if (objectHit.gameObject.CompareTag("Enemy"))
+            if (objectHit.gameObject.GetComponent<Rigidbody>() != null)
             {
                 // apply all modifiers here to the enemy inside radius
                 OnCollision[] collisionModifiers = GetComponents<OnCollision>();
                 foreach (OnCollision modifier in collisionModifiers)
                 {
-                    //modifier.Apply(objectHit.gameObject);
+                    modifier.AoeCollide(objectHit.gameObject);
                 }
             }
         }
