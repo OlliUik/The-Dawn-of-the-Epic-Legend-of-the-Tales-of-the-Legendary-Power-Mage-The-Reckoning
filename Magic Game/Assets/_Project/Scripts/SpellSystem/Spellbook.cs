@@ -27,6 +27,11 @@ public class Spellbook : MonoBehaviour
 
     private void Awake()
     {
+        
+    }
+
+    private void Start()
+    {
         if (GetComponent<PlayerCore>() != null)
         {
             lookTransform = Camera.main.transform;
@@ -36,10 +41,7 @@ public class Spellbook : MonoBehaviour
             // give enemies look / forward transform here
 
         }
-    }
 
-    private void Start()
-    {
         isCasting = false;
         cooldowns = new float[spells.Length];
 

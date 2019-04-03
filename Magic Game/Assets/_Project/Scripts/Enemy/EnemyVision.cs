@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 //using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyCore))]
 public class EnemyVision : MonoBehaviour
 {
     #region VARIABLES

@@ -12,6 +12,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image healthBar = null;
     [SerializeField] private Image manaBar = null;
     [SerializeField] private Image hurtFlash = null;
+    [SerializeField] private Image fadeIn = null;
     
     public bool bIsPaused { get; private set; } = false;
 
@@ -31,8 +32,22 @@ public class HUDManager : MonoBehaviour
         }
         else
         {
-            hurtFlash.color = new Color(1.0f, 0.0f, 0.0f, 0.0f);
+            hurtFlash.color = Color.clear;
         }
+
+        if (fadeIn.color.a > 0.0f)
+        {
+            fadeIn.color = new Color(0.0f, 0.0f, 0.0f, fadeIn.color.a - Time.deltaTime / 1.0f);
+        }
+        else
+        {
+            fadeIn.color = Color.clear;
+        }
+    }
+
+    void OnEnable()
+    {
+        fadeIn.color = Color.black;
     }
 
     #endregion

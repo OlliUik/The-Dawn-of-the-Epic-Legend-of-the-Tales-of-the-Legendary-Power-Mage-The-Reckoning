@@ -47,7 +47,7 @@ public class EnemyCore : MonoBehaviour
         RAGDOLLED   //No AI when ragdolled.
     };
 
-    private enum EDefaultState
+    protected enum EDefaultState
     {
         DISABLED,
         IDLE,
@@ -61,27 +61,28 @@ public class EnemyCore : MonoBehaviour
         MAGIC
     };
 
-    [SerializeField] private EDefaultState defaultState = EDefaultState.IDLE;
-    [SerializeField] private EEnemyType enemyType = EEnemyType.MELEE;
-    [SerializeField] private float meleeAttackDistance = 2.0f;
-    [SerializeField] private bool searchPlayerAfterAttack = true;
-    [SerializeField] private float hearingRadius = 10.0f;
+    [HideInInspector] public EState currentState = EState.IDLE;
+
+    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
+    [SerializeField] protected EEnemyType enemyType = EEnemyType.MELEE;
+    [SerializeField] protected float meleeAttackDistance = 2.0f;
+    [SerializeField] protected bool searchPlayerAfterAttack = true;
+    [SerializeField] protected float hearingRadius = 10.0f;
     //[SerializeField] private float instantSightRadius = 3.0f;
-    [SerializeField] private float rangedEscapeDistance = 10.0f;
-    [SerializeField] private float radiusCheckInterval = 1.0f;
-    [SerializeField] private float paranoidDuration = 5.0f;
-    [SerializeField] private GameObject projectile = null;
-    [SerializeField] private float shootInterval = 5.0f;
-    [SerializeField] private float castingTime = 2.0f;
-    [SerializeField] private float castingStandstill = 4.0f;
-    [SerializeField] private int castingSpellType = 0; //Check the animator controller to find out the desired number!
-    [SerializeField] private Animator animator = null;
-    [SerializeField] private BoxCollider meleeHitbox = null;
+    [SerializeField] protected float rangedEscapeDistance = 10.0f;
+    [SerializeField] protected float radiusCheckInterval = 1.0f;
+    [SerializeField] protected float paranoidDuration = 5.0f;
+    [SerializeField] protected GameObject projectile = null;
+    [SerializeField] protected float shootInterval = 5.0f;
+    [SerializeField] protected float castingTime = 2.0f;
+    [SerializeField] protected float castingStandstill = 4.0f;
+    [SerializeField] protected int castingSpellType = 0; //Check the animator controller to find out the desired number!
+    [SerializeField] protected Animator animator = null;
+    [SerializeField] protected BoxCollider meleeHitbox = null;
 
     public Vector3 spawnPosition { get; private set; } = Vector3.zero;
     public Vector3 spawnRotation { get; private set; } = Vector3.zero;
-    public EState currentState { get; private set; } = EState.IDLE;
-    public EEnemyType currentEnemyType { get; private set; } = EEnemyType.MELEE;
+    public EEnemyType currentEnemyType { get; protected set; } = EEnemyType.MELEE;
     public EnemyVision vision { get; private set; } = null;
     public EnemyNavigation navigation { get; private set; } = null;
     public Health cHealth { get; private set; } = null;
@@ -89,15 +90,15 @@ public class EnemyCore : MonoBehaviour
     public Spellbook cSpellBook { get; private set; } = null;
 
     //Temporary values
-    private bool bCastedProjectile = false;
-    private float radiusCheckTimer = 0.0f;
-    private float alertedTimer = 0.0f;
-    private float paranoidTimer = 0.0f;
-    private float shootIntervalTimer = 0.0f;
-    private float castingTimer = 0.0f;
-    private float castingStandstillTimer = 0.0f;
-    private Vector3 targetPosition = Vector3.zero;
-    private Vector3 playerOffset = Vector3.zero;
+    protected bool bCastedProjectile = false;
+    protected float radiusCheckTimer = 0.0f;
+    protected float alertedTimer = 0.0f;
+    protected float paranoidTimer = 0.0f;
+    protected float shootIntervalTimer = 0.0f;
+    protected float castingTimer = 0.0f;
+    protected float castingStandstillTimer = 0.0f;
+    protected Vector3 targetPosition = Vector3.zero;
+    protected Vector3 playerOffset = Vector3.zero;
 
     public float RangedEscapeRadius
     {
@@ -111,12 +112,12 @@ public class EnemyCore : MonoBehaviour
 
     #region UNITY_DEFAULT_METHODS
 
-    void Awake()
+    protected void Awake()
     {
         GlobalVariables.entityList.Add(this.gameObject);
     }
 
-    void Start()
+    protected virtual void Start()
     {
         vision = GetComponent<EnemyVision>();
         navigation = GetComponent<EnemyNavigation>();
@@ -129,7 +130,7 @@ public class EnemyCore : MonoBehaviour
         currentEnemyType = enemyType;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         AdvanceTimers();
         targetPosition = vision.targetLocation;
@@ -156,7 +157,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void OnTriggerStay(Collider other)
+    protected void OnTriggerStay(Collider other)
     {
         if (other.tag == "TriggerKill")
         {
@@ -171,7 +172,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void OnDrawGizmosSelected()
+    protected void OnDrawGizmosSelected()
     {
         #if UNITY_EDITOR
         Handles.Label(transform.position + Vector3.up * 2.0f, currentState.ToString());
@@ -184,7 +185,7 @@ public class EnemyCore : MonoBehaviour
 
     #region CUSTOM_METHODS
 
-    void AdvanceTimers()
+    protected void AdvanceTimers()
     {
         float time = Time.deltaTime;
 
@@ -200,7 +201,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void NoiseChecker()
+    protected void NoiseChecker()
     {
         if (radiusCheckTimer <= 0.0f)
         {
@@ -243,7 +244,7 @@ public class EnemyCore : MonoBehaviour
         return predictedPosition;
     }
 
-    void CastProjectile()
+    protected void CastProjectile()
     {
         if (projectile != null)
         {
@@ -256,7 +257,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    public void OnHurt()
+    public virtual void OnHurt()
     {
         animator.SetTrigger("Take Damage");
 
@@ -280,7 +281,7 @@ public class EnemyCore : MonoBehaviour
 
     #region AI_LOGIC
 
-    void AIIdle()
+    protected virtual void AIIdle()
     {
         if (vision.bCanSeeTarget)
         {
@@ -289,7 +290,7 @@ public class EnemyCore : MonoBehaviour
         NoiseChecker();
     }
 
-    void AIPatrol()
+    protected virtual void AIPatrol()
     {
         if (vision.bCanSeeTarget)
         {
@@ -298,7 +299,7 @@ public class EnemyCore : MonoBehaviour
         NoiseChecker();
     }
 
-    void AIAlerted()
+    protected virtual void AIAlerted()
     {
         if (vision.bCanSeeTarget)
         {
@@ -314,7 +315,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AIParanoid()
+    protected virtual void AIParanoid()
     {
         if (vision.bCanSeeTarget)
         {
@@ -330,7 +331,7 @@ public class EnemyCore : MonoBehaviour
         NoiseChecker();
     }
 
-    void AISearch()
+    protected virtual void AISearch()
     {
         if (searchPlayerAfterAttack)
         {
@@ -354,7 +355,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AIAttack()
+    protected virtual void AIAttack()
     {
         if (vision.bCanSeeTarget)
         {
@@ -422,7 +423,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AICasting()
+    protected virtual void AICasting()
     {
         if (currentEnemyType == EEnemyType.MELEE)
         {
@@ -453,7 +454,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AIEscape()
+    protected virtual void AIEscape()
     {
         if (vision.bCanSeeTarget)
         {
@@ -468,12 +469,13 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AIPanic()
+    protected virtual void AIPanic()
     {
 
     }
 
-    void AIRagdolled()
+    protected virtual 
+        void AIRagdolled()
     {
 
     }
