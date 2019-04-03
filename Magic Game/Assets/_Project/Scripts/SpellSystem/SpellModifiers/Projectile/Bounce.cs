@@ -7,18 +7,14 @@ public class Bounce : OnCollision
 
     public int bounceCount = 2;
 
-    public override void OnCollide(Collision collision)
+    public override void OnCollide(Collision collision, Vector3 direction)
     {
-        if (!ready)
+        if(bounceCount > 0)
         {
-            GetComponent<Projectile>().direction = collision.contacts[0].normal; // this changes the direction the projectile is moving
-            transform.rotation = Quaternion.FromToRotation(transform.forward, collision.contacts[0].normal); // also rotate the whole thing for graphics to face the right direction
-            bounceCount--;
-
-            if (bounceCount <= 0)
-            {
-                ready = true;
-            }
+            GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
+            copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, collision.contacts[0].normal);  // also rotate the whole thing for graphics to face the right direction
+            copy.GetComponent<Projectile>().direction = collision.contacts[0].normal;                                   // this changes the direction the projectile is moving
+            copy.GetComponent<Bounce>().bounceCount--;
         }
     }
 }

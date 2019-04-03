@@ -6,6 +6,7 @@ using UnityEngine;
 public class Card : ScriptableObject
 {
     [Header("Card variables")]
+    public List<SpellType> types                        = new List<SpellType>();
     public string cardName                              = null;
 
     [TextArea]

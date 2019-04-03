@@ -10,14 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d63c77b3e4e22943b4a0fc4677865d1, type: 3}
-  m_Name: Dot
+  m_Name: TeleportSelf
   m_EditorClassIdentifier: 
-  cardName: Dot
-  cardDescription: Deals over time damage to target when hit
+  types: 01000000
+  cardName: TeleportSelf
+  cardDescription: Teleport caster to the point where the projectile collided with
+    something
   castRequirements: []
   balances: []
-  modifiers: []
-  effects:
-  - {fileID: 11400000, guid: 10233676531ac834fb71f02c95beb180, type: 2}
+  modifiers:
+  - {fileID: 11400000, guid: 5f525083392b4db44a3890bcd07c91d1, type: 2}
+  effects: []
+  statusEffects: []
   graphics: {fileID: 0}
   secendaryGraphics: {fileID: 0}

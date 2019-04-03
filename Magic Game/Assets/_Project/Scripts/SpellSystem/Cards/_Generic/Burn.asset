@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d63c77b3e4e22943b4a0fc4677865d1, type: 3}
-  m_Name: PushBack
+  m_Name: Burn
   m_EditorClassIdentifier: 
-  types: 0100000002000000
-  cardName: PushBack
-  cardDescription: Pushes caster backwards while casting the spell
-  castRequirements:
-  - {fileID: 11400000, guid: ecd50df72cc8d8b4f9b185426e1a3035, type: 2}
-  balances:
-  - {fileID: 11400000, guid: 70dd056438a70a14c91b5de72983ecdc, type: 2}
-  modifiers:
-  - {fileID: 11400000, guid: fd922e3f3b6302841ba01ba0e185e948, type: 2}
+  types: 00000000
+  cardName: Burn
+  cardDescription: Deals over time damage to target when hit
+  castRequirements: []
+  balances: []
+  modifiers: []
   effects: []
-  statusEffects: []
+  statusEffects:
+  - {fileID: 3109190786659307199, guid: 5477ea31cb071c949b422958ec43c77a, type: 3}
   graphics: {fileID: 0}
   secendaryGraphics: {fileID: 0}

@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d63c77b3e4e22943b4a0fc4677865d1, type: 3}
   m_Name: KnockBack
   m_EditorClassIdentifier: 
-  cardName: Knockback Beam
-  cardDescription: Enemies are knocked backwards when hit by the beam
+  types: 0100000002000000
+  cardName: Knockback
+  cardDescription: Enemies are knocked backwards when hit by the spell
   castRequirements: []
   balances: []
-  modifiers: []
+  modifiers:
+  - {fileID: 11400000, guid: c032679b9bb6e7645a71040bb53e630e, type: 2}
   effects: []
+  statusEffects: []
   graphics: {fileID: 0}
   secendaryGraphics: {fileID: 0}

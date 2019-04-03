@@ -18,7 +18,7 @@ public class Beam : Spell
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Beam beam = Instantiate(this, spellbook.spellPos.position, rot);
-        beam.transform.parent = spellbook.transform;
+        beam.transform.SetParent(spellbook.transform);
 
         // apply all spellmodifiers to the beam
         ApplyModifiers(beam.gameObject, data);
@@ -59,12 +59,14 @@ public class Beam : Spell
                 {
                     // deal damage to the enemy and apply all collision modifiers ( knockback, burn, etc )
                     hit.collider.GetComponent<Health>().Hurt(baseDamage);
-                    OnCollision[] collisionModifiers = GetComponents<OnCollision>();
-                    foreach (OnCollision modifier in collisionModifiers)
-                    {
-                        modifier.Hit(hit.collider.gameObject, spellbook);
-                    }
                 }
+
+                OnCollision[] collisionModifiers = self.GetComponents<OnCollision>();
+                foreach (OnCollision modifier in collisionModifiers)
+                {
+                    modifier.BeamHit(hit, direction);
+                }
+
             }
             else
             {

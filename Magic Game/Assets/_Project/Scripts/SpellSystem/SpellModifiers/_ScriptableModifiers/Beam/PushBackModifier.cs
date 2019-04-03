@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PushBack", menuName = "SpellSystem/Modifiers/Beam/PushBack")]
+[CreateAssetMenu(fileName = "PushBack", menuName = "SpellSystem/Modifiers/PushBack")]
 public class PushBackModifier : SpellScriptableModifier
 {
 

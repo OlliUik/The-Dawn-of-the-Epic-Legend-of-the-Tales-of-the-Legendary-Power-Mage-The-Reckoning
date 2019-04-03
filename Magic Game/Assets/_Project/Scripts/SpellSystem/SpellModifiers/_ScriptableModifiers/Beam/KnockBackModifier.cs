@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "KnockBack", menuName = "SpellSystem/Modifiers/Beam/KnockBack")]
+[CreateAssetMenu(fileName = "KnockBack", menuName = "SpellSystem/Modifiers/KnockBack")]
 public class KnockBackModifier : SpellScriptableModifier
 {
 

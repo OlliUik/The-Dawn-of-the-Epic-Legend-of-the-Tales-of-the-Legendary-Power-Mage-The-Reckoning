@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d63c77b3e4e22943b4a0fc4677865d1, type: 3}
-  m_Name: Burning projectile
+  m_Name: Split4
   m_EditorClassIdentifier: 
-  cardName: Burn
-  cardDescription: Ignite target this spell hits
+  types: 01000000
+  cardName: Split
+  cardDescription: Splits projectile when collide
   castRequirements: []
   balances: []
-  modifiers: []
+  modifiers:
+  - {fileID: 11400000, guid: 7a519fac83517a940a66d72eb73a2736, type: 2}
   effects: []
-  statusEffects:
-  - {fileID: 3109190786659307199, guid: 5477ea31cb071c949b422958ec43c77a, type: 3}
+  statusEffects: []
   graphics: {fileID: 0}
   secendaryGraphics: {fileID: 0}

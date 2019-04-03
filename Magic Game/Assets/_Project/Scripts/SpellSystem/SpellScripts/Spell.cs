@@ -5,6 +5,8 @@ using UnityEngine;
 public class Spell : MonoBehaviour
 {
 
+    public GameObject caster { get; protected set; }
+
     [Header("Spell")]
     [SerializeField] protected float cooldown = 5.0f;
     [SerializeField] protected float castTime = 5.0f;
@@ -31,6 +33,7 @@ public class Spell : MonoBehaviour
     // most spells override this cause they require different logic
     public virtual void CastSpell(Spellbook spellbook, SpellData data)
     {
+
         ///<summary>
         ///
         ///                                 SPELLS
@@ -99,6 +102,13 @@ public class Spell : MonoBehaviour
                 graphics.transform.parent = go.transform;
             }
         }
+
+        OnCast[] onCastMods = go.GetComponents<OnCast>();
+        foreach (OnCast mod in onCastMods)
+        {
+            mod.OnSpellCast();
+        }
+
     }
 
 }
