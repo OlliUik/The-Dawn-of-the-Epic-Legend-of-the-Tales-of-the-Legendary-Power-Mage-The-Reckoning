@@ -14,6 +14,7 @@ public class EnemyVision : MonoBehaviour
     [SerializeField] private float checkInterval = 0.5f;
     [SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
     [SerializeField] private float checkHeightOffset = 0.5f;
+    [SerializeField] private LayerMask raycastLayerMask = 1;
 
     public bool bCanSeeTarget { get; private set; } = false;
     public GameObject targetGO { get; private set; } = null;
@@ -246,7 +247,7 @@ public class EnemyVision : MonoBehaviour
                         entityDirection,
                         out hit,
                         sightDistance,
-                        1
+                        raycastLayerMask
                         ))
                     {
                         if (hit.transform == targetGO.transform)
@@ -270,7 +271,7 @@ public class EnemyVision : MonoBehaviour
                                         Vector3.down,
                                         out hit,
                                         Mathf.Infinity,
-                                        1
+                                        raycastLayerMask
                                         ))
                                     {
                                         targetLocation = hit.point + Vector3.up * checkHeightOffset;
@@ -306,7 +307,7 @@ public class EnemyVision : MonoBehaviour
                                                 Vector3.down,
                                                 out hit,
                                                 Mathf.Infinity,
-                                                1
+                                                raycastLayerMask
                                                 ))
                             {
                                 if (Vector3.Distance(targetLocation, hit.point) > 0.5f)

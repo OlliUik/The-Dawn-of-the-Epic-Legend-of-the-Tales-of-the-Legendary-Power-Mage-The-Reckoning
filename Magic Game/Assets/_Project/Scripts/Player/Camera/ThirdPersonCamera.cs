@@ -5,6 +5,10 @@ public class ThirdPersonCamera : MonoBehaviour
 {
     #region VARIABLES
 
+    [Header("Input")]
+    [SerializeField] private string horizontalAxis = "Mouse X";
+    [SerializeField] private string verticalAxis = "Mouse Y";
+
     [HideInInspector] public float cameraFOV = 0.0f;
 
     [Header("Public")]
@@ -18,7 +22,9 @@ public class ThirdPersonCamera : MonoBehaviour
     [Header("Serialized")]
     [SerializeField] private float cameraFOVLerpSpeed = 10.0f;
     [SerializeField] private Vector3 pivotPoint = Vector3.zero;
-
+    [SerializeField] private Vector3 cameraClosePosition = Vector3.zero;
+    [SerializeField] private LayerMask raycastLayerMask = 1;
+    
     private Vector3 cameraOffset = Vector3.zero;
     private float cameraFOVLerp = 0.0f;
     private Vector2 minMaxPitch = new Vector2(-85.0f, 85.0f);
@@ -92,7 +98,7 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         if (isEnabled)
         {
-            Look(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+            Look(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
 
             if (cameraFOVLerp != cameraFOV)
             {
@@ -124,13 +130,17 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        //Don't draw gizmos when in play mode
+        //Don't draw certain gizmos when in play mode
         if (!UnityEditor.EditorApplication.isPlaying)
         {
             //Draw pivot point
             Gizmos.color = Color.red;
             Gizmos.DrawCube(transform.position + pivotPoint, Vector3.one * 0.15f);
         }
+
+        //Draw close position
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawCube(transform.position + pivotPoint + cameraClosePosition, Vector3.one * 0.18f);
     }
 
     #endregion
@@ -149,6 +159,8 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void Look(float x, float y)
     {
+        #region CAMERA_TURNING
+
         lookDirection += new Vector3(
             y * sensitivity.x * (invertY ? 1.0f : -1.0f),
             x * sensitivity.y,
@@ -168,6 +180,70 @@ public class ThirdPersonCamera : MonoBehaviour
         Vector3 offset = cameraObject.transform.right * cameraOffset.x + cameraObject.transform.up * cameraOffset.y + cameraObject.transform.forward * cameraOffset.z;
         cameraObject.transform.position = transform.position + pivotPoint + offset;
 
+        #endregion
+
+        #region CAMERA_WALLCHECKING
+
+        Vector3 cameraRaycast = cameraObject.transform.right * (cameraOffset.x - cameraClosePosition.x)
+            + cameraObject.transform.up * (cameraOffset.y - cameraClosePosition.y)
+            + cameraObject.transform.forward * (cameraOffset.z - cameraClosePosition.z);
+
+        RaycastHit hit;
+        float shortestDistance = Mathf.Infinity;
+
+        for (int i = 0; i < 4; i++)
+        {
+            Vector2 checkCorner = Vector2.zero;
+
+            switch (i)
+            {
+                case 0: checkCorner = Vector2.one; break;
+                case 1: checkCorner = Vector2.up + Vector2.left; break;
+                case 2: checkCorner = -Vector2.one; break;
+                case 3: checkCorner = -(Vector2.up + Vector2.left); break;
+                default: Debug.Log("Somehow " + this.gameObject + " made less/more raycasts than intended!"); break;
+            }
+
+            checkCorner *= cameraComponent.nearClipPlane;
+            checkCorner.x *= cameraComponent.aspect;
+
+            Vector3 v3 = cameraObject.transform.right * checkCorner.x * 1.0f + cameraObject.transform.up * checkCorner.y * 1.0f;
+            Debug.DrawLine(transform.position + pivotPoint + cameraClosePosition + v3, transform.position + pivotPoint + cameraClosePosition + cameraRaycast + v3, Color.yellow);
+
+            if (Physics.Raycast(
+                  transform.position + pivotPoint + cameraClosePosition + v3,
+                  cameraRaycast,
+                  out hit,
+                  Vector3.Magnitude(cameraOffset),
+                  raycastLayerMask
+                  ))
+            {
+                float distance = Vector3.Distance(transform.position + pivotPoint + cameraClosePosition + v3, hit.point);
+                if (distance < shortestDistance)
+                {
+                    shortestDistance = distance;
+                }
+            }
+        }
+
+        if (shortestDistance != Mathf.Infinity)
+        {
+            if (Physics.Raycast(
+            transform.position + pivotPoint + cameraClosePosition,
+            cameraRaycast,
+            out hit,
+            Mathf.Infinity,
+            raycastLayerMask
+            ))
+            {
+                cameraObject.transform.position = transform.position + pivotPoint + cameraClosePosition + Vector3.Normalize(cameraRaycast) * shortestDistance;
+            }
+        }
+
+
+        Debug.DrawLine(transform.position + pivotPoint + cameraClosePosition, transform.position + pivotPoint + cameraClosePosition + cameraRaycast, Color.yellow);
+
+        #endregion
 
         //if (cameraPivot != null)
         //{

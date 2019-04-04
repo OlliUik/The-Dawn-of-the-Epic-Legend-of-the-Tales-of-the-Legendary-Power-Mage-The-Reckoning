@@ -6,6 +6,12 @@ public class PlayerMovement : MonoBehaviour
 {
     #region VARIABLES
 
+    [Header("Input")]
+    [SerializeField] private string horizontalAxis = "Horizontal";
+    [SerializeField] private string verticalAxis = "Vertical";
+    [SerializeField] private string jumpButton = "Jump";
+    [SerializeField] private string dashButton = "Fire3";
+
     [HideInInspector] public float accelerationMultiplier = 1.0f;
     [HideInInspector] public int midAirJumps = 0;
     [HideInInspector] public bool enableControls = true;
@@ -26,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashCooldown = 1.0f;
     [SerializeField] private float gravityWallSliding = -1.0f;
     [SerializeField] private float wallSlidingTime = 2.0f;
-    [SerializeField] private LayerMask physicsLayerMask = 1;
+    [SerializeField] private LayerMask raycastLayerMask = 1;
 
     private ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
@@ -71,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        GetInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetButtonDown("Jump"), Input.GetButtonDown("Fire3"));
+        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
     }
 
     void FixedUpdate()
@@ -93,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
             Vector3.down,
             out rcHit,
             Mathf.Infinity,
-            physicsLayerMask
+            raycastLayerMask
             ))
         {
             if (AlmostEqual(hit.normal, rcHit.normal, 0.01f))
@@ -254,7 +260,7 @@ public class PlayerMovement : MonoBehaviour
                     Vector3.down,
                     out hit,
                     cCharacter.skinWidth + smoothStepDown,
-                    physicsLayerMask
+                    raycastLayerMask
                     ))
                 {
                     if (hit.transform != movingPlatform)
@@ -354,7 +360,7 @@ public class PlayerMovement : MonoBehaviour
                 -slopeNormal,
                 out hit,
                 cCharacter.skinWidth + 0.1f,
-                physicsLayerMask
+                raycastLayerMask
                 ))
             {
                 slopeNormal = Vector3.up;

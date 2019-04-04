@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6989253897410125415}
   - component: {fileID: 26209675684781308}
   - component: {fileID: 366472666550424865}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -66,15 +66,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f9b5870bd854df4d86a902428808f01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayer: 1
   isCasting: 0
   spellPos: {fileID: 6348975069626707363}
   spells:
-  - spell: {fileID: 0}
+  - type: 0
+    spell: {fileID: 0}
     cards: []
-  - spell: {fileID: 0}
+  - type: 0
+    spell: {fileID: 0}
     cards: []
-  - spell: {fileID: 0}
+  - type: 0
+    spell: {fileID: 0}
     cards: []
   lookTransform: {fileID: 6348975070603861140}
 --- !u!114 &5316809420139669611
@@ -89,12 +91,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca1f4bb94730ea4f860ca0beda35578, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  horizontalAxis: Mouse X
+  verticalAxis: Mouse Y
   cameraFOV: 0
   cameraObject: {fileID: 6348975070603861141}
   invertY: 0
   sensitivity: {x: 2, y: 2}
   cameraFOVLerpSpeed: 10
   pivotPoint: {x: 0, y: 1.4, z: 0}
+  cameraClosePosition: {x: 0, y: 0.5, z: 0}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &4387790940446206530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,6 +115,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 368e2e80e621e1845886116163085d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  horizontalAxis: Horizontal
+  verticalAxis: Vertical
+  jumpButton: Jump
+  dashButton: Fire3
   accelerationMultiplier: 1
   midAirJumps: 0
   enableControls: 1
@@ -219,7 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animationWeightThreshold: 0.5
-  audioPrefab: {fileID: 243950367109901844, guid: ea33fe8c59a02d544a1a3af02f3a356e,
+  audioPrefab: {fileID: 4097383918908376589, guid: d04449003dd799847baf0980ff59d149,
     type: 3}
 --- !u!114 &6348975071309872482
 MonoBehaviour:
