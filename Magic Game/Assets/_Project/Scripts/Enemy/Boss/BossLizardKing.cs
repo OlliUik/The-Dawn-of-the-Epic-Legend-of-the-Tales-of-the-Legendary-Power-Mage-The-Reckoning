@@ -103,7 +103,7 @@ public class BossLizardKing : EnemyCore
 
                         if (shootIntervalTimer <= 0.0f)
                         {
-                            shootIntervalTimer = shootInterval;
+                            shootIntervalTimer = castingInterval;
                             castingTimer = castingTime;
                             castingStandstillTimer = castingStandstill;
                             animator.SetTrigger("Cast Spell");
@@ -147,11 +147,16 @@ public class BossLizardKing : EnemyCore
     {
         if (currentPattern == EBossAttackPattern.ATTACK_MELEE)
         {
-            meleeHitbox.enabled = true;
+            if (!bCastedProjectile)
+            {
+                vision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
+                bCastedProjectile = true;
+            }
+
             if (castingStandstillTimer <= 0.0f)
             {
+                bCastedProjectile = false;
                 currentState = EState.ATTACK;
-                meleeHitbox.enabled = false;
             }
         }
         else

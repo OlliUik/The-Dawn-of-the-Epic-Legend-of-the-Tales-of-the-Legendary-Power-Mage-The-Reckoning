@@ -14,7 +14,7 @@ public class EnemyVision : MonoBehaviour
     [SerializeField] private float checkInterval = 0.5f;
     [SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
     [SerializeField] private float checkHeightOffset = 0.5f;
-    [SerializeField] private LayerMask raycastLayerMask = 1;
+    [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     public bool bCanSeeTarget { get; private set; } = false;
     public GameObject targetGO { get; private set; } = null;
@@ -64,11 +64,13 @@ public class EnemyVision : MonoBehaviour
     {
         checkTimer = Random.Range(0.0f, checkIntervalRandomRangeMax);
 
-        for (int i = 0; i < visionVertices.Length; i++)
+        for (int i = 1; i < visionVertices.Length; i++)
         {
-            visionVertices[i].x *= sightRadius / 2;
-            visionVertices[i].y *= sightRadius / 2;
-            visionVertices[i].z *= sightDistance;
+            //visionVertices[i].x *= sightRadius / 90;
+            //visionVertices[i].y *= sightRadius / 90;
+            //visionVertices[i].z *= sightDistance;
+            visionVertices[i].z *= -Mathf.Tan((sightRadius / 2 + 90.0f) * Mathf.Deg2Rad);
+            visionVertices[i] = visionVertices[i].normalized;
         }
     }
 
@@ -346,10 +348,10 @@ public class EnemyVision : MonoBehaviour
                     targetLocation = Vector3.zero;
                 }
 
-                Debug.DrawLine(vvTemp[0], vvTemp[1], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[2], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[3], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[4], Color.red);
+                Debug.DrawLine(vvTemp[0], vvTemp[1], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[2], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[3], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[4], Color.red, checkInterval + Time.fixedDeltaTime);
             }
         }
         else

@@ -12,6 +12,32 @@ public class EnemyCore : MonoBehaviour
 {
     #region VARIABLES
 
+    [Header("Melee Only Variables")]
+    [SerializeField] protected float meleeAttackDistance = 2.0f;
+    [SerializeField] protected float meleeDamage = 25.0f;
+
+    [Header("Ranged Only Variables")]
+    [SerializeField] protected float rangedEscapeDistance = 10.0f;
+
+    [Header("Ranged & Melee/Ranged Magic Variables")]
+    [SerializeField] protected bool castInBursts = false;
+    [SerializeField] protected float castingTime = 2.0f;
+    [SerializeField] protected int burstCount = 3;
+    [SerializeField] protected float timeBetweenShots = 0.2f;
+     
+    [Header("Shared Variables")]
+    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
+    [SerializeField] protected EEnemyType enemyType = EEnemyType.MELEE;
+    [SerializeField] protected bool useMagic = false;
+    [SerializeField] protected bool searchPlayerAfterAttack = true;
+    [SerializeField] protected float hearingRadius = 10.0f;
+    [SerializeField] protected float radiusCheckInterval = 1.0f;
+    [SerializeField] protected float paranoidDuration = 5.0f;
+    [SerializeField] protected float castingInterval = 1.0f;
+    [SerializeField] protected float castingStandstill = 4.0f;
+    [SerializeField] protected int castingSpellType = 0; //Check the animator controller to find out the desired number!
+    [SerializeField] protected Animator animator = null;
+
     public struct StatusEffects
     {
         public bool isOnFire;
@@ -57,29 +83,11 @@ public class EnemyCore : MonoBehaviour
     public enum EEnemyType
     {
         MELEE,
-        RANGED,
-        MAGIC
+        RANGED
     };
 
     [HideInInspector] public EState currentState = EState.IDLE;
-
-    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
-    [SerializeField] protected EEnemyType enemyType = EEnemyType.MELEE;
-    [SerializeField] protected float meleeAttackDistance = 2.0f;
-    [SerializeField] protected bool searchPlayerAfterAttack = true;
-    [SerializeField] protected float hearingRadius = 10.0f;
-    //[SerializeField] private float instantSightRadius = 3.0f;
-    [SerializeField] protected float rangedEscapeDistance = 10.0f;
-    [SerializeField] protected float radiusCheckInterval = 1.0f;
-    [SerializeField] protected float paranoidDuration = 5.0f;
-    [SerializeField] protected GameObject projectile = null;
-    [SerializeField] protected float shootInterval = 5.0f;
-    [SerializeField] protected float castingTime = 2.0f;
-    [SerializeField] protected float castingStandstill = 4.0f;
-    [SerializeField] protected int castingSpellType = 0; //Check the animator controller to find out the desired number!
-    [SerializeField] protected Animator animator = null;
-    [SerializeField] protected BoxCollider meleeHitbox = null;
-
+    
     public Vector3 spawnPosition { get; private set; } = Vector3.zero;
     public Vector3 spawnRotation { get; private set; } = Vector3.zero;
     public EEnemyType currentEnemyType { get; protected set; } = EEnemyType.MELEE;
@@ -97,6 +105,7 @@ public class EnemyCore : MonoBehaviour
     protected float shootIntervalTimer = 0.0f;
     protected float castingTimer = 0.0f;
     protected float castingStandstillTimer = 0.0f;
+    protected int shotsLeft = 0;
     protected Vector3 targetPosition = Vector3.zero;
     protected Vector3 playerOffset = Vector3.zero;
 
@@ -122,7 +131,18 @@ public class EnemyCore : MonoBehaviour
         vision = GetComponent<EnemyVision>();
         navigation = GetComponent<EnemyNavigation>();
         cHealth = GetComponent<Health>();
-        cSpellBook = GetComponent<Spellbook>();
+
+        if (useMagic)
+        {
+            if (GetComponent<Spellbook>() != null)
+            {
+                cSpellBook = GetComponent<Spellbook>();
+            }
+            else
+            {
+                Debug.LogWarning(this.gameObject + " is marked as a spellcaster, but has no spellbook!");
+            }
+        }
 
         spawnPosition = transform.position;
         spawnRotation = transform.rotation.eulerAngles;
@@ -244,18 +264,18 @@ public class EnemyCore : MonoBehaviour
         return predictedPosition;
     }
 
-    protected void CastProjectile()
-    {
-        if (projectile != null)
-        {
-            Vector3 direction = -Vector3.Normalize(transform.position + Vector3.up * 1.0f - (vision.targetLocation));
-            Instantiate(projectile).GetComponent<ProjectileTemp>().Initialize(transform.position + Vector3.up * 1.0f, direction, this.gameObject);
-        }
-        else
-        {
-            Debug.LogWarning(this.gameObject + " tried to cast a spell, but it has no projectile prefab assigned to it!");
-        }
-    }
+    //protected void CastProjectile()
+    //{
+    //    if (projectile != null)
+    //    {
+    //        Vector3 direction = -Vector3.Normalize(transform.position + Vector3.up * 1.0f - (vision.targetLocation));
+    //        Instantiate(projectile).GetComponent<ProjectileTemp>().Initialize(transform.position + Vector3.up * 1.0f, direction, this.gameObject);
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning(this.gameObject + " tried to cast a spell, but it has no projectile prefab assigned to it!");
+    //    }
+    //}
 
     public virtual void OnHurt()
     {
@@ -363,17 +383,9 @@ public class EnemyCore : MonoBehaviour
             {
                 case EEnemyType.MELEE:
                     {
-                        if (Vector3.Distance(transform.position, vision.targetLocation) < meleeAttackDistance)
+                        if (Vector3.Distance(transform.position, vision.targetLocation) > meleeAttackDistance)
                         {
-                            if (castingStandstillTimer > 0.0f)
-                            {
-                                animator.SetTrigger("Interrupt Spell");
-                                return;
-                            }
-                            castingStandstillTimer = castingStandstill;
-                            animator.SetTrigger("Cast Spell");
-                            animator.SetInteger("Spell Type", castingSpellType);
-                            currentState = EState.CASTING;
+                            return;
                         }
                         break;
                     }
@@ -384,37 +396,23 @@ public class EnemyCore : MonoBehaviour
                             currentState = EState.ESCAPE;
                             return;
                         }
-
-                        if (shootIntervalTimer <= 0.0f)
-                        {
-                            shootIntervalTimer = shootInterval;
-                            castingTimer = castingTime;
-                            castingStandstillTimer = castingStandstill;
-                            animator.SetTrigger("Cast Spell");
-                            animator.SetInteger("Spell Type", castingSpellType);
-                            currentState = EState.CASTING;
-                        }
                         break;
                     }
-                case EEnemyType.MAGIC:
-                    {
-                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeDistance)
-                        {
-                            currentState = EState.ESCAPE;
-                            return;
-                        }
+            }
 
-                        if (shootIntervalTimer <= 0.0f)
-                        {
-                            shootIntervalTimer = shootInterval;
-                            castingTimer = castingTime;
-                            castingStandstillTimer = castingStandstill;
-                            animator.SetTrigger("Cast Spell");
-                            animator.SetInteger("Spell Type", 3);
-                            currentState = EState.CASTING;
-                        }
-                        break;
-                    }
+            if (shootIntervalTimer <= 0.0f)
+            {
+                if (castInBursts)
+                {
+                    shotsLeft = burstCount;
+                }
+
+                shootIntervalTimer = castingInterval;
+                castingTimer = castingTime;
+                castingStandstillTimer = castingStandstill;
+                animator.SetTrigger("Cast Spell");
+                animator.SetInteger("Spell Type", castingSpellType);
+                currentState = EState.CASTING;
             }
         }
         else
@@ -425,13 +423,24 @@ public class EnemyCore : MonoBehaviour
 
     protected virtual void AICasting()
     {
-        if (currentEnemyType == EEnemyType.MELEE)
+        if (!useMagic && currentEnemyType == EEnemyType.MELEE)
         {
-            meleeHitbox.enabled = true;
+            if (navigation.agent.hasPath)
+            {
+                navigation.agent.ResetPath();
+                navigation.agent.velocity = new Vector3(0.0f, navigation.agent.velocity.y, 0.0f);
+            }
+
+            if (!bCastedProjectile)
+            {
+                vision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
+                bCastedProjectile = true;
+            }
+
             if (castingStandstillTimer <= 0.0f)
             {
+                bCastedProjectile = false;
                 currentState = EState.ATTACK;
-                meleeHitbox.enabled = false;
             }
         }
         else
@@ -445,10 +454,19 @@ public class EnemyCore : MonoBehaviour
                     bCastedProjectile = true;
                 }
 
-                if (castingStandstillTimer <= 0.0f)
+                if (shotsLeft > 1)
+                {
+                    animator.SetTrigger("Interrupt Spell");
+                    animator.SetTrigger("Cast Spell");
+                    bCastedProjectile = false;
+                    castingTimer = timeBetweenShots;
+                    shotsLeft--;
+                }
+                else if (castingStandstillTimer <= 0.0f)
                 {
                     bCastedProjectile = false;
                     currentState = EState.ATTACK;
+
                 }
             }
         }
@@ -474,8 +492,7 @@ public class EnemyCore : MonoBehaviour
 
     }
 
-    protected virtual 
-        void AIRagdolled()
+    protected virtual void AIRagdolled()
     {
 
     }

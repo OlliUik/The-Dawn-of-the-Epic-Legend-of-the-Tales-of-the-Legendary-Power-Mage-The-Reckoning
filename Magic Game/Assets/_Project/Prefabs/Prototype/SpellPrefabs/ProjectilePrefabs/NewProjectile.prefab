@@ -43,7 +43,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f9b3a9f9d185a424cb1b03e2c6afff27, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -51,10 +51,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 5
+  MinDistance: 3
+  MaxDistance: 15
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -235,13 +235,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b906893b70c7341b807d1c59dec587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  caster: {fileID: 0}
   cooldown: 0.01
   castTime: 0
   manaCost: 5
   effects: []
   statusEffects: []
   baseDamage: 25
-  baseRange: 1000
+  baseRange: 50
   baseSpeed: 30
 --- !u!54 &7973058797542623552
 Rigidbody:
@@ -302,7 +303,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6549cd76ad46bee419ce1d180a34e0f3, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -310,10 +311,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 10
+  MinDistance: 3
+  MaxDistance: 20
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -468,32 +469,32 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 7440952069193365007, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
+    - target: {fileID: 7440952068686814839, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
         type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 7440952069193365007, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
+    - target: {fileID: 7440952068686814839, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
         type: 3}
       propertyPath: m_LocalScale.y
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 7440952069193365007, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
+    - target: {fileID: 7440952068686814839, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 7440952068686814839, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
+    - target: {fileID: 7440952069193365007, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
         type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 7440952068686814839, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
+    - target: {fileID: 7440952069193365007, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
         type: 3}
       propertyPath: m_LocalScale.y
       value: 0.2
       objectReference: {fileID: 0}
-    - target: {fileID: 7440952068686814839, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
+    - target: {fileID: 7440952069193365007, guid: 9a3ac39c8865ca74a90a838f8c3fb342,
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.2
