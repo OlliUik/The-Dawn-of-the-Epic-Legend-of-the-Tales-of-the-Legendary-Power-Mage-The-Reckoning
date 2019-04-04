@@ -125,10 +125,16 @@ public class Spellbook : MonoBehaviour
 
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            spells[1].spell.CastSpell(this, spells[1]);
+        }
+
         if(Input.GetKeyDown(KeyCode.Alpha3))
         {
             spells[2].spell.CastSpell(this, spells[2]);
         }
+
     }
 
     public Vector3 GetDirection()

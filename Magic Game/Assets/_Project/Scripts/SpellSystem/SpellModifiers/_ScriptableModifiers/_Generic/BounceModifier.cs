@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Bounce", menuName = "SpellSystem/Modifiers/Projectile/Bounce")]
+[CreateAssetMenu(fileName = "Bounce", menuName = "SpellSystem/Modifiers/Bounce")]
 public class BounceModifier : SpellScriptableModifier
 {
 

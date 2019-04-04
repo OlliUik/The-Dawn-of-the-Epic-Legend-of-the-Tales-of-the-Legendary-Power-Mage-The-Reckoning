@@ -5,9 +5,15 @@ using UnityEngine;
 public class Aoe : Spell
 {
 
-    [Header("AoE varialbes")]
-    [SerializeField] protected float radius = 7.0f;
-    [SerializeField] protected float duration = 5.0f;
+    #region Variables
+
+    //[Header("AoE varialbes")]
+    [SerializeField] public float radius    { get; private set; } = 7.0f;
+    [SerializeField] public float duration  { get; private set; } = 10.0f;
+
+    #endregion
+
+    #region CustomMethods
 
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
@@ -27,32 +33,14 @@ public class Aoe : Spell
 
         // spawn instance in players current position
         Aoe aoe = Instantiate(this, spellbook.transform.position, spellbook.transform.rotation);
-        aoe.transform.parent = spellbook.transform;
+        aoe.transform.SetParent(spellbook.transform);
+        aoe.caster = spellbook.gameObject;
 
         aoe.ApplyModifiers(aoe.gameObject, data);
 
         aoe.StartCoroutine(DestroyAoe(aoe.gameObject, duration));
         spellbook.StopCasting();
 
-    }
-
-    private void Update()
-    {
-        // find out what is inside the radius
-        var auraArea = Physics.OverlapSphere(transform.position, radius);
-        foreach (var objectHit in auraArea)
-        {
-            // check if objectHit is enemy
-            if (objectHit.gameObject.GetComponent<Rigidbody>() != null)
-            {
-                // apply all modifiers here to the enemy inside radius
-                OnCollision[] collisionModifiers = GetComponents<OnCollision>();
-                foreach (OnCollision modifier in collisionModifiers)
-                {
-                    modifier.AoeCollide(objectHit.gameObject);
-                }
-            }
-        }
     }
 
     public void ModifyRange(float amount)
@@ -72,6 +60,29 @@ public class Aoe : Spell
     {
         yield return new WaitForSeconds(duration);
         Destroy(self);
+    }
+
+    #endregion
+
+    #region UnityMethods
+
+    private void Update()
+    {
+        // find out what is inside the radius
+        var auraArea = Physics.OverlapSphere(transform.position, radius);
+        foreach (var objectHit in auraArea)
+        {
+            // check if objectHit is enemy
+            if (objectHit.gameObject.GetComponent<Rigidbody>() != null)
+            {
+                // apply all modifiers here to the enemy inside radius
+                SpellModifier[] modifiers = GetComponents<SpellModifier>();
+                foreach (SpellModifier modifier in modifiers)
+                {
+                    modifier.AoeCollide(objectHit.gameObject);
+                }
+            }
+        }
     }
 
     // debug stuff
@@ -95,5 +106,7 @@ public class Aoe : Spell
             previousPoint = newPoint;
         }
     }
+
+    #endregion
 
 }

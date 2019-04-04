@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class Card : ScriptableObject
 {
-    [Header("Card variables")]
+    [Header("Spell editing variables")]
     public List<SpellType> types                        = new List<SpellType>();
     public string cardName                              = null;
 
@@ -22,6 +22,8 @@ public class Card : ScriptableObject
     public List<StatusEffectBase> statusEffects         = new List<StatusEffectBase>();
 
     [Space(10)]
-    public GameObject graphics                          = null;
-    public GameObject secendaryGraphics                 = null;
+    public GameObject graphicsProjecile                 = null;
+    public GameObject graphicsBeam                      = null;
+    public GameObject graphicsAoe                       = null;
+
 }

@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bounce : OnCollision
+public class Bounce : SpellModifier
 {
 
     public int bounceCount = 2;
+
+
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    {
+       // reflect TODO:
+    }
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {

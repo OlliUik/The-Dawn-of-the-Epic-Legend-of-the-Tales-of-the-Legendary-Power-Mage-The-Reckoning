@@ -46,25 +46,29 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
+
+        // COLLISION TO PLAYER OR ENEMY --> DEAL DAMAGE AND APPLY STATUSEFFECTS
+
         // collided with player or enemy deal damage
-        if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
-        {
-            collision.gameObject.GetComponent<Health>().Hurt(baseDamage);
+        //if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
+        //{
+        //    collision.gameObject.GetComponent<Health>().Hurt(baseDamage);
+        //
+        //    foreach (ScriptableEffect effect in effects)
+        //    {
+        //        print("Applied: " + effect.name);
+        //        collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
+        //    }
+        //
+        //    foreach (StatusEffectBase effectBase in statusEffects)
+        //    {
+        //        collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
+        //    }
+        //}
 
-            foreach (ScriptableEffect effect in effects)
-            {
-                print("Applied: " + effect.name);
-                collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
-            }
-
-            foreach (StatusEffectBase effectBase in statusEffects)
-            {
-                collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
-            }
-        }
-
-        OnCollision[] collisionModifiers = GetComponents<OnCollision>();
-        foreach (OnCollision modifier in collisionModifiers)
+        // APPLY ALL COLLISION MODIFIERS
+        SpellModifier[] modifiers = GetComponents<SpellModifier>();
+        foreach (SpellModifier modifier in modifiers)
         {
             modifier.ProjectileCollide(collision, direction);
         }
@@ -96,6 +100,7 @@ public class Projectile : Spell
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
         projectile.direction = direction;
+        projectile.caster = spellbook.gameObject;
 
         // apply all modifiers to the projectile ( this is inherited from spell class )
         ApplyModifiers(projectile.gameObject, data);
@@ -104,7 +109,6 @@ public class Projectile : Spell
         spellbook.StopCasting();
 
     }
-
 
     // THESE ARE USED TO MODIFY PROJECTILES BASE VALUES
     public void ModifyDamage(float amount)

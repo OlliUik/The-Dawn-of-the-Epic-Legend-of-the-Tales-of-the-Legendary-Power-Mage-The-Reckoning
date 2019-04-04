@@ -6,11 +6,13 @@ using UnityEngine;
 public class SummonLavaModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private GameObject spawnPrefab = null;
+    [SerializeField] private GameObject lavaPrefab = null;
+    [SerializeField] private GameObject aoeLavaFountain = null;
 
     public override void AddSpellModifier(GameObject spellObject)
     {
         SummonLava component = spellObject.AddComponent<SummonLava>();
-        component.spawnPrefab = spawnPrefab;
+        component.spawnPrefab = lavaPrefab;
+        component.aoeLavaFountain = aoeLavaFountain;
     }
 }
