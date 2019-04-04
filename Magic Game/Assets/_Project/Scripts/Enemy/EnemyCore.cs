@@ -456,6 +456,13 @@ public class EnemyCore : MonoBehaviour
 
                 if (shotsLeft > 1)
                 {
+                    if (!vision.bCanSeeTarget)
+                    {
+                        currentState = EState.ATTACK;
+                        shootIntervalTimer *= 0.25f;
+                        return;
+                    }
+
                     animator.SetTrigger("Interrupt Spell");
                     animator.SetTrigger("Cast Spell");
                     bCastedProjectile = false;

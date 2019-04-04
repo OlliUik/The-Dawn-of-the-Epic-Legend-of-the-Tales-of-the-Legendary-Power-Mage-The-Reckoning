@@ -18,6 +18,7 @@ public class Spellbook : MonoBehaviour
     public Transform lookTransform = null;
     private Vector3 charPositionOffset = Vector3.up * 1.0f;
     private Vector3 castPoint = Vector3.zero;
+    [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     // Components
     private Health health;
@@ -148,12 +149,12 @@ public class Spellbook : MonoBehaviour
             RaycastHit hitFromCamera;
             RaycastHit hitFromPlayer;
 
-            if (!Physics.Raycast(lookTransform.transform.position, lookTransform.transform.forward, out hitFromCamera, Mathf.Infinity, 1))
+            if (!Physics.Raycast(lookTransform.transform.position, lookTransform.transform.forward, out hitFromCamera, Mathf.Infinity, raycastLayerMask))
             {
                 hitFromCamera.point = transform.position + charPositionOffset + (lookTransform.transform.position + lookTransform.transform.forward * 5000.0f);
             }
 
-            if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity, 1))
+            if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity, raycastLayerMask))
             {
                 castPoint = hitFromPlayer.point;
             }
