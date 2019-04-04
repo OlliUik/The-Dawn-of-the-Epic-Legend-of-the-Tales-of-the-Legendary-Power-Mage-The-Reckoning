@@ -21,7 +21,8 @@ public class SpellEditorController : MonoBehaviour
     public GameObject cardPrefab                    = null;
     public Transform spawnPosition                  = null;
     public Transform[] availableCardPositions       = new Transform[3];
-    private GameObject[] currentCards               = new GameObject[3];
+    public GameObject[] currentCards               = new GameObject[3];
+
 
     private void Awake()
     {
