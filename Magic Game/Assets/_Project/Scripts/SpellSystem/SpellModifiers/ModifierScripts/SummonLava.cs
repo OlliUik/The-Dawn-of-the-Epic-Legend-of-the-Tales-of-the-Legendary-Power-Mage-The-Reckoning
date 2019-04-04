@@ -2,11 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SummonLava : OnCollision
+public class SummonLava : SpellModifier
 {
 
     public GameObject spawnPrefab = null;
+    public GameObject aoeLavaFountain = null;
 
+    public override void OnSpellCast(Spell spell)
+    {
+        if(spell.GetType() == typeof(Aoe))
+        {
+            GameObject temp = Instantiate(aoeLavaFountain, spell.transform.position, Quaternion.identity);
+        }
+    }
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
     {
@@ -20,4 +28,7 @@ public class SummonLava : OnCollision
     {
         GameObject temp = Instantiate(spawnPrefab, collision.contacts[0].point, Quaternion.FromToRotation(Vector3.up, collision.contacts[0].normal));
     }
+
+
+
 }
