@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class CardDisplay : MonoBehaviour
 {
 
@@ -14,11 +15,8 @@ public class CardDisplay : MonoBehaviour
     public Text descriptionText;
     public Image artworkImage;
 
-    private Button button;
-
     void Start()
     {
-        button = GetComponentInChildren<Button>();
         editorController = transform.parent.GetComponentInParent<SpellEditorController>();
     }
 
@@ -31,6 +29,38 @@ public class CardDisplay : MonoBehaviour
 
         // move spell to the correct position
         GetComponent<CardAnimation>().AnimateCard(startPosition, endPosition);
+    }
+
+    private void OnMouseEnter()
+    {
+        print("Mouse Enter");
+
+        Vector3 startScale = gameObject.transform.localScale;
+        Vector3 endScale = Vector3.one * 1.1f;
+
+        float percent = 0f;
+
+        while(percent < 1f)
+        {
+            transform.localScale = Vector3.Lerp(startScale, endScale, percent);
+            percent += Time.unscaledDeltaTime;
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        print("Mouse Exit");
+
+        Vector3 startScale = gameObject.transform.localScale;
+        Vector3 endScale = Vector3.one;
+
+        float percent = 0f;
+
+        while (percent < 1f)
+        {
+            transform.localScale = Vector3.Lerp(startScale, endScale, percent);
+            percent += Time.unscaledDeltaTime;
+        }
     }
 
     public void ChooseCard()

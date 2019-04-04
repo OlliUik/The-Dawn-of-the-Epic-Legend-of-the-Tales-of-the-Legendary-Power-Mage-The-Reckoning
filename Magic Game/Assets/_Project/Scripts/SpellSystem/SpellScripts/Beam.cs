@@ -44,6 +44,8 @@ public class Beam : Spell
             }
         }
 
+        SpellModifier[] modifiers = self.GetComponents<SpellModifier>();
+
         while (true)
         {
 
@@ -52,27 +54,44 @@ public class Beam : Spell
             // if collider[].length > 0     compare distances and get the closest one to the caster we hit...
 
             // keep updating the direction the player is looking and check if our beam hits something
-            Vector3 direction = spellbook.GetDirection();
-            GameObject hitObject = null;
 
-            if (baseRadius > 0.5f)
+
+            //if (baseRadius > 1.0f)
+            //{
+            //    hitObject = CapsuleBeam(spellbook, self);
+            //}
+            //else
+            //{
+            //    hitInfo = RaycastBeam(spellbook, self);
+            //}
+
+            //if(hitObject.CompareTag("Player") || hitObject.CompareTag("Enemy"))
+            //{
+            //    // deal damage
+            //    print("Deal damage");
+            //}
+
+
+            print("castin beam");
+
+            Vector3 direction = spellbook.GetDirection();
+
+            Ray ray = new Ray(spellbook.spellPos.position, direction * baseRange);
+            RaycastHit hitInfo;
+
+            // if beam hits something apply all collision modifiers to the hitObject
+            if (Physics.Raycast(ray, out hitInfo, baseRange))
             {
-                hitObject = CapsuleBeam(spellbook, self);
+                Debug.DrawRay(spellbook.spellPos.position, (hitInfo.point - spellbook.spellPos.position), Color.red);
+                foreach (SpellModifier modifier in modifiers)
+                {
+                    modifier.BeamCollide(hitInfo, direction);
+                }
             }
             else
             {
-                hitObject = RaycastBeam(spellbook, self);
-            }
-
-            if(hitObject.CompareTag("Player") || hitObject.CompareTag("Enemy"))
-            {
-                // deal damage
-            }
-
-            SpellModifier[] modifiers = GetComponents<SpellModifier>();
-            foreach (SpellModifier modifier in modifiers)
-            {
-                //modifier.BeamCollide(hitObject, direction);
+                // do max range beam if nothing is hit
+                Debug.DrawRay(spellbook.spellPos.position, ray.direction * baseRange, Color.green);
             }
 
             // if player is not pressing or releases the beam key stop the cast
@@ -91,8 +110,10 @@ public class Beam : Spell
 
     }
 
-    private GameObject RaycastBeam(Spellbook spellbook, GameObject self)
+    private RaycastHit RaycastBeam(Spellbook spellbook, GameObject self)
     {
+
+        direction = spellbook.GetDirection();
         Ray ray = new Ray(spellbook.spellPos.position, direction * baseRange);
         RaycastHit hit;
 
@@ -100,35 +121,13 @@ public class Beam : Spell
         if (Physics.Raycast(ray, out hit, baseRange))
         {
             Debug.DrawRay(spellbook.spellPos.position, (hit.point - spellbook.spellPos.position), Color.red);
-
-            if(hit.collider.GetComponent<Rigidbody>() != null)
-            {
-                return hit.collider.gameObject;
-            }
-            else
-            {
-                return null;
-            }
-
-            //// apply beam effects here to target we hit
-            //if (hit.collider.gameObject.CompareTag("Enemy") || hit.collider.gameObject.CompareTag("Player"))
-            //{
-            //    // deal damage to the enemy and apply all collision modifiers ( knockback, burn, etc )
-            //    hit.collider.GetComponent<Health>().Hurt(baseDamage);
-            //}
-            //
-            //SpellModifier[] modifiers = self.GetComponents<SpellModifier>();
-            //foreach (SpellModifier modifier in modifiers)
-            //{
-            //    modifier.BeamCollide(hit, direction);
-            //}
-
+            return hit;
         }
         else
         {
             // do max range beam if nothing is hit
             Debug.DrawRay(spellbook.spellPos.position, ray.direction * baseRange, Color.green);
-            return null;
+            return hit;
         }
     }
 

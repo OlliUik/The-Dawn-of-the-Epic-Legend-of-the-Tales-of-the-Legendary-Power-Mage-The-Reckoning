@@ -18,8 +18,9 @@ public class SummonLava : SpellModifier
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
     {
-        if(!hitInfo.collider.gameObject.CompareTag("Spell"))
+        if(!hitInfo.collider.gameObject.CompareTag("Spell") && hitInfo.collider.gameObject != null)
         {
+            print("Spawning lava");
             GameObject temp = Instantiate(spawnPrefab, hitInfo.point + Vector3.up * 0.1f, Quaternion.FromToRotation(Vector3.up, hitInfo.normal));
         }
     }

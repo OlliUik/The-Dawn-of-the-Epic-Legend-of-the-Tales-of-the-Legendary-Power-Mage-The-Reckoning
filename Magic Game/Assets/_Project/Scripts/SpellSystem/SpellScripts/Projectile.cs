@@ -49,22 +49,27 @@ public class Projectile : Spell
 
         // COLLISION TO PLAYER OR ENEMY --> DEAL DAMAGE AND APPLY STATUSEFFECTS
 
-        // collided with player or enemy deal damage
-        //if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
-        //{
-        //    collision.gameObject.GetComponent<Health>().Hurt(baseDamage);
-        //
-        //    foreach (ScriptableEffect effect in effects)
-        //    {
-        //        print("Applied: " + effect.name);
-        //        collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
-        //    }
-        //
-        //    foreach (StatusEffectBase effectBase in statusEffects)
-        //    {
-        //        collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
-        //    }
-        //}
+        if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
+        {
+
+            var health = collision.gameObject.GetComponent<Health>();
+
+            if(health != null)
+            {
+                health.Hurt(baseDamage);
+            }
+        
+            //foreach (ScriptableEffect effect in effects)
+            //{
+            //    print("Applied: " + effect.name);
+            //    collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
+            //}
+            //
+            //foreach (StatusEffectBase effectBase in statusEffects)
+            //{
+            //    collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
+            //}
+        }
 
         // APPLY ALL COLLISION MODIFIERS
         SpellModifier[] modifiers = GetComponents<SpellModifier>();
