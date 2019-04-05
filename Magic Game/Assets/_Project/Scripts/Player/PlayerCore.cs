@@ -10,6 +10,8 @@ public class PlayerCore : MonoBehaviour
 
     [Header("Serialized")]
     [SerializeField] private HUDManager canvasManager = null;
+    [SerializeField] private GameObject ragdollObject = null;
+    [SerializeField] private Transform ragdollPosition = null;
 
     public Health cHealth { get; private set; } = null;
     public Mana cMana { get; private set; } = null;
@@ -22,6 +24,9 @@ public class PlayerCore : MonoBehaviour
     private bool bInputEnabled = true;
     private bool bIsDead = false;
     private bool bShotFired = false;
+    private bool bIsRagdolled = false;
+    private float ragdollSleepTimer = 0.0f;
+    private Vector3 ragdollPrevPosition = Vector3.zero;
 
     #endregion
 
@@ -86,6 +91,7 @@ public class PlayerCore : MonoBehaviour
 
                 if (Input.GetButtonDown("Fire2"))
                 {
+                    EnableRagdoll(!bIsRagdolled);
                     //cTPCamera.SwitchSide();
                 }
             }
@@ -99,6 +105,31 @@ public class PlayerCore : MonoBehaviour
             {
                 EnableControls(!canvasManager.FlipSpellEditingState(this));
             }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (!bIsDead && bIsRagdolled && ragdollPosition != null)
+        {
+            cHealth.AddInvulnerability(Time.fixedDeltaTime);
+
+            if (Vector3.Distance(ragdollPosition.position, ragdollPrevPosition) < 0.2f)
+            {
+                if (ragdollSleepTimer > 0.0f)
+                {
+                    ragdollSleepTimer -= Time.fixedDeltaTime;
+                }
+                else
+                {
+                    EnableRagdoll(false);
+                }
+            }
+            else
+            {
+                ragdollSleepTimer = 2.0f;
+            }
+            ragdollPrevPosition = ragdollPosition.position;
         }
     }
 
@@ -149,6 +180,21 @@ public class PlayerCore : MonoBehaviour
         //{
         //    cSpellCaster.CastBeamActive(b);
         //}
+    }
+
+    public void EnableRagdoll(bool b)
+    {
+        bIsRagdolled = b;
+        ragdollObject.GetComponent<Animator>().enabled = !b;
+        ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
+        cTPCamera.isRagdolled = b;
+        cMovement.enableControls = !b;
+        ragdollSleepTimer = 3.0f;
+
+        if (!b)
+        {
+            cMovement.OnDisableRagdoll();
+        }
     }
 
     public void OnHurt()
