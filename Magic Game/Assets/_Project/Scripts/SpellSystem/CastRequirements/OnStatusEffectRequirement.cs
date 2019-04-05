@@ -6,7 +6,7 @@ using UnityEngine;
 public class OnStatusEffectRequirement : CastRequirement
 {
 
-    [SerializeField] private ScriptableEffect requiredStatusEffect;
+    [SerializeField] private ScriptableEffect requiredStatusEffect = null;
 
     public override bool isMet(Spellbook spellbook)
     {

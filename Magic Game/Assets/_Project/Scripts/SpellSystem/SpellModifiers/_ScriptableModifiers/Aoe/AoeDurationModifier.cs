@@ -6,7 +6,7 @@ using UnityEngine;
 public class AoeDurationModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private float extraDuration;
+    [SerializeField] private float extraDuration = 0f;
 
     public override void AddSpellModifier(GameObject spellObject)
     {

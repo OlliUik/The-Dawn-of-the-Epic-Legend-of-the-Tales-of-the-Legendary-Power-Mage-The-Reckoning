@@ -1,13 +1,22 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(PlayerCore))]
+[RequireComponent(typeof(ThirdPersonCamera))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
     #region VARIABLES
 
+    [Header("Input")]
+    [SerializeField] private string horizontalAxis = "Horizontal";
+    [SerializeField] private string verticalAxis = "Vertical";
+    [SerializeField] private string jumpButton = "Jump";
+    [SerializeField] private string dashButton = "Fire3";
+
     [HideInInspector] public float accelerationMultiplier = 1.0f;
     [HideInInspector] public int midAirJumps = 0;
+    [HideInInspector] public bool enableControls = true;
 
+    [Header("Serialized")]
     [SerializeField] private bool bAllowMidairDashing = true;
     [SerializeField] private float acceleration = 100.0f;
     [SerializeField] private float airAcceleration = 20.0f;
@@ -23,10 +32,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashCooldown = 1.0f;
     [SerializeField] private float gravityWallSliding = -1.0f;
     [SerializeField] private float wallSlidingTime = 2.0f;
+    [SerializeField] private LayerMask raycastLayerMask = 1;
 
     private ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
-    private LayerMask physicsLayerMask = 1;
 
     //Input
     private Vector2 movementInput = Vector2.zero;
@@ -44,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
     private float dCooldownTimer = 0.0f;
     private float wstTimer = 0.0f;
     private int midAirJumpsLeft = 0;
+    private int physicsLayer = 0;
     private Transform movingPlatform = null;
     private Vector3 movingPlatformPrevPosition = Vector3.zero;
     private Vector3 movingPlatformPrevRotation = Vector3.zero;
@@ -54,18 +64,30 @@ public class PlayerMovement : MonoBehaviour
 
     #region UNITY_DEFAULT_METHODS
 
+    void Awake()
+    {
+        cCharacter = GetComponent<CharacterController>();
+        cTPCamera = GetComponent<ThirdPersonCamera>();
+    }
+
     void Start()
     {
-        cCharacter = GetComponent<PlayerCore>().cCharacter;
-        cTPCamera = GetComponent<PlayerCore>().cTPCamera;
-        physicsLayerMask = GetComponent<PlayerCore>().physicsLayerMask;
+        transform.localRotation = Quaternion.identity;
+    }
+
+    void Update()
+    {
+        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
     }
 
     void FixedUpdate()
     {
-        Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
-        bJumpingActivated = false;
-        bDashingActivated = false;
+        if (enableControls)
+        {
+            Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
+            bJumpingActivated = false;
+            bDashingActivated = false;
+        }
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -77,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
             Vector3.down,
             out rcHit,
             Mathf.Infinity,
-            physicsLayerMask
+            raycastLayerMask
             ))
         {
             if (AlmostEqual(hit.normal, rcHit.normal, 0.01f))
@@ -133,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     #region CUSTOM_METHODS
 
-    public void GetInput(float inputX, float inputY, bool inputJump, bool inputDash)
+    void GetInput(float inputX, float inputY, bool inputJump, bool inputDash)
     {
         movementInput = new Vector2(inputX, inputY);
         if (inputJump && !bJumpingActivated)
@@ -144,6 +166,14 @@ public class PlayerMovement : MonoBehaviour
         {
             bDashingActivated = true;
         }
+    }
+
+    public void Teleport(Vector3 position)
+    {
+        physicsLayer = cCharacter.gameObject.layer;
+        cCharacter.gameObject.layer = 31;
+        cCharacter.Move(position - transform.position);
+        cCharacter.gameObject.layer = physicsLayer;
     }
 
     void Move(float inputX, float inputY, bool inputJump, bool inputDash)
@@ -230,7 +260,7 @@ public class PlayerMovement : MonoBehaviour
                     Vector3.down,
                     out hit,
                     cCharacter.skinWidth + smoothStepDown,
-                    physicsLayerMask
+                    raycastLayerMask
                     ))
                 {
                     if (hit.transform != movingPlatform)
@@ -260,7 +290,10 @@ public class PlayerMovement : MonoBehaviour
                     {
                         moveDirection = -lookVector;
                     }
-                    GetComponent<Health>().AddInvulnerability(dashDuration);
+                    if (GetComponent<Health>() != null)
+                    {
+                        GetComponent<Health>().AddInvulnerability(dashDuration);
+                    }
                     dDurationTimer = dashDuration;
                     dCooldownTimer = dashCooldown;
                     tempVector = moveDirection * dashSpeed * accelerationMultiplier;
@@ -327,7 +360,7 @@ public class PlayerMovement : MonoBehaviour
                 -slopeNormal,
                 out hit,
                 cCharacter.skinWidth + 0.1f,
-                physicsLayerMask
+                raycastLayerMask
                 ))
             {
                 slopeNormal = Vector3.up;

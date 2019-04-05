@@ -46,42 +46,38 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
-        // collided with player or enemy deal damage
+
+        // COLLISION TO PLAYER OR ENEMY --> DEAL DAMAGE AND APPLY STATUSEFFECTS
+
         if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<Health>().Hurt(baseDamage);
 
-            foreach (ScriptableEffect effect in effects)
-            {
-                print("Applied: " + effect.name);
-                collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
-            }
+            var health = collision.gameObject.GetComponent<Health>();
 
-            foreach (StatusEffectBase effectBase in statusEffects)
+            if(health != null)
             {
-                collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
+                health.Hurt(baseDamage);
             }
+        
+            //foreach (ScriptableEffect effect in effects)
+            //{
+            //    print("Applied: " + effect.name);
+            //    collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
+            //}
+            //
+            //foreach (StatusEffectBase effectBase in statusEffects)
+            //{
+            //    collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
+            //}
         }
 
-        // if some collision modifier is not ready yet...apply all and return 
-        // if all collisions modifiers are ready destroy the projectile
-        OnCollision[] collisionModifiers = GetComponents<OnCollision>();
-        for (int i = 0; i < collisionModifiers.Length; i++)
+        // APPLY ALL COLLISION MODIFIERS
+        SpellModifier[] modifiers = GetComponents<SpellModifier>();
+        foreach (SpellModifier modifier in modifiers)
         {
-            if (!collisionModifiers[i].ready)
-            {
-                foreach (OnCollision modifier in collisionModifiers)
-                {
-                    modifier.OnCollide(collision);
-                    return;
-                }
-            }
-
-            print("All collision modifiers ready...destroying");
-            Destroy(gameObject);
+            modifier.ProjectileCollide(collision, direction);
         }
 
-        print("No collision modifiers...destroying");
         Destroy(gameObject);
     }
 
@@ -109,6 +105,7 @@ public class Projectile : Spell
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
         projectile.direction = direction;
+        projectile.caster = spellbook.gameObject;
 
         // apply all modifiers to the projectile ( this is inherited from spell class )
         ApplyModifiers(projectile.gameObject, data);
@@ -117,7 +114,6 @@ public class Projectile : Spell
         spellbook.StopCasting();
 
     }
-
 
     // THESE ARE USED TO MODIFY PROJECTILES BASE VALUES
     public void ModifyDamage(float amount)

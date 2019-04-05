@@ -6,7 +6,7 @@ using UnityEngine;
 public class AoeRadiusModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private float extraRange;
+    [SerializeField] private float extraRange = 0f;
 
     public override void AddSpellModifier(GameObject spellObject)
     {

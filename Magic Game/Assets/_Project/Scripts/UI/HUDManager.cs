@@ -12,6 +12,11 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image healthBar = null;
     [SerializeField] private Image manaBar = null;
     [SerializeField] private Image hurtFlash = null;
+    [SerializeField] private Image fadeIn = null;
+
+    [SerializeField] private GameObject spellEditingUI = null;
+    private SpellEditorController controller = null;
+    public bool bIsEditingSpells { get; private set; } = false;
     
     public bool bIsPaused { get; private set; } = false;
 
@@ -23,6 +28,11 @@ public class HUDManager : MonoBehaviour
 
     #region UNITY_DEFAULT_METHODS
 
+    private void Start()
+    {
+        controller = spellEditingUI.GetComponent<SpellEditorController>();
+    }
+
     void Update()
     {
         if (hurtFlash.color.a > 0.0f)
@@ -31,8 +41,22 @@ public class HUDManager : MonoBehaviour
         }
         else
         {
-            hurtFlash.color = new Color(1.0f, 0.0f, 0.0f, 0.0f);
+            hurtFlash.color = Color.clear;
         }
+
+        if (fadeIn.color.a > 0.0f)
+        {
+            fadeIn.color = new Color(0.0f, 0.0f, 0.0f, fadeIn.color.a - Time.deltaTime / 1.0f);
+        }
+        else
+        {
+            fadeIn.color = Color.clear;
+        }
+    }
+
+    void OnEnable()
+    {
+        fadeIn.color = Color.black;
     }
 
     #endregion
@@ -58,6 +82,21 @@ public class HUDManager : MonoBehaviour
         goHPAndManaBars.SetActive(!bIsPaused);
         Time.timeScale = bIsPaused ? 0.0f : 1.0f;
         return bIsPaused;
+    }
+
+    public bool FlipSpellEditingState(PlayerCore pc)
+    {
+        cPlayerCore = pc;
+        bIsEditingSpells = !bIsEditingSpells;
+        spellEditingUI.SetActive(bIsEditingSpells);
+        crosshair.SetActive(!bIsEditingSpells);
+        goHPAndManaBars.SetActive(!bIsEditingSpells);
+        Time.timeScale = bIsEditingSpells ? 0.0f : 1.0f;
+
+        controller.useCrystalButton.gameObject.SetActive(true);
+        controller.useCrystalButton.interactable = controller.crystalsLeft > 0 ? true : false;
+
+        return bIsEditingSpells;
     }
 
     //Use previous caller if no PlayerInput is specified
