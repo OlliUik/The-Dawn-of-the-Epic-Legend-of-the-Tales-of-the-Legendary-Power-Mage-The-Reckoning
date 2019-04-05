@@ -103,6 +103,7 @@ public class PlayerCore : MonoBehaviour
 
             if(Input.GetKeyDown(KeyCode.Return))
             {
+                // OPEN SPELL EDITING MENU // ALSO CLOSES IT
                 EnableControls(!canvasManager.FlipSpellEditingState(this));
             }
         }
