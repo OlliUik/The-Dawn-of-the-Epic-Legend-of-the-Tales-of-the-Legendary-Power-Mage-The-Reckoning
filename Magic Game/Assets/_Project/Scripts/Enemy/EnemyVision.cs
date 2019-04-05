@@ -9,8 +9,9 @@ public class EnemyVision : MonoBehaviour
 
     [HideInInspector] public Vector3 targetLocation = Vector3.zero;
 
+    [SerializeField] private bool alwaysSeeTarget = false;
     [SerializeField] private float sightDistance = 30.0f;
-    [SerializeField] private float sightRadius = 45.0f;
+    [SerializeField][Range(1.0f, 180.0f)] private float sightRadius = 45.0f;
     [SerializeField] private float checkInterval = 0.5f;
     [SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
     [SerializeField] private float checkHeightOffset = 0.5f;
@@ -216,7 +217,7 @@ public class EnemyVision : MonoBehaviour
                     {
                         if (Vector3.Distance(headTransform.position, entity.transform.position + Vector3.up * checkHeightOffset) < sightDistance)
                         {
-                            if (IsPointInside(mesh, entity.transform.position + Vector3.up * checkHeightOffset))
+                            if (alwaysSeeTarget || IsPointInside(mesh, entity.transform.position + Vector3.up * checkHeightOffset))
                             {
                                 targetGO = entity;
                                 break;
@@ -230,6 +231,13 @@ public class EnemyVision : MonoBehaviour
             {
                 Vector3 entityPosition = targetGO.transform.position + Vector3.up * checkHeightOffset;
                 Vector3 entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
+
+                if (alwaysSeeTarget)
+                {
+                    bCanSeeTarget = true;
+                    targetLocation = entityPosition;
+                    return;
+                }
 
                 //if (targetGO.tag == "Player")
                 //{

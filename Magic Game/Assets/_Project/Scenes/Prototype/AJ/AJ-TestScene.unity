@@ -11355,6 +11355,22 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 053adb37b95d05244948f3acbc8bdea7, type: 2}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -6.123234e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -3.3087225e-24
+      objectReference: {fileID: 0}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.090194955
@@ -11381,22 +11397,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -6.123234e-17
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -3.3087225e-24
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 13700002, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
@@ -11970,6 +11970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headTransform: {fileID: 378470796}
   targetLocation: {x: 0, y: 0, z: 0}
+  alwaysSeeTarget: 0
   sightDistance: 30
   sightRadius: 60
   checkInterval: 0.15
@@ -12001,6 +12002,8 @@ MonoBehaviour:
   enemyType: 0
   useMagic: 0
   searchPlayerAfterAttack: 1
+  alwaysAggressive: 1
+  aggressiveRadius: 30
   hearingRadius: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
@@ -15108,6 +15111,22 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 053adb37b95d05244948f3acbc8bdea7, type: 2}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -6.123234e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -3.3087225e-24
+      objectReference: {fileID: 0}
+    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.090194955
@@ -15134,22 +15153,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -6.123234e-17
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -3.3087225e-24
-      objectReference: {fileID: 0}
-    - target: {fileID: 400050, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
-      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 13700002, guid: 094beb6c7fde68f429fdf2a0a79f4c1d, type: 3}
@@ -15913,10 +15916,12 @@ MonoBehaviour:
   castingTime: 2
   burstCount: 3
   timeBetweenShots: 0.2
-  defaultState: 0
+  defaultState: 1
   enemyType: 0
-  useMagic: 0
+  useMagic: 1
   searchPlayerAfterAttack: 1
+  alwaysAggressive: 0
+  aggressiveRadius: 32
   hearingRadius: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
@@ -15957,8 +15962,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headTransform: {fileID: 148594719}
   targetLocation: {x: 0, y: 0, z: 0}
+  alwaysSeeTarget: 1
   sightDistance: 50
-  sightRadius: 150
+  sightRadius: 180
   checkInterval: 0.5
   checkIntervalRandomRangeMax: 2
   checkHeightOffset: 0.5
@@ -15999,6 +16005,9 @@ MonoBehaviour:
     spell: {fileID: 3169531526154035573, guid: b73ed34253d469e4299aee34fd4c54bc, type: 3}
     cards: []
   lookTransform: {fileID: 148594719}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 3073
 --- !u!195 &1888490024
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -17364,6 +17373,11 @@ PrefabInstance:
     - target: {fileID: 5132427363293623724, guid: ca0496571654b224bbddfe026defebbf,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5132427363293623712, guid: ca0496571654b224bbddfe026defebbf,
+        type: 3}
+      propertyPath: aggressiveAlways
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

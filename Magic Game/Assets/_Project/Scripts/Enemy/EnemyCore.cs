@@ -30,6 +30,8 @@ public class EnemyCore : MonoBehaviour
     [SerializeField] protected EEnemyType enemyType = EEnemyType.MELEE;
     [SerializeField] protected bool useMagic = false;
     [SerializeField] protected bool searchPlayerAfterAttack = true;
+    [SerializeField] protected bool alwaysAggressive = true;
+    [SerializeField] protected float aggressiveRadius = 30.0f;
     [SerializeField] protected float hearingRadius = 10.0f;
     [SerializeField] protected float radiusCheckInterval = 1.0f;
     [SerializeField] protected float paranoidDuration = 5.0f;
@@ -196,8 +198,14 @@ public class EnemyCore : MonoBehaviour
     {
         #if UNITY_EDITOR
         Handles.Label(transform.position + Vector3.up * 2.0f, currentState.ToString());
-        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.1f);
-        Gizmos.DrawSphere(transform.position, hearingRadius);
+        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
+        Gizmos.DrawWireSphere(transform.position, hearingRadius);
+
+        if (!alwaysAggressive)
+        {
+            Gizmos.color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+            Gizmos.DrawWireSphere(transform.position, aggressiveRadius);
+        }
         #endif
     }
 
@@ -305,7 +313,17 @@ public class EnemyCore : MonoBehaviour
     {
         if (vision.bCanSeeTarget)
         {
-            currentState = EState.ATTACK;
+            if (!alwaysAggressive)
+            {
+                if (Vector3.Distance(transform.position, vision.targetLocation) < aggressiveRadius)
+                {
+                    currentState = EState.ATTACK;
+                }
+            }
+            else
+            {
+                currentState = EState.ATTACK;
+            }
         }
         NoiseChecker();
     }
