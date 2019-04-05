@@ -11,7 +11,19 @@ public class Beam : Spell
     [SerializeField] private float baseRange        = 150.0f;
     [SerializeField] private float baseRadius       = 1f;
 
-    private Vector3 direction                       = Vector3.zero;
+    [SerializeField] private GameObject graphics    = null;
+
+    public Vector3 startPos                        = Vector3.zero;
+    public Vector3 endPos                          = Vector3.zero;
+
+    [HideInInspector]
+    public Vector3 direction                        = Vector3.zero;
+
+    private Spellbook spellbook;
+    private RaycastHit hit;
+
+    public bool isMaster                            = false;
+    SpellModifier[] modifiers;
 
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
@@ -21,94 +33,160 @@ public class Beam : Spell
         Beam beam = Instantiate(this, spellbook.spellPos.position, rot);
         beam.caster = spellbook.gameObject;
         beam.transform.SetParent(spellbook.transform);
+        beam.isMaster = true;
 
         // apply all spellmodifiers to the beam
         ApplyModifiers(beam.gameObject, data);
+        beam.modifiers = GetComponents<SpellModifier>();
+
+        foreach (SpellModifier modifier in modifiers)
+        {
+            modifier.OnSpellCast(beam);
+        }
 
         // keep casting beam as long as the beam button is held down TODO:: change this
-        beam.StartCoroutine(CastBeam(beam.gameObject, spellbook, data));
+        //beam.StartCoroutine(CastBeam(beam.gameObject, spellbook, data)); OLDWAY
     }
 
-    IEnumerator CastBeam(GameObject self, Spellbook spellbook, SpellData data)
+    private void Start()
+    {
+        spellbook = GetComponentInParent<Spellbook>();
+        modifiers = GetComponents<SpellModifier>();
+    }
+
+    private void Update()
     {
 
-        print("Started beam cast");
-
-        int spellIndex = 0;
-        for (int i = 0; i < spellbook.spells.Length; i++)
+        if (isMaster)
         {
-            if(spellbook.spells[i].spell == data.spell)
-            {
-                spellIndex = i;
-                break;
-            }
+            direction = spellbook.GetDirection();
+            startPos = spellbook.spellPos.position;
         }
 
-        SpellModifier[] modifiers = self.GetComponents<SpellModifier>();
-
-        while (true)
+        endPos = (direction * baseRange);
+    
+        if (Physics.SphereCast(startPos, baseRadius, direction, out hit, baseRange))
         {
-
-            // if radius is samller than X limit do beam collision check with ray
-            // else if radius is bigger make capsule cast from spellcast position to look direction with range, returns collider[]
-            // if collider[].length > 0     compare distances and get the closest one to the caster we hit...
-
-            // keep updating the direction the player is looking and check if our beam hits something
-
-
-            //if (baseRadius > 1.0f)
-            //{
-            //    hitObject = CapsuleBeam(spellbook, self);
-            //}
-            //else
-            //{
-            //    hitInfo = RaycastBeam(spellbook, self);
-            //}
-
-            //if(hitObject.CompareTag("Player") || hitObject.CompareTag("Enemy"))
-            //{
-            //    // deal damage
-            //    print("Deal damage");
-            //}
-
-
-            print("castin beam");
-
-            Vector3 direction = spellbook.GetDirection();
-
-            Ray ray = new Ray(spellbook.spellPos.position, direction * baseRange);
-            RaycastHit hitInfo;
-
-            // if beam hits something apply all collision modifiers to the hitObject
-            if (Physics.Raycast(ray, out hitInfo, baseRange))
+            endPos = hit.point;
+        
+            var health = hit.collider.gameObject.GetComponent<Health>();
+            if(health != null)
             {
-                Debug.DrawRay(spellbook.spellPos.position, (hitInfo.point - spellbook.spellPos.position), Color.red);
-                foreach (SpellModifier modifier in modifiers)
-                {
-                    modifier.BeamCollide(hitInfo, direction);
-                }
+                health.Hurt(baseDamage);
             }
-            else
+                   
+            foreach (SpellModifier modifier in modifiers)
             {
-                // do max range beam if nothing is hit
-                Debug.DrawRay(spellbook.spellPos.position, ray.direction * baseRange, Color.green);
-            }
-
-            // if player is not pressing or releases the beam key stop the cast
-            if(Input.GetKeyUp((spellIndex + 1).ToString()) || !Input.GetKey((spellIndex + 1).ToString()))
+                modifier.BeamCollide(hit, direction);
+            }    
+        }     
+        else
+        {
+            foreach (SpellModifier modifier in modifiers)
             {
-                print("Beam cast ended");
-                break;
+                modifier.BeamCollisionEnd();
             }
-
-            yield return null;
         }
-
-        // stop the spellcast and set the cooldown for the spell
-        spellbook.StopCasting();
-        Destroy(self);
+        
+        UpdateBeam(startPos, direction);
 
     }
+
+    public void UpdateBeam(Vector3 startPosition, Vector3 direction)
+    {
+        // position
+        Vector3 offset = endPos - startPos;
+        Vector3 position = startPos + (offset * 0.5f);
+        graphics.transform.position = position;
+
+        // scale
+        Vector3 localScale = graphics.transform.localScale;
+        localScale.y = (endPos - startPos).magnitude * 0.5f;
+        graphics.transform.localScale = localScale;
+        
+        graphics.transform.rotation = Quaternion.FromToRotation(Vector3.up, offset);
+    }
+
+    //IEnumerator CastBeam(GameObject self, Spellbook spellbook, SpellData data)
+    //{
+
+    //    print("Started beam cast");
+
+    //    int spellIndex = 0;
+    //    for (int i = 0; i < spellbook.spells.Length; i++)
+    //    {
+    //        if(spellbook.spells[i].spell == data.spell)
+    //        {
+    //            spellIndex = i;
+    //            break;
+    //        }
+    //    }
+
+    //    SpellModifier[] modifiers = self.GetComponents<SpellModifier>();
+
+    //    while (true)
+    //    {
+
+    //        // if radius is samller than X limit do beam collision check with ray
+    //        // else if radius is bigger make capsule cast from spellcast position to look direction with range, returns collider[]
+    //        // if collider[].length > 0     compare distances and get the closest one to the caster we hit...
+
+    //        // keep updating the direction the player is looking and check if our beam hits something
+
+
+    //        //if (baseRadius > 1.0f)
+    //        //{
+    //        //    hitObject = CapsuleBeam(spellbook, self);
+    //        //}
+    //        //else
+    //        //{
+    //        //    hitInfo = RaycastBeam(spellbook, self);
+    //        //}
+
+    //        //if(hitObject.CompareTag("Player") || hitObject.CompareTag("Enemy"))
+    //        //{
+    //        //    // deal damage
+    //        //    print("Deal damage");
+    //        //}
+
+
+    //        print("castin beam");
+
+    //        Vector3 direction = spellbook.GetDirection();
+
+    //        Ray ray = new Ray(spellbook.spellPos.position, direction * baseRange);
+    //        RaycastHit hitInfo;
+
+    //        // if beam hits something apply all collision modifiers to the hitObject
+    //        if (Physics.Raycast(ray, out hitInfo, baseRange))
+    //        {
+    //            Debug.DrawRay(spellbook.spellPos.position, (hitInfo.point - spellbook.spellPos.position), Color.red);
+    //            foreach (SpellModifier modifier in modifiers)
+    //            {
+    //                modifier.BeamCollide(hitInfo, direction);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            // do max range beam if nothing is hit
+    //            Debug.DrawRay(spellbook.spellPos.position, ray.direction * baseRange, Color.green);
+    //        }
+
+    //        // if player is not pressing or releases the beam key stop the cast
+    //        if(Input.GetKeyUp((spellIndex + 1).ToString()) || !Input.GetKey((spellIndex + 1).ToString()))
+    //        {
+    //            print("Beam cast ended");
+    //            break;
+    //        }
+
+    //        yield return null;
+    //    }
+
+    //    // stop the spellcast and set the cooldown for the spell
+    //    spellbook.StopCasting();
+    //    Destroy(self);
+
+    //}
 
     private RaycastHit RaycastBeam(Spellbook spellbook, GameObject self)
     {
@@ -154,6 +232,7 @@ public class Beam : Spell
         return closest;
     }
 
+    // USED TO MODIFY BASE VALUES
     public void ModifyDamage(float amount)
     {
         baseDamage += amount;
