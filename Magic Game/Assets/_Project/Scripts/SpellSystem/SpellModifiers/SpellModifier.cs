@@ -12,5 +12,5 @@ public abstract class SpellModifier : MonoBehaviour
     public virtual void BeamCollide(RaycastHit hitInfo, Vector3 direction) { }                              // used to detect hits on gameObjects without collision info
     public virtual void AoeCollide(GameObject hitObject) { }
 
-
+    public virtual void BeamCollisionEnd() { }
 }

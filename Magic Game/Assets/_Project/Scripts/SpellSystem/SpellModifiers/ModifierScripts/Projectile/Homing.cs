@@ -6,10 +6,14 @@ public class Homing : SpellModifier
 {
 
     public float rotationSpeed = 2.0f;
-    private Transform target = null;
+    public Transform target = null;
+
+    Projectile pro;
 
     void Start()
     {
+        pro = GetComponent<Projectile>();
+
         if (target == null)
         {
             target = FindClosestTarget();
@@ -18,11 +22,12 @@ public class Homing : SpellModifier
 
     void Update()
     {
-        Vector3 targetDir = target.transform.position - transform.position;
         float step = rotationSpeed * Time.deltaTime;
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
-        Debug.DrawRay(transform.position, newDir, Color.red);
-        transform.rotation = Quaternion.LookRotation(newDir);
+
+        Vector3 targetDir = target.transform.position - transform.position;
+        Vector3 newDir = Vector3.RotateTowards(pro.direction, targetDir, step, 0.0f);
+
+        pro.direction = newDir;
     }
 
     private Transform FindClosestTarget()

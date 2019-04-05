@@ -371,6 +371,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpellEditingUI
       objectReference: {fileID: 0}
+    - target: {fileID: 7881424386204121091, guid: b56392675e379d24c95acf5e2c615404,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -480,6 +485,18 @@ PrefabInstance:
         type: 3}
       propertyPath: crystalsLeft
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 594032811, guid: b56392675e379d24c95acf5e2c615404, type: 3}
+      propertyPath: data.type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1745262857, guid: b56392675e379d24c95acf5e2c615404, type: 3}
+      propertyPath: data.type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1598896869, guid: b56392675e379d24c95acf5e2c615404, type: 3}
+      propertyPath: data.type
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b56392675e379d24c95acf5e2c615404, type: 3}
@@ -965,6 +982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 1
   defaultState: 2
   enemyType: 0
   meleeAttackDistance: 2
@@ -1073,6 +1091,9 @@ MonoBehaviour:
   checkInterval: 0.15
   checkIntervalRandomRangeMax: 2
   checkHeightOffset: 0.5
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!195 &251516346
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -7940,12 +7961,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477685266}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &586639682 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 366472666253240096, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
-    type: 3}
-  m_PrefabInstance: {fileID: 366472666166418844}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &658781938
 GameObject:
   m_ObjectHideFlags: 0
@@ -8856,6 +8871,9 @@ MonoBehaviour:
   checkInterval: 0.15
   checkIntervalRandomRangeMax: 2
   checkHeightOffset: 0.5
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &1175843104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8883,6 +8901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 1
   defaultState: 1
   enemyType: 0
   meleeAttackDistance: 2
@@ -9112,6 +9131,9 @@ MonoBehaviour:
   checkInterval: 0.1
   checkIntervalRandomRangeMax: 2
   checkHeightOffset: 0.5
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &1265521322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9139,6 +9161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 1
   defaultState: 2
   enemyType: 1
   meleeAttackDistance: 2
@@ -9368,7 +9391,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14390
+  m_Name: pb_Mesh16616
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10671,12 +10694,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391169820}
   m_Mesh: {fileID: 1482508334}
---- !u!4 &1414259712 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6953763851940780089, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
-    type: 3}
-  m_PrefabInstance: {fileID: 366472666166418844}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1430657210
 GameObject:
   m_ObjectHideFlags: 0
@@ -10880,7 +10897,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14574
+  m_Name: pb_Mesh16800
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -11077,6 +11094,9 @@ MonoBehaviour:
   checkInterval: 0.5
   checkIntervalRandomRangeMax: 2
   checkHeightOffset: 0.5
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &1485341760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11104,6 +11124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 1
   defaultState: 2
   enemyType: 1
   meleeAttackDistance: 2
@@ -11435,6 +11456,9 @@ MonoBehaviour:
   checkInterval: 0.15
   checkIntervalRandomRangeMax: 2
   checkHeightOffset: 0.5
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &1609891693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11462,6 +11486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 1
   defaultState: 1
   enemyType: 0
   meleeAttackDistance: 2
@@ -11691,7 +11716,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh14378
+  m_Name: pb_Mesh16604
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -12446,6 +12471,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1938077161}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1963493511 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 366472666550424924, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 366472666166418844}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1981173824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12727,36 +12758,6 @@ Transform:
   m_Father: {fileID: 1737206198}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2063962847
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2063962848}
-  m_Layer: 0
-  m_Name: SpellPosition
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2063962848
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2063962847}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0542, z: 0.0455}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 586639682}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2087287852
 GameObject:
   m_ObjectHideFlags: 0
@@ -12942,8 +12943,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1414259712}
-  m_RootOrder: 3
+  m_Father: {fileID: 1963493511}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &366472666166418844
 PrefabInstance:
@@ -13251,6 +13252,97 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 500730027540131323, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spellEditingUI
+      value: 
+      objectReference: {fileID: 121346227}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].cards.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].cards.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].cards.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].spell
+      value: 
+      objectReference: {fileID: 5489485157920764430, guid: d62ef5013ca69e741ae08acded91b356,
+        type: 3}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].spell
+      value: 
+      objectReference: {fileID: 3627455154893943791, guid: dc13a6c579e0b3548b314807f492158a,
+        type: 3}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].spell
+      value: 
+      objectReference: {fileID: 1874960764304840051, guid: 3dde67cb60224dd45ab9be309846317c,
+        type: 3}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[2].cards.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b477617dfaf32a40b93b5e5e39c89fc,
+        type: 2}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[0].cards.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 246cf9d7846c6c6448058eabb7596f07,
+        type: 2}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].cards.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1888278b250f3b74b803c0b24ae12a81,
+        type: 2}
+    - target: {fileID: 6348975070603861140, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6348975069766138289, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942450007882474024, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192421045694677326, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7916848275118598932, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
       propertyPath: spellEditingUI
       value: 

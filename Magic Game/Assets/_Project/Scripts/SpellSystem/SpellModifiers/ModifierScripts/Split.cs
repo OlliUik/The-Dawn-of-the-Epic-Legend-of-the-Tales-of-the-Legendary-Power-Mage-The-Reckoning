@@ -32,11 +32,41 @@ public class Split : SpellModifier
     }
 
 
+    List<GameObject> beamCopies = new List<GameObject>();
+    List<Beam> beams = new List<Beam>();
+
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
     {
-       
-        // split for beam TODO:
 
+        for (int i = 0; i < splitCount; i++)
+        {
+
+            if(!splitted)
+            {
+                GameObject copy = Instantiate(gameObject);
+                beamCopies.Add(copy);
+                Destroy(copy.GetComponent<Split>());
+                splitted = true;
+            }
+
+            beamCopies[i].SetActive(true);
+            Beam copyBeam = beamCopies[i].GetComponent<Beam>();
+            copyBeam.startPos = hitInfo.point;
+            copyBeam.isMaster = false;
+            Vector3 reflectedDir = Vector3.Reflect(direction, hitInfo.normal);
+            reflectedDir = Quaternion.Euler(0, -45f, 0) * reflectedDir;
+            copyBeam.direction = reflectedDir;           
+
+        }
+
+    }
+
+    public override void BeamCollisionEnd()
+    {
+        foreach (GameObject go in beamCopies)
+        {
+            go.SetActive(false);
+        }
     }
 
 }
