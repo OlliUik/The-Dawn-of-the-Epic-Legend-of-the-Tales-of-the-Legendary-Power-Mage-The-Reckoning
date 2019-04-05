@@ -35,6 +35,7 @@ public class Bounce : SpellModifier
             if(beamCopy == null)
             {
                 beamCopy = Instantiate(gameObject);
+                beamCopy.name = "BounceCopy";
                 beamCopy.transform.SetParent(gameObject.transform);
                 beamCopy.GetComponent<Bounce>().bounceCount--;
                 beam = beamCopy.GetComponent<Beam>();

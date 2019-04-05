@@ -23,7 +23,7 @@ public class Beam : Spell
     private RaycastHit hit;
 
     public bool isMaster                            = false;
-    SpellModifier[] modifiers;
+
 
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
@@ -37,12 +37,6 @@ public class Beam : Spell
 
         // apply all spellmodifiers to the beam
         ApplyModifiers(beam.gameObject, data);
-        beam.modifiers = GetComponents<SpellModifier>();
-
-        foreach (SpellModifier modifier in modifiers)
-        {
-            modifier.OnSpellCast(beam);
-        }
 
         // keep casting beam as long as the beam button is held down TODO:: change this
         //beam.StartCoroutine(CastBeam(beam.gameObject, spellbook, data)); OLDWAY
@@ -50,8 +44,8 @@ public class Beam : Spell
 
     private void Start()
     {
+        if(isMaster)
         spellbook = GetComponentInParent<Spellbook>();
-        modifiers = GetComponents<SpellModifier>();
     }
 
     private void Update()
@@ -74,7 +68,8 @@ public class Beam : Spell
             {
                 health.Hurt(baseDamage);
             }
-                   
+
+            SpellModifier[] modifiers = GetComponents<SpellModifier>();
             foreach (SpellModifier modifier in modifiers)
             {
                 modifier.BeamCollide(hit, direction);
@@ -82,6 +77,7 @@ public class Beam : Spell
         }     
         else
         {
+            SpellModifier[] modifiers = GetComponents<SpellModifier>();
             foreach (SpellModifier modifier in modifiers)
             {
                 modifier.BeamCollisionEnd();

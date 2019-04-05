@@ -364,17 +364,12 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1963493511}
     m_Modifications:
     - target: {fileID: 7881424386204121091, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
       propertyPath: m_Name
       value: SpellEditingUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 7881424386204121091, guid: b56392675e379d24c95acf5e2c615404,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
@@ -394,17 +389,17 @@ PrefabInstance:
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
@@ -414,7 +409,7 @@ PrefabInstance:
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7881424386204121102, guid: b56392675e379d24c95acf5e2c615404,
         type: 3}
@@ -480,23 +475,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7881424386204121090, guid: b56392675e379d24c95acf5e2c615404,
-        type: 3}
-      propertyPath: crystalsLeft
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 594032811, guid: b56392675e379d24c95acf5e2c615404, type: 3}
-      propertyPath: data.type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1745262857, guid: b56392675e379d24c95acf5e2c615404, type: 3}
-      propertyPath: data.type
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1598896869, guid: b56392675e379d24c95acf5e2c615404, type: 3}
-      propertyPath: data.type
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b56392675e379d24c95acf5e2c615404, type: 3}
@@ -982,22 +960,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 1
+  meleeAttackDistance: 2
+  meleeDamage: 25
+  rangedEscapeDistance: 10
+  castInBursts: 0
+  castingTime: 2
+  burstCount: 3
+  timeBetweenShots: 0.2
   defaultState: 2
   enemyType: 0
-  meleeAttackDistance: 2
+  useMagic: 0
   searchPlayerAfterAttack: 1
+  alwaysAggressive: 1
+  aggressiveRadius: 30
   hearingRadius: 10
-  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
-  projectile: {fileID: 0}
-  shootInterval: 5
-  castingTime: 2
+  castingInterval: 1
   castingStandstill: 4
   castingSpellType: 0
   animator: {fileID: 0}
-  meleeHitbox: {fileID: 0}
+  currentState: 1
 --- !u!136 &251516341
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1086,6 +1069,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headTransform: {fileID: 1027641407}
   targetLocation: {x: 0, y: 0, z: 0}
+  alwaysSeeTarget: 0
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -1128,6 +1112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97df1a9f55c5d3d448ca924dcb99ab36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveWhileCasting: 0
   navigationInterval: 1
   navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
@@ -8866,6 +8851,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headTransform: {fileID: 34479360}
   targetLocation: {x: 0, y: 0, z: 0}
+  alwaysSeeTarget: 0
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -8901,22 +8887,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 1
+  meleeAttackDistance: 2
+  meleeDamage: 25
+  rangedEscapeDistance: 10
+  castInBursts: 0
+  castingTime: 2
+  burstCount: 3
+  timeBetweenShots: 0.2
   defaultState: 1
   enemyType: 0
-  meleeAttackDistance: 2
+  useMagic: 0
   searchPlayerAfterAttack: 1
+  alwaysAggressive: 1
+  aggressiveRadius: 30
   hearingRadius: 10
-  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
-  projectile: {fileID: 0}
-  shootInterval: 0.05
-  castingTime: 2
+  castingInterval: 1
   castingStandstill: 4
   castingSpellType: 0
   animator: {fileID: 0}
-  meleeHitbox: {fileID: 0}
+  currentState: 1
 --- !u!136 &1175843106
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8965,6 +8956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97df1a9f55c5d3d448ca924dcb99ab36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveWhileCasting: 0
   navigationInterval: 0.2
   navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
@@ -9126,6 +9118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2087287853}
   targetLocation: {x: 0, y: 0, z: 0}
+  alwaysSeeTarget: 0
   sightDistance: 150
   sightRadius: 75
   checkInterval: 0.1
@@ -9161,23 +9154,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 1
+  meleeAttackDistance: 2
+  meleeDamage: 25
+  rangedEscapeDistance: 10
+  castInBursts: 0
+  castingTime: 2
+  burstCount: 3
+  timeBetweenShots: 0.2
   defaultState: 2
   enemyType: 1
-  meleeAttackDistance: 2
+  useMagic: 0
   searchPlayerAfterAttack: 0
+  alwaysAggressive: 1
+  aggressiveRadius: 30
   hearingRadius: 10
-  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
-  projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
-    type: 3}
-  shootInterval: 5
-  castingTime: 2
+  castingInterval: 1
   castingStandstill: 4
   castingSpellType: 0
   animator: {fileID: 0}
-  meleeHitbox: {fileID: 0}
+  currentState: 1
 --- !u!136 &1265521324
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9226,6 +9223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97df1a9f55c5d3d448ca924dcb99ab36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveWhileCasting: 0
   navigationInterval: 0.5
   navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 5
@@ -11089,6 +11087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headTransform: {fileID: 658781939}
   targetLocation: {x: 0, y: 0, z: 0}
+  alwaysSeeTarget: 0
   sightDistance: 50
   sightRadius: 45
   checkInterval: 0.5
@@ -11124,23 +11123,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 1
+  meleeAttackDistance: 2
+  meleeDamage: 25
+  rangedEscapeDistance: 10
+  castInBursts: 0
+  castingTime: 2
+  burstCount: 3
+  timeBetweenShots: 0.2
   defaultState: 2
   enemyType: 1
-  meleeAttackDistance: 2
+  useMagic: 0
   searchPlayerAfterAttack: 0
+  alwaysAggressive: 1
+  aggressiveRadius: 30
   hearingRadius: 10
-  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
-  projectile: {fileID: 5925449961177488333, guid: 48aae58b95808e641922f6382b21e79e,
-    type: 3}
-  shootInterval: 5
-  castingTime: 2
+  castingInterval: 1
   castingStandstill: 4
   castingSpellType: 0
   animator: {fileID: 0}
-  meleeHitbox: {fileID: 0}
+  currentState: 1
 --- !u!136 &1485341762
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11189,6 +11192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97df1a9f55c5d3d448ca924dcb99ab36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveWhileCasting: 0
   navigationInterval: 1
   navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
@@ -11451,6 +11455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2106006298}
   targetLocation: {x: 0, y: 0, z: 0}
+  alwaysSeeTarget: 0
   sightDistance: 30
   sightRadius: 45
   checkInterval: 0.15
@@ -11486,22 +11491,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 1
+  meleeAttackDistance: 2
+  meleeDamage: 25
+  rangedEscapeDistance: 10
+  castInBursts: 0
+  castingTime: 2
+  burstCount: 3
+  timeBetweenShots: 0.2
   defaultState: 1
   enemyType: 0
-  meleeAttackDistance: 2
+  useMagic: 0
   searchPlayerAfterAttack: 1
+  alwaysAggressive: 1
+  aggressiveRadius: 30
   hearingRadius: 10
-  rangedEscapeDistance: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
-  projectile: {fileID: 0}
-  shootInterval: 5
-  castingTime: 2
+  castingInterval: 1
   castingStandstill: 4
   castingSpellType: 0
   animator: {fileID: 0}
-  meleeHitbox: {fileID: 0}
+  currentState: 1
 --- !u!136 &1609891695
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -11550,6 +11560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97df1a9f55c5d3d448ca924dcb99ab36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveWhileCasting: 0
   navigationInterval: 1
   navigationIntervalPlayerLocated: 0.2
   waitAtPatrolPoint: 0
@@ -12916,36 +12927,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106006297}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2134162022
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2134162023}
-  m_Layer: 0
-  m_Name: SpellPosition
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2134162023
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2134162022}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1963493511}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &366472666166418844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13047,7 +13028,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spellPos
       value: 
-      objectReference: {fileID: 2134162023}
+      objectReference: {fileID: 0}
     - target: {fileID: 5988127636396934133, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
       propertyPath: spells.Array.data[0].spell
@@ -13269,7 +13250,7 @@ PrefabInstance:
     - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
       propertyPath: spells.Array.data[1].cards.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
@@ -13321,6 +13302,12 @@ PrefabInstance:
       propertyPath: spells.Array.data[1].cards.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 1888278b250f3b74b803c0b24ae12a81,
+        type: 2}
+    - target: {fileID: 5021546834307941695, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
+        type: 3}
+      propertyPath: spells.Array.data[1].cards.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: a0e74379f77d98445ae58db07b085985,
         type: 2}
     - target: {fileID: 6348975070603861140, guid: 0fceb9effa83d094a96cd97b4a2a67e9,
         type: 3}
