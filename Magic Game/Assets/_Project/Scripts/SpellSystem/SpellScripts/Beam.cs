@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,8 @@ public class Beam : Spell
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Beam beam = Instantiate(this, spellbook.spellPos.position, rot);
-        beam.transform.parent = spellbook.transform;
+        beam.caster = spellbook.gameObject;
+        beam.transform.SetParent(spellbook.transform);
 
         // apply all spellmodifiers to the beam
         ApplyModifiers(beam.gameObject, data);
@@ -42,28 +44,48 @@ public class Beam : Spell
             }
         }
 
+        SpellModifier[] modifiers = self.GetComponents<SpellModifier>();
+
         while (true)
         {
+
+            // if radius is samller than X limit do beam collision check with ray
+            // else if radius is bigger make capsule cast from spellcast position to look direction with range, returns collider[]
+            // if collider[].length > 0     compare distances and get the closest one to the caster we hit...
+
             // keep updating the direction the player is looking and check if our beam hits something
+
+
+            //if (baseRadius > 1.0f)
+            //{
+            //    hitObject = CapsuleBeam(spellbook, self);
+            //}
+            //else
+            //{
+            //    hitInfo = RaycastBeam(spellbook, self);
+            //}
+
+            //if(hitObject.CompareTag("Player") || hitObject.CompareTag("Enemy"))
+            //{
+            //    // deal damage
+            //    print("Deal damage");
+            //}
+
+
+            print("castin beam");
+
             Vector3 direction = spellbook.GetDirection();
+
             Ray ray = new Ray(spellbook.spellPos.position, direction * baseRange);
-            RaycastHit hit;
+            RaycastHit hitInfo;
 
-            // if beam hits something do this
-            if (Physics.Raycast(ray, out hit, baseRange))
+            // if beam hits something apply all collision modifiers to the hitObject
+            if (Physics.Raycast(ray, out hitInfo, baseRange))
             {
-                Debug.DrawRay(spellbook.spellPos.position, (hit.point - spellbook.spellPos.position), Color.red);
-
-                // apply beam effects here to target we hit
-                if (hit.collider.gameObject.CompareTag("Enemy") || hit.collider.gameObject.CompareTag("Player"))
+                Debug.DrawRay(spellbook.spellPos.position, (hitInfo.point - spellbook.spellPos.position), Color.red);
+                foreach (SpellModifier modifier in modifiers)
                 {
-                    // deal damage to the enemy and apply all collision modifiers ( knockback, burn, etc )
-                    hit.collider.GetComponent<Health>().Hurt(baseDamage);
-                    OnCollision[] collisionModifiers = GetComponents<OnCollision>();
-                    foreach (OnCollision modifier in collisionModifiers)
-                    {
-                        modifier.Hit(hit.collider.gameObject, spellbook);
-                    }
+                    modifier.BeamCollide(hitInfo, direction);
                 }
             }
             else
@@ -72,14 +94,12 @@ public class Beam : Spell
                 Debug.DrawRay(spellbook.spellPos.position, ray.direction * baseRange, Color.green);
             }
 
-
             // if player is not pressing or releases the beam key stop the cast
             if(Input.GetKeyUp((spellIndex + 1).ToString()) || !Input.GetKey((spellIndex + 1).ToString()))
             {
                 print("Beam cast ended");
                 break;
             }
-
 
             yield return null;
         }
@@ -90,6 +110,49 @@ public class Beam : Spell
 
     }
 
+    private RaycastHit RaycastBeam(Spellbook spellbook, GameObject self)
+    {
+
+        direction = spellbook.GetDirection();
+        Ray ray = new Ray(spellbook.spellPos.position, direction * baseRange);
+        RaycastHit hit;
+
+        // if beam hits something do this
+        if (Physics.Raycast(ray, out hit, baseRange))
+        {
+            Debug.DrawRay(spellbook.spellPos.position, (hit.point - spellbook.spellPos.position), Color.red);
+            return hit;
+        }
+        else
+        {
+            // do max range beam if nothing is hit
+            Debug.DrawRay(spellbook.spellPos.position, ray.direction * baseRange, Color.green);
+            return hit;
+        }
+    }
+
+    private GameObject CapsuleBeam(Spellbook spellbook, GameObject self)
+    {
+
+        Collider[] objectsHit = Physics.OverlapCapsule(spellbook.spellPos.position, direction * baseRange, baseRadius);
+        GameObject closest = null;
+      
+        for (int i = 0; i < objectsHit.Length; i++)
+        {
+            if(closest != null)
+            {
+                if((objectsHit[i].gameObject.transform.position - spellbook.transform.position).magnitude < (closest.transform.position - spellbook.transform.position).magnitude)
+                {
+                    closest = objectsHit[i].gameObject;
+                }
+            }
+            else
+            {
+                closest = objectsHit[i].gameObject;
+            }
+        }
+        return closest;
+    }
 
     public void ModifyDamage(float amount)
     {

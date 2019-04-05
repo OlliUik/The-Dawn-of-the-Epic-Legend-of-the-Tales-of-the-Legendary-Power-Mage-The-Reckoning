@@ -5,6 +5,8 @@ using UnityEngine;
 public class Spell : MonoBehaviour
 {
 
+    public GameObject caster;
+
     [Header("Spell")]
     [SerializeField] protected float cooldown = 5.0f;
     [SerializeField] protected float castTime = 5.0f;
@@ -31,6 +33,7 @@ public class Spell : MonoBehaviour
     // most spells override this cause they require different logic
     public virtual void CastSpell(Spellbook spellbook, SpellData data)
     {
+
         ///<summary>
         ///
         ///                                 SPELLS
@@ -43,6 +46,8 @@ public class Spell : MonoBehaviour
         /// </summary>
 
         Spell spell = Instantiate(data.spell, spellbook.spellPos.position, spellbook.transform.rotation);
+        spell.caster = spellbook.gameObject;
+
         foreach (Card card in data.cards)
         {
             foreach (SpellBalance balance in card.balances)
@@ -55,11 +60,11 @@ public class Spell : MonoBehaviour
 
     }    
 
-    public void ApplyModifiers(GameObject go, SpellData data)
+    public virtual void ApplyModifiers(GameObject go, SpellData data)
     {
         Spell spell = go.GetComponent<Spell>();
-        spell.effects.Clear(); // this makes sure all previous effects will be removed from the list
-        spell.effects.Clear();
+        spell.effects.Clear();          // this makes sure all previous effects will be removed from the list
+        spell.statusEffects.Clear();    // same
 
         foreach (Card card in data.cards)
         {
@@ -81,14 +86,16 @@ public class Spell : MonoBehaviour
                 spell.statusEffects.Add(statusEffect);
             }
 
+            /* Graphics old
+
             // check if card has graphics assained if so add them to the spell
             if(card.graphics != null)
             {
                 // first check if spell has primary graphics
         
                 // if not add these 
-                GameObject graphics = Instantiate(card.graphics, go.transform.position, go.transform.rotation);
-                graphics.transform.parent = go.transform;
+                GameObject graphics = Instantiate(card.graphics, go.transform.position, card.graphics.transform.rotation);
+                graphics.transform.SetParent(go.transform);
                 break; // if primary graphics get added don't and secendary of the same ( fire particles on fire projectile )
             }
         
@@ -98,7 +105,17 @@ public class Spell : MonoBehaviour
                 GameObject graphics = Instantiate(card.secendaryGraphics, go.transform.position, go.transform.rotation);
                 graphics.transform.parent = go.transform;
             }
+
+            */        
+
         }
+
+        SpellModifier[] modifiers = go.GetComponents<SpellModifier>();
+        foreach (SpellModifier mod in modifiers)
+        {
+            mod.OnSpellCast(spell);
+        }
+
     }
 
 }

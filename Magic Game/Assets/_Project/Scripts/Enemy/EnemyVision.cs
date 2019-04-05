@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 //using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyCore))]
 public class EnemyVision : MonoBehaviour
 {
     #region VARIABLES
@@ -10,11 +9,13 @@ public class EnemyVision : MonoBehaviour
 
     [HideInInspector] public Vector3 targetLocation = Vector3.zero;
 
+    [SerializeField] private bool alwaysSeeTarget = false;
     [SerializeField] private float sightDistance = 30.0f;
-    [SerializeField] private float sightRadius = 45.0f;
+    [SerializeField][Range(1.0f, 180.0f)] private float sightRadius = 45.0f;
     [SerializeField] private float checkInterval = 0.5f;
     [SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
     [SerializeField] private float checkHeightOffset = 0.5f;
+    [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     public bool bCanSeeTarget { get; private set; } = false;
     public GameObject targetGO { get; private set; } = null;
@@ -64,11 +65,13 @@ public class EnemyVision : MonoBehaviour
     {
         checkTimer = Random.Range(0.0f, checkIntervalRandomRangeMax);
 
-        for (int i = 0; i < visionVertices.Length; i++)
+        for (int i = 1; i < visionVertices.Length; i++)
         {
-            visionVertices[i].x *= sightRadius / 2;
-            visionVertices[i].y *= sightRadius / 2;
-            visionVertices[i].z *= sightDistance;
+            //visionVertices[i].x *= sightRadius / 90;
+            //visionVertices[i].y *= sightRadius / 90;
+            //visionVertices[i].z *= sightDistance;
+            visionVertices[i].z *= -Mathf.Tan((sightRadius / 2 + 90.0f) * Mathf.Deg2Rad);
+            visionVertices[i] = visionVertices[i].normalized;
         }
     }
 
@@ -214,7 +217,7 @@ public class EnemyVision : MonoBehaviour
                     {
                         if (Vector3.Distance(headTransform.position, entity.transform.position + Vector3.up * checkHeightOffset) < sightDistance)
                         {
-                            if (IsPointInside(mesh, entity.transform.position + Vector3.up * checkHeightOffset))
+                            if (alwaysSeeTarget || IsPointInside(mesh, entity.transform.position + Vector3.up * checkHeightOffset))
                             {
                                 targetGO = entity;
                                 break;
@@ -228,6 +231,13 @@ public class EnemyVision : MonoBehaviour
             {
                 Vector3 entityPosition = targetGO.transform.position + Vector3.up * checkHeightOffset;
                 Vector3 entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
+
+                if (alwaysSeeTarget)
+                {
+                    bCanSeeTarget = true;
+                    targetLocation = entityPosition;
+                    return;
+                }
 
                 //if (targetGO.tag == "Player")
                 //{
@@ -247,7 +257,7 @@ public class EnemyVision : MonoBehaviour
                         entityDirection,
                         out hit,
                         sightDistance,
-                        1
+                        raycastLayerMask
                         ))
                     {
                         if (hit.transform == targetGO.transform)
@@ -271,7 +281,7 @@ public class EnemyVision : MonoBehaviour
                                         Vector3.down,
                                         out hit,
                                         Mathf.Infinity,
-                                        1
+                                        raycastLayerMask
                                         ))
                                     {
                                         targetLocation = hit.point + Vector3.up * checkHeightOffset;
@@ -307,7 +317,7 @@ public class EnemyVision : MonoBehaviour
                                                 Vector3.down,
                                                 out hit,
                                                 Mathf.Infinity,
-                                                1
+                                                raycastLayerMask
                                                 ))
                             {
                                 if (Vector3.Distance(targetLocation, hit.point) > 0.5f)
@@ -346,10 +356,10 @@ public class EnemyVision : MonoBehaviour
                     targetLocation = Vector3.zero;
                 }
 
-                Debug.DrawLine(vvTemp[0], vvTemp[1], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[2], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[3], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[4], Color.red);
+                Debug.DrawLine(vvTemp[0], vvTemp[1], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[2], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[3], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[4], Color.red, checkInterval + Time.fixedDeltaTime);
             }
         }
         else
