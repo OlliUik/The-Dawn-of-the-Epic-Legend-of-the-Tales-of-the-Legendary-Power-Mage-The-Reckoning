@@ -1,27 +1,28 @@
 ﻿using UnityEngine;
-using UnityEngine.AI;
+//using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyCore))]
 public class EnemyVision : MonoBehaviour
 {
     #region VARIABLES
 
     public Transform headTransform = null;
 
+    [HideInInspector] public Vector3 targetLocation = Vector3.zero;
+
+    [SerializeField] private bool alwaysSeeTarget = false;
     [SerializeField] private float sightDistance = 30.0f;
-    [SerializeField] private float sightRadius = 45.0f;
+    [SerializeField][Range(1.0f, 180.0f)] private float sightRadius = 45.0f;
     [SerializeField] private float checkInterval = 0.5f;
     [SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
+    [SerializeField] private float checkHeightOffset = 0.5f;
+    [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     public bool bCanSeeTarget { get; private set; } = false;
-    public Vector3 targetLocation { get; private set; } = Vector3.zero;
+    public GameObject targetGO { get; private set; } = null;
 
     private float checkTimer = 0.0f;
     private float raycastGraceTimer = 0.0f;
-    private GameObject targetGO = null;
     private EnemyCore cEnemyCore = null;
-    //private Vector3 playerPosition = Vector3.zero;
-    //private Vector3 playerOffset = Vector3.zero;
 
     #endregion
 
@@ -62,14 +63,15 @@ public class EnemyVision : MonoBehaviour
 
     void Start()
     {
-        //playerOffset = Vector3.up * (GlobalVariables.player.GetComponent<CharacterController>().height / 2);
         checkTimer = Random.Range(0.0f, checkIntervalRandomRangeMax);
 
-        for (int i = 0; i < visionVertices.Length; i++)
+        for (int i = 1; i < visionVertices.Length; i++)
         {
-            visionVertices[i].x *= sightRadius / 2;
-            visionVertices[i].y *= sightRadius / 2;
-            visionVertices[i].z *= sightDistance;
+            //visionVertices[i].x *= sightRadius / 90;
+            //visionVertices[i].y *= sightRadius / 90;
+            //visionVertices[i].z *= sightDistance;
+            visionVertices[i].z *= -Mathf.Tan((sightRadius / 2 + 90.0f) * Mathf.Deg2Rad);
+            visionVertices[i] = visionVertices[i].normalized;
         }
     }
 
@@ -211,11 +213,11 @@ public class EnemyVision : MonoBehaviour
             {
                 foreach (GameObject entity in GlobalVariables.entityList)
                 {
-                    if (entity.tag == (cEnemyCore.targetPlayer ? "Player" : "Enemy"))
+                    if (entity.tag == (cEnemyCore.status.isConfused ? "Enemy" : "Player"))
                     {
-                        if (Vector3.Distance(headTransform.position, entity.transform.position) < sightDistance)
+                        if (Vector3.Distance(headTransform.position, entity.transform.position + Vector3.up * checkHeightOffset) < sightDistance)
                         {
-                            if (IsPointInside(mesh, entity.transform.position))
+                            if (alwaysSeeTarget || IsPointInside(mesh, entity.transform.position + Vector3.up * checkHeightOffset))
                             {
                                 targetGO = entity;
                                 break;
@@ -227,58 +229,100 @@ public class EnemyVision : MonoBehaviour
 
             if (targetGO != null)
             {
-                Vector3 entityPosition = Vector3.zero;
-                Vector3 entityDirection = Vector3.zero;
+                Vector3 entityPosition = targetGO.transform.position + Vector3.up * checkHeightOffset;
+                Vector3 entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
 
-                if (targetGO.tag == "Player")
+                if (alwaysSeeTarget)
                 {
-                    entityPosition = targetGO.transform.position + Vector3.up * targetGO.GetComponent<CharacterController>().height / 2;
-                    entityDirection = -Vector3.Normalize(transform.position - entityPosition);
-                }
-                else
-                {
-                    entityPosition = targetGO.transform.position + Vector3.up * 0.5f;
-                    entityDirection = -Vector3.Normalize(transform.position - entityPosition);
+                    bCanSeeTarget = true;
+                    targetLocation = entityPosition;
+                    return;
                 }
 
-                RaycastHit hit;
-                if (Physics.Raycast(
-                    transform.position,
-                    entityDirection,
-                    out hit,
-                    sightDistance,
-                    1
-                    ))
+                //if (targetGO.tag == "Player")
+                //{
+                //    entityPosition = targetGO.transform.position + Vector3.up * targetGO.GetComponent<CharacterController>().height / 2;
+                //}
+                //else
+                //{
+                //    entityPosition = targetGO.transform.position + Vector3.up * checkHeightOffset;
+                //}
+                //entityDirection = -Vector3.Normalize(headTransform.position - entityPosition);
+
+                if (IsPointInside(mesh, entityPosition))
                 {
-                    if (hit.transform == targetGO.transform)
+                    RaycastHit hit;
+                    if (Physics.Raycast(
+                        headTransform.position,
+                        entityDirection,
+                        out hit,
+                        sightDistance,
+                        raycastLayerMask
+                        ))
                     {
-                        bCanSeeTarget = true;
-                        raycastGraceTimer = 0.2f;
-                        targetLocation = entityPosition;
-                    }
-                    else
-                    {
-                        if (raycastGraceTimer > 0.0f)
+                        if (hit.transform == targetGO.transform)
                         {
-                            raycastGraceTimer -= Time.fixedDeltaTime;
+                            bCanSeeTarget = true;
+                            raycastGraceTimer = 0.2f;
+                            targetLocation = entityPosition;
                         }
                         else
                         {
-                            if (bCanSeeTarget)
+                            if (raycastGraceTimer > 0.0f)
                             {
-                                if (Physics.Raycast(
-                                    entityPosition,
-                                    Vector3.down,
-                                    out hit,
-                                    Mathf.Infinity,
-                                    1
-                                    ))
+                                raycastGraceTimer -= Time.fixedDeltaTime;
+                            }
+                            else
+                            {
+                                if (bCanSeeTarget)
                                 {
-                                    targetLocation = hit.point + Vector3.up * 0.5f;
+                                    if (Physics.Raycast(
+                                        entityPosition,
+                                        Vector3.down,
+                                        out hit,
+                                        Mathf.Infinity,
+                                        raycastLayerMask
+                                        ))
+                                    {
+                                        targetLocation = hit.point + Vector3.up * checkHeightOffset;
+                                    }
+                                    else
+                                    {
+                                        targetLocation = entityPosition + Vector3.up * checkHeightOffset;
+                                    }
                                 }
-                                else
+                                bCanSeeTarget = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        bCanSeeTarget = false;
+                    }
+                }
+                else
+                {
+                    if (raycastGraceTimer > 0.0f)
+                    {
+                        targetLocation = entityPosition + Vector3.up * checkHeightOffset;
+                        raycastGraceTimer -= Time.fixedDeltaTime;
+                    }
+                    else
+                    {
+                        if (bCanSeeTarget)
+                        {
+                            RaycastHit hit;
+                            if (Physics.Raycast(
+                                                targetLocation,
+                                                Vector3.down,
+                                                out hit,
+                                                Mathf.Infinity,
+                                                raycastLayerMask
+                                                ))
+                            {
+                                if (Vector3.Distance(targetLocation, hit.point) > 0.5f)
                                 {
-                                    targetLocation = entityPosition;
+                                    targetLocation = hit.point + Vector3.up * checkHeightOffset;
                                 }
                             }
                             bCanSeeTarget = false;
@@ -288,7 +332,15 @@ public class EnemyVision : MonoBehaviour
 
                 //Draw the pyramid with debug lines
                 {
-                    Debug.DrawLine(transform.position, transform.position + entityDirection * sightDistance, bCanSeeTarget ? Color.green : Color.red);
+                    if (IsPointInside(mesh, entityPosition))
+                    {
+                        Debug.DrawLine(headTransform.position, headTransform.position + entityDirection * sightDistance, bCanSeeTarget ? Color.green : Color.red);
+                        if (cEnemyCore.currentEnemyType != EnemyCore.EEnemyType.MELEE)
+                        {
+                            Debug.DrawLine(headTransform.position, headTransform.position + entityDirection * cEnemyCore.RangedEscapeRadius * 2, Color.yellow);
+                            Debug.DrawLine(headTransform.position, headTransform.position + entityDirection * cEnemyCore.RangedEscapeRadius, Color.red);
+                        }
+                    }
                     Debug.DrawLine(vvTemp[0], vvTemp[1], bCanSeeTarget ? Color.green : Color.yellow);
                     Debug.DrawLine(vvTemp[0], vvTemp[2], bCanSeeTarget ? Color.green : Color.yellow);
                     Debug.DrawLine(vvTemp[0], vvTemp[3], bCanSeeTarget ? Color.green : Color.yellow);
@@ -304,33 +356,16 @@ public class EnemyVision : MonoBehaviour
                     targetLocation = Vector3.zero;
                 }
 
-                Debug.DrawLine(vvTemp[0], vvTemp[1], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[2], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[3], Color.red);
-                Debug.DrawLine(vvTemp[0], vvTemp[4], Color.red);
+                Debug.DrawLine(vvTemp[0], vvTemp[1], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[2], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[3], Color.red, checkInterval + Time.fixedDeltaTime);
+                Debug.DrawLine(vvTemp[0], vvTemp[4], Color.red, checkInterval + Time.fixedDeltaTime);
             }
         }
         else
         {
             checkTimer -= Time.fixedDeltaTime;
         }
-
-        //Look at the player (IMPLEMENT THIS BETTER LATER)
-        Quaternion headRotation = headTransform.rotation;
-
-        if (bCanSeeTarget)
-        {
-            if (targetGO != null)
-            {
-                headTransform.LookAt(targetGO.transform.position + Vector3.up * 0.5f);
-            }
-        }
-        else
-        {
-            headTransform.LookAt(headTransform.position + Vector3.Normalize(GetComponent<NavMeshAgent>().velocity));
-        }
-
-        headTransform.rotation = Quaternion.Lerp(headTransform.rotation, headRotation, 0.9f);
     }
 
     void OnDrawGizmosSelected()

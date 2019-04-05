@@ -1,23 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyCore))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyNavigation : MonoBehaviour
 {
     #region VARIABLES
 
+    [SerializeField] private bool moveWhileCasting = false;
     [SerializeField] private float navigationInterval = 1.0f;
+    [SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
     [SerializeField] private Vector3[] patrolPoints = null;
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
+    public NavMeshAgent agent { get; private set; } = null;
 
     private int navCurrentPoint = 0;
     private float navTimer = 0.0f;
     private float waitTimer = 0.0f;
+    private int validPathAttempts = 10;
     private EnemyCore cEnemyCore = null;
-    private NavMeshAgent agent = null;
 
     #endregion
 
@@ -34,7 +36,7 @@ public class EnemyNavigation : MonoBehaviour
     {
         if (navTimer <= 0.0f)
         {
-            navTimer = navigationInterval;
+            navTimer = cEnemyCore.vision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
             switch (cEnemyCore.currentState)
             {
                 case EnemyCore.EState.IDLE: AIIdle(); break;
@@ -43,12 +45,27 @@ public class EnemyNavigation : MonoBehaviour
                 case EnemyCore.EState.PARANOID: AIParanoid(); break;
                 case EnemyCore.EState.SEARCH: AISearch(); break;
                 case EnemyCore.EState.ATTACK: AIAttack(); break;
+                case EnemyCore.EState.CASTING: AICasting(); break;
                 case EnemyCore.EState.ESCAPE: AIEscape(); break;
                 case EnemyCore.EState.PANIC: AIPanic(); break;
-                case EnemyCore.EState.CONFUSED: AIConfused(); break;
                 case EnemyCore.EState.RAGDOLLED: break;
-                case EnemyCore.EState.VICTORY: break;
                 default: if (agent.hasPath) agent.ResetPath(); break;
+            }
+
+            if (!agent.hasPath && !cEnemyCore.vision.bCanSeeTarget && cEnemyCore.vision.targetLocation != Vector3.zero)
+            {
+                if (validPathAttempts > 0)
+                {
+                    validPathAttempts--;
+                }
+                else
+                {
+                    cEnemyCore.vision.targetLocation = Vector3.zero;
+                }
+            }
+            else
+            {
+                validPathAttempts = 10;
             }
         }
         else
@@ -101,22 +118,29 @@ public class EnemyNavigation : MonoBehaviour
 
     void AIPatrol()
     {
-        Vector2 playerPos = new Vector2(transform.position.x, transform.position.z);
-        Vector2 patrolPos = new Vector2(patrolPoints[navCurrentPoint].x, patrolPoints[navCurrentPoint].z);
-
-        if (Vector2.Distance(playerPos, patrolPos) < navigationErrorMargin)
+        if (patrolPoints.Length > 1)
         {
-            waitTimer = waitAtPatrolPoint;
-            navCurrentPoint++;
-            if (navCurrentPoint >= patrolPoints.Length)
+            Vector2 entityPos = new Vector2(transform.position.x, transform.position.z);
+            Vector2 patrolPos = new Vector2(patrolPoints[navCurrentPoint].x, patrolPoints[navCurrentPoint].z);
+
+            if (Vector2.Distance(entityPos, patrolPos) < navigationErrorMargin)
             {
-                navCurrentPoint = 0;
+                waitTimer = waitAtPatrolPoint;
+                navCurrentPoint++;
+                if (navCurrentPoint >= patrolPoints.Length)
+                {
+                    navCurrentPoint = 0;
+                }
+            }
+
+            if (waitTimer <= 0.0f)
+            {
+                agent.SetDestination(patrolPoints[navCurrentPoint]);
             }
         }
-
-        if (waitTimer <= 0.0f)
+        else
         {
-            agent.SetDestination(patrolPoints[navCurrentPoint]);
+            Debug.LogWarning(this.gameObject + " is trying to patrol but has less than 2 patrol points!");
         }
     }
 
@@ -137,35 +161,53 @@ public class EnemyNavigation : MonoBehaviour
 
     void AISearch()
     {
-        agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
+        agent.SetDestination(cEnemyCore.vision.targetLocation);
     }
 
     void AIAttack()
     {
-        if (cEnemyCore.currentEnemyType == EnemyCore.EEnemyType.MELEE)
+        if (!moveWhileCasting && cEnemyCore.currentEnemyType != EnemyCore.EEnemyType.MELEE)
+        {
+            if (agent.hasPath)
+            {
+                agent.ResetPath();
+            }
+        }
+        else
         {
             agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
         }
-        else if (cEnemyCore.currentEnemyType == EnemyCore.EEnemyType.RANGED)
+    }
+
+    void AICasting()
+    {
+        if (moveWhileCasting)
         {
-            agent.ResetPath();
+            agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
+        }
+        else
+        {
+            if (agent.hasPath)
+            {
+                agent.ResetPath();
+            }
+
+            if (cEnemyCore.currentEnemyType == EnemyCore.EEnemyType.MELEE)
+            {
+                agent.velocity = new Vector3(0.0f, agent.velocity.y, 0.0f);
+            }
         }
     }
 
     void AIEscape()
     {
-        if (Vector3.Distance(transform.position, GlobalVariables.player.transform.position) < 20.0f)
+        if (Vector3.Distance(transform.position, cEnemyCore.vision.targetLocation) < 20.0f)
         {
-            agent.SetDestination(transform.position + Vector3.Normalize(transform.position - GlobalVariables.player.transform.position) * 5.0f);
+            agent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.vision.targetLocation) * 5.0f);
         }
     }
 
     void AIPanic()
-    {
-
-    }
-
-    void AIConfused()
     {
 
     }

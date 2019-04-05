@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Extra cast time ", menuName = "Balance/Casting/CastTime")]
+[CreateAssetMenu(fileName = "Extra cast time ", menuName = "SpellSystem/Balances/Casting/CastTime")]
 public class CastTime : SpellBalance
 {
 

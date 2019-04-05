@@ -1,84 +1,90 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(PlayerCore))]
-[RequireComponent(typeof(Mana))]
 public class PlayerSpellCaster : MonoBehaviour
 {
     #region VARIABLES
 
-    public GameObject projectile                        = null;
+    [SerializeField] private Transform cameraTransform = null;
+    [SerializeField] private Transform spellCastTransform = null;
+    [SerializeField] private GameObject blockedReticle = null;
+    [SerializeField] private LineRenderer blockedLine = null;
+    [SerializeField] private bool lineAlwaysEnabled = true;
 
-    [SerializeField] private GameObject blockedReticle  = null;
-    [SerializeField] private LineRenderer blockedLine   = null;
+    public Vector3 castPoint { get; private set; } = Vector3.zero;
 
-    private bool bIsEnabled                             = true;
-    private Mana cMana                                  = null;
-    private LayerMask physicsLayerMask                  = 1;
-    private new Transform camera                        = null;
-    private Vector3 charPositionOffset                  = Vector3.up * 1.0f;
-    private Vector3 castPoint                           = Vector3.zero;
+    private bool bIsEnabled = true;
+    private LayerMask physicsLayerMask = 1;
+    private Vector3 charPositionOffset = Vector3.up * 1.0f;
 
     #endregion
 
     #region UNITY_DEFAULT_METHODS
 
-    void Start()
-    {
-        physicsLayerMask    = GetComponent<PlayerCore>().physicsLayerMask;
-        camera              = Camera.main.transform;
-        cMana               = GetComponent<Mana>();
-    }
+    //void Start()
+    //{
+    //    physicsLayerMask = GetComponent<PlayerCore>().physicsLayerMask;
+    //}
 
     void Update()
     {
-        if (bIsEnabled && camera != null)
+        if (bIsEnabled && cameraTransform != null)
         {
-            RaycastHit hitFromCamera;
-            RaycastHit hitFromPlayer;
-
-            if (!Physics.Raycast(
-                camera.position,
-                camera.forward,
-                out hitFromCamera,
-                Mathf.Infinity,
-                physicsLayerMask
-                ))
+            if (cameraTransform != null && spellCastTransform != null)
             {
-                hitFromCamera.point = transform.position + charPositionOffset + (camera.position + camera.forward * 5000.0f);
-            }
+                RaycastHit hitFromCamera;
+                RaycastHit hitFromSpellCast;
 
-            if (blockedReticle != null && blockedLine != null)
-            {
-                if (Physics.Raycast(
-                transform.position + charPositionOffset,
-                -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point),
-                out hitFromPlayer,
-                Mathf.Infinity,
-                physicsLayerMask
-                ))
+                if (!Physics.Raycast(
+                    cameraTransform.position,
+                    cameraTransform.forward,
+                    out hitFromCamera,
+                    Mathf.Infinity,
+                    physicsLayerMask
+                    ))
                 {
-                    castPoint = hitFromPlayer.point;
-                    if (AlmostEqual(hitFromPlayer.point, hitFromCamera.point, 0.05f))
+                    hitFromCamera.point = cameraTransform.position + cameraTransform.forward * 1000.0f;
+                }
+
+                if (blockedReticle != null && blockedLine != null)
+                {
+                    if (Physics.Raycast(
+                    spellCastTransform.position,
+                    -Vector3.Normalize(spellCastTransform.position - hitFromCamera.point),
+                    out hitFromSpellCast,
+                    Mathf.Infinity,
+                    physicsLayerMask
+                    ))
                     {
-                        blockedReticle.SetActive(false);
-                        blockedLine.enabled = false;
+                        castPoint = hitFromSpellCast.point;
+                        if (AlmostEqual(hitFromSpellCast.point, hitFromCamera.point, 0.1f))
+                        {
+                            blockedReticle.SetActive(false);
+                            blockedLine.enabled = false;
+                        }
+                        else
+                        {
+                            blockedReticle.SetActive(true);
+                            blockedReticle.transform.position = hitFromSpellCast.point + hitFromSpellCast.normal * 0.01f;
+                            blockedReticle.transform.rotation = Quaternion.LookRotation(hitFromSpellCast.normal, Vector3.up);
+
+                            blockedLine.enabled = true;
+                            blockedLine.SetPosition(0, spellCastTransform.position);
+                            blockedLine.SetPosition(1, hitFromSpellCast.point);
+                        }
                     }
                     else
                     {
-                        blockedReticle.SetActive(true);
-                        blockedReticle.transform.position = hitFromPlayer.point + hitFromPlayer.normal * 0.01f;
-                        blockedReticle.transform.rotation = Quaternion.LookRotation(hitFromPlayer.normal, Vector3.up);
-
-                        blockedLine.enabled = true;
-                        blockedLine.SetPosition(0, transform.position + charPositionOffset);
-                        blockedLine.SetPosition(1, hitFromPlayer.point);
+                        castPoint = hitFromCamera.point;
+                        blockedReticle.SetActive(false);
+                        blockedLine.enabled = false;
                     }
                 }
-                else
+
+                if (lineAlwaysEnabled)
                 {
-                    castPoint = hitFromCamera.point;
-                    blockedReticle.SetActive(false);
-                    blockedLine.enabled = false;
+                    blockedLine.enabled = true;
+                    blockedLine.SetPosition(0, spellCastTransform.position);
+                    blockedLine.SetPosition(1, castPoint);
                 }
             }
         }
@@ -95,19 +101,20 @@ public class PlayerSpellCaster : MonoBehaviour
 
     #region CUSTOM_METHODS
 
-    public void CastSpell()
-    {
-        if (projectile != null)
-        {
-            if (projectile.GetComponent<ProjectileTemp>().GetManaCost() < cMana.mana)
-            {
-                Vector3 direction = -Vector3.Normalize(transform.position + charPositionOffset - castPoint);
-                ProjectileTemp spell = Instantiate(projectile).GetComponent<ProjectileTemp>();
-                spell.Initialize(transform.position + charPositionOffset, direction, this.gameObject);
-                cMana.UseMana(spell.GetManaCost());
-            }
-        }
-    }
+    //public void CastSpell()
+    //{
+    //    if (projectile != null)
+    //    {
+    //        if (projectile.GetComponent<ProjectileTemp>().GetManaCost() < cMana.mana)
+    //        {
+    //            Vector3 direction = -Vector3.Normalize(transform.position + charPositionOffset - castPoint);
+    //            ProjectileTemp spell = Instantiate(projectile).GetComponent<ProjectileTemp>();
+    //            spell.Initialize(transform.position + charPositionOffset, direction, this.gameObject);
+    //            cMana.UseMana(spell.GetManaCost());
+    //            GetComponent<PlayerAnimations>().CastSpell(0);
+    //        }
+    //    }
+    //}
 
     bool AlmostEqual(Vector3 v1, Vector3 v2, float precision)
     {

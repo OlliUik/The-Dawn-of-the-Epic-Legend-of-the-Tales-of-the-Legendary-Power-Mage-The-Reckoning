@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,12 +12,48 @@ public class EnemyCore : MonoBehaviour
 {
     #region VARIABLES
 
-    struct StatusEffects
+    [Header("Melee Only Variables")]
+    [SerializeField] protected float meleeAttackDistance = 2.0f;
+    [SerializeField] protected float meleeDamage = 25.0f;
+
+    [Header("Ranged Only Variables")]
+    [SerializeField] protected float rangedEscapeDistance = 10.0f;
+
+    [Header("Ranged & Melee/Ranged Magic Variables")]
+    [SerializeField] protected bool castInBursts = false;
+    [SerializeField] protected float castingTime = 2.0f;
+    [SerializeField] protected int burstCount = 3;
+    [SerializeField] protected float timeBetweenShots = 0.2f;
+     
+    [Header("Shared Variables")]
+    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
+    [SerializeField] protected EEnemyType enemyType = EEnemyType.MELEE;
+    [SerializeField] protected bool useMagic = false;
+    [SerializeField] protected bool searchPlayerAfterAttack = true;
+    [SerializeField] protected bool alwaysAggressive = true;
+    [SerializeField] protected float aggressiveRadius = 30.0f;
+    [SerializeField] protected float hearingRadius = 10.0f;
+    [SerializeField] protected float radiusCheckInterval = 1.0f;
+    [SerializeField] protected float paranoidDuration = 5.0f;
+    [SerializeField] protected float castingInterval = 1.0f;
+    [SerializeField] protected float castingStandstill = 4.0f;
+    [SerializeField] protected int castingSpellType = 0; //Check the animator controller to find out the desired number!
+    [SerializeField] protected Animator animator = null;
+
+    public struct StatusEffects
     {
-        bool isOnFire;
-        bool isConfused;
-        bool isFrozen;
-        bool isKnocked;
+        public bool isOnFire;
+        public bool isConfused;
+        public bool isFrozen;
+        public bool isKnocked;
+
+        public StatusEffects(bool onFire, bool confused, bool frozen, bool knocked)
+        {
+            isOnFire = onFire;
+            isConfused = confused;
+            isFrozen = frozen;
+            isKnocked = knocked;
+        }
     };
 
     public enum EState
@@ -32,14 +69,13 @@ public class EnemyCore : MonoBehaviour
         SEARCH,     //Search for player at the last known location.
         ATTACK,     //MELEE: Move towards player and attack.
                     //RANGED: Stand still and shoot towards player.
+        CASTING,    //Stand still and execute an attack.
         ESCAPE,     //RANGED: Move away from player
         PANIC,      //Run in random directions
-        CONFUSED,   //Shoot at other enemies
-        RAGDOLLED,  //No AI when ragdolled.
-        VICTORY     //Enemy killed the player, laugh at his/her failure!
+        RAGDOLLED   //No AI when ragdolled.
     };
 
-    private enum EDefaultState
+    protected enum EDefaultState
     {
         DISABLED,
         IDLE,
@@ -49,129 +85,101 @@ public class EnemyCore : MonoBehaviour
     public enum EEnemyType
     {
         MELEE,
-        RANGED,
-        MAGIC
+        RANGED
     };
 
-    [SerializeField] private EDefaultState defaultState = EDefaultState.IDLE;
-    [SerializeField] private EEnemyType enemyType = EEnemyType.MELEE;
-    [SerializeField] private bool searchPlayerAfterAttack = true;
-    [SerializeField] private float hearingRadius = 10.0f;
-    [SerializeField] private float instantSightRadius = 3.0f;
-    [SerializeField] private float rangedEscapeRadius = 10.0f;
-    [SerializeField] private float radiusCheckInterval = 1.0f;
-    [SerializeField] private float paranoidDuration = 5.0f;
-
-    [SerializeField] private GameObject projectile = null;
-    [SerializeField] private float shootInterval = 5.0f;
-
+    [HideInInspector] public EState currentState = EState.IDLE;
+    
     public Vector3 spawnPosition { get; private set; } = Vector3.zero;
     public Vector3 spawnRotation { get; private set; } = Vector3.zero;
-    public EState currentState { get; private set; } = EState.IDLE;
-    public EEnemyType currentEnemyType { get; private set; } = EEnemyType.MELEE;
+    public EEnemyType currentEnemyType { get; protected set; } = EEnemyType.MELEE;
     public EnemyVision vision { get; private set; } = null;
     public EnemyNavigation navigation { get; private set; } = null;
-    public Animator animator { get; private set; } = null;
     public Health cHealth { get; private set; } = null;
-    public bool targetPlayer { get; private set; } = true;
+    public StatusEffects status { get; private set; } = new StatusEffects(false, false, false, false);
+    public Spellbook cSpellBook { get; private set; } = null;
 
-    //private bool bIsAttacking = false;
-    private float radiusCheckTimer = 0.0f;
-    private float alertedTimer = 0.0f;
-    private float paranoidTimer = 0.0f;
-    private float shootIntervalTimer = 0.0f;
-    private Vector3 playerPosition = Vector3.zero;
-    private Vector3 playerOffset = Vector3.zero;
+    //Temporary values
+    protected bool bCastedProjectile = false;
+    protected float radiusCheckTimer = 0.0f;
+    protected float alertedTimer = 0.0f;
+    protected float paranoidTimer = 0.0f;
+    protected float shootIntervalTimer = 0.0f;
+    protected float castingTimer = 0.0f;
+    protected float castingStandstillTimer = 0.0f;
+    protected int shotsLeft = 0;
+    protected Vector3 targetPosition = Vector3.zero;
+    protected Vector3 playerOffset = Vector3.zero;
+
+    public float RangedEscapeRadius
+    {
+        get
+        {
+            return rangedEscapeDistance;
+        }
+    }
 
     #endregion
 
     #region UNITY_DEFAULT_METHODS
 
-    void Awake()
+    protected void Awake()
     {
         GlobalVariables.entityList.Add(this.gameObject);
     }
 
-    void Start()
+    protected virtual void Start()
     {
         vision = GetComponent<EnemyVision>();
         navigation = GetComponent<EnemyNavigation>();
         cHealth = GetComponent<Health>();
 
-        if (GetComponent<Animator>() != null)
+        if (useMagic)
         {
-            animator = GetComponent<Animator>();
-            animator.enabled = false;
+            if (GetComponent<Spellbook>() != null)
+            {
+                cSpellBook = GetComponent<Spellbook>();
+            }
+            else
+            {
+                Debug.LogWarning(this.gameObject + " is marked as a spellcaster, but has no spellbook!");
+            }
         }
 
-        playerOffset = Vector3.up * (GlobalVariables.player.GetComponent<CharacterController>().height / 2);
         spawnPosition = transform.position;
         spawnRotation = transform.rotation.eulerAngles;
         currentState = (EState)defaultState;
         currentEnemyType = enemyType;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         AdvanceTimers();
-        playerPosition = GlobalVariables.player.transform.position + playerOffset;
+        targetPosition = vision.targetLocation;
 
-        if (radiusCheckTimer <= 0.0f)
+        if (GlobalVariables.bAnyPlayersAlive == false)
         {
-            radiusCheckTimer = radiusCheckInterval;
-
-            if (currentState == EState.IDLE
-            || currentState == EState.PATROL
-            || currentState == EState.SEARCH
-            || currentState == EState.PARANOID)
-            {
-                if (Vector3.Distance(transform.position, playerPosition) < hearingRadius)
-                {
-                    RaycastHit hit;
-                    if (Physics.Raycast(
-                        transform.position,
-                        Vector3.Normalize(playerPosition - transform.position),
-                        out hit,
-                        hearingRadius,
-                        1
-                        ))
-                    {
-                        if (hit.transform.tag == "Player")
-                        {
-                            if (Vector3.Distance(transform.position, playerPosition) < instantSightRadius)
-                            {
-                                currentState = EState.ATTACK;
-                            }
-                            else
-                            {
-                                currentState = EState.PARANOID;
-                                paranoidTimer = paranoidDuration;
-                            }
-                        }
-                    }
-                }
-            }
+            currentState = EState.DISABLED;
         }
 
         switch (currentState)
         {
-            case EState.DISABLED: AIDisabled(); break;
+            case EState.DISABLED: break;
             case EState.IDLE: AIIdle(); break;
             case EState.PATROL: AIPatrol(); break;
             case EState.ALERTED: AIAlerted(); break;
             case EState.PARANOID: AIParanoid(); break;
             case EState.SEARCH: AISearch(); break;
             case EState.ATTACK: AIAttack(); break;
+            case EState.CASTING: AICasting(); break;
             case EState.ESCAPE: AIEscape(); break;
             case EState.PANIC: AIPanic(); break;
-            case EState.CONFUSED: AIConfused(); break;
             case EState.RAGDOLLED: AIRagdolled(); break;
-            case EState.VICTORY: AIVictory(); break;
             default: currentState = EState.DISABLED; break;
         }
     }
 
-    void OnTriggerStay(Collider other)
+    protected void OnTriggerStay(Collider other)
     {
         if (other.tag == "TriggerKill")
         {
@@ -186,12 +194,18 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    protected void OnDrawGizmosSelected()
     {
         #if UNITY_EDITOR
         Handles.Label(transform.position + Vector3.up * 2.0f, currentState.ToString());
-        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.1f);
-        Gizmos.DrawSphere(transform.position, hearingRadius);
+        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
+        Gizmos.DrawWireSphere(transform.position, hearingRadius);
+
+        if (!alwaysAggressive)
+        {
+            Gizmos.color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
+            Gizmos.DrawWireSphere(transform.position, aggressiveRadius);
+        }
         #endif
     }
 
@@ -199,18 +213,82 @@ public class EnemyCore : MonoBehaviour
 
     #region CUSTOM_METHODS
 
-    void AdvanceTimers()
+    protected void AdvanceTimers()
     {
         float time = Time.deltaTime;
 
-        shootIntervalTimer      -= shootIntervalTimer > 0.0f    ? time : 0.0f;
-        radiusCheckTimer        -= radiusCheckTimer > 0.0f      ? time : 0.0f;
-        paranoidTimer           -= paranoidTimer > 0.0f         ? time : 0.0f;
+        shootIntervalTimer -= shootIntervalTimer > 0.0f ? time : 0.0f;
+        radiusCheckTimer -= radiusCheckTimer > 0.0f ? time : 0.0f;
+        paranoidTimer -= paranoidTimer > 0.0f ? time : 0.0f;
         alertedTimer -= alertedTimer > 0.0f ? time : 0.0f;
+        castingTimer -= castingTimer > 0.0f ? time : 0.0f;
+
+        if (castingTimer <= 0.0f)
+        {
+            castingStandstillTimer -= castingStandstillTimer > 0.0f ? time : 0.0f;
+        }
     }
 
-    public void OnHurt()
+    protected void NoiseChecker()
     {
+        if (radiusCheckTimer <= 0.0f)
+        {
+            radiusCheckTimer = radiusCheckInterval;
+            
+            GameObject[] soundObjects = GameObject.FindGameObjectsWithTag("SFX");
+
+            foreach (GameObject go in soundObjects)
+            {
+                if (go.activeInHierarchy && Vector3.Distance(transform.position, go.transform.position) < hearingRadius)
+                {
+                    if (go.GetComponent<AudioSourceIdentifier>() != null)
+                    {
+                        if (go.GetComponent<AudioSourceIdentifier>().isPlayer)
+                        {
+                            if (go.GetComponent<AudioSourceIdentifier>().madeNoise)
+                            {
+                                vision.targetLocation = go.transform.position;
+                                currentState = EState.SEARCH;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public Vector3 PredictTargetPosition(Vector3 selfPosition, float spellSpeed, Vector3 targetPosition, Vector3 targetVelocity)
+    {
+        Vector3 predictedPosition = targetPosition;
+
+        if (!status.isConfused)
+        {
+            float distance = Vector3.Distance(selfPosition, targetPosition);
+            float timeUntilImpact = distance / spellSpeed;
+            predictedPosition = targetPosition + targetVelocity * timeUntilImpact;
+            predictedPosition.y = targetPosition.y;
+        }
+
+        return predictedPosition;
+    }
+
+    //protected void CastProjectile()
+    //{
+    //    if (projectile != null)
+    //    {
+    //        Vector3 direction = -Vector3.Normalize(transform.position + Vector3.up * 1.0f - (vision.targetLocation));
+    //        Instantiate(projectile).GetComponent<ProjectileTemp>().Initialize(transform.position + Vector3.up * 1.0f, direction, this.gameObject);
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning(this.gameObject + " tried to cast a spell, but it has no projectile prefab assigned to it!");
+    //    }
+    //}
+
+    public virtual void OnHurt()
+    {
+        animator.SetTrigger("Take Damage");
+
         switch (currentState)
         {
             case EState.IDLE:       currentState = EState.PARANOID; paranoidTimer = paranoidDuration; break;
@@ -231,35 +309,35 @@ public class EnemyCore : MonoBehaviour
 
     #region AI_LOGIC
 
-    void AIDisabled()
+    protected virtual void AIIdle()
     {
-        if (animator.enabled)
+        if (vision.bCanSeeTarget)
         {
-            if (shootIntervalTimer <= 0.0f)
+            if (!alwaysAggressive)
             {
-                animator.enabled = false;
+                if (Vector3.Distance(transform.position, vision.targetLocation) < aggressiveRadius)
+                {
+                    currentState = EState.ATTACK;
+                }
+            }
+            else
+            {
                 currentState = EState.ATTACK;
             }
         }
+        NoiseChecker();
     }
 
-    void AIIdle()
+    protected virtual void AIPatrol()
     {
         if (vision.bCanSeeTarget)
         {
             currentState = EState.ATTACK;
         }
+        NoiseChecker();
     }
 
-    void AIPatrol()
-    {
-        if (vision.bCanSeeTarget)
-        {
-            currentState = EState.ATTACK;
-        }
-    }
-
-    void AIAlerted()
+    protected virtual void AIAlerted()
     {
         if (vision.bCanSeeTarget)
         {
@@ -275,7 +353,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AIParanoid()
+    protected virtual void AIParanoid()
     {
         if (vision.bCanSeeTarget)
         {
@@ -288,9 +366,10 @@ public class EnemyCore : MonoBehaviour
                 currentState = (EState)defaultState;
             }
         }
+        NoiseChecker();
     }
 
-    void AISearch()
+    protected virtual void AISearch()
     {
         if (searchPlayerAfterAttack)
         {
@@ -300,7 +379,8 @@ public class EnemyCore : MonoBehaviour
             }
             else
             {
-                if (Vector3.Distance(transform.position, vision.targetLocation) < navigation.navigationErrorMargin || vision.targetLocation == Vector3.zero)
+                if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(vision.targetLocation.x, vision.targetLocation.z)) < navigation.navigationErrorMargin 
+                    || vision.targetLocation == Vector3.zero)
                 {
                     currentState = EState.PARANOID;
                     paranoidTimer = paranoidDuration;
@@ -313,36 +393,44 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AIAttack()
+    protected virtual void AIAttack()
     {
         if (vision.bCanSeeTarget)
         {
-            if (currentEnemyType == EEnemyType.RANGED)
+            switch (currentEnemyType)
             {
-                if (Vector3.Distance(transform.position, playerPosition) < rangedEscapeRadius)
+                case EEnemyType.MELEE:
+                    {
+                        if (Vector3.Distance(transform.position, vision.targetLocation) > meleeAttackDistance)
+                        {
+                            return;
+                        }
+                        break;
+                    }
+                case EEnemyType.RANGED:
+                    {
+                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeDistance)
+                        {
+                            currentState = EState.ESCAPE;
+                            return;
+                        }
+                        break;
+                    }
+            }
+
+            if (shootIntervalTimer <= 0.0f)
+            {
+                if (castInBursts)
                 {
-                    currentState = EState.ESCAPE;
-                    return;
+                    shotsLeft = burstCount;
                 }
 
-                if (shootIntervalTimer <= 0.0f)
-                {
-                    shootIntervalTimer = shootInterval;
-                    if (projectile != null)
-                    {
-                        Vector3 direction = -Vector3.Normalize(transform.position + Vector3.up * 1.0f - (vision.targetLocation));
-                        Instantiate(projectile).GetComponent<ProjectileTemp>().Initialize(transform.position + Vector3.up * 1.0f, direction, this.gameObject);
-                    }
-                }
-            }
-            else if (currentEnemyType == EEnemyType.MELEE)
-            {
-                if (Vector3.Distance(transform.position, vision.targetLocation) < 2.0f)
-                {
-                    currentState = EState.DISABLED;
-                    animator.enabled = true;
-                    shootIntervalTimer = 1.0f;
-                }
+                shootIntervalTimer = castingInterval;
+                castingTimer = castingTime;
+                castingStandstillTimer = castingStandstill;
+                animator.SetTrigger("Cast Spell");
+                animator.SetInteger("Spell Type", castingSpellType);
+                currentState = EState.CASTING;
             }
         }
         else
@@ -351,30 +439,85 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    void AIEscape()
+    protected virtual void AICasting()
     {
-        if (Vector3.Distance(transform.position, playerPosition) > 20.0f)
+        if (!useMagic && currentEnemyType == EEnemyType.MELEE)
         {
-            currentState = EState.ATTACK;
+            if (navigation.agent.hasPath)
+            {
+                navigation.agent.ResetPath();
+                navigation.agent.velocity = new Vector3(0.0f, navigation.agent.velocity.y, 0.0f);
+            }
+
+            if (!bCastedProjectile)
+            {
+                vision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
+                bCastedProjectile = true;
+            }
+
+            if (castingStandstillTimer <= 0.0f)
+            {
+                bCastedProjectile = false;
+                currentState = EState.ATTACK;
+            }
+        }
+        else
+        {
+            if (castingTimer <= 0.0f)
+            {
+                if (!bCastedProjectile)
+                {
+                    //CastProjectile();
+                    cSpellBook.CastSpell(0);
+                    bCastedProjectile = true;
+                }
+
+                if (shotsLeft > 1)
+                {
+                    if (!vision.bCanSeeTarget)
+                    {
+                        currentState = EState.ATTACK;
+                        shootIntervalTimer *= 0.25f;
+                        return;
+                    }
+
+                    animator.SetTrigger("Interrupt Spell");
+                    animator.SetTrigger("Cast Spell");
+                    bCastedProjectile = false;
+                    castingTimer = timeBetweenShots;
+                    shotsLeft--;
+                }
+                else if (castingStandstillTimer <= 0.0f)
+                {
+                    bCastedProjectile = false;
+                    currentState = EState.ATTACK;
+
+                }
+            }
         }
     }
 
-    void AIPanic()
+    protected virtual void AIEscape()
+    {
+        if (vision.bCanSeeTarget)
+        {
+            if (Vector3.Distance(transform.position, targetPosition) > rangedEscapeDistance * 2)
+            {
+                currentState = EState.ATTACK;
+            }
+        }
+        else
+        {
+            currentState = EState.SEARCH;
+        }
+    }
+
+    protected virtual void AIPanic()
     {
 
     }
 
-    void AIConfused()
-    {
-
-    }
-
-    void AIRagdolled()
-    {
-
-    }
-
-    void AIVictory()
+    protected virtual void AIRagdolled()
     {
 
     }

@@ -4,11 +4,14 @@ public class Health : MonoBehaviour
 {
     #region VARIABLES
 
-    [SerializeField] private float maxHealth = 100.0f;
+    [Header("Public")]
+    public float maxHealth = 100.0f;
+
+    [Header("Serialized")]
     [SerializeField] private float iFrameTime = 0.5f;
 
     public bool bIsDead { get; private set; } = false;
-    public float health { get; private set; } = 0.0f;
+    [HideInInspector] public float health /*{ get; private set; }*/ = 0.0f;
 
     private bool bIsPlayer = false;
     private float iftTimer = 0.0f;
@@ -78,6 +81,11 @@ public class Health : MonoBehaviour
                 GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
             }
         }
+    }
+
+    public void AddInvulnerability(float amount)
+    {
+        iftTimer += amount;
     }
 
     public void Kill()

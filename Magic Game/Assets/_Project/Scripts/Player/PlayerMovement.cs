@@ -1,80 +1,105 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(PlayerCore))]
+[RequireComponent(typeof(ThirdPersonCamera))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
     #region VARIABLES
 
+    [Header("Input")]
+    [SerializeField] private string horizontalAxis = "Horizontal";
+    [SerializeField] private string verticalAxis = "Vertical";
+    [SerializeField] private string jumpButton = "Jump";
+    [SerializeField] private string dashButton = "Fire3";
+
     [HideInInspector] public float accelerationMultiplier = 1.0f;
-    [HideInInspector] public int midAirJumps            = 0;
+    [HideInInspector] public int midAirJumps = 0;
+    [HideInInspector] public bool enableControls = true;
 
-    [SerializeField] private float acceleration         = 100.0f;
-    [SerializeField] private float airAcceleration      = 20.0f;
-    [SerializeField] private float friction             = 5.5f;
-    [SerializeField] private float airFriction          = 1.5f;
-    [SerializeField] private float gravity              = -30.0f;
-    [SerializeField] private float smoothStepDown       = 0.5f;
-    [SerializeField] private float jumpForce            = 15.0f;
-    [SerializeField] private float jumpGraceTime        = 0.2f;
-    [SerializeField] private float dashSpeed            = 20.0f;
-    [SerializeField] private float dashJumpForce        = 8.0f;
-    [SerializeField] private float dashDuration         = 0.2f;
-    [SerializeField] private float dashCooldown         = 1.0f;
-    [SerializeField] private float gravityWallSliding   = -1.0f;
-    [SerializeField] private float wallSlidingTime      = 2.0f;
+    [Header("Serialized")]
+    [SerializeField] private bool bAllowMidairDashing = true;
+    [SerializeField] private float acceleration = 100.0f;
+    [SerializeField] private float airAcceleration = 20.0f;
+    [SerializeField] private float friction = 5.5f;
+    [SerializeField] private float airFriction = 1.5f;
+    [SerializeField] private float gravity = -30.0f;
+    [SerializeField] private float smoothStepDown = 0.5f;
+    [SerializeField] private float jumpForce = 15.0f;
+    [SerializeField] private float jumpGraceTime = 0.2f;
+    [SerializeField] private float dashSpeed = 20.0f;
+    [SerializeField] private float dashJumpForce = 8.0f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1.0f;
+    [SerializeField] private float gravityWallSliding = -1.0f;
+    [SerializeField] private float wallSlidingTime = 2.0f;
+    [SerializeField] private LayerMask raycastLayerMask = 1;
 
-    private ThirdPersonCamera cTPCamera                 = null;
-    private CharacterController cCharacter              = null;
-    private LayerMask physicsLayerMask                  = 1;
+    private ThirdPersonCamera cTPCamera = null;
+    private CharacterController cCharacter = null;
 
     //Input
     private Vector2 movementInput = Vector2.zero;
     private bool bJumpingActivated = false;
     private bool bDashingActivated = false;
-    
+
     //Temporary values
-    private float dt                                    = 0.0f;
-    private bool bIsWallSliding                         = false;
-    private Vector3 moveDirection                       = Vector3.zero;
-    private Vector3 moveVector                          = Vector3.zero;
-    private Vector3 slopeNormal                         = Vector3.zero;
-    private float jgtTimer                              = 0.0f;
-    private float dDurationTimer                        = 0.0f;
-    private float dCooldownTimer                        = 0.0f;
-    private float wstTimer                              = 0.0f;
-    private int midAirJumpsLeft                         = 0;
-    private Transform movingPlatform                    = null;
-    private Vector3 movingPlatformPrevPosition          = Vector3.zero;
-    private Vector3 movingPlatformPrevRotation          = Vector3.zero;
-    private Vector3 movingPlatformVelocity              = Vector3.zero;
+    private float dt = 0.0f;
+    private bool bIsWallSliding = false;
+    private Vector3 moveDirection = Vector3.zero;
+    private Vector3 moveVector = Vector3.zero;
+    private Vector3 slopeNormal = Vector3.zero;
+    private float jgtTimer = 0.0f;
+    private float dDurationTimer = 0.0f;
+    private float dCooldownTimer = 0.0f;
+    private float wstTimer = 0.0f;
+    private int midAirJumpsLeft = 0;
+    private int physicsLayer = 0;
+    private Transform movingPlatform = null;
+    private Vector3 movingPlatformPrevPosition = Vector3.zero;
+    private Vector3 movingPlatformPrevRotation = Vector3.zero;
+    public Vector3 movingPlatformVelocity { get; private set; } = Vector3.zero;
+    private ControllerColliderHit currentHit = null;
 
     #endregion
 
     #region UNITY_DEFAULT_METHODS
 
+    void Awake()
+    {
+        cCharacter = GetComponent<CharacterController>();
+        cTPCamera = GetComponent<ThirdPersonCamera>();
+    }
+
     void Start()
     {
-        cCharacter       = GetComponent<PlayerCore>().cCharacter;
-        cTPCamera        = GetComponent<PlayerCore>().cTPCamera;
-        physicsLayerMask = GetComponent<PlayerCore>().physicsLayerMask;
+        transform.localRotation = Quaternion.identity;
+    }
+
+    void Update()
+    {
+        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
     }
 
     void FixedUpdate()
     {
-        Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
-        bJumpingActivated = false;
-        bDashingActivated = false;
+        if (enableControls)
+        {
+            Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
+            bJumpingActivated = false;
+            bDashingActivated = false;
+        }
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        currentHit = hit;
         RaycastHit rcHit;
         if (Physics.Raycast(
             transform.position + Vector3.up * (cCharacter.height / 2),
             Vector3.down,
             out rcHit,
             Mathf.Infinity,
-            physicsLayerMask
+            raycastLayerMask
             ))
         {
             if (AlmostEqual(hit.normal, rcHit.normal, 0.01f))
@@ -96,7 +121,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (hit.gameObject.tag == "MovingPlatform")
         {
-            movingPlatform = hit.transform;
+            if (movingPlatform == null)
+            {
+                movingPlatform = hit.transform;
+            }
+            else if (hit.transform != movingPlatform)
+            {
+                //Uh oh, we're hitting multiple moving platforms at the same time!
+                //Reset platform movement values to avoid warping.
+
+                //NOTE: This solution is not perfect, warping still occurs during unknown edge cases.
+                //If possible, avoid using multiple moving platforms close to each other!
+                movingPlatform = null;
+                movingPlatformPrevPosition = Vector3.zero;
+                movingPlatformPrevRotation = Vector3.zero;
+                movingPlatformVelocity = Vector3.zero;
+            }
         }
         else
         {
@@ -115,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     #region CUSTOM_METHODS
 
-    public void GetInput(float inputX, float inputY, bool inputJump, bool inputDash)
+    void GetInput(float inputX, float inputY, bool inputJump, bool inputDash)
     {
         movementInput = new Vector2(inputX, inputY);
         if (inputJump && !bJumpingActivated)
@@ -126,6 +166,14 @@ public class PlayerMovement : MonoBehaviour
         {
             bDashingActivated = true;
         }
+    }
+
+    public void Teleport(Vector3 position)
+    {
+        physicsLayer = cCharacter.gameObject.layer;
+        cCharacter.gameObject.layer = 31;
+        cCharacter.Move(position - transform.position);
+        cCharacter.gameObject.layer = physicsLayer;
     }
 
     void Move(float inputX, float inputY, bool inputJump, bool inputDash)
@@ -212,7 +260,7 @@ public class PlayerMovement : MonoBehaviour
                     Vector3.down,
                     out hit,
                     cCharacter.skinWidth + smoothStepDown,
-                    physicsLayerMask
+                    raycastLayerMask
                     ))
                 {
                     if (hit.transform != movingPlatform)
@@ -236,10 +284,21 @@ public class PlayerMovement : MonoBehaviour
             //Dashing
             if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
             {
-                dDurationTimer = dashDuration;
-                dCooldownTimer = dashCooldown;
-                tempVector = moveDirection * dashSpeed * accelerationMultiplier;
-                tempVector.y = dashJumpForce;
+                if (isGrounded || bAllowMidairDashing)
+                {
+                    if (moveSpeed < 0.1f)
+                    {
+                        moveDirection = -lookVector;
+                    }
+                    if (GetComponent<Health>() != null)
+                    {
+                        GetComponent<Health>().AddInvulnerability(dashDuration);
+                    }
+                    dDurationTimer = dashDuration;
+                    dCooldownTimer = dashCooldown;
+                    tempVector = moveDirection * dashSpeed * accelerationMultiplier;
+                    tempVector.y = dashJumpForce;
+                }
             }
             /*----------------------------------------------------------------------------------------*/
             //Jumping
@@ -248,14 +307,24 @@ public class PlayerMovement : MonoBehaviour
                 //Jumping (normal)
                 if (jgtTimer > 0.0f || midAirJumpsLeft > 0)
                 {
+                    jgtTimer = 0.0f;
                     tempVector.y = jumpForce;
-                    midAirJumpsLeft--;
+                    if (midAirJumpsLeft > 0)
+                    {
+                        midAirJumpsLeft--;
+                    }
                 }
 
                 //Jumping (wallsliding)
                 if (bIsWallSliding)
                 {
-                    tempVector.y = jumpForce;
+                    Vector3 wallHorizontalNormal = Vector3.Normalize(new Vector3(currentHit.normal.x, 0.0f, currentHit.normal.z));
+
+                    tempVector.y = 0.0f;
+                    tempVector += Vector3.Normalize(wallHorizontalNormal + Vector3.up * 0.5f) * jumpForce;
+
+                    jgtTimer = 0.0f;
+                    //tempVector.y = jumpForce;
                     if (midAirJumpsLeft > 0)
                     {
                         midAirJumpsLeft--;
@@ -279,15 +348,26 @@ public class PlayerMovement : MonoBehaviour
             moveVector += tempVector + slopeDownDirection * -gravity * dt;
 
             RaycastHit hit;
+            //if (!Physics.Raycast(
+            //    transform.position + slopeNormal + moveVector * dt,
+            //    -slopeNormal,
+            //    out hit,
+            //    1.0f + 0.5f,
+            //    physicsLayerMask
+            //    ))
             if (!Physics.Raycast(
-                transform.position + slopeNormal + moveVector * dt,
+                transform.position,
                 -slopeNormal,
                 out hit,
-                1.0f + 0.5f,
-                physicsLayerMask
+                cCharacter.skinWidth + 0.1f,
+                raycastLayerMask
                 ))
             {
                 slopeNormal = Vector3.up;
+            }
+            else
+            {
+                Debug.DrawLine(hit.point, hit.point + hit.normal * 5.0f, Color.yellow);
             }
         }
 

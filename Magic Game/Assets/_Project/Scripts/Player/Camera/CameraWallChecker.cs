@@ -2,28 +2,42 @@
 
 public class CameraWallChecker : MonoBehaviour
 {
-    [SerializeField] private Transform cameraOriginalPos = null;
-    [SerializeField] private LayerMask physicsLayerMask = 1;
+    /*-------------------------------------------------------------------------------------*/
 
-    void Update()
-    {
-        if (cameraOriginalPos != null)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(
-                cameraOriginalPos.position + transform.forward * 4.0f,
-                -transform.forward,
-                out hit,
-                4.0f,
-                physicsLayerMask
-                ))
-            {
-                transform.position = hit.point;
-            }
-            else
-            {
-                transform.position = cameraOriginalPos.position;
-            }
-        }
-    }
+    //This component is now obsolete, the functionality has been moved to ThirdPersonCamera!
+
+    /*-------------------------------------------------------------------------------------*/
+
+
+
+    //[SerializeField] private Transform cameraTransform = null;
+    //[SerializeField] private Transform cameraClosePosition = null;
+    //[SerializeField] private LayerMask physicsLayerMask = 1;
+
+    //public bool checkingForWalls { get; private set; } = false;
+
+    //void OnTriggerStay(Collider other)
+    //{
+    //    if (physicsLayerMask == (physicsLayerMask | (1 << other.gameObject.layer)))
+    //    {
+    //        if (other.tag != "Player")
+    //        {
+    //            checkingForWalls = true;
+    //        }
+    //    }
+    //}
+
+    //void OnTriggerExit(Collider other)
+    //{
+    //    cameraTransform.position = transform.position;
+    //    checkingForWalls = false;
+    //}
+
+    //void LateUpdate()
+    //{
+    //    if (checkingForWalls)
+    //    {
+    //        cameraTransform.position = cameraClosePosition.position;
+    //    }
+    //}
 }

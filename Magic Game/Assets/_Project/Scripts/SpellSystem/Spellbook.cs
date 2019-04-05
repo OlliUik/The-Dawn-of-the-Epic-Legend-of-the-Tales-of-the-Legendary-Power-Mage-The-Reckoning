@@ -3,123 +3,203 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct SpellData 
-{
-    public Spell spell;         // determinates how spell is casted and what happens on cast
-    public List<Card> cards;    // all modifiers are here
-}
-
-[RequireComponent(typeof(PlayerCore))]
 public class Spellbook : MonoBehaviour
 {
 
     #region Variables
 
-    [SerializeField] public bool isCasting = false;
-    public Transform spellPos;
+    private bool isPlayer = false;
+    public bool isCasting = false;
+    public Transform spellPos = null;
 
-    public SpellData[] spells = new SpellData[4];
-    private float[] cooldowns = new float[4];
+    public SpellData[] spells = new SpellData[3];
+    private float[] cooldowns;
 
-    public PlayerCore playerCore { get; private set; }
-
-    private Camera cam;
+    public Transform lookTransform = null;
     private Vector3 charPositionOffset = Vector3.up * 1.0f;
     private Vector3 castPoint = Vector3.zero;
+    [SerializeField] private LayerMask raycastLayerMask = 3073;
+
+    // Components
+    private Health health;
+    private Mana mana;
 
     #endregion
 
+    private void Awake()
+    {
+        
+    }
+
     private void Start()
     {
-        cam = Camera.main;
-        playerCore = GetComponent<PlayerCore>();
+        if (GetComponent<PlayerCore>() != null)
+        {
+            lookTransform = Camera.main.transform;
+        }
+        else
+        {
+            // give enemies look / forward transform here
+
+        }
+
+        isCasting = false;
+        cooldowns = new float[spells.Length];
 
         for (int i = 0; i < cooldowns.Length; i++)
         {
             cooldowns[i] = 0.0f;
         }
 
-        isCasting = false;
+        if (GetComponent<PlayerCore>() != null)
+        {
+            isPlayer = true;
+        }
+        else
+        {
+            isPlayer = false;
+        }
+
+        health = GetComponent<Health>();
+        mana = GetComponent<Mana>();
+    }
+
+    public void CastSpell(int spellIndex)
+    {
+        if (CanCast(spellIndex))
+        {
+            StartCoroutine(StartCastingSpell(spellIndex));
+        }
     }
 
     // Inputs
-    void Update()
+    //void Update()
+    //{
+    //    // COMBAT SPELLS
+    //    for (int i = 0; i < spells.Length; i++)
+    //    {
+    //        if(Input.GetKeyDown(spells[i].castKey) && CanCast(i))
+    //        {
+    //            StartCoroutine(StartCastingSpell(i));
+    //        }
+    //    }
+
+    //    // ON_SELF SPELLS
+    //    if(Input.GetKeyDown(onSelfKey) && Time.time > onSelfCooldown)
+    //    {
+    //        // check if OnSelf is not on cooldown
+    //        if(selfSpells[selfIndex] != null)
+    //        {
+    //            selfSpells[selfIndex].CastSpell(this, selfIndex);
+    //        }
+    //    }
+    //    else if(Input.GetKeyDown(onSelfSwapKey))
+    //    {
+    //        if(selfSpells[1] != null)
+    //        {
+    //            selfIndex += 1;
+
+    //            if(selfIndex > 1)
+    //            {
+    //                selfIndex = 0;
+    //            }
+
+    //            print("OnSelf swapped to " + selfSpells[selfIndex].name);
+    //            return;
+    //        }
+
+    //        print("Only one OnSelf spell");
+    //    }
+
+    //    // check if some self spell is invoking and cancel if needed
+    //    //if(Input.GetKeyDown(KeyCode.Space))
+    //    //{
+    //    //    if(activeOnSelfSpell.IsInvoking())
+    //    //    {
+    //    //        activeOnSelfSpell.RemoveEffect();
+    //    //        activeOnSelfSpell.CancelInvoke();
+    //    //        print(activeOnSelfSpell + " effect ended early");
+    //    //    }
+    //    //}
+
+    //}
+
+    // works but not centered --> // spells can get this by calling spellbook.GetDirection()
+
+    private void Update()
     {
-
-        Vector3 direction = GetDirection2();
-
-        if (Input.GetKeyDown(KeyCode.Alpha1) && CanCast(0))
+        if(Input.GetKeyDown(KeyCode.Alpha2))
         {
-            float castingTime = GetCastingTime(0);
-            StartCoroutine(StartCastingSpell(0, castingTime, direction));            
+            spells[1].spell.CastSpell(this, spells[1]);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && CanCast(1))
+        if(Input.GetKeyDown(KeyCode.Alpha3))
         {
-            float castingTime = GetCastingTime(1);
-            StartCoroutine(StartCastingSpell(1, castingTime, direction));
+            spells[2].spell.CastSpell(this, spells[2]);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3) && CanCast(2))
-        {
-            float castingTime = GetCastingTime(2);
-            StartCoroutine(StartCastingSpell(2, castingTime, direction));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4) && CanCast(3))
-        {
-            float castingTime = GetCastingTime(3);
-            StartCoroutine(StartCastingSpell(3, castingTime, direction));
-        }
     }
 
-    // works but not centered
     public Vector3 GetDirection()
     {
         Vector3 direction = Vector3.zero;
 
-        RaycastHit hitFromCamera;
-        RaycastHit hitFromPlayer;
-
-        if (!Physics.Raycast(cam.transform.position, cam.transform.forward, out hitFromCamera, Mathf.Infinity))
+        if (isPlayer)
         {
-            hitFromCamera.point = transform.position + charPositionOffset + (cam.transform.position + cam.transform.forward * 5000.0f);
-        }
+            RaycastHit hitFromCamera;
+            RaycastHit hitFromPlayer;
 
-        if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity))
-        {
-            castPoint = hitFromPlayer.point;
+            if (!Physics.Raycast(lookTransform.transform.position, lookTransform.transform.forward, out hitFromCamera, Mathf.Infinity, raycastLayerMask))
+            {
+                hitFromCamera.point = transform.position + charPositionOffset + (lookTransform.transform.position + lookTransform.transform.forward * 5000.0f);
+            }
+
+            if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity, raycastLayerMask))
+            {
+                castPoint = hitFromPlayer.point;
+            }
+            else
+            {
+                castPoint = hitFromCamera.point;
+            }
+
+            direction = -Vector3.Normalize(spellPos.position - castPoint);
         }
         else
         {
-            castPoint = hitFromCamera.point;
+            //direction = -Vector3.Normalize(lookTransform.position - GetComponent<EnemyCore>().vision.targetLocation);
+            Vector3 prediction = GetComponent<EnemyCore>().vision.targetLocation;
+            Projectile proj = spells[0].spell as Projectile;
+            if (proj != null)
+            {
+                prediction = GetComponent<EnemyCore>().PredictTargetPosition(spellPos.position, proj.baseSpeed, GetComponent<EnemyCore>().vision.targetLocation, GetComponent<EnemyCore>().vision.targetGO.GetComponent<CharacterController>().velocity);
+            }
+            direction = -Vector3.Normalize(lookTransform.position - prediction);
         }
-
-        direction = -Vector3.Normalize(transform.position + charPositionOffset - castPoint);
+        
         return direction;
 
     }
-
     // fires directly towards mouse cursor
-    public Vector3 GetDirection2()
-    {
-        Vector3 direction = Vector3.zero;
+    //public Vector3 GetDirection2()
+    //{
+    //    Vector3 direction = Vector3.zero;
 
-        RaycastHit hit;
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+    //    RaycastHit hit;
+    //    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out hit))
-        {
-            direction = (hit.point - spellPos.position).normalized;
-        }
-        else
-        {
-            direction = ray.direction.normalized;
-        }
+    //    if(Physics.Raycast(ray, out hit))
+    //    {
+    //        direction = (hit.point - spellPos.position).normalized;
+    //    }
+    //    else
+    //    {
+    //        direction = ray.direction.normalized;
+    //    }
 
-        return direction;
-    }
+    //    return direction;
+    //}
+
 
     private bool CanCast(int spellIndex)
     {
@@ -152,6 +232,36 @@ public class Spellbook : MonoBehaviour
 
         return true;
     }
+    //private bool CanCastOnSelf()
+    //{
+    //    foreach (Card card in onSelfSpell.collectedOnSelfSpells[onSelfIndex].cards)
+    //    {
+    //        // check that every cards requirements are met before doing anything
+    //        foreach (CastRequirement requirement in card.castRequirements)
+    //        {
+    //            if (!requirement.isMet(this))
+    //            {
+    //                print(requirement.name + " was not met");
+    //                return false;
+    //            }
+    //        }
+    //    }
+
+    //    // check cooldown
+    //    if(activeOnSelfSpell.Cooldown > Time.time)
+    //    {
+    //        print("OnSelf on cooldown");
+    //        return false;
+    //    }
+
+    //    // check if player is already casting something
+    //    if (isCasting)
+    //    {
+    //        return false;
+    //    }
+
+    //    return true;
+    //}
 
     private float GetCastingTime(int spellIndex)
     {
@@ -173,12 +283,16 @@ public class Spellbook : MonoBehaviour
         return castingTime;
     }
 
-    private IEnumerator StartCastingSpell(int spellIndex, float castingTime, Vector3 direction)
+    private IEnumerator StartCastingSpell(int spellIndex)
     {
         isCasting = true;
+        float castingTime = GetCastingTime(spellIndex);
 
         // use players mana 
-        playerCore.cMana.UseMana(spells[spellIndex].spell.ManaCost);
+        if(mana != null)
+        {
+            mana.UseMana(spells[spellIndex].spell.ManaCost);
+        }
 
         foreach (Card card in spells[spellIndex].cards)
         {
@@ -191,9 +305,10 @@ public class Spellbook : MonoBehaviour
 
         // check if something modifies speed etc. while casting and apply effect here
         // also save them in temp list and remove effects after casting
+        // do casting animation here
         yield return new WaitForSeconds(castingTime);
 
-        spells[spellIndex].spell.CastSpell(this, spellIndex, direction);
+        spells[spellIndex].spell.CastSpell(this, spells[spellIndex]);
         lastCastedSpell = spellIndex;
     }
 

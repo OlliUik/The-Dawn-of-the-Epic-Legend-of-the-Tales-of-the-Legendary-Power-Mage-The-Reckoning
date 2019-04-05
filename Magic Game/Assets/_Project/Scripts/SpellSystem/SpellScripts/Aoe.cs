@@ -5,11 +5,17 @@ using UnityEngine;
 public class Aoe : Spell
 {
 
-    [Header("-- AoE --")]
-    [SerializeField] protected float radius = 7.0f;
-    [SerializeField] protected float duration = 5.0f;
+    #region Variables
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex, Vector3 direction)
+    //[Header("AoE varialbes")]
+    [SerializeField] public float radius    { get; private set; } = 7.0f;
+    [SerializeField] public float duration  { get; private set; } = 10.0f;
+
+    #endregion
+
+    #region CustomMethods
+
+    public override void CastSpell(Spellbook spellbook, SpellData data)
     {
 
         ///<summary>
@@ -27,13 +33,38 @@ public class Aoe : Spell
 
         // spawn instance in players current position
         Aoe aoe = Instantiate(this, spellbook.transform.position, spellbook.transform.rotation);
-        aoe.transform.parent = spellbook.transform;
+        aoe.transform.SetParent(spellbook.transform);
+        aoe.caster = spellbook.gameObject;
 
-        aoe.StartCoroutine(DestroyAoe(aoe.gameObject, spellbook, duration));
+        aoe.ApplyModifiers(aoe.gameObject, data);
+
+        aoe.StartCoroutine(DestroyAoe(aoe.gameObject, duration));
         spellbook.StopCasting();
-        spellbook.SetCooldown();
 
     }
+
+    public void ModifyRange(float amount)
+    {
+        radius += amount;
+        print("Radius increased to " + radius);
+    }
+
+    public void ModifyDuration(float amount)
+    {
+        duration += amount;
+        print("Duration increased to " + duration);
+    }
+
+    // Destroying spell here
+    private IEnumerator DestroyAoe(GameObject self, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        Destroy(self);
+    }
+
+    #endregion
+
+    #region UnityMethods
 
     private void Update()
     {
@@ -41,26 +72,17 @@ public class Aoe : Spell
         var auraArea = Physics.OverlapSphere(transform.position, radius);
         foreach (var objectHit in auraArea)
         {
-            // if object has health component / rb do something
-            //Character character = objectHit.GetComponent<Character>();
-            //if (character != null)
-            //{
-            //    // apply all modifiers here to the enemy inside radius
-            //    AoeModifier[] spellModifiers = GetComponents<AoeModifier>();
-            //    foreach (AoeModifier mod in spellModifiers)
-            //    {
-            //        mod.Apply(character);
-            //    }
-            //}
+            // check if objectHit is enemy
+            if (objectHit.gameObject.GetComponent<Rigidbody>() != null)
+            {
+                // apply all modifiers here to the enemy inside radius
+                SpellModifier[] modifiers = GetComponents<SpellModifier>();
+                foreach (SpellModifier modifier in modifiers)
+                {
+                    modifier.AoeCollide(objectHit.gameObject);
+                }
+            }
         }
-
-    }
-
-    // Destroying spell here
-    private IEnumerator DestroyAoe(GameObject self, Spellbook spellbook, float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        Destroy(self);
     }
 
     // debug stuff
@@ -84,5 +106,7 @@ public class Aoe : Spell
             previousPoint = newPoint;
         }
     }
+
+    #endregion
 
 }

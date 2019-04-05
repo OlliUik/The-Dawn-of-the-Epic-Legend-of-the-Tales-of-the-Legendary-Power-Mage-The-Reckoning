@@ -6,14 +6,20 @@ using UnityEngine;
 public class Projectile : Spell
 {
 
-    [Header("-- Projectile --")]
-    [SerializeField] protected float range = 1000.0f;
-    [SerializeField] protected float speed = 15.0f;
-    [SerializeField] GameObject explosionVfx = null;
+    #region Variables
 
-    public Vector3 direction { get; set; }
-    private Vector3 lastPos = Vector3.zero;
-    private float distanceTravelled = 0.0f;
+    [Header("Projectile variables")]
+    [SerializeField] protected float baseDamage         = 50.0f;
+    [SerializeField] protected float baseRange          = 1000.0f;
+    public float baseSpeed          = 15.0f;
+
+    public Vector3 direction                            { get; set; }
+    private Vector3 lastPos                             = Vector3.zero;
+    private float distanceTravelled                     = 0.0f;
+
+    #endregion
+
+    #region Unitys_Methods
 
     void Start()
     {
@@ -23,49 +29,63 @@ public class Projectile : Spell
 
     void FixedUpdate()
     {
-
         distanceTravelled += Vector3.Distance(transform.position, lastPos);
         lastPos = transform.position;
 
-        if(distanceTravelled < range)
+        if(distanceTravelled < baseRange)
         {
-            transform.position += direction * speed * Time.deltaTime;
+            transform.position += direction * baseSpeed * Time.fixedDeltaTime;
         }
         else
         {
             print("Out of range");
+            // explosion particle ??
             Destroy(gameObject);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.GetComponent<Health>() != null)
-        {
-            // collided with player or enemy
-            collision.gameObject.GetComponent<Health>().Hurt(amount);
-            Instantiate(explosionVfx, transform.position, Quaternion.identity);
-            Destroy(gameObject);
-        }
 
-        OnCollision[] collMods = GetComponents<OnCollision>();
-        for (int i = 0; i < collMods.Length; i++)
+        // COLLISION TO PLAYER OR ENEMY --> DEAL DAMAGE AND APPLY STATUSEFFECTS
+
+        if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
-            if (!collMods[i].ready)
+
+            var health = collision.gameObject.GetComponent<Health>();
+
+            if(health != null)
             {
-                foreach (OnCollision mod in collMods)
-                {
-                    mod.OnCollide(collision);
-                    return;
-                }
+                health.Hurt(baseDamage);
             }
+        
+            //foreach (ScriptableEffect effect in effects)
+            //{
+            //    print("Applied: " + effect.name);
+            //    collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
+            //}
+            //
+            //foreach (StatusEffectBase effectBase in statusEffects)
+            //{
+            //    collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
+            //}
         }
 
-        print("No collision modifiers...destroying");
+        // APPLY ALL COLLISION MODIFIERS
+        SpellModifier[] modifiers = GetComponents<SpellModifier>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            modifier.ProjectileCollide(collision, direction);
+        }
+
         Destroy(gameObject);
     }
 
-    public override void CastSpell(Spellbook spellbook, int spellIndex, Vector3 direction)
+    #endregion
+
+    #region Custom_Methods
+
+    public override void CastSpell(Spellbook spellbook, SpellData data)
     {
 
         ///<summary>
@@ -79,15 +99,38 @@ public class Projectile : Spell
         /// 
         /// </summary>
 
-        direction = spellbook.GetDirection2();
+
+        // get the direction from the spellbook and spawn projectile accodring to that
+        direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
-        Projectile proj = Instantiate(this, spellbook.spellPos.position, rot);
-        proj.direction = direction;
+        Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
+        projectile.direction = direction;
+        projectile.caster = spellbook.gameObject;
 
-        ApplyModifiers(proj.gameObject, spellIndex, spellbook);
+        // apply all modifiers to the projectile ( this is inherited from spell class )
+        ApplyModifiers(projectile.gameObject, data);
 
+        // casting is done
         spellbook.StopCasting();
 
     }
+
+    // THESE ARE USED TO MODIFY PROJECTILES BASE VALUES
+    public void ModifyDamage(float amount)
+    {
+        baseDamage += amount;
+    }
+
+    public void ModifyRange(float amount)
+    {
+        baseRange += amount;
+    }
+
+    public void ModifySpeed(float amount)
+    {
+        baseSpeed += amount;
+    }
+
+    #endregion
 
 }

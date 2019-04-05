@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CostMana ", menuName = "Balance/Cost/Mana")]
+[CreateAssetMenu(fileName = "CostMana ", menuName = "SpellSystem/Balances/Cost/Mana")]
 public class CostMana : SpellBalance
 {
 
@@ -10,6 +10,7 @@ public class CostMana : SpellBalance
 
     public override void ApplyBalance(Spellbook spellbook)
     {
-        spellbook.playerCore.cMana.UseMana(amount);
+        Mana mana = spellbook.GetComponent<Mana>();
+        mana.UseMana(amount);
     }
 }

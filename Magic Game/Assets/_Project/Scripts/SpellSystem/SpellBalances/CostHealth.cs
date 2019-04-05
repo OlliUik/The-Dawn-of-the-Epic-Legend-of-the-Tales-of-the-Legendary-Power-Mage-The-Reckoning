@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CostHealth ", menuName = "Balance/Cost/Health")]
+[CreateAssetMenu(fileName = "CostHealth ", menuName = "SpellSystem/Balances/Cost/Health")]
 public class CostHealth : SpellBalance
 {
 
@@ -10,6 +10,7 @@ public class CostHealth : SpellBalance
 
     public override void ApplyBalance(Spellbook spellbook)
     {
-        spellbook.playerCore.cHealth.Hurt(amount);
+        Health health = spellbook.GetComponent<Health>();
+        health.Hurt(amount);
     }
 }
