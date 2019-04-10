@@ -8,7 +8,7 @@ public class Spellbook : MonoBehaviour
 
     #region Variables
 
-    public bool isPlayer = false;
+    private bool isPlayer = false;
     public bool isCasting = false;
     public Transform spellPos = null;
 
@@ -18,6 +18,7 @@ public class Spellbook : MonoBehaviour
     public Transform lookTransform = null;
     private Vector3 charPositionOffset = Vector3.up * 1.0f;
     private Vector3 castPoint = Vector3.zero;
+    [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     // Components
     private Health health;
@@ -26,6 +27,11 @@ public class Spellbook : MonoBehaviour
     #endregion
 
     private void Awake()
+    {
+        
+    }
+
+    private void Start()
     {
         if (GetComponent<PlayerCore>() != null)
         {
@@ -36,10 +42,7 @@ public class Spellbook : MonoBehaviour
             // give enemies look / forward transform here
 
         }
-    }
 
-    private void Start()
-    {
         isCasting = false;
         cooldowns = new float[spells.Length];
 
@@ -123,6 +126,20 @@ public class Spellbook : MonoBehaviour
 
     // works but not centered --> // spells can get this by calling spellbook.GetDirection()
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            spells[1].spell.CastSpell(this, spells[1]);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            spells[2].spell.CastSpell(this, spells[2]);
+        }
+
+    }
+
     public Vector3 GetDirection()
     {
         Vector3 direction = Vector3.zero;
@@ -132,12 +149,12 @@ public class Spellbook : MonoBehaviour
             RaycastHit hitFromCamera;
             RaycastHit hitFromPlayer;
 
-            if (!Physics.Raycast(lookTransform.transform.position, lookTransform.transform.forward, out hitFromCamera, Mathf.Infinity, 1))
+            if (!Physics.Raycast(lookTransform.transform.position, lookTransform.transform.forward, out hitFromCamera, Mathf.Infinity, raycastLayerMask))
             {
                 hitFromCamera.point = transform.position + charPositionOffset + (lookTransform.transform.position + lookTransform.transform.forward * 5000.0f);
             }
 
-            if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity, 1))
+            if (Physics.Raycast(transform.position + charPositionOffset, -Vector3.Normalize(transform.position + charPositionOffset - hitFromCamera.point), out hitFromPlayer, Mathf.Infinity, raycastLayerMask))
             {
                 castPoint = hitFromPlayer.point;
             }

@@ -50,10 +50,14 @@ public class MusicEventHandler : MonoBehaviour
             {
                 if (item.GetComponent<EnemyVision>().bCanSeeTarget)
                 {
-                    if (item.GetComponent<EnemyVision>().targetGO == player)
+                    if (item.GetComponent<EnemyCore>().currentState == EnemyCore.EState.ATTACK
+                        || item.GetComponent<EnemyCore>().currentState == EnemyCore.EState.CASTING)
                     {
-                        enemySeesPlayer = true;
-                        return;
+                        if (item.GetComponent<EnemyVision>().targetGO == player)
+                        {
+                            enemySeesPlayer = true;
+                            return;
+                        }
                     }
                 }
             }

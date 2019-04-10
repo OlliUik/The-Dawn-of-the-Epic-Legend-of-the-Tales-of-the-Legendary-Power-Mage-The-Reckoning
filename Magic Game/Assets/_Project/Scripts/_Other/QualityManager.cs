@@ -49,8 +49,8 @@ public static class QualityManager
         //Anti-aliasing
         switch (DATA.AA_METHOD)
         {
-            case "msaa": QualitySettings.antiAliasing = DATA.AA_QUALITY; break;
-            default: QualitySettings.antiAliasing = 0; break;
+            case "msaa": { QualitySettings.antiAliasing = DATA.AA_QUALITY; GlobalVariables.aaMethod = "msaa"; break; }
+            default: { QualitySettings.antiAliasing = 0; GlobalVariables.aaMethod = DATA.AA_METHOD.ToString(); break; }
         }
 
         //Model quality

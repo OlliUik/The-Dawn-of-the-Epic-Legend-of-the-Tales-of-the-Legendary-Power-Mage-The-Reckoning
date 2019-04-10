@@ -22,8 +22,11 @@ public class CardAnimation : MonoBehaviour
         endScale = transform.localScale;
     }
 
-    public void AnimateCard()
+    public void AnimateCard(Vector3 startPosition, Vector3 endPosition)
     {
+        startPos = startPosition;
+        endPos = endPosition;
+
         StartCoroutine(Animation());
     }
 

@@ -6,6 +6,8 @@ public static class GlobalVariables
     public static List<string> scenesInBuild = new List<string>();
     public static List<GameObject> entityList = new List<GameObject>();
     public static bool bAnyPlayersAlive = true;
+    public static bool usePostProcessing = true;
+    public static string aaMethod = "fxaa";
     public static string loadLevel = "MainMenu";
     public static string errorCode = "0000-0000";
 }

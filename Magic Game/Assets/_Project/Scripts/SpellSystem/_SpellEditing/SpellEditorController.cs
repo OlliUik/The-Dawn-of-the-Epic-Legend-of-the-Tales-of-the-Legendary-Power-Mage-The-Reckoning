@@ -6,47 +6,84 @@ using UnityEngine.UI;
 public class SpellEditorController : MonoBehaviour
 {
 
+    public int crystalsLeft                         = 2;
+    public Button useCrystalButton                  = null;
+
+    [Header("Spells")]
+    public SpellSlot[] spellsSlots                  = new SpellSlot[3];
+    public SpellSlot highlighedSpell                = null;
+
+    private Transform canvasBackground              = null;
+    public Spellbook playersSpellbook               { get; private set; }
+
     [Header("Cards")]
     public List<Card> allCards                      = new List<Card>();
-    public List<Card> chosenCards                   = new List<Card>();
-
     public GameObject cardPrefab                    = null;
     public Transform spawnPosition                  = null;
     public Transform[] availableCardPositions       = new Transform[3];
-    private CardDisplay[] availableCards            = new CardDisplay[3];
+    public GameObject[] currentCards               = new GameObject[3];
 
+
+    private void Awake()
+    {
+        GameObject player = FindObjectOfType<PlayerCore>().gameObject;
+        playersSpellbook = player.GetComponent<Spellbook>();
+        canvasBackground = transform.GetChild(0);
+    }
 
     void Start()
     {
+        // testing purposes
+        //StartCoroutine(GenerateCards());
 
-        // make each card a prefab and make spell editing menu with game world objects aka. NO UI ELEMENTS
-
-
-        for (int i = 0; i < availableCardPositions.Length; i++)
+        // get all references to spells on player and cards they currently have
+        for (int i = 0; i < spellsSlots.Length; i++)
         {
-
-            GameObject newCard = Instantiate(cardPrefab, spawnPosition.position, spawnPosition.rotation);
-
-            CardAnimation anim = newCard.GetComponent<CardAnimation>();
-            anim.startPos = spawnPosition.position;
-            anim.endPos = availableCardPositions[i].position;
-            anim.AnimateCard();
-
+            spellsSlots[i].Init(playersSpellbook.spells[i]);
         }
-
     }
 
-    public void ChooseCard(CardDisplay cardDisplay)
+    public void UseCrustalButton()
     {
+        crystalsLeft--;
+        useCrystalButton.gameObject.SetActive(false);
+        StartCoroutine(GenerateCards());
+    }
 
-        if(!chosenCards.Contains(cardDisplay.card))
+    public IEnumerator GenerateCards()
+    {
+        for (int i = 0; i < availableCardPositions.Length; i++)
         {
-            chosenCards.Add(cardDisplay.card);
-            print("You chose: " + cardDisplay.card);
+            GameObject cardDisplay = Instantiate(cardPrefab, spawnPosition.position, spawnPosition.rotation);
+            cardDisplay.transform.SetParent(canvasBackground);
+            cardDisplay.transform.position = availableCardPositions[i].position;
+
+            CardDisplay display = cardDisplay.GetComponent<CardDisplay>();
+            display.InitCard(spawnPosition.localPosition, availableCardPositions[i].localPosition, allCards[Random.Range(0, allCards.Count)]);
+            
+            currentCards[i] = cardDisplay;
+            yield return new WaitForSecondsRealtime(0.2f);
+        }
+    }
+
+    public void HighlightSpellSlot(GameObject go)
+    {
+        if(highlighedSpell != null)
+        {
+            highlighedSpell.GetComponent<Image>().color = Color.white;
         }
 
-        cardDisplay.ChooseCard();
+        highlighedSpell = go.GetComponent<SpellSlot>();
+        highlighedSpell.GetComponent<Image>().color = Color.red;
+    }
 
+    public void DestroyCards()
+    {
+        for (int i = 0; i < currentCards.Length; i++)
+        {
+            Destroy(currentCards[i]);
+            currentCards[i] = null;
+        }
     }
 
 }

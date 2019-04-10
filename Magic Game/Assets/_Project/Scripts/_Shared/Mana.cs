@@ -6,7 +6,10 @@ public class Mana : MonoBehaviour
 
     [HideInInspector] public float regenerationMultiplier = 1.0f;
 
-    [SerializeField] private float maxMana = 100.0f;
+    [Header("Public")]
+    public float maxMana = 100.0f;
+
+    [Header("Serialized")]
     [SerializeField] private float regenerationPerSecond = 1.0f;
 
     public float mana { get; private set; } = 0.0f;
