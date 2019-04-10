@@ -74,7 +74,7 @@ public class Aoe : Spell
         foreach (var objectHit in auraArea)
         {
             // check if objectHit is enemy
-            if (objectHit.gameObject.GetComponent<Rigidbody>() != null)
+            if (objectHit.transform.tag != caster.tag)
             {
 
                 var health = objectHit.GetComponent<Health>();

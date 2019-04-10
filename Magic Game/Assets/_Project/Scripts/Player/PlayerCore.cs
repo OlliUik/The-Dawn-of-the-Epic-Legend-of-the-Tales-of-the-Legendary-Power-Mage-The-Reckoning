@@ -104,7 +104,10 @@ public class PlayerCore : MonoBehaviour
 
                 if (Input.GetButtonDown("Fire2"))
                 {
-                    EnableRagdoll(!bIsRagdolled);
+                    if (!bIsRagdolled)
+                    {
+                        EnableRagdoll(true);
+                    }
                     //cTPCamera.SwitchSide();
                 }
 

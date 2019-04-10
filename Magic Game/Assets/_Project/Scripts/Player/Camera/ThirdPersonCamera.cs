@@ -132,6 +132,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+    #if UNITY_EDITOR
         //Don't draw certain gizmos when in play mode
         if (!UnityEditor.EditorApplication.isPlaying)
         {
@@ -143,6 +144,7 @@ public class ThirdPersonCamera : MonoBehaviour
         //Draw close position
         Gizmos.color = Color.yellow;
         Gizmos.DrawCube(transform.position + pivotPoint + cameraClosePosition, Vector3.one * 0.18f);
+    #endif
     }
 
     #endregion
