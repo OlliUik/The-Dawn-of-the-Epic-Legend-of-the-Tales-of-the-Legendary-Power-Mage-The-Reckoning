@@ -24,6 +24,12 @@ public class Homing : SpellModifier
 
     void Update()
     {
+        // incase enemy dies while projectile is flying
+        if (target == null)
+        {
+            target = FindClosestTarget();
+        }
+
         float step = rotationSpeed * Time.deltaTime;
 
         Vector3 targetDir = target.transform.position + offset - transform.position;

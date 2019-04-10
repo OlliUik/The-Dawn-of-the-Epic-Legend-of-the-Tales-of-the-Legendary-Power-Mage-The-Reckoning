@@ -35,6 +35,7 @@ public class Spellbook : MonoBehaviour
     {
         if (GetComponent<PlayerCore>() != null)
         {
+            isPlayer = true;
             lookTransform = Camera.main.transform;
         }
         else
@@ -72,74 +73,7 @@ public class Spellbook : MonoBehaviour
         }
     }
 
-    // Inputs
-    //void Update()
-    //{
-    //    // COMBAT SPELLS
-    //    for (int i = 0; i < spells.Length; i++)
-    //    {
-    //        if(Input.GetKeyDown(spells[i].castKey) && CanCast(i))
-    //        {
-    //            StartCoroutine(StartCastingSpell(i));
-    //        }
-    //    }
-
-    //    // ON_SELF SPELLS
-    //    if(Input.GetKeyDown(onSelfKey) && Time.time > onSelfCooldown)
-    //    {
-    //        // check if OnSelf is not on cooldown
-    //        if(selfSpells[selfIndex] != null)
-    //        {
-    //            selfSpells[selfIndex].CastSpell(this, selfIndex);
-    //        }
-    //    }
-    //    else if(Input.GetKeyDown(onSelfSwapKey))
-    //    {
-    //        if(selfSpells[1] != null)
-    //        {
-    //            selfIndex += 1;
-
-    //            if(selfIndex > 1)
-    //            {
-    //                selfIndex = 0;
-    //            }
-
-    //            print("OnSelf swapped to " + selfSpells[selfIndex].name);
-    //            return;
-    //        }
-
-    //        print("Only one OnSelf spell");
-    //    }
-
-    //    // check if some self spell is invoking and cancel if needed
-    //    //if(Input.GetKeyDown(KeyCode.Space))
-    //    //{
-    //    //    if(activeOnSelfSpell.IsInvoking())
-    //    //    {
-    //    //        activeOnSelfSpell.RemoveEffect();
-    //    //        activeOnSelfSpell.CancelInvoke();
-    //    //        print(activeOnSelfSpell + " effect ended early");
-    //    //    }
-    //    //}
-
-    //}
-
     // works but not centered --> // spells can get this by calling spellbook.GetDirection()
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            spells[1].spell.CastSpell(this, spells[1]);
-        }
-
-        if(Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            spells[2].spell.CastSpell(this, spells[2]);
-        }
-
-    }
-
     public Vector3 GetDirection()
     {
         Vector3 direction = Vector3.zero;
@@ -231,37 +165,7 @@ public class Spellbook : MonoBehaviour
         }
 
         return true;
-    }
-    //private bool CanCastOnSelf()
-    //{
-    //    foreach (Card card in onSelfSpell.collectedOnSelfSpells[onSelfIndex].cards)
-    //    {
-    //        // check that every cards requirements are met before doing anything
-    //        foreach (CastRequirement requirement in card.castRequirements)
-    //        {
-    //            if (!requirement.isMet(this))
-    //            {
-    //                print(requirement.name + " was not met");
-    //                return false;
-    //            }
-    //        }
-    //    }
-
-    //    // check cooldown
-    //    if(activeOnSelfSpell.Cooldown > Time.time)
-    //    {
-    //        print("OnSelf on cooldown");
-    //        return false;
-    //    }
-
-    //    // check if player is already casting something
-    //    if (isCasting)
-    //    {
-    //        return false;
-    //    }
-
-    //    return true;
-    //}
+    }   
 
     private float GetCastingTime(int spellIndex)
     {
