@@ -13,14 +13,14 @@ public class Beam : Spell
 
     [SerializeField] private GameObject graphics    = null;
 
-    public Vector3 startPos                        = Vector3.zero;
-    public Vector3 endPos                          = Vector3.zero;
+    [HideInInspector] public Vector3 startPos                        = Vector3.zero;
+    [HideInInspector] public Vector3 endPos                          = Vector3.zero;
 
-    [HideInInspector]
-    public Vector3 direction                        = Vector3.zero;
+    [HideInInspector] public Vector3 direction                        = Vector3.zero;
 
     private Spellbook spellbook;
     private RaycastHit hit;
+    int spellIndex = 0;
 
     public bool isMaster                            = false;
 
@@ -34,6 +34,8 @@ public class Beam : Spell
         beam.caster = spellbook.gameObject;
         beam.transform.SetParent(spellbook.transform);
         beam.isMaster = true;
+        
+
 
         // apply all spellmodifiers to the beam
         ApplyModifiers(beam.gameObject, data);
@@ -85,6 +87,13 @@ public class Beam : Spell
         }
         
         UpdateBeam(startPos, direction);
+
+        // stop casting here
+        if(Input.GetMouseButtonUp(0))
+        {
+            spellbook.StopCasting();
+            Destroy(gameObject);
+        }
 
     }
 

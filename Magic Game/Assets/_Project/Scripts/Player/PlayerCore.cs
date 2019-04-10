@@ -27,6 +27,7 @@ public class PlayerCore : MonoBehaviour
     private bool bIsRagdolled = false;
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
+    public int activeSpellIndex = 0;
 
     #endregion
 
@@ -68,6 +69,8 @@ public class PlayerCore : MonoBehaviour
         }
         else
         {
+
+
             if (bInputEnabled)
             {
                 //cTPCamera.Look(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
@@ -79,7 +82,7 @@ public class PlayerCore : MonoBehaviour
                     if (!bShotFired)
                     {
                         //cSpellCaster.CastSpell();
-                        cSpellBook.CastSpell(0);
+                        cSpellBook.CastSpell(activeSpellIndex);
                         //GetComponent<PlayerAnimations>().CastSpell(0);
                         bShotFired = true;
                     }
@@ -94,6 +97,30 @@ public class PlayerCore : MonoBehaviour
                     EnableRagdoll(!bIsRagdolled);
                     //cTPCamera.SwitchSide();
                 }
+
+                // CHANGING ACTIVE SPELL
+                if(Input.mouseScrollDelta.y != 0 && !cSpellBook.isCasting)
+                {
+                    if(Input.mouseScrollDelta.y > 0)
+                    {
+                        activeSpellIndex++;
+
+                        if(activeSpellIndex > 3)
+                        {
+                            activeSpellIndex = 0;
+                        }
+                    }
+                    else
+                    {
+                        activeSpellIndex--;
+
+                        if(activeSpellIndex < 0)
+                        {
+                            activeSpellIndex = 3;
+                        }
+                    }
+                }
+
             }
 
             if (Input.GetButtonDown("Escape"))
