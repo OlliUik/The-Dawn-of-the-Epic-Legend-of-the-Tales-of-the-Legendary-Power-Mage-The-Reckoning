@@ -7,8 +7,10 @@ public class Homing : SpellModifier
 
     public float rotationSpeed = 2.0f;
     public Transform target = null;
+    float height = 1f;
 
     Projectile pro;
+
 
     void Start()
     {
@@ -22,9 +24,15 @@ public class Homing : SpellModifier
 
     void Update()
     {
+        // incase enemy dies while projectile is flying
+        if(target == null)
+        {
+            target = FindClosestTarget();
+        }
+
         float step = rotationSpeed * Time.deltaTime;
 
-        Vector3 targetDir = target.transform.position - transform.position;
+        Vector3 targetDir = (target.transform.position + Vector3.up * height) - transform.position;
         Vector3 newDir = Vector3.RotateTowards(pro.direction, targetDir, step, 0.0f);
 
         pro.direction = newDir;
@@ -47,6 +55,12 @@ public class Homing : SpellModifier
                 distance = curDistance;
             }
         }
+        
+        if(closest != null)
+        {
+            height = closest.GetComponent<CapsuleCollider>().center.y;
+        }
+
         return closest.transform;
     }
 }
