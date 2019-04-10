@@ -23,7 +23,7 @@ public class Beam : Spell
     int spellIndex = 0;
 
     public bool isMaster                            = false;
-
+    SpellModifier[] modifiers;
 
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
@@ -47,7 +47,11 @@ public class Beam : Spell
     private void Start()
     {
         if(isMaster)
-        spellbook = GetComponentInParent<Spellbook>();
+        {
+            spellbook = GetComponentInParent<Spellbook>();
+        }
+
+        modifiers = GetComponents<SpellModifier>();
     }
 
     private void Update()
@@ -71,7 +75,6 @@ public class Beam : Spell
                 health.Hurt(baseDamage);
             }
 
-            SpellModifier[] modifiers = GetComponents<SpellModifier>();
             foreach (SpellModifier modifier in modifiers)
             {
                 modifier.BeamCollide(hit, direction);
@@ -79,7 +82,6 @@ public class Beam : Spell
         }     
         else
         {
-            SpellModifier[] modifiers = GetComponents<SpellModifier>();
             foreach (SpellModifier modifier in modifiers)
             {
                 modifier.BeamCollisionEnd();
@@ -89,9 +91,12 @@ public class Beam : Spell
         UpdateBeam(startPos, direction);
 
         // stop casting here
-        if(Input.GetMouseButtonUp(0))
+        if(Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0))
         {
-            spellbook.StopCasting();
+            if (isMaster)
+            {
+                spellbook.StopCasting();
+            }
             Destroy(gameObject);
         }
 

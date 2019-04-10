@@ -15,24 +15,23 @@ public class SwitchPlaces : SpellModifier
 
         if (movement != null)
         {   
-            if(collision.gameObject.GetComponent<EnemyCore>() != null)
+            if(collision.gameObject.GetComponent<Rigidbody>() != null)
             {
-                Vector3 playersPosition = movement.transform.position;
-                playersPosition.y += 1;
-
+                Vector3 playersPosition = (movement.transform.position + (Vector3.up * 1));
                 Instantiate(teleportParticles, playersPosition, Quaternion.identity);
                 
                 movement.Teleport(collision.contacts[0].point);
                 Instantiate(teleportParticles, collision.contacts[0].point, Quaternion.identity);
 
                 collision.gameObject.transform.position = playersPosition;
+                return;
             }
 
-            print("Error: missing EnemyCore");
+            print("HitObject doesn't have rigidbody");
         }
         else
         {
-            print("Error: missing PlayerMovement");
+            print("Error: missing PlayerMovement component");
         }
     }
 
@@ -49,7 +48,7 @@ public class SwitchPlaces : SpellModifier
         if(rb != null)
         {
             Spell spell = gameObject.GetComponent<Spell>();
-            Vector3 casterPosition = spell.caster.transform.position;
+            Vector3 casterPosition = (spell.caster.transform.position + (Vector3.up * 1));
 
             if(spell.caster.CompareTag("Player"))
             {
