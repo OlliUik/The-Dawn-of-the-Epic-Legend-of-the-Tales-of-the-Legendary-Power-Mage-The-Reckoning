@@ -89,7 +89,7 @@ public class Beam : Spell
         UpdateBeam(startPos, direction);
 
         // stop casting here
-        if(Input.GetMouseButtonUp(0))
+        if(Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0))
         {
             spellbook.StopCasting();
             Destroy(gameObject);
