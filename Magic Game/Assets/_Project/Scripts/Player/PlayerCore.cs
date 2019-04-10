@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Mana))]
@@ -29,7 +30,7 @@ public class PlayerCore : MonoBehaviour
     private Vector3 ragdollPrevPosition = Vector3.zero;
 
     #endregion
-
+    
     #region UNITY_DEFAULT_METHODS
 
     void Awake()
@@ -55,6 +56,8 @@ public class PlayerCore : MonoBehaviour
 
     void Start()
     {
+        SetRagdollDepenetrationValues("Armature", 3.0f);
+
         //Quaternion spawnRotation = transform.localRotation;
         //transform.localRotation = Quaternion.Euler(Vector3.zero);
         //cTPCamera.lookDirection = spawnRotation.eulerAngles;
@@ -186,15 +189,59 @@ public class PlayerCore : MonoBehaviour
     public void EnableRagdoll(bool b)
     {
         bIsRagdolled = b;
-        ragdollObject.GetComponent<Animator>().enabled = !b;
-        ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
         cTPCamera.isRagdolled = b;
         cMovement.enableControls = !b;
         ragdollSleepTimer = 3.0f;
 
+        ragdollObject.GetComponent<Animator>().enabled = !b;
+        ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
+
         if (!b)
         {
             cMovement.OnDisableRagdoll();
+        }
+    }
+
+    void SetRagdollDepenetrationValues(string armatureName, float amount)
+    {
+        List<Transform> armatureBones = new List<Transform>();
+
+        if (ragdollObject != null)
+        {
+            foreach (Transform item in ragdollObject.transform)
+            {
+                if (item.name == armatureName)
+                {
+                    Debug.Log("Found the armature, looping through all of its child transforms...");
+                    GetAllChildren(item, armatureBones);
+                    Debug.Log("Found " + armatureBones.Count + " bones.");
+                }
+            }
+        }
+
+        if (armatureBones.Count > 0)
+        {
+            foreach (Transform item in armatureBones)
+            {
+                if (item.GetComponent<Rigidbody>() != null)
+                {
+                    item.GetComponent<Rigidbody>().maxDepenetrationVelocity = amount;
+                }
+            }
+        }
+
+        Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
+    }
+
+    void GetAllChildren(Transform parent, List<Transform> list)
+    {
+        foreach (Transform item in parent)
+        {
+            list.Add(item);
+            if (item.childCount > 0)
+            {
+                GetAllChildren(item, list);
+            }
         }
     }
 
