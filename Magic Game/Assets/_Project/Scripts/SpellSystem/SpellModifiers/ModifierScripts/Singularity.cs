@@ -48,7 +48,10 @@ public class Singularity : SpellModifier
     public override void BeamCollisionEnd()
     {
         // singularity off
-        prefab.SetActive(false);
+        if(prefab != null)
+        {
+            prefab.SetActive(false);
+        }
     }
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)

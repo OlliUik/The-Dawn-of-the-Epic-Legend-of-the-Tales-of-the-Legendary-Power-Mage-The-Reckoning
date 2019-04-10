@@ -66,9 +66,10 @@ public class Split : SpellModifier
             beams[i].gameObject.SetActive(true);
             beams[i].startPos = hitInfo.point;
             Vector3 reflectDir = Vector3.Reflect(direction, hitInfo.normal);
-            reflectDir = Quaternion.Euler(45 * i, 0, 0) * reflectDir;
-            beams[i].direction = reflectDir;
-            beams[i].UpdateBeam(beams[i].startPos, reflectDir);
+            Vector3 rotatedVector = Quaternion.AngleAxis(i == 1 ? 45f : -45f, direction) * reflectDir;
+
+            beams[i].direction = rotatedVector;
+            beams[i].UpdateBeam(beams[i].startPos, rotatedVector);
         }
 
     }
