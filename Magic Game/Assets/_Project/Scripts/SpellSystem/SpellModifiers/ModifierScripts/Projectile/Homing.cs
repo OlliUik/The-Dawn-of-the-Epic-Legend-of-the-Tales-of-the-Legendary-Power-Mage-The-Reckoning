@@ -64,6 +64,11 @@ public class Homing : SpellModifier
                 distance = curDistance;
             }
         }
-        return closest.transform;
+
+        if (closest != null)
+        {
+            return closest.transform;
+        }
+        return null;
     }
 }
