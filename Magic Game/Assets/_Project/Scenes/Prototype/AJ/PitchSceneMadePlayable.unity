@@ -349,6 +349,85 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1206459867}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &111037013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 111037014}
+  - component: {fileID: 111037016}
+  - component: {fileID: 111037015}
+  m_Layer: 5
+  m_Name: ActiveSpell
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &111037014
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111037013}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2008907575}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 10, y: -130}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &111037015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111037013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 48
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 4
+    m_MaxSize: 48
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: 'Active spell: 0'
+--- !u!222 &111037016
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111037013}
+  m_CullTransparentMesh: 0
 --- !u!1 &148545001
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +612,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 333599121}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &438651662 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4034673141433097479, guid: 57c6cfb4d7f609b4d8bfce9a2ee59164,
+    type: 3}
+  m_PrefabInstance: {fileID: 1367399141}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &438651663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438651662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e6ab01364ad57469f9cf8fde547cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &469715092
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,28 +1479,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: fcea13db498bd184f9c75eab54a9b51a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0ff678fd1209d04cb0a0d3066c94e91, type: 3}
---- !u!1 &1023555599 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2901130059248428995, guid: b0ff678fd1209d04cb0a0d3066c94e91,
-    type: 3}
-  m_PrefabInstance: {fileID: 994466293}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &1023555605
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023555599}
-  serializedVersion: 2
-  m_Mass: 5000
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1001 &1063573988
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1473,6 +1548,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce6f88d5025c00f459649a1ffa5dbda1, type: 3}
+--- !u!1 &1075482183 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4034673141433097479, guid: 57c6cfb4d7f609b4d8bfce9a2ee59164,
+    type: 3}
+  m_PrefabInstance: {fileID: 675614708}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1075482184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075482183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e6ab01364ad57469f9cf8fde547cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1096978519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2400,6 +2493,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2ed2a01afdb42445a6c2fcaf9ab9006, type: 3}
+--- !u!224 &2008907575 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5303135430551391158, guid: 14f3d020090e13745a23f198dcab5c97,
+    type: 3}
+  m_PrefabInstance: {fileID: 2095760767}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2049031170 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3078892268375844451, guid: d8a16374f2f80054da294b4f71f3581e,
@@ -2485,6 +2584,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2174652767991932946, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: debugText
+      value: 
+      objectReference: {fileID: 111037015}
     - target: {fileID: 7066670760798350497, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
       propertyPath: spells.Array.data[0].cards.Array.size

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Mana))]
@@ -13,6 +14,7 @@ public class PlayerCore : MonoBehaviour
     [SerializeField] private HUDManager canvasManager = null;
     [SerializeField] private GameObject ragdollObject = null;
     [SerializeField] private Transform ragdollPosition = null;
+    [SerializeField] private Text debugText = null;
 
     public Health cHealth { get; private set; } = null;
     public Mana cMana { get; private set; } = null;
@@ -66,6 +68,11 @@ public class PlayerCore : MonoBehaviour
 
     void Update()
     {
+        if (debugText != null)
+        {
+            debugText.text = "Active spell: " + activeSpellIndex;
+        }
+
         if (bIsDead)
         {
             //Camera.main.transform.LookAt(playerModel.transform);
@@ -108,7 +115,7 @@ public class PlayerCore : MonoBehaviour
                     {
                         activeSpellIndex++;
 
-                        if(activeSpellIndex > 3)
+                        if(activeSpellIndex > 2)
                         {
                             activeSpellIndex = 0;
                         }
@@ -119,7 +126,7 @@ public class PlayerCore : MonoBehaviour
 
                         if(activeSpellIndex < 0)
                         {
-                            activeSpellIndex = 3;
+                            activeSpellIndex = 2;
                         }
                     }
                 }
