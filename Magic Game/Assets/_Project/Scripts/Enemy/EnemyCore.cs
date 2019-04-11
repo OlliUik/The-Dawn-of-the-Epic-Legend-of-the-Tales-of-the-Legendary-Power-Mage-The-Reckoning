@@ -302,6 +302,11 @@ public class EnemyCore : MonoBehaviour
     {
         currentState = EState.DISABLED;
         GlobalVariables.entityList.Remove(this.gameObject);
+
+        //Detach the enemy model and ragdoll it
+        animator.enabled = false;
+        animator.transform.parent = null;
+
         Destroy(this.gameObject);
     }
 
