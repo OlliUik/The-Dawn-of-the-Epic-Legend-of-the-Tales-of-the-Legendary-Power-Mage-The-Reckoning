@@ -305,6 +305,7 @@ public class EnemyCore : MonoBehaviour
 
         //Detach the enemy model and ragdoll it
         animator.enabled = false;
+        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false);
         animator.transform.parent = null;
 
         Destroy(this.gameObject);

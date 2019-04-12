@@ -6,12 +6,14 @@ using UnityEngine;
 public class RagdollModifier : MonoBehaviour
 {
     [SerializeField] private string armatureName = "Armature";
+    [SerializeField] private List<Rigidbody> excludeFromKinematicToggle = new List<Rigidbody>();
     private List<Transform> armatureBones = new List<Transform>();
     
     void Start()
     {
         GetBones(armatureBones, armatureName);
         SetDepenetrationValues(armatureBones, 3.0f);
+        SetKinematic(true);
     }
 
     void GetBones(List<Transform> list, string armatureName)
@@ -53,8 +55,31 @@ public class RagdollModifier : MonoBehaviour
                     rigid.maxDepenetrationVelocity = amount;
                 }
             }
+            Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
         }
+    }
 
-        Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
+    public void SetKinematic(bool b)
+    {
+        SetKinematic(b, armatureBones);
+    }
+
+    void SetKinematic(bool b, List<Transform> list)
+    {
+        if (list.Count > 0)
+        {
+            foreach (Transform item in list)
+            {
+                Rigidbody rigid = item.GetComponent<Rigidbody>();
+                if (rigid != null)
+                {
+                    if (!excludeFromKinematicToggle.Contains(rigid))
+                    {
+                        rigid.isKinematic = b;
+                    }
+                }
+            }
+            Debug.Log("Set ragdoll's rigidbodies' isKinematic to " + (b ? "true." : "false."));
+        }
     }
 }
