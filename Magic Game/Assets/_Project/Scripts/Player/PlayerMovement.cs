@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Serialized")]
     [SerializeField] private bool bAllowMidairDashing = true;
+    [SerializeField] private bool bAllowInfiniteWallJumps = true;
     [SerializeField] private float acceleration = 100.0f;
     [SerializeField] private float airAcceleration = 20.0f;
     [SerializeField] private float friction = 5.5f;
@@ -33,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashCooldown = 1.0f;
     [SerializeField] private float gravityWallSliding = -1.0f;
     [SerializeField] private float wallSlidingTime = 2.0f;
+    [SerializeField] private float wallJumpForce = 25.0f;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     [SerializeField] private Transform ragdollTransform = null;
 
@@ -215,6 +217,14 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 bIsWallSliding = false;
+
+                if (bAllowInfiniteWallJumps)
+                {
+                    if ((cCharacter.collisionFlags & CollisionFlags.Sides) == 0)
+                    {
+                        wstTimer = wallSlidingTime;
+                    }
+                }
             }
         }
         else
@@ -331,8 +341,13 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Vector3 wallHorizontalNormal = Vector3.Normalize(new Vector3(currentHit.normal.x, 0.0f, currentHit.normal.z));
 
-                    tempVector.y = 0.0f;
-                    tempVector += Vector3.Normalize(wallHorizontalNormal + Vector3.up * 0.5f) * jumpForce;
+                    //tempVector.y = 0.0f;
+                    //tempVector += Vector3.Normalize(wallHorizontalNormal + Vector3.up) * wallJumpForce;
+
+                    Vector3 wallSlideDirection = Vector3.ProjectOnPlane(tempVector, wallHorizontalNormal);
+                    wallSlideDirection.y = 0.0f;
+
+                    tempVector = Vector3.Normalize(wallHorizontalNormal + Vector3.up + wallSlideDirection.normalized) * wallJumpForce;
 
                     jgtTimer = 0.0f;
                     //tempVector.y = jumpForce;
