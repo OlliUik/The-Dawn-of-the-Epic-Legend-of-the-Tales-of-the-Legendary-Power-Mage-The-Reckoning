@@ -7,8 +7,8 @@ public class GameObjectSwitcher : MonoBehaviour
     [SerializeField]
     private GameObject a, b;
 
-    //a = wall
-    //b = doorway
+    //a = wall, Doorway-script
+    //b = wall with doorway, no Doorway-script
 
     void Update()
     {
