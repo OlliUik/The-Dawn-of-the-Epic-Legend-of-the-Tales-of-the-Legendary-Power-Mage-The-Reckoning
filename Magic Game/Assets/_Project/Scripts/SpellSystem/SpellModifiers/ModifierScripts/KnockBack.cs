@@ -11,7 +11,11 @@ public class KnockBack : SpellModifier
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction) // fix this and pushback
     {
-        hitInfo.collider.gameObject.transform.position += direction.normalized * knockbackForce * Time.deltaTime;
+        var rb = hitInfo.collider.GetComponent<Rigidbody>();
+        if(rb != null)
+        {
+            rb.gameObject.transform.position += direction.normalized * knockbackForce * Time.deltaTime;
+        }
     }
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)

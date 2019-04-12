@@ -7,11 +7,13 @@ public class Bounce : SpellModifier
 
     public int bounceCount = 2;
 
+    // BEAM variables
+    GameObject beamCopy;
+    Beam beam;
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
-    {
-       // reflect TODO:
-    }
+
+
+
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
@@ -23,4 +25,39 @@ public class Bounce : SpellModifier
             copy.GetComponent<Bounce>().bounceCount--;
         }
     }
+
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    {
+        // reflect TODO:
+
+        if (bounceCount > 0)
+        {
+            if(beamCopy == null)
+            {
+                beamCopy = Instantiate(gameObject);
+                beamCopy.name = "BounceCopy";
+                beamCopy.transform.SetParent(gameObject.transform);
+                beamCopy.GetComponent<Bounce>().bounceCount--;
+                beam = beamCopy.GetComponent<Beam>();
+                beam.isMaster = false;
+            }
+
+            beamCopy.gameObject.SetActive(true);
+            beamCopy.transform.position = hitInfo.point;
+            beam.startPos = hitInfo.point;
+
+            Vector3 reflectDir = Vector3.Reflect(direction, hitInfo.normal);
+            beam.direction = reflectDir;
+            beam.UpdateBeam(hitInfo.point, reflectDir);
+
+        }
+    }
+
+    public override void BeamCollisionEnd()
+    {
+        if (beamCopy == null) return;
+
+        beamCopy.gameObject.SetActive(false);
+    }
+
 }

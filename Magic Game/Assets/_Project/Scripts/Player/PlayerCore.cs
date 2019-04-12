@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(Mana))]
@@ -10,6 +12,9 @@ public class PlayerCore : MonoBehaviour
 
     [Header("Serialized")]
     [SerializeField] private HUDManager canvasManager = null;
+    [SerializeField] private GameObject ragdollObject = null;
+    [SerializeField] private Transform ragdollPosition = null;
+    [SerializeField] private Text debugText = null;
 
     public Health cHealth { get; private set; } = null;
     public Mana cMana { get; private set; } = null;
@@ -22,9 +27,13 @@ public class PlayerCore : MonoBehaviour
     private bool bInputEnabled = true;
     private bool bIsDead = false;
     private bool bShotFired = false;
+    private bool bIsRagdolled = false;
+    private float ragdollSleepTimer = 0.0f;
+    private Vector3 ragdollPrevPosition = Vector3.zero;
+    public int activeSpellIndex = 0;
 
     #endregion
-
+    
     #region UNITY_DEFAULT_METHODS
 
     void Awake()
@@ -50,6 +59,8 @@ public class PlayerCore : MonoBehaviour
 
     void Start()
     {
+        SetRagdollDepenetrationValues("Armature", 3.0f);
+
         //Quaternion spawnRotation = transform.localRotation;
         //transform.localRotation = Quaternion.Euler(Vector3.zero);
         //cTPCamera.lookDirection = spawnRotation.eulerAngles;
@@ -57,12 +68,19 @@ public class PlayerCore : MonoBehaviour
 
     void Update()
     {
+        if (debugText != null)
+        {
+            debugText.text = "Active spell: " + activeSpellIndex;
+        }
+
         if (bIsDead)
         {
             //Camera.main.transform.LookAt(playerModel.transform);
         }
         else
         {
+
+
             if (bInputEnabled)
             {
                 //cTPCamera.Look(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
@@ -74,7 +92,7 @@ public class PlayerCore : MonoBehaviour
                     if (!bShotFired)
                     {
                         //cSpellCaster.CastSpell();
-                        cSpellBook.CastSpell(0);
+                        cSpellBook.CastSpell(activeSpellIndex);
                         //GetComponent<PlayerAnimations>().CastSpell(0);
                         bShotFired = true;
                     }
@@ -86,8 +104,36 @@ public class PlayerCore : MonoBehaviour
 
                 if (Input.GetButtonDown("Fire2"))
                 {
+                    if (!bIsRagdolled)
+                    {
+                        EnableRagdoll(true);
+                    }
                     //cTPCamera.SwitchSide();
                 }
+
+                // CHANGING ACTIVE SPELL
+                if(Input.mouseScrollDelta.y != 0 && !cSpellBook.isCasting)
+                {
+                    if(Input.mouseScrollDelta.y > 0)
+                    {
+                        activeSpellIndex++;
+
+                        if(activeSpellIndex > 2)
+                        {
+                            activeSpellIndex = 0;
+                        }
+                    }
+                    else
+                    {
+                        activeSpellIndex--;
+
+                        if(activeSpellIndex < 0)
+                        {
+                            activeSpellIndex = 2;
+                        }
+                    }
+                }
+
             }
 
             if (Input.GetButtonDown("Escape"))
@@ -97,8 +143,34 @@ public class PlayerCore : MonoBehaviour
 
             if(Input.GetKeyDown(KeyCode.Return))
             {
+                // OPEN SPELL EDITING MENU // ALSO CLOSES IT
                 EnableControls(!canvasManager.FlipSpellEditingState(this));
             }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (!bIsDead && bIsRagdolled && ragdollPosition != null)
+        {
+            cHealth.AddInvulnerability(Time.fixedDeltaTime);
+
+            if (Vector3.Distance(ragdollPosition.position, ragdollPrevPosition) < 0.2f)
+            {
+                if (ragdollSleepTimer > 0.0f)
+                {
+                    ragdollSleepTimer -= Time.fixedDeltaTime;
+                }
+                else
+                {
+                    EnableRagdoll(false);
+                }
+            }
+            else
+            {
+                ragdollSleepTimer = 2.0f;
+            }
+            ragdollPrevPosition = ragdollPosition.position;
         }
     }
 
@@ -149,6 +221,65 @@ public class PlayerCore : MonoBehaviour
         //{
         //    cSpellCaster.CastBeamActive(b);
         //}
+    }
+
+    public void EnableRagdoll(bool b)
+    {
+        bIsRagdolled = b;
+        cTPCamera.isRagdolled = b;
+        cMovement.enableControls = !b;
+        ragdollSleepTimer = 3.0f;
+
+        ragdollObject.GetComponent<Animator>().enabled = !b;
+        ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
+
+        if (!b)
+        {
+            cMovement.OnDisableRagdoll();
+        }
+    }
+
+    void SetRagdollDepenetrationValues(string armatureName, float amount)
+    {
+        List<Transform> armatureBones = new List<Transform>();
+
+        if (ragdollObject != null)
+        {
+            foreach (Transform item in ragdollObject.transform)
+            {
+                if (item.name == armatureName)
+                {
+                    Debug.Log("Found the armature, looping through all of its child transforms...");
+                    GetAllChildren(item, armatureBones);
+                    Debug.Log("Found " + armatureBones.Count + " bones.");
+                }
+            }
+        }
+
+        if (armatureBones.Count > 0)
+        {
+            foreach (Transform item in armatureBones)
+            {
+                if (item.GetComponent<Rigidbody>() != null)
+                {
+                    item.GetComponent<Rigidbody>().maxDepenetrationVelocity = amount;
+                }
+            }
+        }
+
+        Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
+    }
+
+    void GetAllChildren(Transform parent, List<Transform> list)
+    {
+        foreach (Transform item in parent)
+        {
+            list.Add(item);
+            if (item.childCount > 0)
+            {
+                GetAllChildren(item, list);
+            }
+        }
     }
 
     public void OnHurt()

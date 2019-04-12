@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
 
     [Header("Serialized")]
     [SerializeField] private float iFrameTime = 0.5f;
+    [SerializeField] private float ragdollDamageThreshold = 50.0f;
 
     public bool bIsDead { get; private set; } = false;
     [HideInInspector] public float health /*{ get; private set; }*/ = 0.0f;
@@ -51,6 +52,11 @@ public class Health : MonoBehaviour
                 {
                     GetComponent<PlayerCore>().OnHurt();
                     GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
+
+                    if (amount > ragdollDamageThreshold)
+                    {
+                        GetComponent<PlayerCore>().EnableRagdoll(true);
+                    }
                 }
                 else
                 {

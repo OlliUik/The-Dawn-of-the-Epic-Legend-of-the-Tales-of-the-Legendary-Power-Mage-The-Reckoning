@@ -10,6 +10,7 @@ public class Aoe : Spell
     //[Header("AoE varialbes")]
     [SerializeField] public float radius    { get; private set; } = 7.0f;
     [SerializeField] public float duration  { get; private set; } = 10.0f;
+    [SerializeField] public float damagePerSecond = 1.0f;
 
     #endregion
 
@@ -73,8 +74,15 @@ public class Aoe : Spell
         foreach (var objectHit in auraArea)
         {
             // check if objectHit is enemy
-            if (objectHit.gameObject.GetComponent<Rigidbody>() != null)
+            if (objectHit.transform.tag != caster.tag)
             {
+
+                var health = objectHit.GetComponent<Health>();
+                if(health != null)
+                {
+                    health.Hurt(damagePerSecond * Time.deltaTime);
+                }
+
                 // apply all modifiers here to the enemy inside radius
                 SpellModifier[] modifiers = GetComponents<SpellModifier>();
                 foreach (SpellModifier modifier in modifiers)

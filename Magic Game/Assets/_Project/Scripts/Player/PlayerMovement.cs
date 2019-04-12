@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float accelerationMultiplier = 1.0f;
     [HideInInspector] public int midAirJumps = 0;
     [HideInInspector] public bool enableControls = true;
+    [HideInInspector] public bool isRagdolled = false;
 
     [Header("Serialized")]
     [SerializeField] private bool bAllowMidairDashing = true;
@@ -33,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravityWallSliding = -1.0f;
     [SerializeField] private float wallSlidingTime = 2.0f;
     [SerializeField] private LayerMask raycastLayerMask = 1;
+    [SerializeField] private Transform ragdollTransform = null;
 
     private ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
@@ -174,6 +176,15 @@ public class PlayerMovement : MonoBehaviour
         cCharacter.gameObject.layer = 31;
         cCharacter.Move(position - transform.position);
         cCharacter.gameObject.layer = physicsLayer;
+    }
+
+    public void OnDisableRagdoll()
+    {
+        if (ragdollTransform != null)
+        {
+            Teleport(ragdollTransform.position);
+            moveVector = Vector3.zero;
+        }
     }
 
     void Move(float inputX, float inputY, bool inputJump, bool inputDash)

@@ -19,7 +19,7 @@ GameObject:
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -54,6 +54,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasManager: {fileID: 7916848275118598932}
+  ragdollObject: {fileID: 0}
+  ragdollPosition: {fileID: 0}
+  activeSpellIndex: 0
 --- !u!114 &5021546834307941695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +82,9 @@ MonoBehaviour:
     spell: {fileID: 0}
     cards: []
   lookTransform: {fileID: 6348975070603861140}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 3073
 --- !u!114 &5316809420139669611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,11 +100,13 @@ MonoBehaviour:
   horizontalAxis: Mouse X
   verticalAxis: Mouse Y
   cameraFOV: 0
+  isRagdolled: 0
   cameraObject: {fileID: 6348975070603861141}
   invertY: 0
   sensitivity: {x: 2, y: 2}
   cameraFOVLerpSpeed: 10
   pivotPoint: {x: 0, y: 1.4, z: 0}
+  pivotTransformRagdolled: {fileID: 0}
   cameraClosePosition: {x: 0, y: 0.5, z: 0}
   raycastLayerMask:
     serializedVersion: 2
@@ -122,6 +130,7 @@ MonoBehaviour:
   accelerationMultiplier: 1
   midAirJumps: 0
   enableControls: 1
+  isRagdolled: 0
   bAllowMidairDashing: 1
   acceleration: 100
   airAcceleration: 20
@@ -137,9 +146,10 @@ MonoBehaviour:
   dashCooldown: 1
   gravityWallSliding: -1
   wallSlidingTime: 2
-  physicsLayerMask:
+  raycastLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  ragdollTransform: {fileID: 0}
 --- !u!114 &6989253897410125415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,6 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0.5
+  ragdollDamageThreshold: 50
   health: 0
 --- !u!114 &26209675684781308
 MonoBehaviour:

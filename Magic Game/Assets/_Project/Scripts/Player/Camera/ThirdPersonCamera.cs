@@ -10,6 +10,7 @@ public class ThirdPersonCamera : MonoBehaviour
     [SerializeField] private string verticalAxis = "Mouse Y";
 
     [HideInInspector] public float cameraFOV = 0.0f;
+    [HideInInspector] public bool isRagdolled = false;
 
     [Header("Public")]
     public GameObject cameraObject = null;
@@ -22,6 +23,7 @@ public class ThirdPersonCamera : MonoBehaviour
     [Header("Serialized")]
     [SerializeField] private float cameraFOVLerpSpeed = 10.0f;
     [SerializeField] private Vector3 pivotPoint = Vector3.zero;
+    [SerializeField] private Transform pivotTransformRagdolled = null;
     [SerializeField] private Vector3 cameraClosePosition = Vector3.zero;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     
@@ -130,6 +132,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+    #if UNITY_EDITOR
         //Don't draw certain gizmos when in play mode
         if (!UnityEditor.EditorApplication.isPlaying)
         {
@@ -141,6 +144,7 @@ public class ThirdPersonCamera : MonoBehaviour
         //Draw close position
         Gizmos.color = Color.yellow;
         Gizmos.DrawCube(transform.position + pivotPoint + cameraClosePosition, Vector3.one * 0.18f);
+    #endif
     }
 
     #endregion
@@ -178,11 +182,24 @@ public class ThirdPersonCamera : MonoBehaviour
 
         cameraObject.transform.rotation = Quaternion.Euler(lookDirection);
         Vector3 offset = cameraObject.transform.right * cameraOffset.x + cameraObject.transform.up * cameraOffset.y + cameraObject.transform.forward * cameraOffset.z;
-        cameraObject.transform.position = transform.position + pivotPoint + offset;
+
+        if (isRagdolled)
+        {
+            cameraObject.transform.position = pivotTransformRagdolled.position + cameraObject.transform.forward * -5.0f;
+        }
+        else
+        {
+            cameraObject.transform.position = transform.position + pivotPoint + offset;
+        }
 
         #endregion
 
         #region CAMERA_WALLCHECKING
+
+        if (isRagdolled)
+        {
+            return;
+        }
 
         Vector3 cameraRaycast = cameraObject.transform.right * (cameraOffset.x - cameraClosePosition.x)
             + cameraObject.transform.up * (cameraOffset.y - cameraClosePosition.y)
