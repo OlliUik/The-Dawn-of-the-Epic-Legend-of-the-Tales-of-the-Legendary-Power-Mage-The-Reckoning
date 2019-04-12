@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Serialized")]
     [SerializeField] private bool bAllowMidairDashing = true;
+    [SerializeField] private bool bDashingGivesIFrames = false;
     [SerializeField] private bool bAllowInfiniteWallJumps = true;
     [SerializeField] private float acceleration = 100.0f;
     [SerializeField] private float airAcceleration = 20.0f;
@@ -311,10 +312,15 @@ public class PlayerMovement : MonoBehaviour
                     {
                         moveDirection = -lookVector;
                     }
-                    if (GetComponent<Health>() != null)
+
+                    if (bDashingGivesIFrames)
                     {
-                        GetComponent<Health>().AddInvulnerability(dashDuration);
+                        if (GetComponent<Health>() != null)
+                        {
+                            GetComponent<Health>().AddInvulnerability(dashDuration);
+                        }
                     }
+                    
                     dDurationTimer = dashDuration;
                     dCooldownTimer = dashCooldown;
                     tempVector = moveDirection * dashSpeed * accelerationMultiplier;
@@ -368,8 +374,8 @@ public class PlayerMovement : MonoBehaviour
         //Do something else when on a steep slope
         else
         {
-            Vector3 tempVector = moveDirection * airAcceleration * dt;
-            tempVector = Vector3.ProjectOnPlane(tempVector, slopeNormal);
+            Vector3 tempVector = Vector3.Project(moveDirection, new Vector3(slopeNormalPerpendicular.x, 0.0f, slopeNormalPerpendicular.y)) * airAcceleration * dt;
+            //tempVector = Vector3.ProjectOnPlane(tempVector, slopeNormal);
             moveVector = Vector3.ProjectOnPlane(moveVector, slopeNormal);
             moveVector += tempVector + slopeDownDirection * -gravity * dt;
 
