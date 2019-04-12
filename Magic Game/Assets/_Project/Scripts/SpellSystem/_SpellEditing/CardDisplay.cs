@@ -83,6 +83,11 @@ public class CardDisplay : MonoBehaviour
             editorController.useCrystalButton.gameObject.SetActive(true);
             editorController.useCrystalButton.interactable = editorController.crystalsLeft > 0 ? true : false;
 
+            if(editorController.crystalsLeft <= 0)
+            {
+                editorController.CloseSpellEditionMenu();
+            }
+
         }
         else
         {

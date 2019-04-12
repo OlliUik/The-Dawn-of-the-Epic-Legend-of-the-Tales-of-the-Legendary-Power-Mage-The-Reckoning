@@ -15,7 +15,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image fadeIn = null;
 
     [SerializeField] private GameObject spellEditingUI = null;
-    private SpellEditorController controller = null;
+    public SpellEditorController spellEditingController { get; private set; } 
     public bool bIsEditingSpells { get; private set; } = false;
     
     public bool bIsPaused { get; private set; } = false;
@@ -30,7 +30,7 @@ public class HUDManager : MonoBehaviour
 
     private void Start()
     {
-        controller = spellEditingUI.GetComponent<SpellEditorController>();
+        spellEditingController = spellEditingUI.GetComponent<SpellEditorController>();
     }
 
     void Update()
@@ -93,8 +93,8 @@ public class HUDManager : MonoBehaviour
         goHPAndManaBars.SetActive(!bIsEditingSpells);
         Time.timeScale = bIsEditingSpells ? 0.0f : 1.0f;
 
-        controller.useCrystalButton.gameObject.SetActive(true);
-        controller.useCrystalButton.interactable = controller.crystalsLeft > 0 ? true : false;
+        spellEditingController.useCrystalButton.gameObject.SetActive(true);
+        spellEditingController.useCrystalButton.interactable = spellEditingController.crystalsLeft > 0 ? true : false;
 
         return bIsEditingSpells;
     }

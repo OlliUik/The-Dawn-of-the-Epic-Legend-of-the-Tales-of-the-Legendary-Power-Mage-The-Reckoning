@@ -60,7 +60,7 @@ public class PlayerCore : MonoBehaviour
     void Start()
     {
         SetRagdollDepenetrationValues("Armature", 3.0f);
-
+        ToggleSpellEditingUI();
         //Quaternion spawnRotation = transform.localRotation;
         //transform.localRotation = Quaternion.Euler(Vector3.zero);
         //cTPCamera.lookDirection = spawnRotation.eulerAngles;
@@ -140,12 +140,6 @@ public class PlayerCore : MonoBehaviour
             {
                 EnableControls(!canvasManager.FlipPauseState(this));
             }
-
-            if(Input.GetKeyDown(KeyCode.Return))
-            {
-                // OPEN SPELL EDITING MENU // ALSO CLOSES IT
-                EnableControls(!canvasManager.FlipSpellEditingState(this));
-            }
         }
     }
 
@@ -205,6 +199,11 @@ public class PlayerCore : MonoBehaviour
     #endregion
 
     #region CUSTOM_METHODS
+
+    public void ToggleSpellEditingUI()
+    {
+        EnableControls(!canvasManager.FlipSpellEditingState(this));
+    }
 
     public HUDManager GetHUD()
     {
