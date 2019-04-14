@@ -48,7 +48,7 @@ public class Beam : Spell
     {
         if(isMaster)
         {
-            spellbook = GetComponentInParent<Spellbook>();
+            spellbook = caster.GetComponent<Spellbook>();
         }
 
         modifiers = GetComponents<SpellModifier>();
