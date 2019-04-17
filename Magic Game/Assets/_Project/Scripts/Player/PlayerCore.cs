@@ -30,7 +30,7 @@ public class PlayerCore : MonoBehaviour
     private bool bIsRagdolled = false;
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
-    public int activeSpellIndex = 0;
+    public int activeSpellIndex = 0;      
 
     #endregion
     
@@ -57,10 +57,15 @@ public class PlayerCore : MonoBehaviour
         //}
     }
 
+    public bool openSpellEditingUIonStart = false;
+
     void Start()
     {
         SetRagdollDepenetrationValues("Armature", 3.0f);
-        ToggleSpellEditingUI();
+
+        if(openSpellEditingUIonStart)
+            ToggleSpellEditingUI();
+
         //Quaternion spawnRotation = transform.localRotation;
         //transform.localRotation = Quaternion.Euler(Vector3.zero);
         //cTPCamera.lookDirection = spawnRotation.eulerAngles;

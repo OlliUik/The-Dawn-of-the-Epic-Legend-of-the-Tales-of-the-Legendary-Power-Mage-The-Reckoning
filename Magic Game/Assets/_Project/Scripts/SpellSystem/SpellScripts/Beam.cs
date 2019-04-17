@@ -25,6 +25,9 @@ public class Beam : Spell
     public bool isMaster                            = false;
     SpellModifier[] modifiers;
 
+
+    public float angle;
+
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
         // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
@@ -59,7 +62,7 @@ public class Beam : Spell
 
         if (isMaster)
         {
-            direction = spellbook.GetDirection();
+            direction = Quaternion.Euler(0, angle, 0) * spellbook.GetDirection();
             startPos = spellbook.spellPos.position;
         }
 
