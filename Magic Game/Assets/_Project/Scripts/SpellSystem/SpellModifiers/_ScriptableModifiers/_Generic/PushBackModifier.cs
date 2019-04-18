@@ -10,6 +10,13 @@ public class PushBackModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<PushBack>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
         PushBack component = spellObject.AddComponent<PushBack>();
         component.pushbackForce = pushBackForce;
     }

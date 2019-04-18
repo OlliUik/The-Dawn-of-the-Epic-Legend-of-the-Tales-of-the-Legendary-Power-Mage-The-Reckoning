@@ -38,13 +38,7 @@ public class CardDisplay : MonoBehaviour
         Vector3 startScale = gameObject.transform.localScale;
         Vector3 endScale = Vector3.one * 1.1f;
 
-        float percent = 0f;
-
-        while(percent < 1f)
-        {
-            transform.localScale = Vector3.Lerp(startScale, endScale, percent);
-            percent += Time.unscaledDeltaTime;
-        }
+        transform.localScale = Vector3.Lerp(startScale, endScale, Time.unscaledDeltaTime); // runs only once
     }
 
     private void OnMouseExit()
@@ -54,13 +48,7 @@ public class CardDisplay : MonoBehaviour
         Vector3 startScale = gameObject.transform.localScale;
         Vector3 endScale = Vector3.one;
 
-        float percent = 0f;
-
-        while (percent < 1f)
-        {
-            transform.localScale = Vector3.Lerp(startScale, endScale, percent);
-            percent += Time.unscaledDeltaTime;
-        }
+        transform.localScale = Vector3.Lerp(startScale, endScale, Time.unscaledDeltaTime); // only runs this lerp once
     }
 
     public void ChooseCard()
@@ -74,9 +62,27 @@ public class CardDisplay : MonoBehaviour
             }
 
             // ADD THE CARD TO THE SELECTED SPELL
-            editorController.highlighedSpell.data.cards.Add(card);
 
-            // DESTROY THE REMAINING CARDS AND GENERATE NEW 3
+            // TODO:: before adding to card check if spells data already has same effect
+            if(editorController.highlighedSpell.data.cards.Contains(card))
+            {
+                Debug.Log("card has this effect already");
+                editorController.highlighedSpell.data.cards.Add(card);
+                //for (int i = 0; i < editorController.highlighedSpell.data.cards.Count; i++)
+                //{
+                //    if(editorController.highlighedSpell.data.cards[i].GetType() == card.GetType())
+                //    {
+                //        editorController.highlighedSpell.data.cards[i].
+                //        break;
+                //    }
+                //}
+            }
+            else // add card as new
+            {
+                editorController.highlighedSpell.data.cards.Add(card);
+            }
+
+            // DESTROY THE REMAINING CARDS
             editorController.DestroyCards();
 
             // IF PLAYER HAS MORE CRYSTALS ALLOW MORE CARDS

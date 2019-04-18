@@ -39,7 +39,12 @@ public class Split : SpellModifier
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
 
-        Beam beam = GetComponent<Beam>();
+        Beam beam = gameObject.GetComponent<Beam>();
+
+        if(!beam.isMaster)
+        {
+            return;
+        }
 
         if (beam.isMaster && !splitted)
         {
@@ -57,14 +62,23 @@ public class Split : SpellModifier
 
         for (int i = 0; i < beams.Count; i++)
         {
-            beams[i].Range = distance;
             beams[i].transform.position = hitInfo.point;
-            beams[i].gameObject.SetActive(true);
             beams[i].startPos = hitInfo.point;
+            beams[i].Range = beam.Range - distance;
+            beams[i].gameObject.SetActive(true);
             Vector3 reflectDir = Vector3.Reflect(direction, hitInfo.normal);
-            Vector3 rotatedVector = Quaternion.AngleAxis(i == 1 ? 45f : -45f, direction) * reflectDir;
+            Vector3 rotatedDir = Vector3.zero;
 
-            beams[i].direction = rotatedVector;
+            if(i < splitCount * 0.5)
+            {
+                rotatedDir = Quaternion.AngleAxis(-25f * (i + 1), beam.direction) * reflectDir;   
+            }
+            else
+            {
+                rotatedDir = Quaternion.AngleAxis(25f * (i + 1), direction) * reflectDir;
+            }
+
+            beams[i].direction = rotatedDir;
             beams[i].UpdateBeam(beams[i].startPos, beams[i].direction);
         }
 
@@ -74,6 +88,7 @@ public class Split : SpellModifier
     {
         for (int i = 0; i < beams.Count; i++)
         {
+            beams[i].CollisionEnd();
             beams[i].gameObject.SetActive(false);
         }
     }

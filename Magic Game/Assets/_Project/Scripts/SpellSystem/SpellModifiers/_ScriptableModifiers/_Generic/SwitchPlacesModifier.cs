@@ -10,6 +10,13 @@ public class SwitchPlacesModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<SwitchPlaces>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
         SwitchPlaces sp = spellObject.AddComponent<SwitchPlaces>();
         sp.teleportParticles = teleportParticles;
     }

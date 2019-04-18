@@ -11,6 +11,13 @@ public class SummonLavaModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<SummonLava>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
         SummonLava component = spellObject.AddComponent<SummonLava>();
         component.spawnPrefab = lavaPrefab;
         component.aoeLavaFountain = aoeLavaFountain;

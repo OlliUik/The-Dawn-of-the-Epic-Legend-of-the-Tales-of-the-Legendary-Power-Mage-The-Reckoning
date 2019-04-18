@@ -57,13 +57,13 @@ public class PlayerCore : MonoBehaviour
         //}
     }
 
-    public bool openSpellEditingUIonStart = false;
+    public bool openSpellEditingOnStart = false;
 
     void Start()
     {
         SetRagdollDepenetrationValues("Armature", 3.0f);
 
-        if(openSpellEditingUIonStart)
+        if(openSpellEditingOnStart)
             ToggleSpellEditingUI();
 
         //Quaternion spawnRotation = transform.localRotation;

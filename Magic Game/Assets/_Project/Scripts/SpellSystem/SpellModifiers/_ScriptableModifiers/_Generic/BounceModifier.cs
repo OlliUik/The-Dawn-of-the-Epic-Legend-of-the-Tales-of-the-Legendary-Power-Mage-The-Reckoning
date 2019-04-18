@@ -10,6 +10,13 @@ public class BounceModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<Bounce>();
+        if(compo != null)
+        {
+            compo.bounceCount += 2;
+            return;
+        }
+
         Bounce component = spellObject.AddComponent<Bounce>();
         component.bounceCount = bounceCount;
     }

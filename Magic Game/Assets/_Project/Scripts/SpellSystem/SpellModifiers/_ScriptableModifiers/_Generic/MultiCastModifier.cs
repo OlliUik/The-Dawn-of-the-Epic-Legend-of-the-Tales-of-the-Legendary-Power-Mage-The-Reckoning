@@ -12,6 +12,14 @@ public class MultiCastModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<MultiCast>();
+        if (compo != null)
+        {
+            // do what
+            compo.copyCount += 2;
+            return;
+        }
+
         MultiCast component   = spellObject.AddComponent<MultiCast>();
         component.copyCount   = copyCounts;
         component.leftRightRotation = leftRightRotation;

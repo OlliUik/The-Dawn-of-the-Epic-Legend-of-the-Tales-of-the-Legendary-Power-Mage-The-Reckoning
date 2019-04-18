@@ -31,65 +31,20 @@ public class MultiCast : SpellModifier
         {
             for (int i = 0; i < copyCount; i++)
             {
-                GameObject copy = Instantiate(gameObject);
+                Beam copy = Instantiate(gameObject, transform.position, transform.rotation).GetComponent<Beam>();
                 copy.name = "MultiCast copy " + i.ToString();
-                Beam beam = copy.GetComponent<Beam>();
-                beam.isMaster = true;
-                
-                if(i == 0)
+                copy.isMaster = true;               
+
+                if(i < copyCount * 0.5)
                 {
-                    beam.angle = -15f;
+                    copy.angle = -15f * (i+1);
                 }
                 else
                 {
-                    beam.angle = 15f;
+                    copy.angle = 15f * i;
                 }
             }
         }
     }
-
-    //public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
-    //{
-        
-    //    if(!copiesCreated)
-    //    {
-    //        for (int i = 0; i < copyCount; i++)
-    //        {
-    //            GameObject copy = Instantiate(gameObject);
-    //            copy.name = "MultiCast copy " + i.ToString();
-    //            Beam beam = copy.GetComponent<Beam>();
-    //            beam.isMaster = false;
-    //            beam.startPos = hitInfo.point;
-    //            beams.Add(beam);
-    //            copiesCreated = true;
-    //        }
-    //    }
-
-    //    for (int i = 0; i < beams.Count; i++)
-    //    {
-    //        beams[i].gameObject.SetActive(true);
-
-    //        Vector3 reflectDir = Vector3.Reflect(beams[i].direction, hitInfo.normal);
-    //        if(i == 0)
-    //        {
-    //            reflectDir = Quaternion.Euler(0, -25f, 0) * reflectDir;
-    //        }
-    //        else
-    //        {
-    //            reflectDir = Quaternion.Euler(0, 25f, 0) * reflectDir;
-    //        }
-
-    //        beams[i].direction = reflectDir;
-    //    }
-    //}
-
-    //public override void BeamCollisionEnd()
-    //{
-    //    for (int i = 0; i < beams.Count; i++)
-    //    {
-    //        beams[i].gameObject.SetActive(false);
-    //    }
-    //}
-
 
 }

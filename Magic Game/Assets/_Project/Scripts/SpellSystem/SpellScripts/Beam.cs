@@ -11,6 +11,7 @@ public class Beam : Spell
     [SerializeField] private float baseRange        = 150.0f;
     [SerializeField] private float baseRadius       = 1f;
     public float angle;
+    public float distanceTravelled;
 
     public float Range
     {
@@ -20,10 +21,10 @@ public class Beam : Spell
 
     [SerializeField] private GameObject graphics    = null;
 
-    [HideInInspector] public Vector3 startPos       = Vector3.zero;
-    [HideInInspector] public Vector3 endPos         = Vector3.zero;
+    public Vector3 startPos                         = Vector3.zero;
+    public Vector3 endPos                           = Vector3.zero;
 
-    [HideInInspector] public Vector3 direction      = Vector3.zero;
+    public Vector3 direction                        = Vector3.zero;
 
     private Spellbook spellbook;
     private RaycastHit hit;
@@ -32,7 +33,8 @@ public class Beam : Spell
     public bool isMaster                            = false;
     SpellModifier[] modifiers;
 
-
+    private bool colliding                          = false;
+    private bool collEndCalled                      = false;
 
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
@@ -41,7 +43,6 @@ public class Beam : Spell
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Beam beam = Instantiate(this, spellbook.spellPos.position, rot);
         beam.caster = spellbook.gameObject;
-        beam.transform.SetParent(spellbook.transform);
         beam.isMaster = true;
         
         // apply all spellmodifiers to the beam
@@ -70,15 +71,13 @@ public class Beam : Spell
             startPos = spellbook.spellPos.position;
         }
 
-        endPos = (direction * baseRange);
-    
         if (Physics.SphereCast(startPos, baseRadius, direction, out hit, baseRange))
         {
             endPos = hit.point;
-            float distanceTravelled = (hit.point - startPos).magnitude;
+            distanceTravelled = (hit.point - startPos).magnitude;
 
             var health = hit.collider.gameObject.GetComponent<Health>();
-            if(health != null)
+            if (health != null)
             {
                 health.Hurt(baseDamage);
             }
@@ -86,16 +85,22 @@ public class Beam : Spell
             foreach (SpellModifier modifier in modifiers)
             {
                 modifier.BeamCollide(hit, direction, distanceTravelled);
-            }    
-        }     
+            }
+
+            colliding = true;
+            collEndCalled = false;
+        }
         else
         {
-            foreach (SpellModifier modifier in modifiers)
+            colliding = false;
+
+            if(!collEndCalled)
             {
-                modifier.BeamCollisionEnd();
+                CollisionEnd();
+                collEndCalled = true;
             }
         }
-        
+
         UpdateBeam(startPos, direction);
 
         // stop casting here
@@ -108,6 +113,16 @@ public class Beam : Spell
             Destroy(gameObject);
         }
 
+    }
+
+    public void CollisionEnd()
+    {
+        endPos = startPos + (direction * baseRange);
+
+        foreach (SpellModifier modifier in modifiers)
+        {
+            modifier.BeamCollisionEnd();
+        }
     }
 
     public void UpdateBeam(Vector3 startPosition, Vector3 direction)
@@ -264,6 +279,19 @@ public class Beam : Spell
     public void ModifyRadius(float amount)
     {
         baseRadius += amount;
+    }
+
+    private void OnDrawGizmos()
+    {
+        DebugBeam(startPos, endPos);
+    }
+    private void DebugBeam(Vector3 startPos, Vector3 endPos)
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(endPos, baseRadius * 0.5f);
+
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(startPos, baseRadius * 0.5f);
     }
 
 }

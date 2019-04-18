@@ -28,37 +28,35 @@ public class Bounce : SpellModifier
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
-        // reflect TODO:
-
         if (bounceCount > 0)
         {
             if(beamCopy == null)
             {
-                beamCopy = Instantiate(gameObject);
+                beamCopy = Instantiate(gameObject, transform.position, transform.rotation);
                 beamCopy.name = "BounceCopy";
-                beamCopy.transform.SetParent(gameObject.transform);
                 beamCopy.GetComponent<Bounce>().bounceCount--;
                 beam = beamCopy.GetComponent<Beam>();
                 beam.isMaster = false;
             }
 
+            beam.Range = gameObject.GetComponent<Beam>().Range - distance;
             beamCopy.gameObject.SetActive(true);
-            beamCopy.GetComponent<Beam>().Range = distance;
             beamCopy.transform.position = hitInfo.point;
             beam.startPos = hitInfo.point;
 
             Vector3 reflectDir = Vector3.Reflect(direction, hitInfo.normal);
             beam.direction = reflectDir;
             beam.UpdateBeam(hitInfo.point, reflectDir);
-
         }
     }
 
     public override void BeamCollisionEnd()
     {
-        if (beamCopy == null) return;
-
-        beamCopy.gameObject.SetActive(false);
+        if (beamCopy != null)
+        {
+            beam.CollisionEnd();
+            beamCopy.gameObject.SetActive(false);
+        }
     }
 
 }

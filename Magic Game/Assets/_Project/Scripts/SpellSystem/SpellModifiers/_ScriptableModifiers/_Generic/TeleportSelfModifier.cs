@@ -10,6 +10,13 @@ public class TeleportSelfModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<TeleportSelf>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
         TeleportSelf tp = spellObject.AddComponent<TeleportSelf>();
         tp.teleportParticles = teleportParticles;
     }

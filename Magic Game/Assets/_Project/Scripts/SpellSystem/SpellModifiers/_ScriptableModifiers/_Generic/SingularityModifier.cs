@@ -11,6 +11,13 @@ public class SingularityModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<Singularity>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
         Singularity component = spellObject.AddComponent<Singularity>();
         component.singularityPrefab = singularityPrefab;
         component.variables = variables;

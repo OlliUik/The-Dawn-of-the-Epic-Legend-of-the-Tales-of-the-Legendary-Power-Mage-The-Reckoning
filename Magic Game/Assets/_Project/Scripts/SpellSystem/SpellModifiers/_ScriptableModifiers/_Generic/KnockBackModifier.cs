@@ -10,6 +10,13 @@ public class KnockBackModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<KnockBack>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
         KnockBack component = spellObject.AddComponent<KnockBack>();
         component.knockbackForce = knockbackForce;
     }

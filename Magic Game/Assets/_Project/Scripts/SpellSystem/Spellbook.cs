@@ -120,7 +120,7 @@ public class Spellbook : MonoBehaviour
     //    Vector3 direction = Vector3.zero;
 
     //    RaycastHit hit;
-    //    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
     //    if(Physics.Raycast(ray, out hit))
     //    {

@@ -10,6 +10,13 @@ public class SplitModifier : SpellScriptableModifier
 
     public override void AddSpellModifier(GameObject spellObject)
     {
+        var compo = spellObject.GetComponent<Split>();
+        if (compo != null)
+        {
+            compo.splitCount += 2;
+            return;
+        }
+
         Split component = spellObject.AddComponent<Split>();
         component.splitCount = splitCount;
     }
