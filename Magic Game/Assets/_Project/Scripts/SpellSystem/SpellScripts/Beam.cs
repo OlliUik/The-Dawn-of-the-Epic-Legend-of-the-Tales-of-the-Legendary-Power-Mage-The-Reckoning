@@ -93,8 +93,9 @@ public class Beam : Spell
         else
         {
             colliding = false;
+            endPos = startPos + (direction * baseRange);
 
-            if(!collEndCalled)
+            if (!collEndCalled)
             {
                 CollisionEnd();
                 collEndCalled = true;
@@ -106,6 +107,8 @@ public class Beam : Spell
         // stop casting here
         if(Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0))
         {
+            CastingEnd();
+
             if (isMaster)
             {
                 spellbook.StopCasting();
@@ -117,11 +120,17 @@ public class Beam : Spell
 
     public void CollisionEnd()
     {
-        endPos = startPos + (direction * baseRange);
-
         foreach (SpellModifier modifier in modifiers)
         {
             modifier.BeamCollisionEnd();
+        }
+    }
+
+    public void CastingEnd()
+    {
+        foreach (SpellModifier modifier in modifiers)
+        {
+            modifier.BeamCastingEnd();
         }
     }
 

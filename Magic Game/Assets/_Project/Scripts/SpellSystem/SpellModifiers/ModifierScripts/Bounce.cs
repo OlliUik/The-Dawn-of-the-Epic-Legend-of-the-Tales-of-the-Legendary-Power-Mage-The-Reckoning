@@ -55,7 +55,7 @@ public class Bounce : SpellModifier
         if (beamCopy != null)
         {
             beam.CollisionEnd();
-            beamCopy.gameObject.SetActive(false);
+            Destroy(beamCopy);
         }
     }
 

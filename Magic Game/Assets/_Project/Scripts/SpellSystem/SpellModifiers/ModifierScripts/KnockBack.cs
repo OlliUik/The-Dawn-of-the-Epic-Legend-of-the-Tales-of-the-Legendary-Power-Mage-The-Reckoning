@@ -9,7 +9,7 @@ public class KnockBack : SpellModifier
     public float knockbackForce = 10.0f;
     public float knockbackRadius = 10.0f;
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction) // fix this and pushback
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance) // fix this and pushback
     {
         var rb = hitInfo.collider.GetComponent<Rigidbody>();
         if(rb != null)

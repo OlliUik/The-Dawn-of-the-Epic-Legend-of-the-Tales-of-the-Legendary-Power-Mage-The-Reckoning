@@ -93,4 +93,15 @@ public class Split : SpellModifier
         }
     }
 
+    public override void BeamCastingEnd()
+    {
+        foreach (Beam beam in beams)
+        {
+            beam.CastingEnd();
+            Destroy(beam.gameObject);
+        }
+
+        Destroy(gameObject);
+    }
+
 }

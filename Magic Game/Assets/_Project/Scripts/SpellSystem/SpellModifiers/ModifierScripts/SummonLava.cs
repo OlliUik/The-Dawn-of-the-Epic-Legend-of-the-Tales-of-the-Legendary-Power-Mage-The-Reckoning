@@ -16,7 +16,7 @@ public class SummonLava : SpellModifier
         }
     }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
         if(!hitInfo.collider.gameObject.CompareTag("Spell") && hitInfo.collider.gameObject != null)
         {
