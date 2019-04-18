@@ -10,23 +10,29 @@ public class Beam : Spell
     [SerializeField] private float baseDamage       = 1.0f;
     [SerializeField] private float baseRange        = 150.0f;
     [SerializeField] private float baseRadius       = 1f;
+    public float angle;
+
+    public float Range
+    {
+        get { return baseRange; }
+        set { baseRange = value; }
+    }
 
     [SerializeField] private GameObject graphics    = null;
 
-    [HideInInspector] public Vector3 startPos                        = Vector3.zero;
-    [HideInInspector] public Vector3 endPos                          = Vector3.zero;
+    [HideInInspector] public Vector3 startPos       = Vector3.zero;
+    [HideInInspector] public Vector3 endPos         = Vector3.zero;
 
-    [HideInInspector] public Vector3 direction                        = Vector3.zero;
+    [HideInInspector] public Vector3 direction      = Vector3.zero;
 
     private Spellbook spellbook;
     private RaycastHit hit;
-    int spellIndex = 0;
+    int spellIndex                                  = 0;
 
     public bool isMaster                            = false;
     SpellModifier[] modifiers;
 
 
-    public float angle;
 
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
@@ -38,8 +44,6 @@ public class Beam : Spell
         beam.transform.SetParent(spellbook.transform);
         beam.isMaster = true;
         
-
-
         // apply all spellmodifiers to the beam
         ApplyModifiers(beam.gameObject, data);
 
@@ -71,7 +75,8 @@ public class Beam : Spell
         if (Physics.SphereCast(startPos, baseRadius, direction, out hit, baseRange))
         {
             endPos = hit.point;
-        
+            float distanceTravelled = (hit.point - startPos).magnitude;
+
             var health = hit.collider.gameObject.GetComponent<Health>();
             if(health != null)
             {
@@ -80,7 +85,7 @@ public class Beam : Spell
 
             foreach (SpellModifier modifier in modifiers)
             {
-                modifier.BeamCollide(hit, direction);
+                modifier.BeamCollide(hit, direction, distanceTravelled);
             }    
         }     
         else

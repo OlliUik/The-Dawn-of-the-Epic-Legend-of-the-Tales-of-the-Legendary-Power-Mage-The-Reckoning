@@ -36,40 +36,36 @@ public class Split : SpellModifier
     List<Beam> beams = new List<Beam>();
 
 
-    public override void OnSpellCast(Spell spell)
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
-        if(spell.GetType() == typeof(Beam))
+
+        Beam beam = GetComponent<Beam>();
+
+        if (beam.isMaster && !splitted)
         {
-            Beam beam = (Beam)spell;
-            if(beam.isMaster && !splitted)
+            for (int i = 0; i < splitCount; i++)
             {
-                for (int i = 0; i < splitCount; i++)
-                {
-                    Beam copyBeam = Instantiate(beam);
-                    Destroy(copyBeam.GetComponent<Split>());
-                    copyBeam.isMaster = false;
-                    copyBeam.name = "BeamCopy " + i;
-                    print("created copy: " + copyBeam.name);
-                    beams.Add(copyBeam);
-                }
-
-                splitted = true;
+                Beam copyBeam = Instantiate(beam);
+                copyBeam.GetComponent<Split>().splitted = true;
+                copyBeam.isMaster = false;
+                copyBeam.name = "SplitCopy " + i;
+                beams.Add(copyBeam);
             }
-        }
-    }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
-    {
+            splitted = true;
+        }
 
         for (int i = 0; i < beams.Count; i++)
         {
+            beams[i].Range = distance;
+            beams[i].transform.position = hitInfo.point;
             beams[i].gameObject.SetActive(true);
             beams[i].startPos = hitInfo.point;
             Vector3 reflectDir = Vector3.Reflect(direction, hitInfo.normal);
             Vector3 rotatedVector = Quaternion.AngleAxis(i == 1 ? 45f : -45f, direction) * reflectDir;
 
             beams[i].direction = rotatedVector;
-            beams[i].UpdateBeam(beams[i].startPos, rotatedVector);
+            beams[i].UpdateBeam(beams[i].startPos, beams[i].direction);
         }
 
     }

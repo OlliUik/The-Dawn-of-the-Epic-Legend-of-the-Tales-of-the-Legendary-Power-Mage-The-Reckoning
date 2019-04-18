@@ -26,7 +26,7 @@ public class Bounce : SpellModifier
         }
     }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
         // reflect TODO:
 
@@ -43,6 +43,7 @@ public class Bounce : SpellModifier
             }
 
             beamCopy.gameObject.SetActive(true);
+            beamCopy.GetComponent<Beam>().Range = distance;
             beamCopy.transform.position = hitInfo.point;
             beam.startPos = hitInfo.point;
 
