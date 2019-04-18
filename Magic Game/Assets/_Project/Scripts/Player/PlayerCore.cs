@@ -141,6 +141,11 @@ public class PlayerCore : MonoBehaviour
 
             }
 
+            if(Input.GetKeyDown(KeyCode.Return))
+            {
+                ToggleSpellEditingUI();
+            }
+
             if (Input.GetButtonDown("Escape"))
             {
                 EnableControls(!canvasManager.FlipPauseState(this));

@@ -93,8 +93,8 @@ public class HUDManager : MonoBehaviour
         goHPAndManaBars.SetActive(!bIsEditingSpells);
         Time.timeScale = bIsEditingSpells ? 0.0f : 1.0f;
 
-        spellEditingController.useCrystalButton.gameObject.SetActive(true);
-        spellEditingController.useCrystalButton.interactable = spellEditingController.crystalsLeft > 0 ? true : false;
+        //spellEditingController.useCrystalButton.gameObject.SetActive(true);
+        //spellEditingController.useCrystalButton.interactable = spellEditingController.crystalsLeft > 0 ? true : false;
 
         return bIsEditingSpells;
     }

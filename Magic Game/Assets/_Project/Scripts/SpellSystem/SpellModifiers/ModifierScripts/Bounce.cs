@@ -20,8 +20,9 @@ public class Bounce : SpellModifier
         if(bounceCount > 0)
         {
             GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
-            copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, collision.contacts[0].normal);  // also rotate the whole thing for graphics to face the right direction
-            copy.GetComponent<Projectile>().direction = collision.contacts[0].normal;                                   // this changes the direction the projectile is moving
+            Vector3 reflectionDir = Vector3.Reflect(direction, collision.contacts[0].normal);
+            copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, reflectionDir);  // also rotate the whole thing for graphics to face the right direction
+            copy.GetComponent<Projectile>().direction = reflectionDir;                                   // this changes the direction the projectile is moving
             copy.GetComponent<Bounce>().bounceCount--;
         }
     }

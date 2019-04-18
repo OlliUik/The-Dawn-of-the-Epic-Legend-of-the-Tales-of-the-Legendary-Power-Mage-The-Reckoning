@@ -15,13 +15,12 @@ public class MultiCastModifier : SpellScriptableModifier
         var compo = spellObject.GetComponent<MultiCast>();
         if (compo != null)
         {
-            // do what
             compo.copyCount += 2;
             return;
         }
 
-        MultiCast component   = spellObject.AddComponent<MultiCast>();
-        component.copyCount   = copyCounts;
+        MultiCast component         = spellObject.AddComponent<MultiCast>();
+        component.copyCount         = copyCounts;
         component.leftRightRotation = leftRightRotation;
         component.upDownRotation    = upDownRotation;
     }

@@ -290,6 +290,7 @@ public class Beam : Spell
         baseRadius += amount;
     }
 
+    //for debugging
     private void OnDrawGizmos()
     {
         DebugBeam(startPos, endPos);
