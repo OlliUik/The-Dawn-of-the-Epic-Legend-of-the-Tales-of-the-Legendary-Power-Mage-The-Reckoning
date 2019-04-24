@@ -12,9 +12,10 @@ public class Bounce : SpellModifier
     Beam beam;
 
 
-
-
-
+    /// <summary>
+    /// If projectile has bounces left creates a new instance 
+    /// of the projectile and rotates it to face direction of collision reflect
+    /// </summary>
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
         if(bounceCount > 0)
@@ -27,6 +28,12 @@ public class Bounce : SpellModifier
         }
     }
 
+    /// <summary>
+    /// If beam hits a something and it has bounces left create new instance of the colliding beam
+    /// and make it face the direction of collision reflect
+    /// 
+    /// Destroy the copy when beam is not hitting anything TODO:: optimize
+    /// </summary>
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
         if (bounceCount > 0)
@@ -50,7 +57,6 @@ public class Bounce : SpellModifier
             beam.UpdateBeam(hitInfo.point, reflectDir);
         }
     }
-
     public override void BeamCollisionEnd()
     {
         if (beamCopy != null)
