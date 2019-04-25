@@ -65,5 +65,13 @@ public class Bounce : SpellModifier
             Destroy(beamCopy);
         }
     }
+    public override void BeamCastingEnd()
+    {
+        if(beamCopy != null)
+        {
+            beam.CastingEnd();
+            Destroy(beamCopy);
+        }
+    }
 
 }

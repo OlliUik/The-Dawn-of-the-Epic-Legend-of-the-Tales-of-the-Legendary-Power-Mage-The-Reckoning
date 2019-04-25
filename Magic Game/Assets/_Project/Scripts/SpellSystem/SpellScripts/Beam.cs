@@ -41,7 +41,7 @@ public class Beam : Spell
         // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
-        Beam beam = Instantiate(this, spellbook.spellPos.position, rot);
+        Beam beam = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Beam>();
         beam.caster = spellbook.gameObject;
         beam.isMaster = true;
         
@@ -69,6 +69,7 @@ public class Beam : Spell
         {
             direction = Quaternion.Euler(0, angle, 0) * spellbook.GetDirection();
             startPos = spellbook.spellPos.position;
+            spellbook.mana.UseMana(ManaCost * Time.deltaTime);
         }
 
         if (Physics.SphereCast(startPos, baseRadius, direction, out hit, baseRange))
@@ -80,6 +81,18 @@ public class Beam : Spell
             if (health != null)
             {
                 health.Hurt(baseDamage);
+            }
+
+            var effectManager = hit.collider.gameObject.GetComponent<StatusEffectManager>();
+            if (effectManager != null)
+            {
+
+                foreach (StatusEffect effect in statusEffects)
+                {
+                    Debug.Log("Applying " + effect + " to " + hit.collider.gameObject.name);
+                    effectManager.ApplyStatusEffect(effect, statusEffects);
+                }
+
             }
 
             foreach (SpellModifier modifier in modifiers)
@@ -105,7 +118,7 @@ public class Beam : Spell
         UpdateBeam(startPos, direction);
 
         // stop casting here
-        if(Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0))
+        if((Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0)) || (isMaster && spellbook.mana.mana <= 0f))
         {
             CastingEnd();
 

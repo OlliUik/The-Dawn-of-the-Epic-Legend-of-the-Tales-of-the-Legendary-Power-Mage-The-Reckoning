@@ -35,7 +35,6 @@ public class Split : SpellModifier
 
     List<Beam> beams = new List<Beam>();
 
-
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
 
@@ -83,7 +82,6 @@ public class Split : SpellModifier
         }
 
     }
-
     public override void BeamCollisionEnd()
     {
         for (int i = 0; i < beams.Count; i++)
@@ -92,7 +90,6 @@ public class Split : SpellModifier
             beams[i].gameObject.SetActive(false);
         }
     }
-
     public override void BeamCastingEnd()
     {
         foreach (Beam beam in beams)

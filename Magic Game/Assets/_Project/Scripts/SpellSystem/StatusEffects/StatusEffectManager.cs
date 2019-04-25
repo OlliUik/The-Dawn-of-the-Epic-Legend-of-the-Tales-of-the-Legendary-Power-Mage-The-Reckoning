@@ -5,49 +5,69 @@ using UnityEngine;
 public class StatusEffectManager : MonoBehaviour
 {
 
-    public List<StatusEffect> appliedEffects = new List<StatusEffect>();
-    public List<OnSelf> appliedOnSelfSpells = new List<OnSelf>();
-
-    void Update()
+    public enum EffectType
     {
+        Freeze,
+        Ignite,
+        Moist,
+        Confuse,
+    };
 
-        List<StatusEffect> copy = new List<StatusEffect>(appliedEffects);
-        foreach (StatusEffect effect in copy)
+    public List<StatusEffect> affectingEffects = new List<StatusEffect>();
+    public Dictionary<EffectType, bool> AppliedEffects = new Dictionary<EffectType, bool>();
+
+
+    private void Awake()
+    {
+        AppliedEffects.Add(EffectType.Freeze, false);
+        AppliedEffects.Add(EffectType.Ignite, false);
+        AppliedEffects.Add(EffectType.Moist, false);
+        AppliedEffects.Add(EffectType.Confuse, false);
+    }
+
+
+    private void Update()
+    {
+        for (int i = 0; i < affectingEffects.Count; i++)
         {
-            effect.Tick(Time.deltaTime);
-            if(effect.isFinished)
+            affectingEffects[i].OnTick();
+
+            if (affectingEffects[i].IsFinished)
             {
-                RemoveStatusEffect(effect);
+                RemoveStatusEffect(affectingEffects[i]);
             }
         }
-
     }
 
-    public void AddStatusEffect(StatusEffect effect)
+    public void ApplyStatusEffect(StatusEffect effect, List<StatusEffect> allEffectsInSpell)
     {
-        if(!appliedEffects.Contains(effect))
+        for (int i = 0; i < affectingEffects.Count; i++)
         {
-            appliedEffects.Add(effect);
-            effect.OnBeginEffect();
-            return;
-        }
-
-        // stack and other options
-    }
-
-    private void RemoveStatusEffect(StatusEffect effect)
-    {
-        for (int i = 0; i < appliedEffects.Count; i++)
-        {
-            if(appliedEffects[i].Equals(effect))
+            if (affectingEffects[i].GetType() == effect.GetType())
             {
-                effect.OnLeaveEffect();
-                appliedEffects.Remove(appliedEffects[i]);
-                // validate onselfs
+                // same effect already exisit
+                affectingEffects[i].ReApply(allEffectsInSpell);
                 return;
             }
         }
-        print("Error in removing effect");
+
+        // if we get this far the effect is new       
+        affectingEffects.Add(effect);
+        effect.OnApply(gameObject, allEffectsInSpell);
+    }
+
+    public void RemoveStatusEffect(StatusEffect effect)
+    {
+        for (int i = 0; i < affectingEffects.Count; i++)
+        {
+            if (affectingEffects[i].GetType() == effect.GetType())
+            {
+                // found the effect we want to remove
+                affectingEffects[i].OnLeave();
+                affectingEffects.RemoveAt(i);
+                return;
+            }
+        }
     }
 
 }

@@ -21,8 +21,8 @@ public class Spellbook : MonoBehaviour
     [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     // Components
-    private Health health;
-    private Mana mana;
+    public Health health { get; private set; }
+    public Mana mana { get; private set; }
 
     #endregion
 

@@ -17,10 +17,6 @@ public class Card : ScriptableObject
     public List<SpellBalance> balances                  = new List<SpellBalance>();
     public List<SpellScriptableModifier> modifiers      = new List<SpellScriptableModifier>();
 
-    // StatusEffects, CastRequirements and balances are generic for all spells
-    public List<ScriptableEffect> effects               = new List<ScriptableEffect>();
-    public List<StatusEffectBase> statusEffects         = new List<StatusEffectBase>();
-
     [Space(10)]
     public GameObject graphicsProjecile                 = null;
     public GameObject graphicsBeam                      = null;

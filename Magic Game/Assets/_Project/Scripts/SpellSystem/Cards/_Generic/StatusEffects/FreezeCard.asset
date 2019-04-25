@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d63c77b3e4e22943b4a0fc4677865d1, type: 3}
-  m_Name: Burn
+  m_Name: FreezeCard
   m_EditorClassIdentifier: 
   types: 00000000
-  cardName: Burn
-  cardDescription: Deals over time damage to target when hit
+  cardName: Freeze
+  cardDescription: Slow target when hit and stuns when slowed enough
   castRequirements: []
   balances: []
-  modifiers: []
-  effects: []
-  statusEffects:
-  - {fileID: 3109190786659307199, guid: 5477ea31cb071c949b422958ec43c77a, type: 3}
-  graphics: {fileID: 0}
-  secendaryGraphics: {fileID: 0}
+  modifiers:
+  - {fileID: 11400000, guid: 8a91ba9a0e06f6441b2fd27b081527b9, type: 2}
+  graphicsProjecile: {fileID: 0}
+  graphicsBeam: {fileID: 0}
+  graphicsAoe: {fileID: 0}

@@ -58,17 +58,21 @@ public class Projectile : Spell
             {
                 health.Hurt(baseDamage);
             }
-        
-            //foreach (ScriptableEffect effect in effects)
-            //{
-            //    print("Applied: " + effect.name);
-            //    collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
-            //}
-            //
-            //foreach (StatusEffectBase effectBase in statusEffects)
-            //{
-            //    collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
-            //}
+
+            // APPLY STATUS EFFECTS BEFORE OR AFTER DEALING DAMAGE
+
+            var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();
+            if(effectManager != null)
+            {
+
+                foreach (StatusEffect effect in statusEffects)
+                {
+                    Debug.Log("Applying " + effect + " to " + collision.gameObject.name);
+                    effectManager.ApplyStatusEffect(effect, statusEffects);
+                }
+
+            }
+
         }
 
         // APPLY ALL COLLISION MODIFIERS

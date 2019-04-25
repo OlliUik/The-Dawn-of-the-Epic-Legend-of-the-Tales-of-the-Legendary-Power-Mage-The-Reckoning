@@ -11,8 +11,7 @@ public class Spell : MonoBehaviour
     [SerializeField] protected float cooldown = 5.0f;
     [SerializeField] protected float castTime = 5.0f;
     [SerializeField] protected float manaCost = 5.0f;
-    [SerializeField] protected List<ScriptableEffect> effects = new List<ScriptableEffect>();
-    [SerializeField] protected List<StatusEffectBase> statusEffects = new List<StatusEffectBase>();
+    public List<StatusEffect> statusEffects = new List<StatusEffect>();
 
     public float Cooldown
     {
@@ -63,8 +62,6 @@ public class Spell : MonoBehaviour
     public virtual void ApplyModifiers(GameObject go, SpellData data)
     {
         Spell spell = go.GetComponent<Spell>();
-        spell.effects.Clear();          // this makes sure all previous effects will be removed from the list
-        spell.statusEffects.Clear();    // same
 
         foreach (Card card in data.cards)
         {
@@ -73,17 +70,6 @@ public class Spell : MonoBehaviour
             {
                 modifier.AddSpellModifier(go);
                 print("Added: " + modifier.name);
-            }
-
-            // add all effects from cards to spells list of effects
-            foreach (ScriptableEffect effect in card.effects)
-            {
-                spell.effects.Add(effect);
-            }
-
-            foreach (StatusEffectBase statusEffect in card.statusEffects)
-            {
-                spell.statusEffects.Add(statusEffect);
             }
 
             /* Graphics old
