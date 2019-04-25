@@ -18,7 +18,7 @@ public class EnemyNavigation : MonoBehaviour
     private int navCurrentPoint = 0;
     private float navTimer = 0.0f;
     private float waitTimer = 0.0f;
-    private int validPathAttempts = 10;
+    private float navErrorTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
 
     #endregion
@@ -34,9 +34,20 @@ public class EnemyNavigation : MonoBehaviour
 
     void Update()
     {
+        if (agent.hasPath && agent.pathStatus != NavMeshPathStatus.PathInvalid)
+        {
+
+        }
+        else if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
+        {
+            Debug.LogError(this.gameObject + " AI path is invalid!");
+        }
+
+
+
         if (navTimer <= 0.0f)
         {
-            navTimer = cEnemyCore.vision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
+            navTimer = cEnemyCore.cVision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
             switch (cEnemyCore.currentState)
             {
                 case EnemyCore.EState.IDLE: AIIdle(); break;
@@ -50,22 +61,6 @@ public class EnemyNavigation : MonoBehaviour
                 case EnemyCore.EState.PANIC: AIPanic(); break;
                 case EnemyCore.EState.RAGDOLLED: break;
                 default: if (agent.hasPath) agent.ResetPath(); break;
-            }
-
-            if (!agent.hasPath && !cEnemyCore.vision.bCanSeeTarget && cEnemyCore.vision.targetLocation != Vector3.zero)
-            {
-                if (validPathAttempts > 0)
-                {
-                    validPathAttempts--;
-                }
-                else
-                {
-                    cEnemyCore.vision.targetLocation = Vector3.zero;
-                }
-            }
-            else
-            {
-                validPathAttempts = 10;
             }
         }
         else
@@ -103,6 +98,12 @@ public class EnemyNavigation : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
+    #region CUSTOM_METHODS
+    
+
 
     #endregion
 
@@ -161,7 +162,24 @@ public class EnemyNavigation : MonoBehaviour
 
     void AISearch()
     {
-        agent.SetDestination(cEnemyCore.vision.targetLocation);
+        NavMeshHit navHit;
+        if (NavMesh.Raycast(cEnemyCore.cVision.targetLocation, cEnemyCore.cVision.targetLocation + Vector3.down * 2.0f, out navHit, NavMesh.AllAreas))
+        {
+            agent.SetDestination(cEnemyCore.cVision.targetLocation);
+        }
+        else
+        {
+            if (navErrorTimer < 3.0f && agent.velocity.sqrMagnitude < 1.0f)
+            {
+                navErrorTimer += navigationInterval;
+            }
+            else if (navErrorTimer >= 3.0f)
+            {
+                Debug.LogWarning(this.gameObject + " seems to have no valid path towards given location...");
+                navErrorTimer = 0.0f;
+                cEnemyCore.currentState = EnemyCore.EState.PARANOID;
+            }
+        }
     }
 
     void AIAttack()
@@ -201,9 +219,9 @@ public class EnemyNavigation : MonoBehaviour
 
     void AIEscape()
     {
-        if (Vector3.Distance(transform.position, cEnemyCore.vision.targetLocation) < 20.0f)
+        if (Vector3.Distance(transform.position, cEnemyCore.cVision.targetLocation) < 20.0f)
         {
-            agent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.vision.targetLocation) * 5.0f);
+            agent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);
         }
     }
 

@@ -185,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (ragdollTransform != null)
         {
-            Teleport(ragdollTransform.position);
+            //Teleport(ragdollTransform.position);
             moveVector = Vector3.zero;
         }
     }

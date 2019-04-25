@@ -44,7 +44,7 @@ public class MusicEventHandler : MonoBehaviour
     {
         enemySeesPlayer = false;
 
-        foreach (GameObject item in GlobalVariables.entityList)
+        foreach (GameObject item in GlobalVariables.teamBadBoys)
         {
             if (item.tag == "Enemy")
             {

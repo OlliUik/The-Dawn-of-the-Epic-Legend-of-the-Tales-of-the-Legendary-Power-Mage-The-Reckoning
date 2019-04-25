@@ -16,7 +16,7 @@ public class TriggerActivateEnemyAI : MonoBehaviour
             if (enemy != null)
             {
                 enemy.currentState = stateAfterTrigger;
-                enemy.vision.targetLocation = other.transform.position;
+                enemy.cVision.targetLocation = other.transform.position;
                 if (disableAfterTrigger)
                 {
                     GetComponent<BoxCollider>().enabled = false;

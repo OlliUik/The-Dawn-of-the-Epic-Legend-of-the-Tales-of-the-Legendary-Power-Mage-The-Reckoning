@@ -10,10 +10,12 @@ public class PlayerCore : MonoBehaviour
 {
     #region VARIABLES
 
+    [Header("Public")]
+    public Transform ragdollPosition = null;
+
     [Header("Serialized")]
     [SerializeField] private HUDManager canvasManager = null;
     [SerializeField] private GameObject ragdollObject = null;
-    [SerializeField] private Transform ragdollPosition = null;
     [SerializeField] private Text debugText = null;
 
     public Health cHealth { get; private set; } = null;
@@ -38,7 +40,7 @@ public class PlayerCore : MonoBehaviour
 
     void Awake()
     {
-        GlobalVariables.entityList.Add(this.gameObject);
+        GlobalVariables.teamGoodGuys.Add(this.gameObject);
         GlobalVariables.bAnyPlayersAlive = true;
 
         cHealth = GetComponent<Health>();
@@ -157,6 +159,8 @@ public class PlayerCore : MonoBehaviour
     {
         if (!bIsDead && bIsRagdolled && ragdollPosition != null)
         {
+            cMovement.Teleport(ragdollPosition.position);
+
             cHealth.AddInvulnerability(Time.fixedDeltaTime);
 
             if (Vector3.Distance(ragdollPosition.position, ragdollPrevPosition) < 0.2f)
@@ -222,28 +226,39 @@ public class PlayerCore : MonoBehaviour
 
     public void EnableControls(bool b)
     {
-        bInputEnabled = b;
-        cMovement.enableControls = b;
-        cTPCamera.EnableCameraControls(b);
+        if (!bIsRagdolled)
+        {
+            bInputEnabled = b;
+            cMovement.enableControls = b;
+            cTPCamera.EnableCameraControls(b);
 
-        //if (cSpellCaster != null)
-        //{
-        //    cSpellCaster.CastBeamActive(b);
-        //}
+            //if (cSpellCaster != null)
+            //{
+            //    cSpellCaster.CastBeamActive(b);
+            //}
+        }
     }
 
     public void EnableRagdoll(bool b)
     {
+        //bInputEnabled = !b;
         bIsRagdolled = b;
         cTPCamera.isRagdolled = b;
         cMovement.enableControls = !b;
         ragdollSleepTimer = 3.0f;
 
+        ragdollObject.GetComponent<RagdollModifier>().SetKinematic(!b);
         ragdollObject.GetComponent<Animator>().enabled = !b;
         ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
+        
+        ragdollObject.transform.parent = b ? null : transform;
+
+        //ragdollPosition.GetComponent<Rigidbody>().AddForce(cCharacter.velocity, ForceMode.VelocityChange);
+        ragdollPosition.GetComponent<Rigidbody>().velocity = cCharacter.velocity * 6.0f;
 
         if (!b)
         {
+            ragdollObject.transform.localPosition = Vector3.zero;
             cMovement.OnDisableRagdoll();
         }
     }
@@ -300,10 +315,10 @@ public class PlayerCore : MonoBehaviour
     public void OnDeath()
     {
         bIsDead = true;
-        GlobalVariables.entityList.Remove(this.gameObject);
+        GlobalVariables.teamGoodGuys.Remove(this.gameObject);
 
         GlobalVariables.bAnyPlayersAlive = false;
-        foreach (GameObject item in GlobalVariables.entityList)
+        foreach (GameObject item in GlobalVariables.teamGoodGuys)
         {
             if (item.tag == "Player")
             {

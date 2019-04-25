@@ -40,16 +40,9 @@ public class BossLizardKing : EnemyCore
             }
         }
 
-        if (vision.targetGO != null && vision.targetGO != targetGO)
+        if (cVision.targetGO != null && cVision.targetGO != targetGO)
         {
-            targetGO = vision.targetGO;
-        }
-        else
-        {
-            if (targetGO != null)
-            {
-                targetPosition = targetGO.transform.position;
-            }
+            targetGO = cVision.targetGO;
         }
     }
 
@@ -64,7 +57,7 @@ public class BossLizardKing : EnemyCore
 
     protected override void AIAttack()
     {
-        if (vision.bCanSeeTarget)
+        if (cVision.bCanSeeTarget)
         {
             switch (currentPattern)
             {
@@ -73,7 +66,7 @@ public class BossLizardKing : EnemyCore
                     {
                         currentEnemyType = EEnemyType.MELEE;
 
-                        if (Vector3.Distance(transform.position, vision.targetLocation) < meleeAttackDistance)
+                        if (Vector3.Distance(transform.position, cVision.targetLocation) < meleeAttackDistance)
                         {
                             if (castingStandstillTimer > 0.0f)
                             {
@@ -85,7 +78,7 @@ public class BossLizardKing : EnemyCore
                             animator.SetInteger("Spell Type", castingSpellType);
                             currentState = EState.CASTING;
                         }
-                        else if (Vector3.Distance(transform.position, vision.targetLocation) > rangedEscapeDistance * 2)
+                        else if (Vector3.Distance(transform.position, cVision.targetLocation) > rangedEscapeDistance * 2)
                         {
                             currentPattern = EBossAttackPattern.ATTACK_RANGED;
                         }
@@ -95,7 +88,7 @@ public class BossLizardKing : EnemyCore
                     {
                         currentEnemyType = EEnemyType.RANGED;
 
-                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeDistance)
+                        if (Vector3.Distance(transform.position, cVision.targetLocation) < rangedEscapeDistance)
                         {
                             currentPattern = EBossAttackPattern.ATTACK_MELEE;
                             return;
@@ -118,7 +111,7 @@ public class BossLizardKing : EnemyCore
                     }
                 case EBossAttackPattern.TAUNT:
                     {
-                        if (Vector3.Distance(transform.position, vision.targetLocation) < meleeAttackDistance)
+                        if (Vector3.Distance(transform.position, cVision.targetLocation) < meleeAttackDistance)
                         {
                             currentPattern = EBossAttackPattern.ATTACK_MELEE;
                         }
@@ -149,7 +142,7 @@ public class BossLizardKing : EnemyCore
         {
             if (!bCastedProjectile)
             {
-                vision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
+                cVision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
                 bCastedProjectile = true;
             }
 
@@ -183,14 +176,14 @@ public class BossLizardKing : EnemyCore
     {
         if (searchPlayerAfterAttack)
         {
-            if (vision.bCanSeeTarget)
+            if (cVision.bCanSeeTarget)
             {
                 currentState = EState.ATTACK;
             }
             else
             {
-                if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(vision.targetLocation.x, vision.targetLocation.z)) < navigation.navigationErrorMargin
-                    || vision.targetLocation == Vector3.zero)
+                if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(cVision.targetLocation.x, cVision.targetLocation.z)) < cNavigation.navigationErrorMargin
+                    || cVision.targetLocation == Vector3.zero)
                 {
                     currentState = EState.IDLE;
                 }

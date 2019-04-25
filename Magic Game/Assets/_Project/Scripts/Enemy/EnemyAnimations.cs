@@ -25,15 +25,15 @@ public class EnemyAnimations : MonoBehaviour
             float angle = transform.rotation.eulerAngles.y;
             float desiredAngle = 0.0f;
 
-            if (cEnemyCore.vision.bCanSeeTarget)
+            if (cEnemyCore.cVision.bCanSeeTarget)
             {
-                desiredAngle = Vector3.SignedAngle(Vector3.forward, cEnemyCore.vision.targetLocation - transform.position, Vector3.up);
+                desiredAngle = Vector3.SignedAngle(Vector3.forward, cEnemyCore.cVision.targetLocation - transform.position, Vector3.up);
             }
             else
             {
-                if (cEnemyCore.navigation.agent.velocity.magnitude > 1.0f)
+                if (cEnemyCore.cNavigation.agent.velocity.magnitude > 1.0f)
                 {
-                    desiredAngle = Vector3.SignedAngle(Vector3.forward, cEnemyCore.navigation.agent.velocity, Vector3.up);
+                    desiredAngle = Vector3.SignedAngle(Vector3.forward, cEnemyCore.cNavigation.agent.velocity, Vector3.up);
                 }
                 else
                 {
@@ -48,8 +48,8 @@ public class EnemyAnimations : MonoBehaviour
             float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
             float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
 
-            float nx = cEnemyCore.navigation.agent.velocity.x;
-            float ny = cEnemyCore.navigation.agent.velocity.z;
+            float nx = cEnemyCore.cNavigation.agent.velocity.x;
+            float ny = cEnemyCore.cNavigation.agent.velocity.z;
 
             Vector2 velocityRotated = new Vector2(
                 cos * nx - sin * ny,
@@ -68,19 +68,19 @@ public class EnemyAnimations : MonoBehaviour
         {
             if (bIkActive && cEnemyCore != null)
             {
-                if (cEnemyCore.vision.bCanSeeTarget)
+                if (cEnemyCore.cVision.bCanSeeTarget)
                 {
                     cAnimator.SetLookAtWeight(1.0f);
-                    cAnimator.SetLookAtPosition(cEnemyCore.vision.targetLocation);
+                    cAnimator.SetLookAtPosition(cEnemyCore.cVision.targetLocation);
                 }
                 else
                 {
-                    if (cEnemyCore.currentState == EnemyCore.EState.SEARCH && cEnemyCore.vision.targetLocation != Vector3.zero)
+                    if (cEnemyCore.currentState == EnemyCore.EState.SEARCH && cEnemyCore.cVision.targetLocation != Vector3.zero)
                     {
-                        if (Vector3.Distance(transform.position, cEnemyCore.vision.targetLocation) > 2.0f)
+                        if (Vector3.Distance(transform.position, cEnemyCore.cVision.targetLocation) > 2.0f)
                         {
                             cAnimator.SetLookAtWeight(1.0f);
-                            cAnimator.SetLookAtPosition(cEnemyCore.vision.targetLocation);
+                            cAnimator.SetLookAtPosition(cEnemyCore.cVision.targetLocation);
 
                         }
                         else
