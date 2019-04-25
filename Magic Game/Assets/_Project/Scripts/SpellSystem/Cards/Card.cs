@@ -6,7 +6,7 @@ using UnityEngine;
 public class Card : ScriptableObject
 {
     [Header("Spell editing variables")]
-    public List<SpellType> types                        = new List<SpellType>();
+    public List<SpellType> compatibleSpellTypes         = new List<SpellType>();
     public string cardName                              = null;
 
     [TextArea]
@@ -17,7 +17,7 @@ public class Card : ScriptableObject
     public List<SpellBalance> balances                  = new List<SpellBalance>();
     public List<SpellScriptableModifier> modifiers      = new List<SpellScriptableModifier>();
 
-    [Space(10)]
+    [Space(10)] // TODO:: HOW TO APPLY ALL GRAPHICS TO SPELL 
     public GameObject graphicsProjecile                 = null;
     public GameObject graphicsBeam                      = null;
     public GameObject graphicsAoe                       = null;

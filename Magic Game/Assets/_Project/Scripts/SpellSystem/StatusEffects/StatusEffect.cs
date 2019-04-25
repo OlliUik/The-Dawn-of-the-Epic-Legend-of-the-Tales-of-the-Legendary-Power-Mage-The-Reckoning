@@ -14,6 +14,8 @@ public class StatusEffect
     public GameObject graphics;
     public float duration;
 
+    protected GameObject graphicsCopy;
+
     public bool IsFinished
     {
         get { return Time.time > endTime; }
@@ -29,8 +31,8 @@ public class StatusEffect
     public virtual void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
 
-        graphics = GameObject.Instantiate(graphics, target.transform.position, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
-        graphics.transform.SetParent(target.transform);
+        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
+        graphicsCopy.transform.SetParent(target.transform);
 
         this.target = target;
         effectManager = target.GetComponent<StatusEffectManager>();
@@ -42,7 +44,7 @@ public class StatusEffect
     {
         if (target != null)
         {
-            GameObject.Destroy(graphics);
+            GameObject.Destroy(graphicsCopy.gameObject);
         }
         else
         {

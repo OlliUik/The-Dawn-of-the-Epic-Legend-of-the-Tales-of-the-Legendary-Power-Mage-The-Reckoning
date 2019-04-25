@@ -7,10 +7,11 @@ public class Aoe : Spell
 
     #region Variables
 
-    //[Header("AoE varialbes")]
+    [Header("AoE varialbes")]
+    [SerializeField] public float damagePerSecond = 1.0f;
     [SerializeField] public float radius    { get; private set; } = 7.0f;
     [SerializeField] public float duration  { get; private set; } = 10.0f;
-    [SerializeField] public float damagePerSecond = 1.0f;
+    public GameObject graphics;
 
     #endregion
 
@@ -67,6 +68,12 @@ public class Aoe : Spell
 
     #region UnityMethods
 
+    private void Start()
+    {
+        GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
+        copyGraphics.transform.SetParent(gameObject.transform);
+    }
+
     private void Update()
     {
         // find out what is inside the radius
@@ -81,6 +88,18 @@ public class Aoe : Spell
                 if(health != null)
                 {
                     health.Hurt(damagePerSecond * Time.deltaTime);
+                }
+
+                var effectManager = objectHit.GetComponent<StatusEffectManager>();
+                if (effectManager != null)
+                {
+
+                    foreach (StatusEffect effect in statusEffects)
+                    {
+                        Debug.Log("Applying " + effect + " to " + objectHit.gameObject.name);
+                        effectManager.ApplyStatusEffect(effect, statusEffects);
+                    }
+
                 }
 
                 // apply all modifiers here to the enemy inside radius

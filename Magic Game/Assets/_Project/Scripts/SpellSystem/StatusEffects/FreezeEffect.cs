@@ -50,28 +50,7 @@ public class FreezeEffect : StatusEffect
 
     public override void CheckForCounterEffects(List<StatusEffect> allEffectsInSpell)
     {
-        if (effectManager == null)
-        {
-            Debug.Log("No StatusEffectManager found");
-            return;
-        }
-
-        var ignite = (IgniteEffect)allEffectsInSpell.Find(x => x.GetType() == typeof(IgniteEffect));
-        if (effectManager.AppliedEffects[StatusEffectManager.EffectType.Ignite] || ignite != null)
-        {
-            if(ignite != null)
-            {
-                // spell contains ignite --> reduce cooldown
-                endTime = Time.time + (duration * 0.5f);
-            }
-            else
-            {
-                // spell doesn't contain freeze --> remove ignite from target
-                effectManager.RemoveStatusEffect(ignite);
-                effectManager.AppliedEffects[StatusEffectManager.EffectType.Ignite] = false;
-            }
-
-        }
+        return;
     }
 
     public override void OnLeave()

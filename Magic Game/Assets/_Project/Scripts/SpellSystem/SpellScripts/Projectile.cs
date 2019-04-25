@@ -13,6 +13,9 @@ public class Projectile : Spell
     [SerializeField] protected float baseRange          = 1000.0f;
     public float baseSpeed          = 15.0f;
 
+    public GameObject graphics                          = null;
+    public GameObject explosionParticle                 = null;
+
     public Vector3 direction                            { get; set; }
     private Vector3 lastPos                             = Vector3.zero;
     private float distanceTravelled                     = 0.0f;
@@ -23,6 +26,9 @@ public class Projectile : Spell
 
     void Start()
     {
+        GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
+        graphicsCopy.transform.SetParent(gameObject.transform);
+
         lastPos = transform.position;
         direction = transform.forward;
     }
@@ -82,6 +88,7 @@ public class Projectile : Spell
             modifier.ProjectileCollide(collision, direction);
         }
 
+        Instantiate(explosionParticle, collision.contacts[0].point, Quaternion.FromToRotation(transform.up, collision.contacts[0].normal));
         Destroy(gameObject);
     }
 

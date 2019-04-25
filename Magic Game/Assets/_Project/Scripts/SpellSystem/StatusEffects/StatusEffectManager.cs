@@ -9,8 +9,9 @@ public class StatusEffectManager : MonoBehaviour
     {
         Freeze,
         Ignite,
-        Moist,
+        Moisturize,
         Confuse,
+        StackingDamage,
     };
 
     public List<StatusEffect> affectingEffects = new List<StatusEffect>();
@@ -21,8 +22,9 @@ public class StatusEffectManager : MonoBehaviour
     {
         AppliedEffects.Add(EffectType.Freeze, false);
         AppliedEffects.Add(EffectType.Ignite, false);
-        AppliedEffects.Add(EffectType.Moist, false);
+        AppliedEffects.Add(EffectType.Moisturize, false);
         AppliedEffects.Add(EffectType.Confuse, false);
+        AppliedEffects.Add(EffectType.StackingDamage, false);
     }
 
 

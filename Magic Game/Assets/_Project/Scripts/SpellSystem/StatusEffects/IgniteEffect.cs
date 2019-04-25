@@ -37,7 +37,9 @@ public class IgniteEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+
         base.OnApply(target, allEffectsInSpell);
+
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Ignite] = true;
         endTime = Time.time + duration;
 
@@ -64,20 +66,21 @@ public class IgniteEffect : StatusEffect
             return;
         }
 
-        // check if target has freeze applied
-        var freeze = (FreezeEffect)allEffectsInSpell.Find(x => x.GetType() == typeof(FreezeEffect));
-        if(effectManager.AppliedEffects[StatusEffectManager.EffectType.Freeze] || freeze != null)
+        // check if target has moisturize applied
+        var moisturize = (MoisturizeEffect)allEffectsInSpell.Find(x => x.GetType() == typeof(MoisturizeEffect));
+        if (effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize] || moisturize != null)
         {
-            if(freeze != null)
+            if (moisturize != null)
             {
-                // spell contains freeze --> reduce duration
+                // spell contains moisturize --> reduce duration
                 endTime = Time.time + (duration * 0.5f);
+                return;
             }
             else
             {
-                // spell doesn't contain freeze --> remove freeze from target
-                effectManager.RemoveStatusEffect(freeze);
-                effectManager.AppliedEffects[StatusEffectManager.EffectType.Freeze] = false;
+                // spell doesn't contain moisturize --> remove moisturize from target
+                effectManager.RemoveStatusEffect(effectManager.affectingEffects.Find(x => x.GetType() == typeof(MoisturizeEffect)));
+                effectManager.RemoveStatusEffect(effectManager.affectingEffects.Find(x => x.GetType() == typeof(IgniteEffect)));
             }
         }
 

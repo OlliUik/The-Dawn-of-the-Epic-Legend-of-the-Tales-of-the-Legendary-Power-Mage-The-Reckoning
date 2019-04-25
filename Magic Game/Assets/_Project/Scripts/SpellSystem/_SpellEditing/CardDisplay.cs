@@ -104,14 +104,14 @@ public class CardDisplay : MonoBehaviour
 
     private bool ValidateCard()
     {
-        if(card.types.Contains(SpellType.GENERIC))
+        if(card.compatibleSpellTypes.Contains(SpellType.GENERIC))
         {
             return true;
         }
 
-        for (int i = 0; i < card.types.Count; i++)
+        for (int i = 0; i < card.compatibleSpellTypes.Count; i++)
         {
-            if(card.types[i] == editorController.highlighedSpell.data.type)
+            if(card.compatibleSpellTypes[i] == editorController.highlighedSpell.data.type)
             {
                 return true;
             }

@@ -89,7 +89,6 @@ public class Beam : Spell
 
                 foreach (StatusEffect effect in statusEffects)
                 {
-                    Debug.Log("Applying " + effect + " to " + hit.collider.gameObject.name);
                     effectManager.ApplyStatusEffect(effect, statusEffects);
                 }
 
