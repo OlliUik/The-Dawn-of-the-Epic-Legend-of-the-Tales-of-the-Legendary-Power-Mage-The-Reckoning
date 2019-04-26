@@ -80,7 +80,7 @@ public class Aoe : Spell
                 var health = objectHit.GetComponent<Health>();
                 if(health != null)
                 {
-                    health.Hurt(damagePerSecond * Time.deltaTime);
+                    health.Hurt(damagePerSecond * Time.deltaTime, true);
                 }
 
                 // apply all modifiers here to the enemy inside radius

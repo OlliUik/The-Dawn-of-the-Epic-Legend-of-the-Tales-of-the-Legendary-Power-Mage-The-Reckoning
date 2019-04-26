@@ -79,7 +79,7 @@ public class Beam : Spell
             var health = hit.collider.gameObject.GetComponent<Health>();
             if (health != null)
             {
-                health.Hurt(baseDamage);
+                health.Hurt(baseDamage, false);
             }
 
             foreach (SpellModifier modifier in modifiers)

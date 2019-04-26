@@ -56,7 +56,7 @@ public class Projectile : Spell
 
             if(health != null)
             {
-                health.Hurt(baseDamage);
+                health.Hurt(baseDamage, false);
             }
         
             //foreach (ScriptableEffect effect in effects)

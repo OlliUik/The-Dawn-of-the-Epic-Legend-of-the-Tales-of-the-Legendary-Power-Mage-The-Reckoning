@@ -2525,56 +2525,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5e6ab01364ad57469f9cf8fde547cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1142712495
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1142712497}
-  - component: {fileID: 1142712496}
-  m_Layer: 0
-  m_Name: VortexGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1142712496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1142712495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42ea49cf0511a804eb4904fe4ab8088f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affectedEntities: 2
-  pullEntities: 1
-  ragdollInterval: 1
-  radius: 8
-  pullStrength: 400
-  explosionStrength: 100
-  explosionMaxVelocity: 30
---- !u!4 &1142712497
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1142712495}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 130.253, y: 14.54491, z: -42.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 19
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1150873792 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2901130059248428994, guid: b0ff678fd1209d04cb0a0d3066c94e91,
@@ -2799,6 +2749,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerVariantSlower
       objectReference: {fileID: 0}
+    - target: {fileID: 2272323390448093580, guid: 2843230fe793fe74193e5fe093c4c5dc,
+        type: 3}
+      propertyPath: m_Layer
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 1917709800573308790, guid: 2843230fe793fe74193e5fe093c4c5dc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2893,11 +2848,6 @@ PrefabInstance:
         type: 3}
       propertyPath: regenerationPerSecond
       value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2272323390448093580, guid: 2843230fe793fe74193e5fe093c4c5dc,
-        type: 3}
-      propertyPath: m_Layer
-      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2272323390448093692, guid: 2843230fe793fe74193e5fe093c4c5dc,
         type: 3}

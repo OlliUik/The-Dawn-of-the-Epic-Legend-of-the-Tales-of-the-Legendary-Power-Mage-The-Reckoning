@@ -192,7 +192,7 @@ public class PlayerCore : MonoBehaviour
             }
             else
             {
-                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage);
+                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
             }
         }
     }

@@ -11,6 +11,6 @@ public class CostHealth : SpellBalance
     public override void ApplyBalance(Spellbook spellbook)
     {
         Health health = spellbook.GetComponent<Health>();
-        health.Hurt(amount);
+        health.Hurt(amount, true);
     }
 }

@@ -25,6 +25,6 @@ public class Burn : StatusEffectBase
 
     public override void OnTick()
     {
-        health.Hurt(damagePerTick);
+        health.Hurt(damagePerTick, true);
     }
 }

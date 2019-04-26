@@ -17,7 +17,7 @@ public class DamageOverTime : StatusEffect
     public override void OnBeginEffect()
     {
         ScriptableDot dot = (ScriptableDot)effect;
-        health.Hurt(dot.damagePerTick);
+        health.Hurt(dot.damagePerTick, true);
     }
 
     private float timer = 1f;

@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class BossLizardKing : EnemyCore
 {
+    /*
+      
+     
     public enum EBossAttackPattern
     {
         NONE,
@@ -142,7 +145,7 @@ public class BossLizardKing : EnemyCore
         {
             if (!bCastedProjectile)
             {
-                cVision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
+                cVision.targetGO.GetComponent<Health>().Hurt(meleeDamage, false);
                 bCastedProjectile = true;
             }
 
@@ -194,4 +197,7 @@ public class BossLizardKing : EnemyCore
             currentState = EState.ATTACK;
         }
     }
+
+
+    */
 }

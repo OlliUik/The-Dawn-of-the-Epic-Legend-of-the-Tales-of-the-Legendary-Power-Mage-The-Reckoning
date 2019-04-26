@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿//using System.Collections.Generic;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -11,36 +11,6 @@ using UnityEditor;
 public class EnemyCore : MonoBehaviour
 {
     #region VARIABLES
-
-    [Header("Melee Only Variables")]
-    [SerializeField] protected float meleeAttackDistance = 2.0f;
-    [SerializeField] protected float meleeDamage = 25.0f;
-
-    [Header("Ranged Only Variables")]
-    [SerializeField] protected float rangedEscapeDistance = 10.0f;
-
-    [Header("Ranged & Melee/Ranged Magic Variables")]
-    [SerializeField] protected bool castInBursts = false;
-    [SerializeField] protected float castingTime = 2.0f;
-    [SerializeField] protected int burstCount = 3;
-    [SerializeField] protected float timeBetweenShots = 0.2f;
-     
-    [Header("Shared Variables")]
-    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
-    [SerializeField] protected EEnemyType enemyType = EEnemyType.MELEE;
-    [SerializeField] protected bool useMagic = false;
-    [SerializeField] protected bool searchPlayerAfterAttack = true;
-    [SerializeField] protected bool alwaysAggressive = true;
-    [SerializeField] protected float aggressiveRadius = 30.0f;
-    [SerializeField] protected float hearingRadius = 10.0f;
-    [SerializeField] protected float radiusCheckInterval = 1.0f;
-    [SerializeField] protected float paranoidDuration = 5.0f;
-    [SerializeField] protected float castingInterval = 1.0f;
-    [SerializeField] protected float castingStandstill = 4.0f;
-    [SerializeField] protected int castingSpellType = 0; //Check the animator controller to find out the desired number!
-    [SerializeField] protected float logicUpdateInterval = 0.5f;
-    [SerializeField] protected Animator animator = null;
-    public Transform ragdollPosition = null;
 
     public struct StatusEffects
     {
@@ -84,49 +54,50 @@ public class EnemyCore : MonoBehaviour
         PATROL
     };
 
-    public enum EEnemyType
-    {
-        MELEE,
-        RANGED
-    };
+    public EnemyVision cVision { get; protected set; } = null;
+    public EnemyNavigation cNavigation { get; protected set; } = null;
+    public Health cHealth { get; protected set; } = null;
 
-    [HideInInspector] public EState currentState = EState.IDLE;
+    public StatusEffects status { get; protected set; } = new StatusEffects(false, false, false, false);
+    public EState currentState { get; protected set; } = EState.DISABLED;
+    public int entitySpawnNumber { get; protected set; } = 0;
+    public Vector3 spawnPosition { get; protected set; } = Vector3.zero;
+    public Vector3 spawnRotation { get; protected set; } = Vector3.zero;
 
-    public int entitySpawnNumber { get; private set; } = 0;
-    public Vector3 spawnPosition { get; private set; } = Vector3.zero;
-    public Vector3 spawnRotation { get; private set; } = Vector3.zero;
-    public EEnemyType currentEnemyType { get; protected set; } = EEnemyType.MELEE;
-    public EnemyVision cVision { get; private set; } = null;
-    public EnemyNavigation cNavigation { get; private set; } = null;
-    public Health cHealth { get; private set; } = null;
-    public StatusEffects status { get; private set; } = new StatusEffects(false, false, false, false);
-    public Spellbook cSpellBook { get; private set; } = null;
+    [Header("Core -> State Machine")]
+    [SerializeField] protected float logicInterval = 0.5f;
+    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
+    [SerializeField] protected bool searchPlayerAfterAttack = true;
+    [SerializeField] protected bool alwaysAggressive = true;
+    [SerializeField] protected float aggressiveRadius = 30.0f;
+    [SerializeField] protected float hearingRadius = 10.0f;
+    [SerializeField] protected float radiusCheckInterval = 1.0f;
+    [SerializeField] protected float paranoidDuration = 5.0f;
 
-    //Temporary values
-    protected bool bCastedProjectile = false;
+    [Header("Core -> Attacking")]
+    [SerializeField] protected bool moveWhileCasting = false;
+    [SerializeField] protected float standStillAfterCasting = 4.0f;
+    [SerializeField] protected int attackAnimation = 0; //Check the animator controller to find out the desired number!
+    [SerializeField] protected Animator animator = null;
+
+    //Getters
+    public bool MoveWhileCasting { get { return moveWhileCasting; } }
+
+    //Core temporary values
     protected float radiusCheckTimer = 0.0f;
     protected float alertedTimer = 0.0f;
     protected float paranoidTimer = 0.0f;
-    protected float shootIntervalTimer = 0.0f;
-    protected float castingTimer = 0.0f;
-    protected float castingStandstillTimer = 0.0f;
-    protected int shotsLeft = 0;
-    protected Vector3 playerOffset = Vector3.zero;
-    protected Vector3 ragdollPrevPosition = Vector3.zero;
-    protected float ragdollSleepTimer = 0.0f;
+    protected float castStandStillTimer = 0.0f;
 
-    public float RangedEscapeRadius
-    {
-        get
-        {
-            return rangedEscapeDistance;
-        }
-    }
-
+    //Ragdoll temporary values
+    //NOTE: Maybe ragdoll functionality should be moved to another script?
+    //protected Vector3 ragdollPrevPosition = Vector3.zero;
+    //protected float ragdollSleepTimer = 0.0f;
+    
     #endregion
-
+    
     #region UNITY_DEFAULT_METHODS
-
+    
     protected void Awake()
     {
         GlobalVariables.teamBadBoys.Add(this.gameObject);
@@ -139,51 +110,46 @@ public class EnemyCore : MonoBehaviour
         cNavigation = GetComponent<EnemyNavigation>();
         cHealth = GetComponent<Health>();
 
-        if (useMagic)
-        {
-            cSpellBook = GetComponent<Spellbook>();
-            if (cSpellBook == null)
-            {
-                Debug.LogWarning(this.gameObject + " is marked as a spellcaster, but has no spellbook!");
-                useMagic = false;
-            }
-        }
-
         spawnPosition = transform.position;
         spawnRotation = transform.rotation.eulerAngles;
         currentState = (EState)defaultState;
-        currentEnemyType = enemyType;
 
-        InvokeRepeating("EnemyCoreLogic", Time.fixedDeltaTime * entitySpawnNumber, Time.fixedDeltaTime * Mathf.FloorToInt(logicUpdateInterval / Time.fixedDeltaTime));
+        InvokeRepeating("EnemyLogicLoop", Time.fixedDeltaTime * entitySpawnNumber, Time.fixedDeltaTime * Mathf.FloorToInt(logicInterval / Time.fixedDeltaTime));
     }
 
     protected virtual void Update()
     {
-        AdvanceTimers();
+        float time = Time.deltaTime;
+
+        radiusCheckTimer -= radiusCheckTimer > 0.0f ? time : 0.0f;
+        paranoidTimer -= paranoidTimer > 0.0f ? time : 0.0f;
+        alertedTimer -= alertedTimer > 0.0f ? time : 0.0f;
+        castStandStillTimer -= castStandStillTimer > 0.0f ? time : 0.0f;
     }
 
-    protected virtual void FixedUpdate()
-    {
-        if (status.isKnocked)
-        {
-            if (Vector3.Distance(ragdollPosition.position, ragdollPrevPosition) < 0.01f)
-            {
-                if (ragdollSleepTimer > 0.0f)
-                {
-                    ragdollSleepTimer -= Time.fixedDeltaTime;
-                }
-                else
-                {
-                    EnableRagdoll(false);
-                }
-            }
-            else
-            {
-                ragdollSleepTimer = 2.0f;
-            }
-            ragdollPrevPosition = ragdollPosition.position;
-        }
-    }
+    //protected virtual void FixedUpdate()
+    //{
+    //    //Ragdolling
+    //    //if (status.isKnocked)
+    //    //{
+    //    //    if (Vector3.Distance(ragdollPosition.position, ragdollPrevPosition) < 0.01f)
+    //    //    {
+    //    //        if (ragdollSleepTimer > 0.0f)
+    //    //        {
+    //    //            ragdollSleepTimer -= Time.fixedDeltaTime;
+    //    //        }
+    //    //        else
+    //    //        {
+    //    //            EnableRagdoll(false);
+    //    //        }
+    //    //    }
+    //    //    else
+    //    //    {
+    //    //        ragdollSleepTimer = 2.0f;
+    //    //    }
+    //    //    ragdollPrevPosition = ragdollPosition.position;
+    //    //}
+    //}
 
     protected void OnTriggerStay(Collider other)
     {
@@ -195,7 +161,7 @@ public class EnemyCore : MonoBehaviour
             }
             else
             {
-                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage);
+                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
             }
         }
     }
@@ -218,47 +184,7 @@ public class EnemyCore : MonoBehaviour
     #endregion
 
     #region CUSTOM_METHODS
-
-    protected void EnemyCoreLogic()
-    {
-        if (GlobalVariables.bAnyPlayersAlive == false)
-        {
-            currentState = EState.DISABLED;
-        }
-
-        switch (currentState)
-        {
-            case EState.DISABLED: break;
-            case EState.IDLE: AIIdle(); break;
-            case EState.PATROL: AIPatrol(); break;
-            case EState.ALERTED: AIAlerted(); break;
-            case EState.PARANOID: AIParanoid(); break;
-            case EState.SEARCH: AISearch(); break;
-            case EState.ATTACK: AIAttack(); break;
-            case EState.CASTING: AICasting(); break;
-            case EState.ESCAPE: AIEscape(); break;
-            case EState.PANIC: AIPanic(); break;
-            case EState.RAGDOLLED: AIRagdolled(); break;
-            default: currentState = EState.DISABLED; break;
-        }
-    }
-
-    protected void AdvanceTimers()
-    {
-        float time = Time.deltaTime;
-
-        shootIntervalTimer -= shootIntervalTimer > 0.0f ? time : 0.0f;
-        radiusCheckTimer -= radiusCheckTimer > 0.0f ? time : 0.0f;
-        paranoidTimer -= paranoidTimer > 0.0f ? time : 0.0f;
-        alertedTimer -= alertedTimer > 0.0f ? time : 0.0f;
-        castingTimer -= castingTimer > 0.0f ? time : 0.0f;
-
-        if (castingTimer <= 0.0f)
-        {
-            castingStandstillTimer -= castingStandstillTimer > 0.0f ? time : 0.0f;
-        }
-    }
-
+    
     protected void NoiseChecker()
     {
         GameObject[] soundObjects = GameObject.FindGameObjectsWithTag("SFX");
@@ -293,21 +219,21 @@ public class EnemyCore : MonoBehaviour
         return predictedPosition;
     }
 
-    public void EnableRagdoll(bool b)
-    {
-        status = new StatusEffects(status.isOnFire, status.isConfused, status.isFrozen, b);
-        animator.enabled = !b;
-        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(!b);
-        animator.transform.parent = b ? null : transform;
-        cNavigation.agent.enabled = !b;
-        currentState = b ? EState.RAGDOLLED : EState.ATTACK;
-        ragdollSleepTimer = 2.0f;
+    //public void EnableRagdoll(bool b)
+    //{
+    //    status = new StatusEffects(status.isOnFire, status.isConfused, status.isFrozen, b);
+    //    animator.enabled = !b;
+    //    animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(!b);
+    //    animator.transform.parent = b ? null : transform;
+    //    cNavigation.agent.enabled = !b;
+    //    currentState = b ? EState.RAGDOLLED : EState.ATTACK;
+    //    ragdollSleepTimer = 2.0f;
 
-        if (!b)
-        {
-            cNavigation.agent.Warp(ragdollPosition.position);
-        }
-    }
+    //    if (!b)
+    //    {
+    //        cNavigation.agent.Warp(ragdollPosition.position);
+    //    }
+    //}
 
     public virtual void OnHurt()
     {
@@ -339,13 +265,41 @@ public class EnemyCore : MonoBehaviour
 
     #region AI_LOGIC
 
+    protected void EnemyLogicLoop()
+    {
+        if (GlobalVariables.bAnyPlayersAlive == false)
+        {
+            currentState = EState.DISABLED;
+        }
+        EnemyStateMachine();
+    }
+
+    protected virtual void EnemyStateMachine()
+    {
+        switch (currentState)
+        {
+            case EState.DISABLED: break;
+            case EState.IDLE: AIIdle(); break;
+            case EState.PATROL: AIPatrol(); break;
+            case EState.ALERTED: AIAlerted(); break;
+            case EState.PARANOID: AIParanoid(); break;
+            case EState.SEARCH: AISearch(); break;
+            case EState.ATTACK: AIAttack(); break;
+            case EState.CASTING: AICasting(); break;
+            case EState.ESCAPE: AIEscape(); break;
+            case EState.PANIC: AIPanic(); break;
+            case EState.RAGDOLLED: AIRagdolled(); break;
+            default: currentState = EState.DISABLED; break;
+        }
+    }
+
     protected virtual void AIIdle()
     {
         if (cVision.bCanSeeTarget)
         {
             if (!alwaysAggressive)
             {
-                if (Vector3.Distance(transform.position, cVision.targetLocation) < aggressiveRadius)
+                if ((transform.position - cVision.targetLocation).sqrMagnitude < aggressiveRadius * aggressiveRadius)
                 {
                     currentState = EState.ATTACK;
                 }
@@ -369,17 +323,38 @@ public class EnemyCore : MonoBehaviour
 
     protected virtual void AIAlerted()
     {
-        if (cVision.bCanSeeTarget)
-        {
-            currentState = EState.ATTACK;
-        }
-        else
+        if (!cVision.bCanSeeTarget)
         {
             if (alertedTimer <= 0.0f)
             {
                 currentState = EState.PARANOID;
                 paranoidTimer = paranoidDuration;
+                return;
             }
+
+            GameObject target = null;
+
+            foreach (GameObject go in (status.isConfused ? GlobalVariables.teamBadBoys : GlobalVariables.teamGoodGuys))
+            {
+                if (target == null)
+                {
+                    target = go;
+                }
+                else if ((transform.position - go.transform.position).sqrMagnitude < (transform.position - target.transform.position).sqrMagnitude)
+                {
+                    target = go;
+                }
+            }
+
+            if (target != null)
+            {
+                cVision.targetLocation = target.transform.position;
+                cNavigation.agent.SetDestination(cVision.targetLocation);
+            }
+        }
+        else
+        {
+            currentState = EState.ATTACK;
         }
     }
 
@@ -409,137 +384,143 @@ public class EnemyCore : MonoBehaviour
             }
             else
             {
-                if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(cVision.targetLocation.x, cVision.targetLocation.z)) < cNavigation.navigationErrorMargin 
+                if ((transform.position - cVision.targetLocation).sqrMagnitude < cNavigation.navigationErrorMargin * cNavigation.navigationErrorMargin
                     || cVision.targetLocation == Vector3.zero)
                 {
-                    currentState = EState.PARANOID;
                     paranoidTimer = paranoidDuration;
+                    currentState = EState.PARANOID;
                 }
+
+                //if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(cVision.targetLocation.x, cVision.targetLocation.z)) < cNavigation.navigationErrorMargin 
+                //    || cVision.targetLocation == Vector3.zero)
+                //{
+                //    paranoidTimer = paranoidDuration;
+                //    currentState = EState.PARANOID;
+                //}
             }
         }
         else
         {
+            paranoidTimer = paranoidDuration;
             currentState = EState.PARANOID;
         }
+        NoiseChecker();
     }
 
     protected virtual void AIAttack()
     {
-        if (cVision.bCanSeeTarget)
-        {
-            switch (currentEnemyType)
-            {
-                case EEnemyType.MELEE:
-                    {
-                        if (Vector3.Distance(transform.position, cVision.targetLocation) > meleeAttackDistance)
-                        {
-                            return;
-                        }
-                        break;
-                    }
-                case EEnemyType.RANGED:
-                    {
-                        if (Vector3.Distance(transform.position, cVision.targetLocation) < rangedEscapeDistance)
-                        {
-                            currentState = EState.ESCAPE;
-                            return;
-                        }
-                        break;
-                    }
-            }
+        Debug.LogError("Use enemy variant scripts instead of EnemyCore!");
+        currentState = EState.DISABLED;
 
-            if (shootIntervalTimer <= 0.0f)
-            {
-                if (castInBursts)
-                {
-                    shotsLeft = burstCount;
-                }
+        //if (cVision.bCanSeeTarget)
+        //{
+        //    switch (currentEnemyType)
+        //    {
+        //        case EEnemyType.MELEE:
+        //            {
+        //                if (Vector3.Distance(transform.position, cVision.targetLocation) > meleeAttackDistance)
+        //                {
+        //                    return;
+        //                }
+        //                break;
+        //            }
+        //        case EEnemyType.RANGED:
+        //            {
+        //                if (Vector3.Distance(transform.position, cVision.targetLocation) < rangedEscapeDistance)
+        //                {
+        //                    currentState = EState.ESCAPE;
+        //                    return;
+        //                }
+        //                break;
+        //            }
+        //    }
 
-                shootIntervalTimer = castingInterval;
-                castingTimer = castingTime;
-                castingStandstillTimer = castingStandstill;
-                animator.SetTrigger("Cast Spell");
-                animator.SetInteger("Spell Type", castingSpellType);
-                currentState = EState.CASTING;
-            }
-        }
-        else
-        {
-            currentState = EState.SEARCH;
-        }
+        //    if (shootIntervalTimer <= 0.0f)
+        //    {
+        //        if (castInBursts)
+        //        {
+        //            shotsLeft = burstCount;
+        //        }
+
+        //        shootIntervalTimer = castingInterval;
+        //        castingTimer = castingTime;
+        //        attackStandStillTimer = standStillAfterAttack;
+        //        animator.SetTrigger("Cast Spell");
+        //        animator.SetInteger("Spell Type", attackAnimation);
+        //        currentState = EState.CASTING;
+        //    }
+        //}
+        //else
+        //{
+        //    currentState = EState.SEARCH;
+        //}
     }
 
     protected virtual void AICasting()
     {
-        if (!useMagic && currentEnemyType == EEnemyType.MELEE)
-        {
-            if (cNavigation.agent.hasPath)
-            {
-                cNavigation.agent.ResetPath();
-                cNavigation.agent.velocity = new Vector3(0.0f, cNavigation.agent.velocity.y, 0.0f);
-            }
+        Debug.LogError("Use enemy variant scripts instead of EnemyCore!");
+        currentState = EState.DISABLED;
 
-            if (!bCastedProjectile)
-            {
-                cVision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
-                bCastedProjectile = true;
-            }
+        //if (!useMagic && currentEnemyType == EEnemyType.MELEE)
+        //{
+        //    if (cNavigation.agent.hasPath)
+        //    {
+        //        cNavigation.agent.ResetPath();
+        //        cNavigation.agent.velocity = new Vector3(0.0f, cNavigation.agent.velocity.y, 0.0f);
+        //    }
 
-            if (castingStandstillTimer <= 0.0f)
-            {
-                bCastedProjectile = false;
-                currentState = EState.ATTACK;
-            }
-        }
-        else
-        {
-            if (castingTimer <= 0.0f)
-            {
-                if (!bCastedProjectile)
-                {
-                    //CastProjectile();
-                    cSpellBook.CastSpell(0);
-                    bCastedProjectile = true;
-                }
+        //    if (!bCastedProjectile)
+        //    {
+        //        cVision.targetGO.GetComponent<Health>().Hurt(meleeDamage, false);
+        //        bCastedProjectile = true;
+        //    }
 
-                if (shotsLeft > 1)
-                {
-                    if (!cVision.bCanSeeTarget)
-                    {
-                        currentState = EState.ATTACK;
-                        shootIntervalTimer *= 0.25f;
-                        return;
-                    }
+        //    if (attackStandStillTimer <= 0.0f)
+        //    {
+        //        bCastedProjectile = false;
+        //        currentState = EState.ATTACK;
+        //    }
+        //}
+        //else
+        //{
+        //    if (castingTimer <= 0.0f)
+        //    {
+        //        if (!bCastedProjectile)
+        //        {
+        //            //CastProjectile();
+        //            cSpellBook.CastSpell(0);
+        //            bCastedProjectile = true;
+        //        }
 
-                    animator.SetTrigger("Interrupt Spell");
-                    animator.SetTrigger("Cast Spell");
-                    bCastedProjectile = false;
-                    castingTimer = timeBetweenShots;
-                    shotsLeft--;
-                }
-                else if (castingStandstillTimer <= 0.0f)
-                {
-                    bCastedProjectile = false;
-                    currentState = EState.ATTACK;
+        //        if (shotsLeft > 1)
+        //        {
+        //            if (!cVision.bCanSeeTarget)
+        //            {
+        //                currentState = EState.ATTACK;
+        //                shootIntervalTimer *= 0.25f;
+        //                return;
+        //            }
 
-                }
-            }
-        }
+        //            animator.SetTrigger("Interrupt Spell");
+        //            animator.SetTrigger("Cast Spell");
+        //            bCastedProjectile = false;
+        //            castingTimer = timeBetweenShots;
+        //            shotsLeft--;
+        //        }
+        //        else if (attackStandStillTimer <= 0.0f)
+        //        {
+        //            bCastedProjectile = false;
+        //            currentState = EState.ATTACK;
+
+        //        }
+        //    }
+        //}
     }
 
     protected virtual void AIEscape()
     {
-        if (cVision.bCanSeeTarget)
-        {
-            if (Vector3.Distance(transform.position, cVision.targetLocation) > rangedEscapeDistance * 2)
-            {
-                currentState = EState.ATTACK;
-            }
-        }
-        else
-        {
-            currentState = EState.SEARCH;
-        }
+        Debug.LogError("Use enemy variant scripts instead of EnemyCore!");
+        currentState = EState.DISABLED;
     }
 
     protected virtual void AIPanic()

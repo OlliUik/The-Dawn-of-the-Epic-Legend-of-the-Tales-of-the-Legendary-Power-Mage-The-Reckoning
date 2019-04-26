@@ -39,11 +39,11 @@ public class Health : MonoBehaviour
 
     #region CUSTOM_METHODS
     
-    public void Hurt(float amount)
+    public void Hurt(float amount, bool ignoreIFrames)
     {
         if (!bIsDead)
         {
-            if (iftTimer <= 0.0f)
+            if (ignoreIFrames || iftTimer <= 0.0f)
             {
                 iftTimer = iFrameTime;
                 health -= amount;
@@ -64,7 +64,7 @@ public class Health : MonoBehaviour
 
                     if (amount > ragdollDamageThreshold)
                     {
-                        GetComponent<EnemyCore>().EnableRagdoll(true);
+                        //GetComponent<EnemyCore>().EnableRagdoll(true);
                     }
                 }
 

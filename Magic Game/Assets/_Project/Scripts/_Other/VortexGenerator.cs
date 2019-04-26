@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class VortexGenerator : MonoBehaviour
 {
+    /*
+
+
     private enum EAffectedEntities
     {
         BADBOYS,
@@ -12,15 +15,16 @@ public class VortexGenerator : MonoBehaviour
     };
 
     [SerializeField] private EAffectedEntities affectedEntities = EAffectedEntities.BOTH;
-    [SerializeField] private bool pullEntities = true;
+    [SerializeField] private bool pullEntities = false;
     [SerializeField] private float ragdollInterval = 1.0f;
     [SerializeField] private float radius = 20.0f;
     [SerializeField] private float pullStrength = 400.0f;
     [SerializeField] private float explosionStrength = 100.0f;
     [SerializeField] private float explosionMaxVelocity = 30.0f;
+    [SerializeField] private float explosionDamage = 25.0f;
 
     //True if explosion has happened
-    private bool pullEntitiesExplosion = false;
+    private bool pullEntitiesExplosion = true;
 
     private List<GameObject> listOfObjects = new List<GameObject>();
     private List<GameObject> excludeObjects = new List<GameObject>();
@@ -56,7 +60,11 @@ public class VortexGenerator : MonoBehaviour
                 }
                 else if (!pullEntitiesExplosion)
                 {
-                    rigid.velocity = Vector3.ClampMagnitude(-difference.normalized * explosionStrength / difference.magnitude, explosionMaxVelocity);
+                    if (difference.sqrMagnitude < radius * radius)
+                    {
+                        rigid.velocity = Vector3.ClampMagnitude(-difference.normalized * explosionStrength / difference.magnitude, explosionMaxVelocity);
+                        entity.GetComponent<Health>().Hurt(explosionDamage, true);
+                    }
                 }
             }
 
@@ -142,4 +150,8 @@ public class VortexGenerator : MonoBehaviour
             }
         }
     }
+
+
+
+    */
 }

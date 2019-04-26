@@ -34,17 +34,6 @@ public class EnemyNavigation : MonoBehaviour
 
     void Update()
     {
-        if (agent.hasPath && agent.pathStatus != NavMeshPathStatus.PathInvalid)
-        {
-
-        }
-        else if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
-        {
-            Debug.LogError(this.gameObject + " AI path is invalid!");
-        }
-
-
-
         if (navTimer <= 0.0f)
         {
             navTimer = cEnemyCore.cVision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
@@ -98,12 +87,6 @@ public class EnemyNavigation : MonoBehaviour
             }
         }
     }
-
-    #endregion
-
-    #region CUSTOM_METHODS
-    
-
 
     #endregion
 
@@ -177,24 +160,26 @@ public class EnemyNavigation : MonoBehaviour
             {
                 Debug.LogWarning(this.gameObject + " seems to have no valid path towards given location...");
                 navErrorTimer = 0.0f;
-                cEnemyCore.currentState = EnemyCore.EState.PARANOID;
+                //cEnemyCore.currentState = EnemyCore.EState.PARANOID;
             }
         }
     }
 
     void AIAttack()
     {
-        if (!moveWhileCasting && cEnemyCore.currentEnemyType != EnemyCore.EEnemyType.MELEE)
-        {
-            if (agent.hasPath)
-            {
-                agent.ResetPath();
-            }
-        }
-        else
-        {
-            agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
-        }
+        agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
+
+        //if (!cEnemyCore.MoveWhileCasting)
+        //{
+        //    if (agent.hasPath)
+        //    {
+        //        agent.ResetPath();
+        //    }
+        //}
+        //else
+        //{
+        //    agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
+        //}
     }
 
     void AICasting()
@@ -209,11 +194,7 @@ public class EnemyNavigation : MonoBehaviour
             {
                 agent.ResetPath();
             }
-
-            if (cEnemyCore.currentEnemyType == EnemyCore.EEnemyType.MELEE)
-            {
-                agent.velocity = new Vector3(0.0f, agent.velocity.y, 0.0f);
-            }
+            agent.velocity = new Vector3(0.0f, agent.velocity.y, 0.0f);
         }
     }
 
