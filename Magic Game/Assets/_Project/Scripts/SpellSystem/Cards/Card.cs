@@ -6,7 +6,7 @@ using UnityEngine;
 public class Card : ScriptableObject
 {
     [Header("Spell editing variables")]
-    public List<SpellType> compatibleSpellTypes         = new List<SpellType>();
+    public List<SpellType> compatibleSpellTypes         = new List<SpellType>(1) { SpellType.GENERIC };
     public string cardName                              = null;
 
     [TextArea]
