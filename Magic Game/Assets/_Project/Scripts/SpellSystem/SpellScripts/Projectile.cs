@@ -20,7 +20,8 @@ public class Projectile : Spell
     private Vector3 lastPos                             = Vector3.zero;
     private float distanceTravelled                     = 0.0f;
 
-    private SpellModifier[] modifiers = null;
+    public SpellModifier[] modifiers;
+    public bool isMaster = false;
 
     #endregion
 
@@ -107,6 +108,7 @@ public class Projectile : Spell
         Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
         projectile.direction = direction;
         projectile.caster = spellbook.gameObject;
+        projectile.isMaster = true;
 
         // apply all modifiers to the projectile ( this is inherited from spell class )
         ApplyModifiers(projectile.gameObject, data);

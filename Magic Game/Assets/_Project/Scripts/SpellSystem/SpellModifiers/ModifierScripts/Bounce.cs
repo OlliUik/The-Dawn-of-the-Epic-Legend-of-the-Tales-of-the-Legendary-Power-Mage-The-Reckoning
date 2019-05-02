@@ -18,15 +18,16 @@ public class Bounce : SpellModifier
     /// </summary>
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        if(bounceCount > 0)
-        {
-            GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
-            copy.name = "Bounce copy";
-            Vector3 reflectionDir = Vector3.Reflect(direction, collision.contacts[0].normal);
-            copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, reflectionDir);  // also rotate the whole thing for graphics to face the right direction
-            copy.GetComponent<Projectile>().direction = reflectionDir;                                   // this changes the direction the projectile is moving
-            copy.GetComponent<Bounce>().bounceCount--;
-        }
+        var bounce = GetComponent<Bounce>();
+        if (bounce == null || bounceCount <= 0) return;
+
+        GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
+        copy.name = "Bounce copy";
+        Vector3 reflectionDir = Vector3.Reflect(direction, collision.contacts[0].normal);
+        copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, reflectionDir);  // also rotate the whole thing for graphics to face the right direction
+        copy.GetComponent<Projectile>().direction = reflectionDir;                                   // this changes the direction the projectile is moving
+        copy.GetComponent<Bounce>().bounceCount--;
+        copy.GetComponent<Projectile>().isMaster = false;
     }
 
     /// <summary>

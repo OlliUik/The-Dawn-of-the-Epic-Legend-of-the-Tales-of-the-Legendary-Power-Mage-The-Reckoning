@@ -14,29 +14,30 @@ public class Whirlwind : SpellModifier
         base.AoeCollide(hitObject);
     }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
+    private void Update()
     {
-
-        // sphereCastAll() get every physics obbject all the way to the hitInfo
-        // make them all move towards the beam itself
-
-        //if (Physics.SphereCast(startPos, baseRadius, direction, out hit, baseRange))
-
-        Beam beam = gameObject.GetComponent<Beam>();
-        RaycastHit[] hitObject = Physics.SphereCastAll(beam.startPos, variables.size, direction);
-
-        foreach (RaycastHit hit in hitObject)
+        var beam = gameObject.GetComponent<Beam>();
+        if(beam != null)
         {
-            var rb = hit.collider.GetComponent<Rigidbody>();
-            if(rb != null)
+            RaycastHit[] hitObject = Physics.SphereCastAll(beam.startPos, variables.size, beam.direction);
+
+            foreach (RaycastHit hit in hitObject)
             {
-                // pull towards the center
-                Debug.Log("beam pulling " + hit.collider.gameObject.name);  
-                Vector3 difference = (transform.position - rb.transform.position).normalized;
-                rb.AddForce(difference * variables.pullInSpeed);
+                var rb = hit.collider.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+
+                    float s1 = -beam.endPos.y + beam.startPos.y;
+                    float s2 = beam.endPos.x - beam.startPos.x;
+                    var direction = Mathf.Abs((hit.transform.position.x - beam.startPos.x) * s1 + (hit.transform.position.y - beam.startPos.y) * s2) / Mathf.Sqrt(s1 * s1 + s2 * s2);
+
+                    // pull towards the center
+                    Debug.Log("beam pulling " + hit.collider.gameObject.name);
+                    Vector3 difference = (transform.position - rb.transform.position).normalized;
+                    rb.AddForce(difference * variables.pullInSpeed);
+                }
             }
         }
-
     }
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
@@ -44,13 +45,5 @@ public class Whirlwind : SpellModifier
         GameObject tornado = Instantiate(tornadoPrefab, collision.contacts[0].point, Quaternion.identity);
         Tornado script = tornado.GetComponentInChildren<Tornado>();
         script.variables = variables;
-    }
-
-    private void OnDrawGizmos()
-    {
-        for (int i = 0; i < 64; i++)
-        {
-            //Gizmos.DrawWireSphere(())
-        }
     }
 }
