@@ -12,6 +12,7 @@ public class MusicEventHandler : MonoBehaviour
 
     private bool enemySeesPlayer = false;
     private AudioSource source = null;
+    private EnemyCore.EState[] enemyStates = { EnemyCore.EState.ATTACK, EnemyCore.EState.CASTING, EnemyCore.EState.ESCAPE };
 
     void Start()
     {
@@ -48,15 +49,23 @@ public class MusicEventHandler : MonoBehaviour
         {
             if (item.tag == "Enemy")
             {
-                if (item.GetComponent<EnemyVision>().bCanSeeTarget)
+                EnemyCore ec = item.GetComponent<EnemyCore>();
+
+                if (ec.cVision.bCanSeeTarget)
                 {
-                    if (item.GetComponent<EnemyCore>().currentState == EnemyCore.EState.ATTACK
-                        || item.GetComponent<EnemyCore>().currentState == EnemyCore.EState.CASTING)
+                    //if (ec.currentState == EnemyCore.EState.ATTACK
+                    //    || ec.currentState == EnemyCore.EState.CASTING
+                    //    || ec.currentState == EnemyCore.EState.ESCAPE)
+
+                    foreach (EnemyCore.EState state in enemyStates)
                     {
-                        if (item.GetComponent<EnemyVision>().targetGO == player)
+                        if (state == ec.currentState)
                         {
-                            enemySeesPlayer = true;
-                            return;
+                            if (ec.cVision.targetGO == player)
+                            {
+                                enemySeesPlayer = true;
+                                return;
+                            }
                         }
                     }
                 }

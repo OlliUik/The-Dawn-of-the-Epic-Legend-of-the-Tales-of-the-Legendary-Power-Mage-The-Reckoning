@@ -20452,7 +20452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameTime: 0
-  ragdollDamageThreshold: 50
+  ragdollDamageThreshold: 1
   health: 0
 --- !u!1 &4543351958675298753
 GameObject:
@@ -20463,14 +20463,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4543351958675298763}
-  - component: {fileID: 4079002888937992941}
   - component: {fileID: 4543351958675298754}
+  - component: {fileID: 4079002888937992941}
   - component: {fileID: 4543351958675298762}
   - component: {fileID: 4543351958675298760}
   - component: {fileID: 4543351958675298752}
   - component: {fileID: 4543351958675298766}
   - component: {fileID: 4543351958675298758}
   - component: {fileID: 4543351958675298761}
+  - component: {fileID: 4543351958675298755}
   m_Layer: 10
   m_Name: EnemyMagicBase
   m_TagString: Enemy
@@ -20487,7 +20488,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4543351958675298753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de2277dfc07784f47be4639b07079b06, type: 3}
+  m_Script: {fileID: 11500000, guid: 647ab808761ee0645b2f61026f0dfebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   logicInterval: 0.5
@@ -20495,15 +20496,44 @@ MonoBehaviour:
   searchPlayerAfterAttack: 1
   alwaysAggressive: 1
   aggressiveRadius: 30
+  hearingEnabled: 1
   hearingRadius: 10
   radiusCheckInterval: 1
   paranoidDuration: 5
   moveWhileCasting: 1
-  standStillAfterCasting: 1
+  standStillAfterCasting: 4
   attackAnimation: 0
   animator: {fileID: 3928820353002290930}
-  meleeAttackDistance: 4
-  meleeDamage: 25
+  ragdoll: {fileID: 7467822641552814799}
+  rangedEscapeDistance: 10
+  castInBursts: 0
+  castingTime: 2
+  burstCount: 3
+  timeBetweenCasts: 0.2
+  castingCooldown: 4
+  meleeAttackDistance: 10
+--- !u!114 &4543351958675298755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543351958675298753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f9b5870bd854df4d86a902428808f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isCasting: 0
+  spellPos: {fileID: 7669651884024681292}
+  spells:
+  - type: 0
+    spell: {fileID: 3169531526154035573, guid: b73ed34253d469e4299aee34fd4c54bc, type: 3}
+    cards: []
+  lookTransform: {fileID: 6244359217004406517}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 3073
 --- !u!136 &4543351958675298758
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -20530,9 +20560,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97df1a9f55c5d3d448ca924dcb99ab36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveWhileCasting: 0
-  navigationInterval: 2
-  navigationIntervalPlayerLocated: 1
+  walkingSpeed: 4
+  walkingAcceleration: 8
+  runningSpeed: 10
+  runningAcceleration: 8
+  panicSpeed: 15
+  panicAcceleration: 8
+  paranoidMoveInterval: 1
   waitAtPatrolPoint: 0
   patrolPoints: []
 --- !u!195 &4543351958675298761

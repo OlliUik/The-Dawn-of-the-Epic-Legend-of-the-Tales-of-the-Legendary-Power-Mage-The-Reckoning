@@ -1,32 +1,51 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Spellbook))]
-public class EnemyMagicMelee : EnemyMelee
+public class EnemyMagicMelee : EnemyMagicRanged
 {
-    public Spellbook cSpellBook { get; private set; } = null;
+    [Header("Magic Melee -> Attacking")]
+    [SerializeField] private float meleeAttackDistance = 2.0f;
 
-    [Header("Magic -> Attacking")]
-    //Ranged / Magic Ranged / Magic Melee
-    [SerializeField] protected bool castInBursts = false;
-    [SerializeField] protected float castingTime = 2.0f;
-    [SerializeField] protected int burstCount = 3;
-    [SerializeField] protected float timeBetweenCasts = 0.2f;
-
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
-        cSpellBook = GetComponent<Spellbook>();
+        base.Awake();
+
+        isRanged = false;
     }
 
-    protected override void Update()
+    protected override void AIAttack()
     {
-        base.Update();
+        if (cVision.bCanSeeTarget)
+        {
+            if (castingCooldownTimer <= 0.0f)
+            {
+                if ((transform.position - cVision.targetLocation).sqrMagnitude > meleeAttackDistance * meleeAttackDistance)
+                {
+                    return;
+                }
 
-        //shootIntervalTimer -= shootIntervalTimer > 0.0f ? time : 0.0f;
-        //castingTimer -= castingTimer > 0.0f ? time : 0.0f;
+                if (!moveWhileCasting && cNavigation.cAgent.hasPath)
+                {
+                    cNavigation.cAgent.ResetPath();
+                    cNavigation.cAgent.velocity = new Vector3(0.0f, cNavigation.cAgent.velocity.y, 0.0f);
+                }
 
-        //if (castingTimer <= 0.0f)
-        //{
-        //}
+                if (castInBursts)
+                {
+                    shotsLeft = burstCount;
+                }
+
+                castingCooldownTimer = castingCooldown;
+                castingTimer = castingTime;
+                castStandStillTimer = standStillAfterCasting;
+                animator.SetTrigger("Cast Spell");
+                animator.SetInteger("Spell Type", attackAnimation);
+                currentState = EState.CASTING;
+            }
+        }
+        else
+        {
+            currentState = EState.SEARCH;
+        }
     }
 }

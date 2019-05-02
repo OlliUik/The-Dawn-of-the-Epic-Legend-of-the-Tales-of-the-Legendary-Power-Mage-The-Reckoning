@@ -7,8 +7,9 @@ public class RagdollModifier : MonoBehaviour
 {
     [SerializeField] private string armatureName = "Armature";
     [SerializeField] private List<Rigidbody> excludeFromKinematicToggle = new List<Rigidbody>();
+
     private List<Transform> armatureBones = new List<Transform>();
-    
+
     void Start()
     {
         GetBones(armatureBones, armatureName);

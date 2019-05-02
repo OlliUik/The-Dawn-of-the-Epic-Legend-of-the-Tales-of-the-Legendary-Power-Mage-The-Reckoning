@@ -10,7 +10,7 @@ public class EnemyAnimations : MonoBehaviour
     [SerializeField] private EnemyCore cEnemyCore = null;
     [SerializeField] private float animationSpeedMultiplier = 0.1f;
     [SerializeField] private float animationBlendingMultiplier = 0.0625f;
-
+    
     private Animator cAnimator = null;
 
     void Start()
@@ -31,9 +31,9 @@ public class EnemyAnimations : MonoBehaviour
             }
             else
             {
-                if (cEnemyCore.cNavigation.agent.velocity.magnitude > 1.0f)
+                if (cEnemyCore.cNavigation.cAgent.velocity.magnitude > 1.0f)
                 {
-                    desiredAngle = Vector3.SignedAngle(Vector3.forward, cEnemyCore.cNavigation.agent.velocity, Vector3.up);
+                    desiredAngle = Vector3.SignedAngle(Vector3.forward, cEnemyCore.cNavigation.cAgent.velocity, Vector3.up);
                 }
                 else
                 {
@@ -48,8 +48,8 @@ public class EnemyAnimations : MonoBehaviour
             float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
             float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
 
-            float nx = cEnemyCore.cNavigation.agent.velocity.x;
-            float ny = cEnemyCore.cNavigation.agent.velocity.z;
+            float nx = cEnemyCore.cNavigation.cAgent.velocity.x;
+            float ny = cEnemyCore.cNavigation.cAgent.velocity.z;
 
             Vector2 velocityRotated = new Vector2(
                 cos * nx - sin * ny,
@@ -71,7 +71,14 @@ public class EnemyAnimations : MonoBehaviour
                 if (cEnemyCore.cVision.bCanSeeTarget)
                 {
                     cAnimator.SetLookAtWeight(1.0f);
-                    cAnimator.SetLookAtPosition(cEnemyCore.cVision.targetLocation);
+                    if (cEnemyCore.cVision.targetGO != null)
+                    {
+                        cAnimator.SetLookAtPosition(cEnemyCore.cVision.targetGO.transform.position + Vector3.up * cEnemyCore.cVision.HeightOffset);
+                    }
+                    else
+                    {
+                        cAnimator.SetLookAtPosition(cEnemyCore.cVision.targetLocation);
+                    }
                 }
                 else
                 {

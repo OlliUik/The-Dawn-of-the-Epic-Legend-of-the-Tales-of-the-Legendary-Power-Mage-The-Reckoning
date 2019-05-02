@@ -20,8 +20,10 @@ public class EnemyVision : MonoBehaviour
     public bool bCanSeeTarget { get; private set; } = false;
     public GameObject targetGO { get; private set; } = null;
 
+    public float HeightOffset { get { return checkHeightOffset; } }
+
     private bool debugCheckingForTarget = false;
-    private float checkTimer = 0.0f;
+    //private float checkTimer = 0.0f;
     private float sightRadiusTemp = 0.0f;
     //private float raycastGraceTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
@@ -106,6 +108,11 @@ public class EnemyVision : MonoBehaviour
 
     void CheckVision()
     {
+        if (cEnemyCore.status.isOnFire || cEnemyCore.status.isKnocked)
+        {
+            return;
+        }
+
         debugCheckingForTarget = true;
 
         if (sightRadiusTemp != sightRadius)
@@ -143,10 +150,6 @@ public class EnemyVision : MonoBehaviour
                 }
             }
         }
-
-
-
-
 
         if (targetGO != null)
         {
@@ -234,18 +237,6 @@ public class EnemyVision : MonoBehaviour
                 targetLocation = Vector3.zero;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     Vector3[] TranslateVertices(Vector3[] inputArray, Vector3 translateVector, Quaternion headRotation)

@@ -64,7 +64,7 @@ public class Health : MonoBehaviour
 
                     if (amount > ragdollDamageThreshold)
                     {
-                        //GetComponent<EnemyCore>().EnableRagdoll(true);
+                        GetComponent<EnemyCore>().EnableRagdoll(true);
                     }
                 }
 
