@@ -8,10 +8,12 @@ public class Aoe : Spell
     #region Variables
 
     [Header("AoE varialbes")]
-    [SerializeField] public float damagePerSecond = 1.0f;
-    [SerializeField] public float radius    { get; private set; } = 7.0f;
-    [SerializeField] public float duration  { get; private set; } = 10.0f;
-    public GameObject graphics;
+    [SerializeField] public float damagePerSecond   = 1.0f;
+    [SerializeField] public float radius            = 7.0f;
+    [SerializeField] public float duration          = 10.0f;
+    public GameObject graphics                      = null;
+
+    private SpellModifier[] modifiers               = null;
 
     #endregion
 
@@ -72,6 +74,7 @@ public class Aoe : Spell
     {
         GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
         copyGraphics.transform.SetParent(gameObject.transform);
+        modifiers = GetComponents<SpellModifier>();
     }
 
     private void Update()
@@ -83,27 +86,19 @@ public class Aoe : Spell
             // check if objectHit is enemy
             if (objectHit.transform.tag != caster.tag)
             {
-
                 var health = objectHit.GetComponent<Health>();
                 if(health != null)
                 {
-                    health.Hurt(damagePerSecond * Time.deltaTime);
+                    base.DealDamage(health, (damagePerSecond * Time.deltaTime));
                 }
 
                 var effectManager = objectHit.GetComponent<StatusEffectManager>();
                 if (effectManager != null)
                 {
-
-                    foreach (StatusEffect effect in statusEffects)
-                    {
-                        Debug.Log("Applying " + effect + " to " + objectHit.gameObject.name);
-                        effectManager.ApplyStatusEffect(effect, statusEffects);
-                    }
-
+                    base.ApplyStatusEffects(effectManager, statusEffects);
                 }
 
                 // apply all modifiers here to the enemy inside radius
-                SpellModifier[] modifiers = GetComponents<SpellModifier>();
                 foreach (SpellModifier modifier in modifiers)
                 {
                     modifier.AoeCollide(objectHit.gameObject);

@@ -5,11 +5,8 @@ using UnityEngine;
 public class Whirlwind : SpellModifier
 {
 
-
-
-
-    public float size = 10f;
-    public float strenght = 10f;
+    public GameObject tornadoPrefab = null;
+    public WhirlwindVariables variables;
 
 
     public override void AoeCollide(GameObject hitObject)
@@ -17,28 +14,15 @@ public class Whirlwind : SpellModifier
         base.AoeCollide(hitObject);
     }
 
-    public override void BeamCastingEnd()
-    {
-        base.BeamCastingEnd();
-    }
-
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
         base.BeamCollide(hitInfo, direction, distance);
     }
 
-    public override void BeamCollisionEnd()
-    {
-        base.BeamCollisionEnd();
-    }
-
-    public override void OnSpellCast(Spell spell)
-    {
-        base.OnSpellCast(spell);
-    }
-
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        base.ProjectileCollide(collision, direction);
+        GameObject tornado = Instantiate(tornadoPrefab, collision.contacts[0].point, Quaternion.identity);
+        Tornado script = tornado.GetComponentInChildren<Tornado>();
+        script.variables = variables;
     }
 }

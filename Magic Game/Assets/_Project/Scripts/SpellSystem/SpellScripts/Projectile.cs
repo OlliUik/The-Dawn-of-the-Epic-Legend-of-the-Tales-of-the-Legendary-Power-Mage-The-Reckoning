@@ -20,6 +20,8 @@ public class Projectile : Spell
     private Vector3 lastPos                             = Vector3.zero;
     private float distanceTravelled                     = 0.0f;
 
+    private SpellModifier[] modifiers = null;
+
     #endregion
 
     #region Unitys_Methods
@@ -31,6 +33,8 @@ public class Projectile : Spell
 
         lastPos = transform.position;
         direction = transform.forward;
+
+        modifiers = GetComponents<SpellModifier>();
     }
 
     void FixedUpdate()
@@ -52,37 +56,23 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
-
-        // COLLISION TO PLAYER OR ENEMY --> DEAL DAMAGE AND APPLY STATUSEFFECTS
-
+        // DEAL DAMAGE + APPLY STATUSEFFECTS
         if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
-
             var health = collision.gameObject.GetComponent<Health>();
-
-            if(health != null)
+            if (health != null)
             {
-                health.Hurt(baseDamage);
+                base.DealDamage(health, baseDamage);
             }
-
-            // APPLY STATUS EFFECTS BEFORE OR AFTER DEALING DAMAGE
 
             var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();
-            if(effectManager != null)
+            if (effectManager != null)
             {
-
-                foreach (StatusEffect effect in statusEffects)
-                {
-                    Debug.Log("Applying " + effect + " to " + collision.gameObject.name);
-                    effectManager.ApplyStatusEffect(effect, statusEffects);
-                }
-
+                base.ApplyStatusEffects(effectManager, statusEffects);
             }
-
         }
 
         // APPLY ALL COLLISION MODIFIERS
-        SpellModifier[] modifiers = GetComponents<SpellModifier>();
         foreach (SpellModifier modifier in modifiers)
         {
             modifier.ProjectileCollide(collision, direction);

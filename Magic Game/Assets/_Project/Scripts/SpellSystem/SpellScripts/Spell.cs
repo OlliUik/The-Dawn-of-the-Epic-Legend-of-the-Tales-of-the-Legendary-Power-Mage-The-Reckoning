@@ -104,4 +104,18 @@ public class Spell : MonoBehaviour
 
     }
 
+    public virtual void DealDamage(Health health, float amount)
+    {
+        health.Hurt(amount);
+    }
+
+    public virtual void ApplyStatusEffects(StatusEffectManager manager, List<StatusEffect> effects)
+    {
+        // call ApplyStatusEffect in the hitObjects StatusEffectManager and do null checks there
+        foreach (StatusEffect effect in statusEffects)
+        {
+            manager.ApplyStatusEffect(effect, statusEffects);
+        }
+    }
+
 }

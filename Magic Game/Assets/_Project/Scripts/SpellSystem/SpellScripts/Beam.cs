@@ -6,6 +6,8 @@ using UnityEngine;
 public class Beam : Spell
 {
 
+    #region Variables
+
     [Header("-- Beam --")]
     [SerializeField] private float baseDamage       = 1.0f;
     [SerializeField] private float baseRange        = 150.0f;
@@ -36,6 +38,8 @@ public class Beam : Spell
     private bool colliding                          = false;
     private bool collEndCalled                      = false;
 
+    #endregion
+
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
         // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
@@ -48,8 +52,6 @@ public class Beam : Spell
         // apply all spellmodifiers to the beam
         ApplyModifiers(beam.gameObject, data);
 
-        // keep casting beam as long as the beam button is held down TODO:: change this
-        //beam.StartCoroutine(CastBeam(beam.gameObject, spellbook, data)); OLDWAY
     }
 
     private void Start()
@@ -64,7 +66,6 @@ public class Beam : Spell
 
     private void Update()
     {
-
         if (isMaster)
         {
             direction = Quaternion.Euler(0, angle, 0) * spellbook.GetDirection();
@@ -80,18 +81,13 @@ public class Beam : Spell
             var health = hit.collider.gameObject.GetComponent<Health>();
             if (health != null)
             {
-                health.Hurt(baseDamage);
+                base.DealDamage(health, baseDamage * Time.deltaTime);
             }
 
             var effectManager = hit.collider.gameObject.GetComponent<StatusEffectManager>();
             if (effectManager != null)
             {
-
-                foreach (StatusEffect effect in statusEffects)
-                {
-                    effectManager.ApplyStatusEffect(effect, statusEffects);
-                }
-
+                base.ApplyStatusEffects(effectManager, statusEffects);
             }
 
             foreach (SpellModifier modifier in modifiers)

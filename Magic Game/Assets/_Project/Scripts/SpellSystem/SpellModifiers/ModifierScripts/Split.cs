@@ -12,15 +12,16 @@ public class Split : SpellModifier
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        
+
         if(!splitted)
         {
             for (int i = 0; i < splitCount; i++)
             {
                 GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
+                copy.name = "Split copy";
                 copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, collision.contacts[0].normal);  // also rotate the whole thing for graphics to face the right direction
                 copy.GetComponent<Projectile>().direction = collision.contacts[0].normal;                                   // this changes the direction the projectile is moving
-                Destroy(copy.GetComponent<Split>());
+                copy.GetComponent<Split>().splitted = true;
 
                 copy.transform.Rotate(copy.transform.right, UnityEngine.Random.Range(-45f, 45f));
                 copy.transform.Rotate(copy.transform.up, UnityEngine.Random.Range(-45f, 45f));
