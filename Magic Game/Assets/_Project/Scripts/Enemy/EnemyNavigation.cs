@@ -17,6 +17,7 @@ public class EnemyNavigation : MonoBehaviour
     //[SerializeField] private bool moveWhileCasting = false;
     //[SerializeField] private float navigationInterval = 1.0f;
     //[SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
+    [SerializeField] private float minDistanceFromAttackTarget = 2.0f;
     [SerializeField] private float paranoidMoveInterval = 1.0f;
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
     [SerializeField] private Vector3[] patrolPoints = null;
@@ -76,6 +77,15 @@ public class EnemyNavigation : MonoBehaviour
         {
             cAgent.speed = runningSpeed;
             cAgent.acceleration = runningAcceleration;
+        }
+
+        if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+        {
+            cAgent.stoppingDistance = 1.0f;
+        }
+        else
+        {
+            cAgent.stoppingDistance = 0.0f;
         }
     }
 
@@ -263,7 +273,8 @@ public class EnemyNavigation : MonoBehaviour
             }
         }
 
-        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
+        cAgent.SetDestination(nearTargetLocation);
 
         //if (!cEnemyCore.MoveWhileCasting)
         //{
@@ -282,7 +293,8 @@ public class EnemyNavigation : MonoBehaviour
     {
         if (cEnemyCore.MoveWhileCasting)
         {
-            cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+            Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
+            cAgent.SetDestination(nearTargetLocation);
         }
         else
         {

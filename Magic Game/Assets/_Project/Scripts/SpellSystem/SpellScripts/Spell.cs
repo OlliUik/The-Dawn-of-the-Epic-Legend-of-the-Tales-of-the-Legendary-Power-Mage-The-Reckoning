@@ -106,7 +106,7 @@ public class Spell : MonoBehaviour
 
     public virtual void DealDamage(Health health, float amount)
     {
-        health.Hurt(amount);
+        health.Hurt(amount, false);
     }
 
     public virtual void ApplyStatusEffects(StatusEffectManager manager, List<StatusEffect> effects)

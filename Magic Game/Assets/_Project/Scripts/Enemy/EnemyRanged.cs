@@ -34,6 +34,10 @@ public class EnemyRanged : EnemyCore
         if (castingTimer <= 0.0f)
         {
             castingCooldownTimer -= castingCooldownTimer > 0.0f ? Time.deltaTime : 0.0f;
+            if (currentState == EState.CASTING)
+            {
+                AICasting();
+            }
         }
     }
 
