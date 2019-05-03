@@ -13,9 +13,15 @@ public class Projectile : Spell
     [SerializeField] protected float baseRange          = 1000.0f;
     public float baseSpeed          = 15.0f;
 
+    public GameObject graphics                          = null;
+    public GameObject explosionParticle                 = null;
+
     public Vector3 direction                            { get; set; }
     private Vector3 lastPos                             = Vector3.zero;
     private float distanceTravelled                     = 0.0f;
+
+    public SpellModifier[] modifiers;
+    public bool isMaster = false;
 
     #endregion
 
@@ -23,8 +29,13 @@ public class Projectile : Spell
 
     void Start()
     {
+        GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
+        graphicsCopy.transform.SetParent(gameObject.transform);
+
         lastPos = transform.position;
         direction = transform.forward;
+
+        modifiers = GetComponents<SpellModifier>();
     }
 
     void FixedUpdate()
@@ -46,38 +57,29 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
-
-        // COLLISION TO PLAYER OR ENEMY --> DEAL DAMAGE AND APPLY STATUSEFFECTS
-
+        // DEAL DAMAGE + APPLY STATUSEFFECTS
         if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
         {
-
             var health = collision.gameObject.GetComponent<Health>();
-
-            if(health != null)
+            if (health != null)
             {
-                health.Hurt(baseDamage, false);
+                base.DealDamage(health, baseDamage);
             }
-        
-            //foreach (ScriptableEffect effect in effects)
-            //{
-            //    print("Applied: " + effect.name);
-            //    collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
-            //}
-            //
-            //foreach (StatusEffectBase effectBase in statusEffects)
-            //{
-            //    collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
-            //}
+
+            var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();
+            if (effectManager != null)
+            {
+                base.ApplyStatusEffects(effectManager, statusEffects);
+            }
         }
 
         // APPLY ALL COLLISION MODIFIERS
-        SpellModifier[] modifiers = GetComponents<SpellModifier>();
         foreach (SpellModifier modifier in modifiers)
         {
             modifier.ProjectileCollide(collision, direction);
         }
 
+        Instantiate(explosionParticle, collision.contacts[0].point, Quaternion.FromToRotation(transform.up, collision.contacts[0].normal));
         Destroy(gameObject);
     }
 
@@ -106,6 +108,7 @@ public class Projectile : Spell
         Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
         projectile.direction = direction;
         projectile.caster = spellbook.gameObject;
+        projectile.isMaster = true;
 
         // apply all modifiers to the projectile ( this is inherited from spell class )
         ApplyModifiers(projectile.gameObject, data);

@@ -12,29 +12,34 @@ public class Split : SpellModifier
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        
-        if(!splitted)
+
+        Projectile proj = gameObject.GetComponent<Projectile>();
+
+        var split = gameObject.GetComponent<Split>();
+        if (split == null || splitted || !proj.isMaster) return;
+
+        for (int i = 0; i < splitCount; i++)
         {
-            for (int i = 0; i < splitCount; i++)
-            {
-                GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
-                copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, collision.contacts[0].normal);  // also rotate the whole thing for graphics to face the right direction
-                copy.GetComponent<Projectile>().direction = collision.contacts[0].normal;                                   // this changes the direction the projectile is moving
-                Destroy(copy.GetComponent<Split>());
+            gameObject.GetComponent<Split>().splitted = true;
+            GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
+            copy.name = "Split copy";
+            copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, collision.contacts[0].normal);  // also rotate the whole thing for graphics to face the right direction
+            copy.GetComponent<Projectile>().direction = collision.contacts[0].normal;                                   // this changes the direction the projectile is moving
 
-                copy.transform.Rotate(copy.transform.right, UnityEngine.Random.Range(-45f, 45f));
-                copy.transform.Rotate(copy.transform.up, UnityEngine.Random.Range(-45f, 45f));
+            float rand = UnityEngine.Random.Range(-45f, 45f);
+            copy.transform.Rotate(copy.transform.right, rand);
+            copy.transform.Rotate(copy.transform.up, rand);
+            copy.GetComponent<Projectile>().direction = transform.forward;
 
-                Projectile copyProj = copy.GetComponent<Projectile>();
-                copyProj.caster = gameObject.GetComponent<Projectile>().caster;
-            }
+            Projectile copyProj = copy.GetComponent<Projectile>();
+            copyProj.caster = gameObject.GetComponent<Projectile>().caster;
+            copyProj.isMaster = false;
         }
 
     }
 
 
     List<Beam> beams = new List<Beam>();
-
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
@@ -83,7 +88,6 @@ public class Split : SpellModifier
         }
 
     }
-
     public override void BeamCollisionEnd()
     {
         for (int i = 0; i < beams.Count; i++)
@@ -92,7 +96,6 @@ public class Split : SpellModifier
             beams[i].gameObject.SetActive(false);
         }
     }
-
     public override void BeamCastingEnd()
     {
         foreach (Beam beam in beams)

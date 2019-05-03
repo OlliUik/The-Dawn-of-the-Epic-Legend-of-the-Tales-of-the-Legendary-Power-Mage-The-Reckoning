@@ -7,10 +7,13 @@ public class Aoe : Spell
 
     #region Variables
 
-    //[Header("AoE varialbes")]
-    [SerializeField] public float radius    { get; private set; } = 7.0f;
-    [SerializeField] public float duration  { get; private set; } = 10.0f;
-    [SerializeField] public float damagePerSecond = 1.0f;
+    [Header("AoE varialbes")]
+    [SerializeField] public float damagePerSecond   = 1.0f;
+    [SerializeField] public float radius            = 7.0f;
+    [SerializeField] public float duration          = 10.0f;
+    public GameObject graphics                      = null;
+
+    private SpellModifier[] modifiers               = null;
 
     #endregion
 
@@ -67,6 +70,13 @@ public class Aoe : Spell
 
     #region UnityMethods
 
+    private void Start()
+    {
+        GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
+        copyGraphics.transform.SetParent(gameObject.transform);
+        modifiers = GetComponents<SpellModifier>();
+    }
+
     private void Update()
     {
         // find out what is inside the radius
@@ -76,15 +86,19 @@ public class Aoe : Spell
             // check if objectHit is enemy
             if (objectHit.transform.tag != caster.tag)
             {
-
                 var health = objectHit.GetComponent<Health>();
                 if(health != null)
                 {
-                    health.Hurt(damagePerSecond * Time.deltaTime, true);
+                    base.DealDamage(health, (damagePerSecond * Time.deltaTime));
+                }
+
+                var effectManager = objectHit.GetComponent<StatusEffectManager>();
+                if (effectManager != null)
+                {
+                    base.ApplyStatusEffects(effectManager, statusEffects);
                 }
 
                 // apply all modifiers here to the enemy inside radius
-                SpellModifier[] modifiers = GetComponents<SpellModifier>();
                 foreach (SpellModifier modifier in modifiers)
                 {
                     modifier.AoeCollide(objectHit.gameObject);
