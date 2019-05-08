@@ -26,7 +26,7 @@ public class PushBack : SpellModifier
 
     void FixedUpdate()
     {        
-        if(spell.GetType() == typeof(Beam))
+        if(spell.spellType == SpellType.BEAM)
         {
             //Debug.DrawLine(cam.transform.position, cam.transform.forward); // fix this
             spellbook.transform.position += (spellbook.lookTransform.transform.TransformDirection(-Vector3.forward) * pushbackForce * Time.deltaTime);

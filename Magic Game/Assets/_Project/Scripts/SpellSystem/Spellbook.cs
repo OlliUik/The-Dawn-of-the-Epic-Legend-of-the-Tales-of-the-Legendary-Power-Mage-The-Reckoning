@@ -198,12 +198,15 @@ public class Spellbook : MonoBehaviour
             mana.UseMana(spells[spellIndex].spell.ManaCost);
         }
 
-        foreach (Card card in spells[spellIndex].cards)
+        if(spells[spellIndex].cards.Count > 0)
         {
-            foreach (SpellBalance balance in card.balances)
+            foreach (Card card in spells[spellIndex].cards)
             {
-                // take spell extra cost here
-                balance.ApplyBalance(this);
+                foreach (SpellBalance balance in card.balances)
+                {
+                    // take spell extra cost here
+                    balance.ApplyBalance(this);
+                }
             }
         }
 

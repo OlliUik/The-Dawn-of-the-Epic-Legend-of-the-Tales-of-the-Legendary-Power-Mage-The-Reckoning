@@ -17,12 +17,12 @@ public class MultiCast : SpellModifier
         {
             for (int i = 0; i < copyCount; i++)
             {
-                Spell copy = Instantiate(spell, gameObject.transform.position, gameObject.transform.rotation);
-                Destroy(copy.GetComponent<MultiCast>());
-            
-                copy.transform.Rotate(Vector3.up * Random.Range(upDownRotation.x, upDownRotation.y));    // randomize left-right rotation
-                copy.transform.Rotate(Vector3.right * Random.Range(leftRightRotation.x, leftRightRotation.y)); // randomize up-down rotation
-            
+                Projectile copyFrom = (Projectile)spell;
+                Projectile copy = Instantiate(copyFrom, gameObject.transform.position, gameObject.transform.rotation);
+                copy.name = "MultiCast copy " + i.ToString();
+                copy.direction = copyFrom.direction;
+
+                copy.direction = Quaternion.Euler(Random.Range(upDownRotation.x, upDownRotation.y), Random.Range(leftRightRotation.x, leftRightRotation.y), 0) * copy.direction;
                 copy.caster = spell.caster;
             }
         }

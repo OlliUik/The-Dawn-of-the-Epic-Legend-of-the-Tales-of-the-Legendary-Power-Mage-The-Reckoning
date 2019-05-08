@@ -16,18 +16,20 @@ public class StatusEffect
 
     protected GameObject graphicsCopy;
 
+    // StatusEffectManager uses this
     public bool IsFinished
     {
         get { return Time.time > endTime; }
     }
 
-    public StatusEffect(float duration, GameObject graphics) // will be inherited with more parameters
+    // Will be inherited with more parameters
+    public StatusEffect(float duration, GameObject graphics) 
     {
         this.duration = duration;
         this.graphics = graphics;
     }
 
-
+    // This will be called from each entitys own StatusEffectManager when the effect is about to be applied
     public virtual void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
 
@@ -38,8 +40,11 @@ public class StatusEffect
         effectManager = target.GetComponent<StatusEffectManager>();
 
     }
-    public virtual void OnTick() { } // this is used by effects like ignite / heal over time that need to be updated while applied to target
 
+    // OnTick is used by effects like ignite / heal over time that need to be updated while applied to target
+    public virtual void OnTick() { }
+
+    // StatusEffectManager (on entity) calls OnLeave when the duration is passed or the countering effect is applied to the manager as new
     public virtual void OnLeave()
     {
         if (target != null)
@@ -52,12 +57,17 @@ public class StatusEffect
         }
     }
 
-    // refresh duration of effect and check for countering effects
+    // esim. Moisturize overrides this and spawns water pool when hitting something that doesn't have health
+    public virtual void HitNonlivingObject(Collision collision) { }
+
+    // Refresh duration of effect and check for countering effects
     public virtual void ReApply(List<StatusEffect> allEffectsInSpell)
     {
         CheckForCounterEffects(allEffectsInSpell);
         endTime = Time.time + duration;
     }
+
+    // Ignite and moisturize use this to check the existing StatusEffect and what are new effects in spell
     public virtual void CheckForCounterEffects(List<StatusEffect> allEffectsInSpell) { }
 
 }

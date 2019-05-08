@@ -21,13 +21,13 @@ public class Bounce : SpellModifier
         var bounce = GetComponent<Bounce>();
         if (bounce == null || bounceCount <= 0) return;
 
-        GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
-        copy.name = "Bounce copy";
         Vector3 reflectionDir = Vector3.Reflect(direction, collision.contacts[0].normal);
-        copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, reflectionDir);  // also rotate the whole thing for graphics to face the right direction
-        copy.GetComponent<Projectile>().direction = reflectionDir;                                   // this changes the direction the projectile is moving
+        Quaternion rot = Quaternion.Euler(reflectionDir);
+        Projectile copy = Instantiate(gameObject, transform.position, rot).GetComponent<Projectile>();
+        copy.name = "Bounce copy";
+        copy.direction = reflectionDir;
         copy.GetComponent<Bounce>().bounceCount--;
-        copy.GetComponent<Projectile>().isMaster = false;
+        copy.isMaster = false;
     }
 
     /// <summary>
@@ -38,6 +38,9 @@ public class Bounce : SpellModifier
     /// </summary>
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
+
+        if (hitInfo.collider.GetComponent<Health>() != null) return;
+
         if (bounceCount > 0)
         {
             if(beamCopy == null)

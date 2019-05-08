@@ -20,20 +20,27 @@ public class Split : SpellModifier
 
         for (int i = 0; i < splitCount; i++)
         {
-            gameObject.GetComponent<Split>().splitted = true;
-            GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
+
+            Vector3 dir = collision.contacts[0].normal;
+            dir = Quaternion.AngleAxis(UnityEngine.Random.Range(-70.0f, 70.0f) * (i + 1), dir) * dir;
+            Quaternion rot = Quaternion.LookRotation(dir);
+            Vector3 rotatedDir = Vector3.zero;
+
+            if (i < splitCount * 0.5)
+            {
+                rotatedDir = Quaternion.AngleAxis(-25f * (i + 1), direction) * dir;
+            }
+            else
+            {
+                rotatedDir = Quaternion.AngleAxis(25f * (i + 1), direction) * dir;
+            }
+
+            Projectile copy = Instantiate(gameObject, transform.position, rot).GetComponent<Projectile>();
             copy.name = "Split copy";
-            copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, collision.contacts[0].normal);  // also rotate the whole thing for graphics to face the right direction
-            copy.GetComponent<Projectile>().direction = collision.contacts[0].normal;                                   // this changes the direction the projectile is moving
+            copy.direction = rotatedDir;
 
-            float rand = UnityEngine.Random.Range(-45f, 45f);
-            copy.transform.Rotate(copy.transform.right, rand);
-            copy.transform.Rotate(copy.transform.up, rand);
-            copy.GetComponent<Projectile>().direction = transform.forward;
-
-            Projectile copyProj = copy.GetComponent<Projectile>();
-            copyProj.caster = gameObject.GetComponent<Projectile>().caster;
-            copyProj.isMaster = false;
+            copy.caster = proj.caster;
+            copy.isMaster = false;
         }
 
     }
@@ -43,6 +50,8 @@ public class Split : SpellModifier
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
+
+        if (hitInfo.collider.GetComponent<Health>() != null) return;
 
         Beam beam = gameObject.GetComponent<Beam>();
 
@@ -74,6 +83,7 @@ public class Split : SpellModifier
             Vector3 reflectDir = Vector3.Reflect(direction, hitInfo.normal);
             Vector3 rotatedDir = Vector3.zero;
 
+            // rotate half of the splitcount to left by the degree * i+1 and others right by degree * i+1
             if(i < splitCount * 0.5)
             {
                 rotatedDir = Quaternion.AngleAxis(-25f * (i + 1), beam.direction) * reflectDir;   
@@ -98,10 +108,13 @@ public class Split : SpellModifier
     }
     public override void BeamCastingEnd()
     {
-        foreach (Beam beam in beams)
+        if(beams.Count > 0)
         {
-            beam.CastingEnd();
-            Destroy(beam.gameObject);
+            foreach (Beam beam in beams)
+            {
+                beam.CastingEnd();
+                Destroy(beam.gameObject);
+            }
         }
 
         Destroy(gameObject);

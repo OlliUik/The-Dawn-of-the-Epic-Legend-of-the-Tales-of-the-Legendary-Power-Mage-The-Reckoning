@@ -6,7 +6,9 @@ using UnityEngine;
 public class KnockBackModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private float knockbackForce = 0f;
+    [SerializeField] private float aoeForce = 10f;
+    [SerializeField] private float beamForce = 10f;
+    [SerializeField] private float projectileForce = 100f;
 
     public override void AddSpellModifier(GameObject spellObject)
     {
@@ -18,6 +20,8 @@ public class KnockBackModifier : SpellScriptableModifier
         }
 
         KnockBack component = spellObject.AddComponent<KnockBack>();
-        component.knockbackForce = knockbackForce;
+        component.aoeForce = aoeForce;
+        component.beamForce = beamForce;
+        component.projectileForce = projectileForce;
     }
 }

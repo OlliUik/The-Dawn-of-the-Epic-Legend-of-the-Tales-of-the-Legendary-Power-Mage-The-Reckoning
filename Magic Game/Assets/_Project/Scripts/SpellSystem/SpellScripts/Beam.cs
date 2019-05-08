@@ -30,7 +30,7 @@ public class Beam : Spell
 
     private Spellbook spellbook;
     private RaycastHit hit;
-    int spellIndex                                  = 0;
+    int spellIndex                                  = -1;
 
     public bool isMaster                            = false;
     SpellModifier[] modifiers;
@@ -40,19 +40,7 @@ public class Beam : Spell
 
     #endregion
 
-    public override void CastSpell(Spellbook spellbook, SpellData data)
-    {
-        // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
-        direction = spellbook.GetDirection();
-        Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
-        Beam beam = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Beam>();
-        beam.caster = spellbook.gameObject;
-        beam.isMaster = true;
-        
-        // apply all spellmodifiers to the beam
-        ApplyModifiers(beam.gameObject, data);
-
-    }
+    #region Unity_Methods
 
     private void Start()
     {
@@ -62,6 +50,7 @@ public class Beam : Spell
         }
 
         modifiers = GetComponents<SpellModifier>();
+        spellType = SpellType.BEAM;
     }
 
     private void Update()
@@ -126,6 +115,24 @@ public class Beam : Spell
 
     }
 
+    #endregion
+
+    #region Custom_Methods
+
+    public override void CastSpell(Spellbook spellbook, SpellData data)
+    {
+        // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
+        direction = spellbook.GetDirection();
+        Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
+        Beam beam = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Beam>();
+        beam.caster = spellbook.gameObject;
+        beam.isMaster = true;
+        
+        // apply all spellmodifiers to the beam
+        ApplyModifiers(beam.gameObject, data);
+
+    }
+
     public void CollisionEnd()
     {
         foreach (SpellModifier modifier in modifiers)
@@ -136,9 +143,12 @@ public class Beam : Spell
 
     public void CastingEnd()
     {
-        foreach (SpellModifier modifier in modifiers)
+        if(modifiers.Length > 0)
         {
-            modifier.BeamCastingEnd();
+            foreach (SpellModifier modifier in modifiers)
+            {
+                modifier.BeamCastingEnd();
+            }
         }
     }
 
@@ -288,11 +298,6 @@ public class Beam : Spell
         baseDamage += amount;
     }
 
-    public void ModifyRange(float amount)
-    {
-        baseRange += amount;
-    }
-
     public void ModifyRadius(float amount)
     {
         baseRadius += amount;
@@ -311,5 +316,7 @@ public class Beam : Spell
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(startPos, baseRadius * 0.5f);
     }
+
+    #endregion
 
 }

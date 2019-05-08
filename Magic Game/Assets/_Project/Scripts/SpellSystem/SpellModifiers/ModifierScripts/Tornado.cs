@@ -54,23 +54,22 @@ public class Tornado : MonoBehaviour
     void Update()
     {
 
-
         // move the objects on a circular trajectory
         foreach (Rigidbody rb in hitObjects)
         {
-
             if(rb != null)
             {
-                Vector3 normalizedDifference = (transform.position - rb.transform.position).normalized;
-                //Vector3 crossProd = Vector3.Cross(Vector3.up, normalizedDifference);
-                //rb.AddForce(crossProd * variables.strength);
+                var difference = transform.position - rb.transform.position;
+
+                if(difference.magnitude > variables.size * 0.5)
+                {
+                    rb.AddForce(difference.normalized * variables.pullInSpeed * rb.mass);
+                }
+
+                rb.transform.RotateAround(transform.position, transform.up, variables.rotateSpeed * Time.deltaTime);
                 rb.AddForce(Vector3.up * variables.strength * rb.mass);
                 rb.AddTorque(Vector3.up * variables.rotateSpeed * 0.2f);
-                //rb.AddForce(normalizedDifference * (transform.position - rb.transform.position).sqrMagnitude);
-                rb.transform.RotateAround(transform.position, transform.up, variables.rotateSpeed * Time.deltaTime);
-
             }
-
         }
 
         // also check if tornados strength is stronger than enemies will and ragdoll them
