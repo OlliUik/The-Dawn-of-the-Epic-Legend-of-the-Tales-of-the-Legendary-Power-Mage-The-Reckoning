@@ -1,10 +1,174 @@
 ﻿//using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class BossLizardKing : EnemyCore
+public class BossLizardKing : EnemyMagicRanged
 {
+    public enum EBossPattern
+    {
+        PROJECTILE,
+        BEAM,
+        AOE,
+        GROUND_SMASH,
+        DASH
+    }
+
+    [Header("Boss -> Behaviour")]
+    [SerializeField] private BossAttackPattern[] patterns;
+
+    private BossAttackPattern currentPattern;
+    private float patternTimer = 0.0f;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        isRanged = false;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        ApplyPattern(patterns[0]);
+
+        if (patterns.Length == 0)
+        {
+            Debug.LogError(this.gameObject + " has no patterns attached!");
+        }
+        else
+        {
+            for (int i = 0; i < patterns.Length; i++)
+            {
+                if (patterns[i] == null)
+                {
+                    Debug.LogWarning(this.gameObject + " pattern slot number " + i + " is empty!");
+                }
+            }
+        }
+    }
+
+    protected override void EnemyStateMachine()
+    {
+        switch (currentState)
+        {
+            case EState.DISABLED: break;
+            case EState.ATTACK: AIAttack(); break;
+            case EState.CASTING: AICasting(); break;
+            case EState.ESCAPE: AIAttack(); break;
+            default: currentState = EState.ATTACK; break;
+        }
+    }
+
+    private void ApplyRandomPattern()
+    {
+        ApplyPattern(patterns[Mathf.FloorToInt(Random.Range(0, patterns.Length))]);
+    }
+
+    private void ApplyPattern(BossAttackPattern pattern)
+    {
+        currentPattern = pattern;
+
+        //Spellcasting
+        cSpellBook.spells[0].spell = pattern.spell;
+        cSpellBook.spells[0].type = pattern.spellType;
+        cSpellBook.spells[0].cards.Clear();
+        if (pattern.cards.Length > 0)
+        {
+            bool canApply = true;
+
+            for (int i = 0; i < pattern.cards.Length; i++)
+            {
+                if (pattern.cards[i] == null)
+                {
+                    Debug.LogWarning(pattern + " has empty card slots!");
+                    canApply = false;
+                }
+            }
+
+            if (canApply)
+            {
+                cSpellBook.spells[0].cards.AddRange(pattern.cards);
+                Debug.Log("Cards applied successfully.");
+            }
+        }
+
+        switch (pattern.attackPattern)
+        {
+            case EBossPattern.PROJECTILE: attackAnimation = 0; break;
+            case EBossPattern.BEAM: attackAnimation = 1; break;
+            case EBossPattern.AOE: attackAnimation = 2; break;
+            default: attackAnimation = 0; break;
+        }
+
+        moveWhileCasting = pattern.moveWhileCasting;
+        standStillAfterCasting = pattern.standStillAfterCasting;
+        castInBursts = pattern.castInBursts;
+        castingTime = pattern.castingTime;
+        burstCount = pattern.burstCount;
+        timeBetweenCasts = pattern.timeBetweenCasts;
+        castingCooldown = pattern.castingCooldown;
+        
+        //Navigation
+        cNavigation.minDistanceFromAttackTarget = pattern.minDistanceFromAttackTarget;
+        cNavigation.walkingSpeed = pattern.walkingSpeed;
+        cNavigation.walkingAcceleration = pattern.walkingAcceleration;
+        cNavigation.runningSpeed = pattern.runningSpeed;
+        cNavigation.runningAcceleration = pattern.runningAcceleration;
+        cNavigation.panicSpeed = pattern.panicSpeed;
+        cNavigation.panicAcceleration = pattern.panicAcceleration;
+
+        Debug.Log("Pattern applied successfully.");
+    }
+
+    protected override void AIAttack()
+    {
+        if (cVision.bCanSeeTarget)
+        {
+            if ((transform.position - cVision.targetLocation).sqrMagnitude < currentPattern.attackDistance * currentPattern.attackDistance)
+            {
+                patternTimer = 0.0f;
+
+                if (castingCooldownTimer <= 0.0f)
+                {
+                    if (castInBursts)
+                    {
+                        shotsLeft = burstCount;
+                    }
+
+                    castingCooldownTimer = castingCooldown;
+                    castingTimer = castingTime;
+                    castStandStillTimer = standStillAfterCasting;
+                    animator.SetTrigger("Cast Spell");
+                    animator.SetInteger("Spell Type", attackAnimation);
+                    currentState = EState.CASTING;
+                }
+            }
+
+            patternTimer += logicInterval;
+            if (patternTimer > 8.0f)
+            {
+                Debug.Log(this.gameObject + " took too long to attack, switching pattern...");
+                patternTimer = 0.0f;
+                ApplyRandomPattern();
+            }
+        }
+    }
+
+    protected override void AICasting()
+    {
+        base.AICasting();
+
+        if (currentState == EState.ATTACK)
+        {
+            ApplyRandomPattern();
+        }
+
+        //if (currentPattern.attackPattern == EBossPattern.PROJECTILE)
+        //{
+        //}
+    }
+
     /*
       
      

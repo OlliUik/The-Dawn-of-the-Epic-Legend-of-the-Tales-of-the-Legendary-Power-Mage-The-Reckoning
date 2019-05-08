@@ -10,6 +10,7 @@ public class EnemyAnimations : MonoBehaviour
     [SerializeField] private EnemyCore cEnemyCore = null;
     [SerializeField] private float animationSpeedMultiplier = 0.1f;
     [SerializeField] private float animationBlendingMultiplier = 0.0625f;
+    [SerializeField] private float rotationOffset = 0.0f;
     
     private Animator cAnimator = null;
 
@@ -40,6 +41,8 @@ public class EnemyAnimations : MonoBehaviour
                     desiredAngle = angle;
                 }
             }
+
+            desiredAngle += rotationOffset;
 
             Quaternion slerp = Quaternion.Slerp(Quaternion.Euler(0.0f, angle, 0.0f), Quaternion.Euler(0.0f, desiredAngle, 0.0f), Time.deltaTime * 2);
 

@@ -7,17 +7,17 @@ public class EnemyNavigation : MonoBehaviour
     #region VARIABLES
 
     [Header("Movement Speed")]
-    [SerializeField] private float walkingSpeed = 5.0f;
-    [SerializeField] private float walkingAcceleration = 8.0f;
-    [SerializeField] private float runningSpeed = 10.0f;
-    [SerializeField] private float runningAcceleration = 8.0f;
-    [SerializeField] private float panicSpeed = 12.0f;
-    [SerializeField] private float panicAcceleration = 8.0f;
+    public float walkingSpeed = 5.0f;
+    public float walkingAcceleration = 8.0f;
+    public float runningSpeed = 10.0f;
+    public float runningAcceleration = 8.0f;
+    public float panicSpeed = 12.0f;
+    public float panicAcceleration = 8.0f;
     [Header("Navigation")]
     //[SerializeField] private bool moveWhileCasting = false;
     //[SerializeField] private float navigationInterval = 1.0f;
     //[SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
-    [SerializeField] private float minDistanceFromAttackTarget = 2.0f;
+    public float minDistanceFromAttackTarget = 2.0f;
     [SerializeField] private float paranoidMoveInterval = 1.0f;
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
     [SerializeField] private Vector3[] patrolPoints = null;
