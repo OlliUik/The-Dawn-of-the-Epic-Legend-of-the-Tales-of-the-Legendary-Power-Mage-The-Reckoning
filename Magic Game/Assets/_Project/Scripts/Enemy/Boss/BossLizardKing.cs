@@ -2,6 +2,10 @@
 //using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class BossLizardKing : EnemyMagicRanged
 {
     public enum EBossPattern
@@ -13,8 +17,18 @@ public class BossLizardKing : EnemyMagicRanged
         DASH
     }
 
+    [System.Serializable]
+    private class PatternPreference
+    {
+        public Color color = Color.yellow;
+        public Vector2 range = Vector2.up;
+        public BossAttackPattern[] patterns = null;
+    }
+
     [Header("Boss -> Behaviour")]
-    [SerializeField] private BossAttackPattern[] patterns;
+    [SerializeField] private BossAttackPattern defaultPattern;
+    [SerializeField] private PatternPreference[] patternPreferences;
+    //[SerializeField] private BossAttackPattern[] patterns;
 
     private BossAttackPattern currentPattern;
     private float patternTimer = 0.0f;
@@ -30,22 +44,53 @@ public class BossLizardKing : EnemyMagicRanged
     {
         base.Start();
 
-        ApplyPattern(patterns[0]);
+        //ApplyPattern(patterns[0]);
+        ApplyRandomPattern();
 
-        if (patterns.Length == 0)
+        //if (patterns.Length == 0)
+        //{
+        //    Debug.LogError(this.gameObject + " has no patterns attached!");
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < patterns.Length; i++)
+        //    {
+        //        if (patterns[i] == null)
+        //        {
+        //            Debug.LogWarning(this.gameObject + " pattern slot number " + i + " is empty!");
+        //        }
+        //    }
+        //}
+    }
+
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+
+        #if UNITY_EDITOR
+        for (int i = 0; i < patternPreferences.Length; i++)
         {
-            Debug.LogError(this.gameObject + " has no patterns attached!");
+            //Gizmos.color = patternPreferences[i].color;
+            //Gizmos.DrawWireSphere(transform.position, patternPreferences[i].range.x);
+            //Gizmos.DrawWireSphere(transform.position, patternPreferences[i].range.y);
+            Handles.color = patternPreferences[i].color;
+            Handles.DrawWireDisc(transform.position + Vector3.up * i * 0.1f, Vector3.up, patternPreferences[i].range.x);
+            Handles.DrawWireDisc(transform.position + Vector3.up * i * 0.1f, Vector3.up, patternPreferences[i].range.y);
         }
-        else
-        {
-            for (int i = 0; i < patterns.Length; i++)
-            {
-                if (patterns[i] == null)
-                {
-                    Debug.LogWarning(this.gameObject + " pattern slot number " + i + " is empty!");
-                }
-            }
-        }
+        #endif
+    }
+
+    public override void OnDeath()
+    {
+        currentState = EState.DISABLED;
+        GlobalVariables.teamBadBoys.Remove(this.gameObject);
+
+        //Detach the enemy model and ragdoll it
+        //animator.enabled = false;
+        //animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false);
+        //animator.transform.parent = null;
+
+        Destroy(this.gameObject);
     }
 
     protected override void EnemyStateMachine()
@@ -62,7 +107,53 @@ public class BossLizardKing : EnemyMagicRanged
 
     private void ApplyRandomPattern()
     {
-        ApplyPattern(patterns[Mathf.FloorToInt(Random.Range(0, patterns.Length))]);
+        //Initialize counter
+        int counter = 0;
+
+        //Find the amount of all possible patterns, and initialize array with that amount
+        for (int i = 0; i < patternPreferences.Length; i++)
+        {
+            counter += patternPreferences[i].patterns.Length;
+        }
+        BossAttackPattern[] possiblePatterns = new BossAttackPattern[counter];
+
+        //Reset counter, so it can be re-used
+        counter = 0;
+        
+        //If player is within a certain range, add all the patterns in that range to possible patterns
+        for (int outerLoop = 0; outerLoop < patternPreferences.Length; outerLoop++)
+        {
+            if ((transform.position - cVision.targetLocation).sqrMagnitude > patternPreferences[outerLoop].range.x * patternPreferences[outerLoop].range.x
+                && (transform.position - cVision.targetLocation).sqrMagnitude < patternPreferences[outerLoop].range.y * patternPreferences[outerLoop].range.y)
+            {
+                for (int innerLoop = 0; innerLoop < patternPreferences[outerLoop].patterns.Length; innerLoop++)
+                {
+                    possiblePatterns[counter] = patternPreferences[outerLoop].patterns[innerLoop];
+                    counter++;
+                }
+            }
+        }
+
+        if (counter == 0)
+        {
+            if (defaultPattern != null)
+            {
+                Debug.LogWarning(this.gameObject + " found no fitting pattern, using the default one...");
+                ApplyPattern(defaultPattern);
+                return;
+            }
+            else
+            {
+                Debug.LogError(this.gameObject + " couldn't find any fitting patterns, and is missing default pattern!");
+                currentState = EState.DISABLED;
+                return;
+            }
+        }
+        else
+        {
+            //Apply a random pattern from the list of possible patterns
+            ApplyPattern(possiblePatterns[Mathf.RoundToInt(Random.Range(0, counter))]);
+        }
     }
 
     private void ApplyPattern(BossAttackPattern pattern)

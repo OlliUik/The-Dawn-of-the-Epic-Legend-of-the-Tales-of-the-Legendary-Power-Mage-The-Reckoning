@@ -164,13 +164,17 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    protected void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         #if UNITY_EDITOR
         Handles.Label(transform.position + Vector3.up * 2.0f, currentState.ToString());
-        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
-        Gizmos.DrawWireSphere(transform.position, hearingRadius);
 
+        if (hearingEnabled)
+        {
+            Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
+            Gizmos.DrawWireSphere(transform.position, hearingRadius);
+        }
+        
         if (!alwaysAggressive)
         {
             Gizmos.color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
@@ -253,7 +257,7 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    public void OnDeath()
+    public virtual void OnDeath()
     {
         currentState = EState.DISABLED;
         GlobalVariables.teamBadBoys.Remove(this.gameObject);

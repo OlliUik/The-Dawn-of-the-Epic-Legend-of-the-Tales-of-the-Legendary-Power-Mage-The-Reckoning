@@ -15024,7 +15024,12 @@ PrefabInstance:
     - target: {fileID: 1082199312328366950, guid: 2843230fe793fe74193e5fe093c4c5dc,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184593870089929805, guid: 2843230fe793fe74193e5fe093c4c5dc,
+        type: 3}
+      propertyPath: ragdollDamageThreshold
+      value: 999
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2843230fe793fe74193e5fe093c4c5dc, type: 3}
@@ -21252,10 +21257,16 @@ MonoBehaviour:
   burstCount: 3
   timeBetweenCasts: 0.2
   castingCooldown: 4
-  patterns:
-  - {fileID: 11400000, guid: b72970acb73bae54a98e58b025b094b3, type: 2}
-  - {fileID: 11400000, guid: 3e075217f4c4d9b478a850bae06f8661, type: 2}
-  - {fileID: 11400000, guid: bfe68b83756a65a418b887f2cac508b3, type: 2}
+  defaultPattern: {fileID: 0}
+  patternPreferences:
+  - color: {r: 1, g: 0, b: 0.81786346, a: 1}
+    range: {x: 0, y: Infinity}
+    patterns:
+    - {fileID: 11400000, guid: b72970acb73bae54a98e58b025b094b3, type: 2}
+  - color: {r: 0, g: 1, b: 0.09538126, a: 1}
+    range: {x: 0, y: 20}
+    patterns:
+    - {fileID: 11400000, guid: bfe68b83756a65a418b887f2cac508b3, type: 2}
 --- !u!114 &7168203294307725247
 MonoBehaviour:
   m_ObjectHideFlags: 0
