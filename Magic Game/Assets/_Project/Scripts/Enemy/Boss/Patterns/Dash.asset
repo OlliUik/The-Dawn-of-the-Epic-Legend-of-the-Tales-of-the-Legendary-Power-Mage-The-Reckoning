@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81d1dd9de5de699458252f2dd86ccc70, type: 3}
-  m_Name: Beam
+  m_Name: Dash
   m_EditorClassIdentifier: 
-  behaviourName: Beam
-  behaviourDescription: Currently bugged, beam continues to fire only when the player
-    holds left mouse button down.
-  spellType: 2
-  spell: {fileID: 3627455154893943791, guid: dc13a6c579e0b3548b314807f492158a, type: 3}
+  behaviourName: Dash
+  behaviourDescription: Not really a spell, but rather executes special functionality.
+  spellType: 0
+  spell: {fileID: 0}
   cards: []
-  attackPattern: 2
-  attackDistance: 50
-  moveWhileCasting: 1
-  standStillAfterCasting: 4
+  attackPattern: 5
+  attackDistance: 500
+  moveWhileCasting: 0
+  standStillAfterCasting: 0
   castInBursts: 0
   castingTime: 2
   burstCount: 3

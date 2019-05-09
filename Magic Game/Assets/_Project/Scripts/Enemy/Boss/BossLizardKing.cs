@@ -1,4 +1,4 @@
-﻿//using System.Collections;
+﻿using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +11,7 @@ public class BossLizardKing : EnemyMagicRanged
     public enum EBossPattern
     {
         PROJECTILE,
+        PROJECTILE_BEAM_ANIM,
         BEAM,
         AOE,
         GROUND_SMASH,
@@ -187,8 +188,10 @@ public class BossLizardKing : EnemyMagicRanged
         switch (pattern.attackPattern)
         {
             case EBossPattern.PROJECTILE: attackAnimation = 0; break;
+            case EBossPattern.PROJECTILE_BEAM_ANIM: attackAnimation = 1; break;
             case EBossPattern.BEAM: attackAnimation = 1; break;
             case EBossPattern.AOE: attackAnimation = 2; break;
+            case EBossPattern.DASH: attackAnimation = 4; break;
             default: attackAnimation = 0; break;
         }
 
@@ -226,12 +229,17 @@ public class BossLizardKing : EnemyMagicRanged
                     {
                         shotsLeft = burstCount;
                     }
+                    else
+                    {
+                        shotsLeft = 1;
+                    }
 
                     castingCooldownTimer = castingCooldown;
                     castingTimer = castingTime;
                     castStandStillTimer = standStillAfterCasting;
                     animator.SetTrigger("Cast Spell");
                     animator.SetInteger("Spell Type", attackAnimation);
+                    animator.SetInteger("Casts Left", shotsLeft);
                     currentState = EState.CASTING;
                 }
             }
@@ -248,16 +256,91 @@ public class BossLizardKing : EnemyMagicRanged
 
     protected override void AICasting()
     {
-        base.AICasting();
+        switch (currentPattern.attackPattern)
+        {
+            case EBossPattern.PROJECTILE_BEAM_ANIM:
+                {
+                    /*------------------------------------------------------------------------------------*/
+                    
+                    if (castingTimer <= 0.0f)
+                    {
+                        if (shotsLeft > 0)
+                        {
+                            cSpellBook.CastSpell(0);
+                            shotsLeft--;
+                            animator.SetInteger("Casts Left", shotsLeft);
+
+                            if (!cVision.bCanSeeTarget)
+                            {
+                                bCastedProjectile = false;
+                                currentState = EState.ATTACK;
+                                castingCooldownTimer *= 0.25f;
+                                return;
+                            }
+                            castingTimer = timeBetweenCasts;
+                        }
+                        else
+                        {
+                            if (castStandStillTimer <= 0.0f)
+                            {
+                                bCastedProjectile = false;
+                                currentState = EState.ATTACK;
+                            }
+                        }
+                    }
+                    else if (!bCastedProjectile)
+                    {
+                        bCastedProjectile = true;
+                        animator.SetTrigger("Release Hold");
+                    }
+
+                    /*------------------------------------------------------------------------------------*/
+
+                    break;
+                }
+            case EBossPattern.DASH:
+                {
+                    /*------------------------------------------------------------------------------------*/
+
+                    if (!bCastedProjectile)
+                    {
+                        bCastedProjectile = true;
+                        StartCoroutine("DashCoroutine");
+                    }
+
+                    /*------------------------------------------------------------------------------------*/
+
+                    break;
+                }
+            default:
+                {
+                    base.AICasting();
+                    break;
+                }
+        }
 
         if (currentState == EState.ATTACK)
         {
             ApplyRandomPattern();
         }
+    }
 
-        //if (currentPattern.attackPattern == EBossPattern.PROJECTILE)
-        //{
-        //}
+    IEnumerator DashCoroutine()
+    {
+        cNavigation.cAgent.ResetPath();
+        cNavigation.cAgent.enabled = false;
+        GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<Rigidbody>().velocity = (cVision.targetLocation - transform.position).normalized * 25.0f;
+
+        yield return new WaitForSeconds(castingTime);
+
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().isKinematic = true;
+        cNavigation.cAgent.enabled = true;
+        bCastedProjectile = false;
+        currentState = EState.ATTACK;
+
+        yield return null;
     }
 
     /*

@@ -59,7 +59,7 @@ public class EnemyNavigation : MonoBehaviour
             case EnemyCore.EState.RAGDOLLED: break;
             default: if (cAgent.hasPath) cAgent.ResetPath(); break;
         }
-
+        
         if (cEnemyCore.currentState == EnemyCore.EState.IDLE
             || cEnemyCore.currentState == EnemyCore.EState.PATROL
             || cEnemyCore.currentState == EnemyCore.EState.PARANOID
@@ -87,6 +87,10 @@ public class EnemyNavigation : MonoBehaviour
         {
             cAgent.stoppingDistance = 0.0f;
         }
+
+        //When walking away from player, give more acceleration
+        float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
+        cAgent.acceleration += accel;
     }
 
     //void Update()

@@ -33,11 +33,16 @@ public class EnemyMagicMelee : EnemyMagicRanged
                 if (castInBursts)
                 {
                     shotsLeft = burstCount;
+                    castStandStillTimer = castingTime + timeBetweenCasts * burstCount + standStillAfterCasting;
+                }
+                else
+                {
+                    castStandStillTimer = castingTime + standStillAfterCasting;
                 }
 
                 castingCooldownTimer = castingCooldown;
                 castingTimer = castingTime;
-                castStandStillTimer = standStillAfterCasting;
+                
                 animator.SetTrigger("Cast Spell");
                 animator.SetInteger("Spell Type", attackAnimation);
                 currentState = EState.CASTING;

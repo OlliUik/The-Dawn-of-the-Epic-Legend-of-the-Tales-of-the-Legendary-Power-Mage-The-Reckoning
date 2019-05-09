@@ -15,32 +15,49 @@ public class EnemyMagicRanged : EnemyRanged
     {
         if (castingTimer <= 0.0f)
         {
-            if (!bCastedProjectile)
+            if (shotsLeft > 0)
             {
                 cSpellBook.CastSpell(0);
-                bCastedProjectile = true;
-            }
+                animator.SetTrigger("Release Hold");
+                shotsLeft--;
+                animator.SetInteger("Casts Left", shotsLeft);
 
-            if (shotsLeft > 1)
-            {
                 if (!cVision.bCanSeeTarget)
                 {
                     currentState = EState.ATTACK;
                     castingCooldownTimer *= 0.25f;
                     return;
                 }
-
-                animator.SetTrigger("Interrupt Spell");
-                animator.SetTrigger("Cast Spell");
-                bCastedProjectile = false;
                 castingTimer = timeBetweenCasts;
-                shotsLeft--;
             }
-            else if (castStandStillTimer <= 0.0f)
+            else
             {
-                bCastedProjectile = false;
-                currentState = EState.ATTACK;
+                if (castStandStillTimer <= 0.0f)
+                {
+                    currentState = EState.ATTACK;
+                }
             }
+
+            //if (shotsLeft > 1)
+            //{
+            //    if (!cVision.bCanSeeTarget)
+            //    {
+            //        currentState = EState.ATTACK;
+            //        castingCooldownTimer *= 0.25f;
+            //        return;
+            //    }
+
+            //    animator.SetTrigger("Interrupt Spell");
+            //    animator.SetTrigger("Cast Spell");
+            //    bCastedProjectile = false;
+                
+            //    shotsLeft--;
+            //}
+            //else if (castStandStillTimer <= 0.0f)
+            //{
+            //    bCastedProjectile = false;
+            //    currentState = EState.ATTACK;
+            //}
         }
     }
 }
