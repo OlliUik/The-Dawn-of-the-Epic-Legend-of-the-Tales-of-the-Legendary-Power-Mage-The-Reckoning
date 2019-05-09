@@ -190,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Move(float inputX, float inputY, bool inputJump, bool inputDash)
+    public void Move(float inputX, float inputY, bool inputJump, bool inputDash)
     {
         dt = Time.fixedDeltaTime;
 
@@ -428,6 +428,11 @@ public class PlayerMovement : MonoBehaviour
         {
             cCharacter.Move(finalMovement);
         }
+    }
+
+    public void Move(Vector3 direction)
+    {
+        cCharacter.Move(direction);
     }
 
     void CalculateMovingPlatform()

@@ -6,26 +6,26 @@ using UnityEngine;
 public class LaunchModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private float aoeForce = 10f;
-    [SerializeField] private float beamForce = 10f;
-    [SerializeField] private float projectileForce = 100f;
+    [SerializeField] private float aoeForce         = 10f;
+    [SerializeField] private float beamForce        = 10f;
+    [SerializeField] private float projectileForce  = 100f;
 
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        var component = spellObject.GetComponent<Launch>();
+        var component = spell.GetComponent<Launch>();
         if(component != null)
         {
-            component.aoeForce += aoeForce;
-            component.beamForce += beamForce;
-            component.projectileForce += projectileForce;
+            component.aoeForce          += aoeForce;
+            component.beamForce         += beamForce;
+            component.projectileForce   += projectileForce;
             return;
         }
 
-        Launch launch = spellObject.AddComponent<Launch>();
-        launch.aoeForce = aoeForce;
-        launch.beamForce = beamForce;
-        launch.projectileForce = projectileForce;
+        Launch launch                   = spell.gameObject.AddComponent<Launch>();
+        launch.aoeForce                 = aoeForce;
+        launch.beamForce                = beamForce;
+        launch.projectileForce          = projectileForce;
     }
 
 }

@@ -9,9 +9,9 @@ public class WhirlwindModifier : SpellScriptableModifier
     public WhirlwindVariables variables;
     public GameObject tornadoPrefab;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        var compo = spellObject.GetComponent<Whirlwind>();
+        var compo = spell.GetComponent<Whirlwind>();
         if (compo != null)
         {
             compo.variables.duration += variables.duration;
@@ -19,7 +19,7 @@ public class WhirlwindModifier : SpellScriptableModifier
             return;
         }
 
-        Whirlwind component = spellObject.AddComponent<Whirlwind>();
+        Whirlwind component = spell.gameObject.AddComponent<Whirlwind>();
         component.tornadoPrefab = tornadoPrefab;
         component.variables = variables;
     }

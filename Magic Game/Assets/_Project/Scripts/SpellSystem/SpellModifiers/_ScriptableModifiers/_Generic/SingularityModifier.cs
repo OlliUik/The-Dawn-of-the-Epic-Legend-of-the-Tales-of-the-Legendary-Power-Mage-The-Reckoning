@@ -9,16 +9,16 @@ public class SingularityModifier : SpellScriptableModifier
     public GameObject singularityPrefab = null;
     public BlackHoleVariables variables;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        var compo = spellObject.GetComponent<Singularity>();
+        var compo = spell.GetComponent<Singularity>();
         if (compo != null)
         {
             // do what
             return;
         }
 
-        Singularity component = spellObject.AddComponent<Singularity>();
+        Singularity component = spell.gameObject.AddComponent<Singularity>();
         component.singularityPrefab = singularityPrefab;
         component.variables = variables;
     }

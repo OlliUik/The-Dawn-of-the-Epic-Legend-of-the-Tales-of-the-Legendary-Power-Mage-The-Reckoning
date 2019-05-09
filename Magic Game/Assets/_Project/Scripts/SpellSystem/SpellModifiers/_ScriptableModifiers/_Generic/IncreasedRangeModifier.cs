@@ -8,9 +8,8 @@ public class IncreasedRangeModifier : SpellScriptableModifier
 
     [SerializeField] private float increaseAmount = 5f;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Spell spell = spellObject.GetComponent<Spell>();
         spell.ModifyRange(increaseAmount);
     }
 }

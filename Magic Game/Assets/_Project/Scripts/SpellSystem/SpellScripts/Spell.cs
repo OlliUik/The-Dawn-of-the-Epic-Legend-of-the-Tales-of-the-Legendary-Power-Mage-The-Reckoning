@@ -70,7 +70,7 @@ public class Spell : MonoBehaviour
             // add all modifiers to spell
             foreach (SpellScriptableModifier modifier in card.modifiers)
             {
-                modifier.AddSpellModifier(go);
+                modifier.AddSpellModifier(spell);
                 print("Added: " + modifier.name);
             }
 

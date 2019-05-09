@@ -8,10 +8,13 @@ public class AoeDurationModifier : SpellScriptableModifier
 
     [SerializeField] private float extraDuration = 0f;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Aoe aoe = spellObject.GetComponent<Aoe>();
-        aoe.ModifyDuration(extraDuration);
+        if(spell.spellType == SpellType.AOE)
+        {
+            Aoe aoe = (Aoe)spell;
+            aoe.ModifyDuration(extraDuration);
+        }
     }
 
 }

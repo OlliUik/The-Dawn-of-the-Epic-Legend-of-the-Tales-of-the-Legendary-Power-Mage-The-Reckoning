@@ -12,10 +12,8 @@ public class MoisturizeModifier : SpellScriptableModifier
     [SerializeField] private float size = 1.0f;
 
     // When spell is casted this gets called --> Add this effect to the spell
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Spell spell = spellObject.GetComponent<Spell>();
-
         // check if freeze already exist if so --> modify values only
         var moisturize = (MoisturizeEffect)spell.statusEffects.Find(x => x.GetType() == typeof(MoisturizeEffect));
         if (moisturize != null)

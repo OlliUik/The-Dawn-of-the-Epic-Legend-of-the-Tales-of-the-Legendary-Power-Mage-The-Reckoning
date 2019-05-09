@@ -30,6 +30,11 @@ public class Homing : SpellModifier
             target = FindClosestTarget();
         }
 
+        if(target == null)
+        {
+            return;
+        }
+
         float step = rotationSpeed * Time.deltaTime;
 
         Vector3 targetDir = target.transform.position + offset - transform.position;

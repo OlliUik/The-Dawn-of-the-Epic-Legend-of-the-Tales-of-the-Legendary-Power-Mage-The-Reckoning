@@ -8,9 +8,16 @@ public class HomingModifier : SpellScriptableModifier
 
     [SerializeField] private float rotationSpeed = 2.0f;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Homing component = spellObject.AddComponent<Homing>();
+        Homing comp = spell.GetComponent<Homing>();
+        if(comp != null)
+        {
+            comp.rotationSpeed += rotationSpeed;
+            // what else
+        }
+
+        Homing component = spell.gameObject.AddComponent<Homing>();
         component.rotationSpeed = rotationSpeed;
     }
 }

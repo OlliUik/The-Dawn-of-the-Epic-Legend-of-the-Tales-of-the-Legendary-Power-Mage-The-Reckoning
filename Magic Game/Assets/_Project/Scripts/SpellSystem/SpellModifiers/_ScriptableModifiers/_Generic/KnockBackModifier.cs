@@ -10,16 +10,18 @@ public class KnockBackModifier : SpellScriptableModifier
     [SerializeField] private float beamForce = 10f;
     [SerializeField] private float projectileForce = 100f;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        var compo = spellObject.GetComponent<KnockBack>();
+        var compo = spell.GetComponent<KnockBack>();
         if (compo != null)
         {
-            // do what
+            compo.aoeForce += aoeForce;
+            compo.beamForce += beamForce;
+            compo.projectileForce += projectileForce;
             return;
         }
 
-        KnockBack component = spellObject.AddComponent<KnockBack>();
+        KnockBack component = spell.gameObject.AddComponent<KnockBack>();
         component.aoeForce = aoeForce;
         component.beamForce = beamForce;
         component.projectileForce = projectileForce;

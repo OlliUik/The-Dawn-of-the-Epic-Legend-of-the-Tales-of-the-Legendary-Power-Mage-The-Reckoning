@@ -10,10 +10,8 @@ public class StackingDamageModifier : SpellScriptableModifier
     [SerializeField] private float extraDamage      = 2.5f;
     [SerializeField] private GameObject graphics    = null;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Spell spell = spellObject.GetComponent<Spell>();
-
         // check if stackingDamage already exist if so --> modify values only
         var stackingDamage = (StackingDamageEffect)spell.statusEffects.Find(x => x.GetType() == typeof(StackingDamageEffect));
         if (stackingDamage != null)
