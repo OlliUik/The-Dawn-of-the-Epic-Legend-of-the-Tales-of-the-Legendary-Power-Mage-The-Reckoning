@@ -7,6 +7,7 @@ public class TransformTo : SpellModifier
 
     public GameObject transformPrefab { get; set; }
     public float duration;
+    public GameObject transformationParticles { get; set; }
 
     public override void AoeCollide(GameObject hitObject)
     {
@@ -17,6 +18,8 @@ public class TransformTo : SpellModifier
             Transformation tempTransform = Instantiate(transformPrefab, hitObject.transform.position, hitObject.transform.rotation).GetComponent<Transformation>();
             tempTransform.TransformedObject = hitObject;
             tempTransform.Duration = duration;
+            tempTransform.transformationParticles = transformationParticles;
+            Instantiate(transformationParticles, hitObject.transform.position, hitObject.transform.rotation);
         }
     }
 
@@ -34,6 +37,8 @@ public class TransformTo : SpellModifier
             Transformation tempTransform = Instantiate(transformPrefab, rb.transform.position, rb.transform.rotation).GetComponent<Transformation>();
             tempTransform.TransformedObject = collision.gameObject;
             tempTransform.Duration = duration;
+            tempTransform.transformationParticles = transformationParticles;
+            Instantiate(transformationParticles, collision.contacts[0].point, collision.gameObject.transform.rotation);
         }
     }
 }

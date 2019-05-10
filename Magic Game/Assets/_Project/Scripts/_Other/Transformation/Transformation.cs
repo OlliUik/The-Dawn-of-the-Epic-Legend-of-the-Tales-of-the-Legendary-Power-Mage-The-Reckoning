@@ -7,6 +7,7 @@ public class Transformation : MonoBehaviour
 
     public float Duration { get; set; } = 5f;
     public GameObject TransformedObject { get; set; } = null;
+    public GameObject transformationParticles = null;
 
 
     protected virtual void Start()
@@ -28,6 +29,10 @@ public class Transformation : MonoBehaviour
                 TransformedObject.SetActive(true);
             }
             // particles before destroying etc
+            if(transformationParticles != null)
+            {
+                Instantiate(transformationParticles, transform.position, Quaternion.identity);
+            }
             Destroy(gameObject);
         }
     }

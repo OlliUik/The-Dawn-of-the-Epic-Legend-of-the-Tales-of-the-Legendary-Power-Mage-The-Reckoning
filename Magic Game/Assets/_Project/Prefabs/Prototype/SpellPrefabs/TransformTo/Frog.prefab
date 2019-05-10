@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fc5bf7ae1a3de4387263478d24a1a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transformationParticles: {fileID: 0}
+  jumpForce: 5
+  timeBeteenJumps: 2
 --- !u!54 &8038120733611399403
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -146,7 +149,8 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: a2d430b39105028439a6c1f2591414c4, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6400000, guid: 3384d84c236b6d2488c259662f2af355, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3384d84c236b6d2488c259662f2af355, type: 3}
 --- !u!4 &7104555436420445824 stripped
 Transform:

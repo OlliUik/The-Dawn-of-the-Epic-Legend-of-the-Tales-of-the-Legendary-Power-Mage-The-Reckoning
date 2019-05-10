@@ -8,6 +8,7 @@ public class Frog : Transformation
 
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float timeBeteenJumps = 2f;
+
     private float jumpTimer;
     private Rigidbody rb;
 

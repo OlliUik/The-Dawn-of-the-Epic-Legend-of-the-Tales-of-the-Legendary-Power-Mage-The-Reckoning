@@ -7,7 +7,8 @@ public class TransformToModifier : SpellScriptableModifier
 {
 
     [SerializeField] private GameObject transformToPrefab = null;
-    [SerializeField] private float duration;
+    [SerializeField] private float duration = 5f;
+    [SerializeField] private GameObject transformationParticles = null;
 
     public override void AddSpellModifier(Spell spell)
     {
@@ -21,5 +22,6 @@ public class TransformToModifier : SpellScriptableModifier
         var compo = spell.gameObject.AddComponent<TransformTo>();
         compo.transformPrefab = transformToPrefab;
         compo.duration = duration;
+        compo.transformationParticles = transformationParticles;
     }
 }
