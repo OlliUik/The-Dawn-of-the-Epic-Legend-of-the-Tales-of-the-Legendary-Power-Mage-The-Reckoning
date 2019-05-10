@@ -11,34 +11,30 @@ public class TransformTo : SpellModifier
 
     public override void AoeCollide(GameObject hitObject)
     {
-        var rb = hitObject.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            hitObject.SetActive(false);
-            Transformation tempTransform = Instantiate(transformPrefab, hitObject.transform.position, hitObject.transform.rotation).GetComponent<Transformation>();
-            tempTransform.TransformedObject = hitObject;
-            tempTransform.Duration = duration;
-            tempTransform.transformationParticles = transformationParticles;
-            Instantiate(transformationParticles, hitObject.transform.position, hitObject.transform.rotation);
-        }
+        InitTransformation(hitObject);
     }
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
-        
+        InitTransformation(hitInfo.collider.gameObject);
     }
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        var rb = collision.gameObject.GetComponent<Rigidbody>();
-        if (rb != null)
+        InitTransformation(collision.gameObject);
+    }
+
+    private void InitTransformation(GameObject orginal)
+    {
+        if(orginal.GetComponent<Rigidbody>() != null && orginal.transform.GetComponent<Transformation>() == null && orginal.transform.parent == null)
         {
-            rb.gameObject.SetActive(false);
-            Transformation tempTransform = Instantiate(transformPrefab, rb.transform.position, rb.transform.rotation).GetComponent<Transformation>();
-            tempTransform.TransformedObject = collision.gameObject;
-            tempTransform.Duration = duration;
+            orginal.SetActive(false);
+            Transformation tempTransform = Instantiate(transformPrefab, orginal.transform.position, Quaternion.identity).GetComponent<Transformation>();
+            tempTransform.TransformedObject = orginal;
+            tempTransform.duration = duration;
             tempTransform.transformationParticles = transformationParticles;
-            Instantiate(transformationParticles, collision.contacts[0].point, collision.gameObject.transform.rotation);
+            Instantiate(transformationParticles, orginal.transform.position, Quaternion.identity);
         }
     }
+
 }

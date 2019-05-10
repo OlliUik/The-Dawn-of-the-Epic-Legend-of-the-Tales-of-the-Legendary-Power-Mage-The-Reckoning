@@ -6,6 +6,8 @@ using UnityEngine;
 public class Beam : Spell
 {
 
+    // TODO:: Make the beam collide with explosive casks
+
     #region Variables
 
     [Header("-- Beam --")]

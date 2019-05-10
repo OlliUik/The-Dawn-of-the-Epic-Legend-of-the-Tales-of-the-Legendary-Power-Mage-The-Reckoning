@@ -5,17 +5,18 @@ using UnityEngine;
 public class Transformation : MonoBehaviour
 {
 
-    public float Duration { get; set; } = 5f;
+    public float duration = 5f;
     public GameObject TransformedObject { get; set; } = null;
-    public GameObject transformationParticles = null;
+    public GameObject transformationParticles { get; set; } = null;
+    private float timer;
 
 
     protected virtual void Start()
     {
-        timer = Duration;
+        timer = duration;
     }
 
-    private float timer;
+    // wait the duration of the transformation and reactivate the orginal object if we still have it
     protected virtual void Update()
     {
         timer -= Time.deltaTime;

@@ -11,7 +11,7 @@ public class Whirlwind : SpellModifier
 
     public override void OnSpellCast(Spell spell)
     {
-        if(spell.GetType() == typeof(Aoe))
+        if(spell.spellType == SpellType.AOE)
         {
             GameObject tornado = Instantiate(tornadoPrefab, spell.caster.transform.position, spell.caster.transform.rotation);
             tornado.transform.SetParent(spell.caster.transform);
