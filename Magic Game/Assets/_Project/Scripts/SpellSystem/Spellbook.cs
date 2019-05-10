@@ -187,6 +187,10 @@ public class Spellbook : MonoBehaviour
         return castingTime;
     }
 
+
+    /// This func should be called when some spell is about to be casted
+    /// We should pass an animation as parameter (how the spell is charged)
+    /// After charging the spell the animation can call "CastSpell()" with anim event
     private IEnumerator StartCastingSpell(int spellIndex)
     {
         isCasting = true;

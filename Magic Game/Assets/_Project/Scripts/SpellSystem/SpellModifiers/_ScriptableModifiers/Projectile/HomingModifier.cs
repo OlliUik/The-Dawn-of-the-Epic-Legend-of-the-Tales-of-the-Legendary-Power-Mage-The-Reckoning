@@ -6,6 +6,7 @@ using UnityEngine;
 public class HomingModifier : SpellScriptableModifier
 {
 
+    [SerializeField] private float maxAngle = 20f;
     [SerializeField] private float rotationSpeed = 2.0f;
 
     public override void AddSpellModifier(Spell spell)
@@ -14,10 +15,10 @@ public class HomingModifier : SpellScriptableModifier
         if(comp != null)
         {
             comp.rotationSpeed += rotationSpeed;
-            // what else
         }
 
         Homing component = spell.gameObject.AddComponent<Homing>();
         component.rotationSpeed = rotationSpeed;
+        component.maxAngle = maxAngle;
     }
 }

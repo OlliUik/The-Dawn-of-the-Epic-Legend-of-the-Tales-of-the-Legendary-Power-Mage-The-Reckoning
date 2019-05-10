@@ -35,7 +35,7 @@ public class PushBack : SpellModifier
         }
     }
 
-    private void PushTargetBackwards(float force)
+    private void PushTargetBackwards(float force) // doesn't work so well with projectile yet plz fix
     {
         Vector3 direction = spellbook.GetDirection();
         direction *= -1;
