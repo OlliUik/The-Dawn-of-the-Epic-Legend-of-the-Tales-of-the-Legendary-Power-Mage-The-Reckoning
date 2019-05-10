@@ -20,10 +20,9 @@ public class Split : SpellModifier
 
         for (int i = 0; i < splitCount; i++)
         {
-
             Vector3 dir = collision.contacts[0].normal;
             dir = Quaternion.AngleAxis(UnityEngine.Random.Range(-70.0f, 70.0f) * (i + 1), dir) * dir;
-            Quaternion rot = Quaternion.LookRotation(dir);
+            Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
             Vector3 rotatedDir = Vector3.zero;
 
             if (i < splitCount * 0.5)
@@ -41,6 +40,13 @@ public class Split : SpellModifier
 
             copy.caster = proj.caster;
             copy.isMaster = false;
+
+            var homing = copy.GetComponent<Homing>();
+            if (homing != null)
+            {
+                homing.Start();
+                homing.target = homing.FindClosestTarget();
+            }
         }
 
     }

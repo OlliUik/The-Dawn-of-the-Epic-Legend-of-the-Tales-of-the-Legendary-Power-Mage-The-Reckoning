@@ -61,14 +61,14 @@ public class Tornado : MonoBehaviour
             {
                 var difference = transform.position - rb.transform.position;
 
-                if(difference.magnitude > variables.size * 0.5)
+                if(difference.magnitude > variables.size * 0.25)
                 {
                     rb.AddForce(difference.normalized * variables.pullInSpeed * rb.mass);
                 }
 
                 rb.transform.RotateAround(transform.position, transform.up, variables.rotateSpeed * Time.deltaTime);
                 rb.AddForce(Vector3.up * variables.strength * rb.mass);
-                rb.AddTorque(Vector3.up * variables.rotateSpeed * 0.2f);
+                rb.AddTorque(Vector3.up * variables.rotateSpeed);
             }
         }
 

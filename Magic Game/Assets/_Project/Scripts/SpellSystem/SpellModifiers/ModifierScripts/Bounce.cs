@@ -22,12 +22,19 @@ public class Bounce : SpellModifier
         if (bounce == null || bounceCount <= 0) return;
 
         Vector3 reflectionDir = Vector3.Reflect(direction, collision.contacts[0].normal);
-        Quaternion rot = Quaternion.Euler(reflectionDir);
+        Quaternion rot = Quaternion.LookRotation(reflectionDir, Vector3.up);
         Projectile copy = Instantiate(gameObject, transform.position, rot).GetComponent<Projectile>();
         copy.name = "Bounce copy";
         copy.direction = reflectionDir;
         copy.GetComponent<Bounce>().bounceCount--;
         copy.isMaster = false;
+
+        var homing = copy.GetComponent<Homing>();
+        if(homing != null)
+        {
+            homing.Start();
+            homing.target = homing.FindClosestTarget();
+        }
     }
 
     /// <summary>

@@ -121,7 +121,6 @@ public class Projectile : Spell
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
-        projectile.transform.rotation = Quaternion.FromToRotation(projectile.transform.forward, direction);
         projectile.direction = direction;
         projectile.caster = spellbook.gameObject;
         projectile.isMaster = true;
