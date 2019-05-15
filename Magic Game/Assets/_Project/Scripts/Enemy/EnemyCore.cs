@@ -233,7 +233,7 @@ public class EnemyCore : MonoBehaviour
     {
         status = new StatusEffects(status.isOnFire, status.isConfused, status.isFrozen, b);
         animator.enabled = !b;
-        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(!b);
+        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(!b, !b);
         animator.transform.parent = b ? null : transform;
         cNavigation.cAgent.enabled = !b;
         currentState = b ? EState.RAGDOLLED : EState.ATTACK;
@@ -269,7 +269,7 @@ public class EnemyCore : MonoBehaviour
 
         //Detach the enemy model and ragdoll it
         animator.enabled = false;
-        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false);
+        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false, true);
         animator.transform.parent = null;
 
         Destroy(this.gameObject);

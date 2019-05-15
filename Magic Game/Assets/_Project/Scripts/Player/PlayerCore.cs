@@ -16,6 +16,7 @@ public class PlayerCore : MonoBehaviour
     [Header("Serialized")]
     [SerializeField] private HUDManager canvasManager = null;
     [SerializeField] private GameObject ragdollObject = null;
+    [SerializeField] private PlayerAnimationHandler cAnimHandler = null;
     [SerializeField] private Text debugText = null;
 
     public Health cHealth { get; private set; } = null;
@@ -23,7 +24,6 @@ public class PlayerCore : MonoBehaviour
     public ThirdPersonCamera cTPCamera { get; private set; } = null;
     public CharacterController cCharacter { get; private set; } = null;
     public PlayerMovement cMovement { get; private set; } = null;
-    //public PlayerSpellCaster cSpellCaster { get; private set; } = null;
     public Spellbook cSpellBook { get; private set; } = null;
 
     private bool bInputEnabled = true;
@@ -32,10 +32,11 @@ public class PlayerCore : MonoBehaviour
     private bool bIsRagdolled = false;
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
-    public int activeSpellIndex = 0;      
+    public int activeSpellIndex = 0;
+    public bool openSpellEditingOnStart = false;
 
     #endregion
-    
+
     #region UNITY_DEFAULT_METHODS
 
     void Awake()
@@ -48,23 +49,11 @@ public class PlayerCore : MonoBehaviour
         cTPCamera = GetComponent<ThirdPersonCamera>();
         cMovement = GetComponent<PlayerMovement>();
         cCharacter = GetComponent<CharacterController>();
-
-        if (GetComponent<Spellbook>() != null)
-        {
-            cSpellBook = GetComponent<Spellbook>();
-        }
-        //if (GetComponent<PlayerSpellCaster>() != null)
-        //{
-        //    cSpellCaster = GetComponent<PlayerSpellCaster>();
-        //}
+        cSpellBook = GetComponent<Spellbook>();
     }
-
-    public bool openSpellEditingOnStart = false;
 
     void Start()
     {
-        SetRagdollDepenetrationValues("Armature", 3.0f);
-
         if(openSpellEditingOnStart)
             ToggleSpellEditingUI();
 
@@ -82,26 +71,20 @@ public class PlayerCore : MonoBehaviour
 
         if (bIsDead)
         {
-            //Camera.main.transform.LookAt(playerModel.transform);
+            cTPCamera.cameraObject.transform.LookAt(ragdollPosition.position);
         }
         else
         {
-
-
             if (bInputEnabled)
             {
-                //cTPCamera.Look(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-                //cMovement.GetInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetButtonDown("Jump"), Input.GetButtonDown("Fire3"));
-
                 if (Input.GetButtonDown("Fire1") || Input.GetAxisRaw("Fire1") != 0.0f)
                 {
                     //Don't allow repeated input from controller axis
                     if (!bShotFired)
                     {
-                        //cSpellCaster.CastSpell();
                         cSpellBook.CastSpell(activeSpellIndex);
-                        //GetComponent<PlayerAnimations>().CastSpell(0);
                         bShotFired = true;
+                        cAnimHandler.CastSpell(activeSpellIndex);
                     }
                 }
                 else
@@ -115,7 +98,6 @@ public class PlayerCore : MonoBehaviour
                     {
                         EnableRagdoll(true);
                     }
-                    //cTPCamera.SwitchSide();
                 }
 
                 // CHANGING ACTIVE SPELL
@@ -140,7 +122,6 @@ public class PlayerCore : MonoBehaviour
                         }
                     }
                 }
-
             }
 
             if(Input.GetKeyDown(KeyCode.Return))
@@ -163,7 +144,7 @@ public class PlayerCore : MonoBehaviour
 
             cHealth.AddInvulnerability(Time.fixedDeltaTime);
 
-            if (Vector3.Distance(ragdollPosition.position, ragdollPrevPosition) < 0.2f)
+            if ((ragdollPosition.position - ragdollPrevPosition).sqrMagnitude < 0.04f)
             {
                 if (ragdollSleepTimer > 0.0f)
                 {
@@ -226,28 +207,34 @@ public class PlayerCore : MonoBehaviour
 
     public void EnableControls(bool b)
     {
+        if (canvasManager.bIsPaused || canvasManager.bIsEditingSpells)
+        {
+            cTPCamera.EnableCameraControls(false);
+        }
+        else
+        {
+            cTPCamera.EnableCameraControls(b);
+        }
+
         if (!bIsRagdolled)
         {
             bInputEnabled = b;
             cMovement.enableControls = b;
-            cTPCamera.EnableCameraControls(b);
-
-            //if (cSpellCaster != null)
-            //{
-            //    cSpellCaster.CastBeamActive(b);
-            //}
+        }
+        else
+        {
+            bInputEnabled = false;
+            cMovement.enableControls = false;
         }
     }
 
     public void EnableRagdoll(bool b)
     {
-        //bInputEnabled = !b;
         bIsRagdolled = b;
         cTPCamera.isRagdolled = b;
-        cMovement.enableControls = !b;
         ragdollSleepTimer = 3.0f;
 
-        ragdollObject.GetComponent<RagdollModifier>().SetKinematic(!b);
+        ragdollObject.GetComponent<RagdollModifier>().SetKinematic(!b, b);
         ragdollObject.GetComponent<Animator>().enabled = !b;
         ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
         
@@ -261,54 +248,14 @@ public class PlayerCore : MonoBehaviour
             ragdollObject.transform.localPosition = Vector3.zero;
             cMovement.OnDisableRagdoll();
         }
-    }
 
-    void SetRagdollDepenetrationValues(string armatureName, float amount)
-    {
-        List<Transform> armatureBones = new List<Transform>();
-
-        if (ragdollObject != null)
-        {
-            foreach (Transform item in ragdollObject.transform)
-            {
-                if (item.name == armatureName)
-                {
-                    Debug.Log("Found the armature, looping through all of its child transforms...");
-                    GetAllChildren(item, armatureBones);
-                    Debug.Log("Found " + armatureBones.Count + " bones.");
-                }
-            }
-        }
-
-        if (armatureBones.Count > 0)
-        {
-            foreach (Transform item in armatureBones)
-            {
-                if (item.GetComponent<Rigidbody>() != null)
-                {
-                    item.GetComponent<Rigidbody>().maxDepenetrationVelocity = amount;
-                }
-            }
-        }
-
-        Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
-    }
-
-    void GetAllChildren(Transform parent, List<Transform> list)
-    {
-        foreach (Transform item in parent)
-        {
-            list.Add(item);
-            if (item.childCount > 0)
-            {
-                GetAllChildren(item, list);
-            }
-        }
+        EnableControls(true);
     }
 
     public void OnHurt()
     {
         canvasManager.OnPlayerHurt();
+        ragdollObject.GetComponent<Animator>().SetTrigger("Take Damage");
         //GetComponent<PlayerAnimations>().TakeDamage();
     }
 
@@ -327,6 +274,7 @@ public class PlayerCore : MonoBehaviour
         }
 
         canvasManager.OnPlayerDeath();
+        EnableRagdoll(true);
         EnableControls(false);
         //cCharacter.enabled = false;
         //cMovement.enabled = false;
