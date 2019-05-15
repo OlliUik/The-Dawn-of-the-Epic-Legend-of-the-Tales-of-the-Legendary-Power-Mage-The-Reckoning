@@ -6,7 +6,7 @@ public class ArrowSpawner : MonoBehaviour
 {
     public Rigidbody arrow;
 
-    Transform spawnPoint;
+    private Transform spawnPoint;
 
     [SerializeField, Range(1.0f, 20f)]
     private float forceMultiplier;
@@ -22,7 +22,7 @@ public class ArrowSpawner : MonoBehaviour
 
     void Start()
     {
-        spawnPoint = GetComponent<Transform>();
+        spawnPoint = gameObject.transform;
         timer = setTimer;
         arrow.position = spawnPoint.position;
     }

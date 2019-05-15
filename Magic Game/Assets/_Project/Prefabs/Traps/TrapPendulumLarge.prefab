@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3388843258627237077}
   - component: {fileID: 3388843258627237076}
   m_Layer: 0
-  m_Name: TrapPendulumPrefabNew
+  m_Name: TrapPendulumLarge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,6 +152,9 @@ GameObject:
   - component: {fileID: 3388843259581818116}
   - component: {fileID: 3388843259581818119}
   - component: {fileID: 3388843259581818118}
+  - component: {fileID: 7438218543723171406}
+  - component: {fileID: 1086695865610966081}
+  - component: {fileID: 870012490871778880}
   m_Layer: 0
   m_Name: PendulumHead (1)
   m_TagString: Untagged
@@ -227,8 +230,50 @@ MeshCollider:
   m_GameObject: {fileID: 3388843259581818112}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300002, guid: c24224da289e73f4b9cd766aebc6439d, type: 3}
+--- !u!136 &7438218543723171406
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388843259581818112}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.008
+  m_Height: 0.04
+  m_Direction: 0
+  m_Center: {x: 0, y: 0, z: -0.06264712}
+--- !u!136 &1086695865610966081
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388843259581818112}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.008
+  m_Height: 0.04
+  m_Direction: 0
+  m_Center: {x: 0, y: 0, z: -0.06264712}
+--- !u!114 &870012490871778880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388843259581818112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200bb66833ce60f4b89ba3ae49930ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  killInstantly: 0
+  damage: 10
