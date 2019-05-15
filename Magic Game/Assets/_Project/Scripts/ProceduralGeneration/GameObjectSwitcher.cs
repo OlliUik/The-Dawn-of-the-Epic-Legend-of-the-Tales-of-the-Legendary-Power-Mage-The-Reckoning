@@ -8,7 +8,7 @@ public class GameObjectSwitcher : MonoBehaviour
     private GameObject a, b;
 
     //a = wall, Doorway-script
-    //b = wall with doorway, no Doorway-script
+    //b = wall with hole
 
     void Update()
     {
