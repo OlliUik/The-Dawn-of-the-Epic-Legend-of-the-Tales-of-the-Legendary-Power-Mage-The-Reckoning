@@ -233,7 +233,7 @@ public class EnemyCore : MonoBehaviour
     {
         status = new StatusEffects(status.isOnFire, status.isConfused, status.isFrozen, b);
         animator.enabled = !b;
-        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(!b, !b);
+        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(!b, b);
         animator.transform.parent = b ? null : transform;
         cNavigation.cAgent.enabled = !b;
         currentState = b ? EState.RAGDOLLED : EState.ATTACK;

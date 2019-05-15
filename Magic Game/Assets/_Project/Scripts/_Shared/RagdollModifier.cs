@@ -14,7 +14,7 @@ public class RagdollModifier : MonoBehaviour
     {
         GetBones(armatureBones, armatureName);
         SetDepenetrationValues(armatureBones, 3.0f);
-        SetKinematic(true, true);
+        SetKinematic(true, false);
     }
 
     void GetBones(List<Transform> list, string armatureName)
