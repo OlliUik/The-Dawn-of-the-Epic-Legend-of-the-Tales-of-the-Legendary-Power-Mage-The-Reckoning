@@ -55,7 +55,7 @@ public class LeechLifeEffect : StatusEffect
         {
             if(giving != null)
             {
-                giving.Hurt(healthPerTick);
+                giving.Hurt(healthPerTick, true);
             }
 
             if(resiving != null)

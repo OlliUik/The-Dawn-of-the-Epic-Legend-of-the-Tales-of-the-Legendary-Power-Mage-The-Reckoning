@@ -4,7 +4,8 @@ using UnityEngine;
 public static class GlobalVariables
 {
     public static List<string> scenesInBuild = new List<string>();
-    public static List<GameObject> entityList = new List<GameObject>();
+    public static List<GameObject> teamGoodGuys = new List<GameObject>();
+    public static List<GameObject> teamBadBoys = new List<GameObject>();
     public static bool bAnyPlayersAlive = true;
     public static bool usePostProcessing = true;
     public static string aaMethod = "fxaa";

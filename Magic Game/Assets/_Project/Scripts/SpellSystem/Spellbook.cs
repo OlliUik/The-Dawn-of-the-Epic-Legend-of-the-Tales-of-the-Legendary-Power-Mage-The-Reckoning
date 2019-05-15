@@ -102,11 +102,11 @@ public class Spellbook : MonoBehaviour
         else
         {
             //direction = -Vector3.Normalize(lookTransform.position - GetComponent<EnemyCore>().vision.targetLocation);
-            Vector3 prediction = GetComponent<EnemyCore>().vision.targetLocation;
+            Vector3 prediction = GetComponent<EnemyCore>().cVision.targetLocation;
             Projectile proj = spells[0].spell as Projectile;
             if (proj != null)
             {
-                prediction = GetComponent<EnemyCore>().PredictTargetPosition(spellPos.position, proj.baseSpeed, GetComponent<EnemyCore>().vision.targetLocation, GetComponent<EnemyCore>().vision.targetGO.GetComponent<CharacterController>().velocity);
+                prediction = GetComponent<EnemyCore>().PredictTargetPosition(spellPos.position, proj.baseSpeed, GetComponent<EnemyCore>().cVision.targetLocation, GetComponent<EnemyCore>().cVision.targetGO.GetComponent<CharacterController>().velocity);
             }
             direction = -Vector3.Normalize(lookTransform.position - prediction);
         }

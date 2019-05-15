@@ -41,7 +41,7 @@ public class LevelManager : MonoBehaviour
     
     IEnumerator LoadLevelAsync(string levelName)
     {
-        GlobalVariables.entityList.Clear();
+        GlobalVariables.teamBadBoys.Clear();
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelName);
         while (!asyncLoad.isDone)
         {
