@@ -328,18 +328,11 @@ public class BossLizardKing : EnemyMagicRanged
     IEnumerator DashCoroutine()
     {
         cNavigation.cAgent.ResetPath();
-        cNavigation.cAgent.enabled = false;
-        GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Rigidbody>().velocity = (cVision.targetLocation - transform.position).normalized * 25.0f;
-
+        cNavigation.cAgent.velocity = Vector3.zero;
+        cNavigation.cAgent.SetDestination(cVision.targetLocation);
         yield return new WaitForSeconds(castingTime);
-
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().isKinematic = true;
-        cNavigation.cAgent.enabled = true;
         bCastedProjectile = false;
         currentState = EState.ATTACK;
-
         yield return null;
     }
 

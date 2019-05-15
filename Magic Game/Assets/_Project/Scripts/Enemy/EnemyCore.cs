@@ -224,6 +224,11 @@ public class EnemyCore : MonoBehaviour
         return predictedPosition;
     }
 
+    public void SwitchTeam()
+    {
+
+    }
+
     public void EnableRagdoll(bool b)
     {
         status = new StatusEffects(status.isOnFire, status.isConfused, status.isFrozen, b);
