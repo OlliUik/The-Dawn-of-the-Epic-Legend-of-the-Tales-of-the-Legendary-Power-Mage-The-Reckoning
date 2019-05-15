@@ -5,6 +5,8 @@ using UnityEngine;
 public class StatusEffectManager : MonoBehaviour
 {
 
+    #region Variables
+
     public enum EffectType
     {
         Freeze,
@@ -17,6 +19,9 @@ public class StatusEffectManager : MonoBehaviour
     public List<StatusEffect> affectingEffects = new List<StatusEffect>();
     public Dictionary<EffectType, bool> AppliedEffects = new Dictionary<EffectType, bool>();
 
+    #endregion
+
+    #region Unity_Methods
 
     private void Awake()
     {
@@ -27,7 +32,7 @@ public class StatusEffectManager : MonoBehaviour
         AppliedEffects.Add(EffectType.StackingDamage, false);
     }
 
-
+    // Loop through all the affecting StatusEffects and call OnTick()
     private void Update()
     {
         for (int i = 0; i < affectingEffects.Count; i++)
@@ -41,6 +46,12 @@ public class StatusEffectManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Custom_Methods
+
+    // Spells call this if they contain StatusEffects as cards
+    // if entity already has current effect call ReApply() on it
     public void ApplyStatusEffect(StatusEffect effect, List<StatusEffect> allEffectsInSpell)
     {
         for (int i = 0; i < affectingEffects.Count; i++)
@@ -58,6 +69,7 @@ public class StatusEffectManager : MonoBehaviour
         effect.OnApply(gameObject, allEffectsInSpell);
     }
 
+    // Update calls this when StatusEffects duration ends or when countering effect is applied
     public void RemoveStatusEffect(StatusEffect effect)
     {
         for (int i = 0; i < affectingEffects.Count; i++)
@@ -71,5 +83,7 @@ public class StatusEffectManager : MonoBehaviour
             }
         }
     }
+
+    #endregion
 
 }

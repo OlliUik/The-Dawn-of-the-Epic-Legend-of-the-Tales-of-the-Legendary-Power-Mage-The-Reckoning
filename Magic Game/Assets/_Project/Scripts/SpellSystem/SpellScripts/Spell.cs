@@ -8,10 +8,12 @@ public class Spell : MonoBehaviour
     public GameObject caster;
 
     [Header("Spell")]
-    [SerializeField] protected float cooldown = 5.0f;
-    [SerializeField] protected float castTime = 5.0f;
-    [SerializeField] protected float manaCost = 5.0f;
-    public List<StatusEffect> statusEffects = new List<StatusEffect>();
+    public SpellType spellType                  = SpellType.GENERIC;
+    [SerializeField] protected float cooldown   = 5.0f;
+    [SerializeField] protected float castTime   = 5.0f;
+    [SerializeField] protected float manaCost   = 5.0f;
+    [SerializeField] protected float range      = 250.0f;
+    public List<StatusEffect> statusEffects     = new List<StatusEffect>();
 
     public float Cooldown
     {
@@ -68,7 +70,7 @@ public class Spell : MonoBehaviour
             // add all modifiers to spell
             foreach (SpellScriptableModifier modifier in card.modifiers)
             {
-                modifier.AddSpellModifier(go);
+                modifier.AddSpellModifier(spell);
                 print("Added: " + modifier.name);
             }
 
@@ -103,6 +105,8 @@ public class Spell : MonoBehaviour
         }
 
     }
+
+    public virtual void ModifyRange(float increaseAmount) { range += increaseAmount; }
 
     public virtual void DealDamage(Health health, float amount)
     {

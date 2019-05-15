@@ -8,16 +8,16 @@ public class SwitchPlacesModifier : SpellScriptableModifier
 
     [SerializeField] private GameObject teleportParticles = null;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        var compo = spellObject.GetComponent<SwitchPlaces>();
+        var compo = spell.GetComponent<SwitchPlaces>();
         if (compo != null)
         {
             // do what
             return;
         }
 
-        SwitchPlaces sp = spellObject.AddComponent<SwitchPlaces>();
+        SwitchPlaces sp = spell.gameObject.AddComponent<SwitchPlaces>();
         sp.teleportParticles = teleportParticles;
     }
 }

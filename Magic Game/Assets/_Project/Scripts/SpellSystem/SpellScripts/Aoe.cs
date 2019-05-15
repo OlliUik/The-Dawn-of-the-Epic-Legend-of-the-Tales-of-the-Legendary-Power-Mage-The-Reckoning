@@ -17,61 +17,11 @@ public class Aoe : Spell
 
     #endregion
 
-    #region CustomMethods
-
-    public override void CastSpell(Spellbook spellbook, SpellData data)
-    {
-
-        ///<summary>
-        ///
-        ///                                 AOE SPELLS
-        /// 
-        ///     • Aoe spells have aura like effects in default
-        ///     • Aura like effects can be overritten by adding a Placable property that allows player to place them like turrets
-        ///     • Auras have range modifier that determinates how far they reach, can be modified
-        ///     • Aoe spells duration determinates how long the spell will last, can be modified
-        ///     • Aoe spells work well with elements (burn, slow, etc.)
-        ///         • Aoe effects can be added to projectiles   ??????
-        /// 
-        /// </summary>
-
-        // spawn instance in players current position
-        Aoe aoe = Instantiate(this, spellbook.transform.position, spellbook.transform.rotation);
-        aoe.transform.SetParent(spellbook.transform);
-        aoe.caster = spellbook.gameObject;
-
-        aoe.ApplyModifiers(aoe.gameObject, data);
-
-        aoe.StartCoroutine(DestroyAoe(aoe.gameObject, duration));
-        spellbook.StopCasting();
-
-    }
-
-    public void ModifyRange(float amount)
-    {
-        radius += amount;
-        print("Radius increased to " + radius);
-    }
-
-    public void ModifyDuration(float amount)
-    {
-        duration += amount;
-        print("Duration increased to " + duration);
-    }
-
-    // Destroying spell here
-    private IEnumerator DestroyAoe(GameObject self, float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        Destroy(self);
-    }
-
-    #endregion
-
     #region UnityMethods
 
     private void Start()
     {
+        spellType = SpellType.AOE;
         GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
         copyGraphics.transform.SetParent(gameObject.transform);
         modifiers = GetComponents<SpellModifier>();
@@ -130,5 +80,57 @@ public class Aoe : Spell
     }
 
     #endregion
+
+    #region CustomMethods
+
+    public override void CastSpell(Spellbook spellbook, SpellData data)
+    {
+
+        ///<summary>
+        ///
+        ///                                 AOE SPELLS
+        /// 
+        ///     • Aoe spells have aura like effects in default
+        ///     • Aura like effects can be overritten by adding a Placable property that allows player to place them like turrets
+        ///     • Auras have range modifier that determinates how far they reach, can be modified
+        ///     • Aoe spells duration determinates how long the spell will last, can be modified
+        ///     • Aoe spells work well with elements (burn, slow, etc.)
+        ///         • Aoe effects can be added to projectiles   ??????
+        /// 
+        /// </summary>
+
+        // spawn instance in players current position
+        Aoe aoe = Instantiate(this, spellbook.transform.position, spellbook.transform.rotation);
+        aoe.transform.SetParent(spellbook.transform);
+        aoe.caster = spellbook.gameObject;
+
+        aoe.ApplyModifiers(aoe.gameObject, data);
+
+        aoe.StartCoroutine(DestroyAoe(aoe.gameObject, duration));
+        spellbook.StopCasting();
+
+    }
+
+    public override void ModifyRange(float amount)
+    {
+        radius += amount;
+        print("Radius increased to " + radius);
+    }
+
+    public void ModifyDuration(float amount)
+    {
+        duration += amount;
+        print("Duration increased to " + duration);
+    }
+
+    // Destroying spell here
+    private IEnumerator DestroyAoe(GameObject self, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        Destroy(self);
+    }
+
+    #endregion
+
 
 }

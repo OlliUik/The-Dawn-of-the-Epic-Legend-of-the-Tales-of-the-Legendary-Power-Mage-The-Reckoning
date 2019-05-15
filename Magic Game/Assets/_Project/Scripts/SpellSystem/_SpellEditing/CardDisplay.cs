@@ -111,7 +111,7 @@ public class CardDisplay : MonoBehaviour
 
         for (int i = 0; i < card.compatibleSpellTypes.Count; i++)
         {
-            if(card.compatibleSpellTypes[i] == editorController.highlighedSpell.data.type)
+            if(card.compatibleSpellTypes[i] == editorController.highlighedSpell.data.spell.spellType)
             {
                 return true;
             }

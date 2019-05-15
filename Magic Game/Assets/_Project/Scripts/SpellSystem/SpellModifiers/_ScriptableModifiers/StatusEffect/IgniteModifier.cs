@@ -11,10 +11,8 @@ public class IgniteModifier : SpellScriptableModifier
     [SerializeField] private float timeBetweenTicks = 1.0f;
     [SerializeField] private GameObject graphics    = null;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Spell spell = spellObject.GetComponent<Spell>();
-
         // check if ignite already exist if so --> modify values only
         var ignite = (IgniteEffect)spell.statusEffects.Find(x => x.GetType() == typeof(IgniteEffect));
         if (ignite != null)
