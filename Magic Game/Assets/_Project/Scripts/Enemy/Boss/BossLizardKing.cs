@@ -163,7 +163,7 @@ public class BossLizardKing : EnemyMagicRanged
 
         //Spellcasting
         cSpellBook.spells[0].spell = pattern.spell;
-        cSpellBook.spells[0].type = pattern.spellType;
+        //cSpellBook.spells[0].type = pattern.spellType;
         cSpellBook.spells[0].cards.Clear();
         if (pattern.cards.Length > 0)
         {
