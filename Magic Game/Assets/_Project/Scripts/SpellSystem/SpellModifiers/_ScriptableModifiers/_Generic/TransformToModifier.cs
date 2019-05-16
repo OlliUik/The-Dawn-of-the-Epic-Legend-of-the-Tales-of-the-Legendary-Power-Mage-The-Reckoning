@@ -6,7 +6,7 @@ using UnityEngine;
 public class TransformToModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private GameObject transformToPrefab = null;
+    [SerializeField] private List<GameObject> transformToPrefabs = new List<GameObject>();
     [SerializeField] private float duration = 5f;
     [SerializeField] private GameObject transformationParticles = null;
 
@@ -20,7 +20,7 @@ public class TransformToModifier : SpellScriptableModifier
         }
 
         var compo = spell.gameObject.AddComponent<TransformTo>();
-        compo.transformPrefab = transformToPrefab;
+        compo.transformPrefab = transformToPrefabs[Random.Range(0, transformToPrefabs.Count)];
         compo.duration = duration;
         compo.transformationParticles = transformationParticles;
     }
