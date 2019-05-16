@@ -43,7 +43,8 @@ public class ExplosiveCask : Transformation
     {
         health -= collision.relativeVelocity.magnitude;
 
-        if(collision.gameObject.GetComponent<Spell>() != null || health <= 0f)
+
+        if (collision.gameObject.GetComponent<Spell>() != null || health <= 0f)
         {
             activated = true;
         }

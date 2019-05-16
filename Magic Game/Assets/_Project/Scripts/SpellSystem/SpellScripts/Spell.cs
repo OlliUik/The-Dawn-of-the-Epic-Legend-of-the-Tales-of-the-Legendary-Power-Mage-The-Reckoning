@@ -74,27 +74,52 @@ public class Spell : MonoBehaviour
                 print("Added: " + modifier.name);
             }
 
-            /* Graphics old
+            // Instantiate all graphics from cards
+            switch (spell.spellType)
+            {
+                case SpellType.PROJECTILE:
+                    if(card.graphicsProjecile != null)
+                    {
+                        GameObject graphics = Instantiate(card.graphicsProjecile, go.transform.position, Quaternion.identity);
+                        graphics.transform.SetParent(go.transform);
+                    }
+                    break;
+                case SpellType.BEAM:
+                    if (card.graphicsBeam != null)
+                    {
+                        GameObject graphics = Instantiate(card.graphicsProjecile, go.transform.position, Quaternion.identity);
+                        graphics.transform.SetParent(go.transform);
+                    }
+                    break;
+                case SpellType.AOE:
+                    if (card.graphicsAoe != null)
+                    {
+                        GameObject graphics = Instantiate(card.graphicsProjecile, go.transform.position, Quaternion.identity);
+                        graphics.transform.SetParent(go.transform);
+                    }
+                    break;
+                default:
+                    Debug.Log("Error: Instantiating spells graphics");
+                    break;
+            }
 
             // check if card has graphics assained if so add them to the spell
-            if(card.graphics != null)
-            {
-                // first check if spell has primary graphics
-        
-                // if not add these 
-                GameObject graphics = Instantiate(card.graphics, go.transform.position, card.graphics.transform.rotation);
-                graphics.transform.SetParent(go.transform);
-                break; // if primary graphics get added don't and secendary of the same ( fire particles on fire projectile )
-            }
-        
-            if(card.secendaryGraphics != null)
-            {
-                // card has some secendary graphics
-                GameObject graphics = Instantiate(card.secendaryGraphics, go.transform.position, go.transform.rotation);
-                graphics.transform.parent = go.transform;
-            }
-
-            */        
+            //if(card.graphics != null)
+            //{
+            //    // first check if spell has primary graphics
+            //
+            //    // if not add these 
+            //    GameObject graphics = Instantiate(card.graphics, go.transform.position, card.graphics.transform.rotation);
+            //    graphics.transform.SetParent(go.transform);
+            //    break; // if primary graphics get added don't and secendary of the same ( fire particles on fire projectile )
+            //}
+            //
+            //if(card.secendaryGraphics != null)
+            //{
+            //    // card has some secendary graphics
+            //    GameObject graphics = Instantiate(card.secendaryGraphics, go.transform.position, go.transform.rotation);
+            //    graphics.transform.parent = go.transform;
+            //}
 
         }
 
@@ -107,6 +132,15 @@ public class Spell : MonoBehaviour
     }
 
     public virtual void ModifyRange(float increaseAmount) { range += increaseAmount; }
+
+    public virtual void ModifyCooldown(float cooldownDercrease)
+    {
+        cooldown -= cooldownDercrease;
+        if(cooldown < 0f)
+        {
+            cooldown = 0f;
+        }
+    }
 
     public virtual void DealDamage(Health health, float amount)
     {

@@ -37,9 +37,9 @@ public class Split : SpellModifier
             Projectile copy = Instantiate(gameObject, transform.position, rot).GetComponent<Projectile>();
             copy.name = "Split copy";
             copy.direction = rotatedDir;
-
             copy.caster = proj.caster;
             copy.isMaster = false;
+            copy.statusEffects = proj.statusEffects;
 
             var homing = copy.GetComponent<Homing>();
             if (homing != null)
@@ -75,6 +75,7 @@ public class Split : SpellModifier
                 copyBeam.isMaster = false;
                 copyBeam.name = "SplitCopy " + i;
                 beams.Add(copyBeam);
+                copyBeam.statusEffects = beam.statusEffects;
             }
 
             splitted = true;

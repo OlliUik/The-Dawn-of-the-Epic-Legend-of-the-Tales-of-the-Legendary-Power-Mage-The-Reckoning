@@ -32,13 +32,13 @@ public class StatusEffect
     // This will be called from each entitys own StatusEffectManager when the effect is about to be applied
     public virtual void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+        Debug.Log("calling base apply");
 
-        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
-        graphicsCopy.transform.SetParent(target.transform);
-
+        endTime = Time.time + duration;
         this.target = target;
         effectManager = target.GetComponent<StatusEffectManager>();
-
+        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
+        graphicsCopy.transform.SetParent(target.transform);
     }
 
     // OnTick is used by effects like ignite / heal over time that need to be updated while applied to target
@@ -47,7 +47,7 @@ public class StatusEffect
     // StatusEffectManager (on entity) calls OnLeave when the duration is passed or the countering effect is applied to the manager as new
     public virtual void OnLeave()
     {
-        if (target != null)
+        if (target != null && graphicsCopy != null)
         {
             GameObject.Destroy(graphicsCopy.gameObject);
         }

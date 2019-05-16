@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(ThirdPersonCamera))]
 [RequireComponent(typeof(CharacterController))]
@@ -38,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float wallJumpForce = 25.0f;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     [SerializeField] private Transform ragdollTransform = null;
+    [SerializeField] private bool bStunned;
 
     private ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
@@ -432,7 +436,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(Vector3 direction)
     {
-        cCharacter.Move(direction);
+        if(!bStunned)
+        {
+            cCharacter.Move(direction);
+        }
     }
 
     void CalculateMovingPlatform()
@@ -505,6 +512,18 @@ public class PlayerMovement : MonoBehaviour
             equal = false;
         }
         return equal;
+    }
+
+    public void Stun(float duration)
+    {
+        bStunned = true;
+        StartCoroutine(Stunned(duration));
+    }
+
+    IEnumerator Stunned(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        bStunned = false;
     }
 
     #endregion
