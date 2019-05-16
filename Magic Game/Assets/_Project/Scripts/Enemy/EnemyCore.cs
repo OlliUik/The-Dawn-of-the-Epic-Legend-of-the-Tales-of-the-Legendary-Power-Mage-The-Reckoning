@@ -7,7 +7,7 @@ using UnityEditor;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(EnemyVision))]
-[RequireComponent(typeof(EnemyNavigation))]
+//[RequireComponent(typeof(EnemyNavigation))]
 public class EnemyCore : MonoBehaviour
 {
     #region VARIABLES
@@ -400,7 +400,7 @@ public class EnemyCore : MonoBehaviour
             }
             else
             {
-                if ((cNavigation.cAgent.remainingDistance < cNavigation.navigationErrorMargin && (transform.position - cVision.targetLocation).sqrMagnitude < 3.0f) || cVision.targetLocation == Vector3.zero)
+                if ((transform.position - cVision.targetLocation).sqrMagnitude < 3.0f || cVision.targetLocation == Vector3.zero)
                 {
                     paranoidTimer = paranoidDuration;
                     currentState = EState.PARANOID;
