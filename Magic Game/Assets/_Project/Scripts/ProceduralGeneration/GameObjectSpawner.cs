@@ -31,7 +31,7 @@ public class GameObjectSpawner : MonoBehaviour
             }
         }
 
-        if (isDestroyingOneRandom)
+        if (isDestroyingOneRandom && spawnedObjects.Count > 0)
         {
             //Destroy one game object in the list
             Destroy(spawnedObjects[Random.Range(0, spawnedObjects.Count)]);
