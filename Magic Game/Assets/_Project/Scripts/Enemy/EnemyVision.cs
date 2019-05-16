@@ -11,7 +11,7 @@ public class EnemyVision : MonoBehaviour
     [SerializeField] private bool alwaysSeeTarget = false;
     [SerializeField] private bool neverLoseVisionToTarget = false;
     [SerializeField] private float sightDistance = 30.0f;
-    [SerializeField][Range(1.0f, 180.0f)] private float sightRadius = 45.0f;
+    [SerializeField] [Range(1.0f, 180.0f)] private float sightRadius = 45.0f;
     [SerializeField] private float checkInterval = 0.2f;
     //[SerializeField] private float checkIntervalRandomRangeMax = 2.0f;
     [SerializeField] private float checkHeightOffset = 0.5f;
@@ -166,13 +166,7 @@ public class EnemyVision : MonoBehaviour
             if (IsPointInside(vvTemp, visionTriangles, entityPosition))
             {
                 RaycastHit hit;
-                if (Physics.Raycast(
-                    headTransform.position,
-                    entityDirection,
-                    out hit,
-                    sightDistance,
-                    raycastLayerMask
-                    ))
+                if (Physics.Raycast(headTransform.position, entityDirection, out hit, sightDistance, raycastLayerMask))
                 {
                     if (hit.transform == targetGO.transform)
                     {
@@ -183,13 +177,7 @@ public class EnemyVision : MonoBehaviour
                     {
                         if (bCanSeeTarget)
                         {
-                            if (Physics.Raycast(
-                                entityPosition,
-                                Vector3.down,
-                                out hit,
-                                Mathf.Infinity,
-                                raycastLayerMask
-                                ))
+                            if (Physics.Raycast(entityPosition, Vector3.down, out hit, Mathf.Infinity, raycastLayerMask))
                             {
                                 targetLocation = hit.point + Vector3.up * checkHeightOffset;
                             }
@@ -211,13 +199,7 @@ public class EnemyVision : MonoBehaviour
                 if (bCanSeeTarget)
                 {
                     RaycastHit hit;
-                    if (Physics.Raycast(
-                                        targetLocation,
-                                        Vector3.down,
-                                        out hit,
-                                        Mathf.Infinity,
-                                        raycastLayerMask
-                                        ))
+                    if (Physics.Raycast(targetLocation, Vector3.down, out hit, Mathf.Infinity, raycastLayerMask))
                     {
                         if (Vector3.Distance(targetLocation, hit.point) > 0.5f)
                         {

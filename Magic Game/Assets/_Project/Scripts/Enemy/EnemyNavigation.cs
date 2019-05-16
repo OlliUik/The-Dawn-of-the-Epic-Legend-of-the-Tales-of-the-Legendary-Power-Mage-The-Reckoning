@@ -2,7 +2,7 @@
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyNavigation : MonoBehaviour
+public class EnemyNavigation : Enemy
 {
     #region VARIABLES
 
@@ -31,6 +31,7 @@ public class EnemyNavigation : MonoBehaviour
     private float navErrorTimer = 0.0f;
     private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
+    private Enemy cEnemy = null;
 
     #endregion
 
@@ -41,6 +42,7 @@ public class EnemyNavigation : MonoBehaviour
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
         navTimer = Random.Range(0.0f, 2.0f);
+        cEnemy = GetComponent<Enemy>();
     }
 
     public void NavigationLoop()
@@ -67,25 +69,35 @@ public class EnemyNavigation : MonoBehaviour
         {
             cAgent.speed = walkingSpeed;
             cAgent.acceleration = walkingAcceleration;
+
+            cEnemy.speed = walkingSpeed; //testing for a*
         }
         else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
         {
             cAgent.speed = panicSpeed;
             cAgent.acceleration = panicAcceleration;
+
+            cEnemy.speed = panicSpeed; //testing for a*
         }
         else
         {
             cAgent.speed = runningSpeed;
             cAgent.acceleration = runningAcceleration;
+
+            cEnemy.speed = runningSpeed; //testing for a*
         }
 
         if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
         {
             cAgent.stoppingDistance = 1.0f;
+
+            cEnemy.stoppingDistance = 1.0f; //testing for a*
         }
         else
         {
             cAgent.stoppingDistance = 0.0f;
+
+            cEnemy.stoppingDistance = 0.0f; //testing for a*
         }
 
         //When walking away from player, give more acceleration
@@ -158,9 +170,13 @@ public class EnemyNavigation : MonoBehaviour
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
         {
             cAgent.SetDestination(cEnemyCore.spawnPosition);
+
+            //cEnemy.SetTargetPosition(cEnemyCore.spawnPosition);//testing for a*
+            //cEnemy.StartCoroutine(UpdatePath());
         }
     }
 
+    //TODO: change patrolpoints to node positions?
     void AIPatrol()
     {
         if (patrolPoints.Length > 1)
@@ -181,6 +197,9 @@ public class EnemyNavigation : MonoBehaviour
             if (waitTimer <= 0.0f)
             {
                 cAgent.SetDestination(patrolPoints[navCurrentPoint]);
+
+                //cEnemy.SetTargetPosition(patrolPoints[navCurrentPoint]);//testing for a*
+                //cEnemy.StartCoroutine(UpdatePath());
             }
         }
         else
@@ -192,6 +211,9 @@ public class EnemyNavigation : MonoBehaviour
     void AIAlerted()
     {
         cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+
+        //cEnemy.SetTargetPosition(cEnemyCore.cVision.targetLocation);//testing for a*
+        //cEnemy.StartCoroutine(UpdatePath());
     }
 
     void AIParanoid()
@@ -206,6 +228,9 @@ public class EnemyNavigation : MonoBehaviour
             randomPosition.z = Random.Range(-1.0f, 1.0f);
 
             cAgent.SetDestination(transform.position + randomPosition);
+
+            //cEnemy.SetTargetPosition(transform.position + randomPosition);//testing for a*
+            //cEnemy.StartCoroutine(UpdatePath());
         }
         else
         {
@@ -234,6 +259,9 @@ public class EnemyNavigation : MonoBehaviour
         //}
 
         cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+
+        //cEnemy.SetTargetPosition(cEnemyCore.cVision.targetLocation);//testing for a*
+        //cEnemy.StartCoroutine(UpdatePath());
 
         if (navErrorTimer < 3.0f && cAgent.velocity.sqrMagnitude < 1.0f)
         {
@@ -280,6 +308,9 @@ public class EnemyNavigation : MonoBehaviour
         Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
         cAgent.SetDestination(nearTargetLocation);
 
+        //cEnemy.SetTargetPosition(nearTargetLocation);//testing for a*
+        //cEnemy.StartCoroutine(UpdatePath());
+
         //if (!cEnemyCore.MoveWhileCasting)
         //{
         //    if (agent.hasPath)
@@ -299,6 +330,9 @@ public class EnemyNavigation : MonoBehaviour
         {
             Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
             cAgent.SetDestination(nearTargetLocation);
+
+            //cEnemy.SetTargetPosition(nearTargetLocation);//testing for a*
+            //cEnemy.StartCoroutine(UpdatePath());
         }
         else
         {
@@ -315,6 +349,9 @@ public class EnemyNavigation : MonoBehaviour
         if (Vector3.Distance(transform.position, cEnemyCore.cVision.targetLocation) < 20.0f)
         {
             cAgent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);
+
+            //cEnemy.SetTargetPosition(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);//testing for a*
+            //cEnemy.StartCoroutine(UpdatePath());
         }
     }
 
@@ -328,6 +365,9 @@ public class EnemyNavigation : MonoBehaviour
             randomPosition.z = Random.Range(-5.0f, 5.0f);
 
             cAgent.SetDestination(transform.position + randomPosition);
+
+            //cEnemy.SetTargetPosition(transform.position + randomPosition); //testing for a*
+            //cEnemy.StartCoroutine(UpdatePath());
         }
     }
 

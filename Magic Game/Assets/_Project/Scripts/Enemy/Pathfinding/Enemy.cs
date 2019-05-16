@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     Vector3 surfaceNormal = Vector3.down;
     Vector3 colPoint;
     Vector3 normalizedDirection;
+    Vector3 targetPosition = Vector3.zero;
 
     EnemyPath path;
  
@@ -52,59 +53,59 @@ public class Enemy : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        DrawDebugLines();
-        CalculateForward();
-        CheckGround();
-        ApplyGravity();
+    //private void Update()
+    //{
+    //    DrawDebugLines();
+    //    CalculateForward();
+    //    CheckGround();
+    //    ApplyGravity();
 
 
 
-        if(bGrounded /*&& Vector3.Distance(transform.position, target.position) < 20 ||bMovingToPlayer*/)
-        {
-            if(!bMovingToPlayer)
-            {
-                bMovingToPlayer = true;
-            }
-            StartCoroutine(UpdatePath());
-        }
+    //    if(bGrounded /*&& Vector3.Distance(transform.position, target.position) < 20 ||bMovingToPlayer*/)
+    //    {
+    //        if(!bMovingToPlayer)
+    //        {
+    //            bMovingToPlayer = true;
+    //        }
+    //        StartCoroutine(UpdatePath());
+    //    }
 
-    }
+    //}
 
-    private void CheckGround()
-    {
-        if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, height + heightPadding, ground))
-        {
-            transform.up = hitInfo.normal;
-            bGrounded = true;
-        }
-        else
-        {
-            bGrounded = false;
-        }
-    }
+    //private void CheckGround()
+    //{
+    //    if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, height + heightPadding, ground))
+    //    {
+    //        transform.up = hitInfo.normal;
+    //        bGrounded = true;
+    //    }
+    //    else
+    //    {
+    //        bGrounded = false;
+    //    }
+    //}
 
-    private void ApplyGravity()
-    {
-        if (!bGrounded)
-        {
-            transform.position += Physics.gravity * Time.deltaTime;
-        }
-    }
+    //private void ApplyGravity()
+    //{
+    //    if (!bGrounded)
+    //    {
+    //        transform.position += Physics.gravity * Time.deltaTime;
+    //    }
+    //}
 
-    private void CalculateForward()
-    {
-        // if not grounded forward is transform.forward else change according to groundAngle
-        if (!bGrounded)
-        {
-            forward = transform.forward;
-            currentNormal = Vector3.up;
-            return;
-        }
+    //private void CalculateForward()
+    //{
+    //    // if not grounded forward is transform.forward else change according to groundAngle
+    //    if (!bGrounded)
+    //    {
+    //        forward = transform.forward;
+    //        currentNormal = Vector3.up;
+    //        return;
+    //    }
 
-        forward = Vector3.Cross(transform.right, hitInfo.normal);
-    }
+    //    forward = Vector3.Cross(transform.right, hitInfo.normal);
+    //}
 
     private void OnPathFound(Vector3[] waypoints, bool bPathSuccessful)
     {
@@ -116,7 +117,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    IEnumerator UpdatePath()
+    public IEnumerator UpdatePath()
     {
         if (Time.timeSinceLevelLoad < .3f)
         {
@@ -188,8 +189,7 @@ public class Enemy : MonoBehaviour
                         bFollowingPath = false;
 
                         if (bMovingToPlayer)
-                        {
-                            
+                        {                            
                             bMovingToPlayer = false;
                         }
                     }
@@ -206,9 +206,13 @@ public class Enemy : MonoBehaviour
 
             }
 
-            transform.LookAt(target.position);
             yield return null;
         }
+    }
+
+    public void SetTargetPosition(Vector3 targetPos)
+    {
+        targetPosition = targetPos;
     }
 
     private void DrawDebugLines()
