@@ -116,7 +116,6 @@ public class FloorGrid : MonoBehaviour
         {
             for (int y = 0; y < gridSizeY; y++)
             {
-                //TODO: ignore position with no floor
 
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
