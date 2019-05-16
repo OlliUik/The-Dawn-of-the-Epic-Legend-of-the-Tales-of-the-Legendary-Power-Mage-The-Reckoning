@@ -90,15 +90,21 @@ public class Projectile : Spell
     private void Init()
     {
         spellType = SpellType.PROJECTILE;
-        GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
-        graphicsCopy.transform.SetParent(gameObject.transform);
+        if(graphics != null)
+        {
+            GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
+            graphicsCopy.transform.SetParent(gameObject.transform);
+        }
         lastPos = transform.position;
         modifiers = GetComponents<SpellModifier>();
     }
 
     private void DestroyProjectile()
     {
-        Instantiate(explosionParticle, transform.position, transform.rotation);
+        if(explosionParticle != null)
+        {
+            Instantiate(explosionParticle, transform.position, transform.rotation);
+        }
         Destroy(gameObject);
     }
 

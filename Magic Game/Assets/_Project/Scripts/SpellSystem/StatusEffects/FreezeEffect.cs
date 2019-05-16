@@ -8,6 +8,7 @@ public class FreezeEffect : StatusEffect
     public float slowAmount = 5f;   // how much slows per spell hit
     public float startSpeed;        // what was the speed before started slowing
 
+
     public FreezeEffect(float duration, GameObject graphics, float slowAmount) : base(duration, graphics)
     {
         name = "Freeze";
@@ -43,8 +44,8 @@ public class FreezeEffect : StatusEffect
 
     public override void ReApply(List<StatusEffect> allEffectsInSpell)
     {
-        base.ReApply(allEffectsInSpell);
         // slow target again
+        base.ReApply(allEffectsInSpell);
         Slow();
     }
 
