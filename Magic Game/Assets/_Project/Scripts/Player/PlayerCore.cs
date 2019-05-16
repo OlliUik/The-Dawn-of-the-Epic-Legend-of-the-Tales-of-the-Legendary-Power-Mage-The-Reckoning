@@ -57,6 +57,8 @@ public class PlayerCore : MonoBehaviour
         if(openSpellEditingOnStart)
             ToggleSpellEditingUI();
 
+        canvasManager.ChangeSpell(activeSpellIndex);
+
         //Quaternion spawnRotation = transform.localRotation;
         //transform.localRotation = Quaternion.Euler(Vector3.zero);
         //cTPCamera.lookDirection = spawnRotation.eulerAngles;
@@ -121,6 +123,24 @@ public class PlayerCore : MonoBehaviour
                             activeSpellIndex = 2;
                         }
                     }
+
+                    canvasManager.ChangeSpell(activeSpellIndex);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    activeSpellIndex = 0;
+                    canvasManager.ChangeSpell(activeSpellIndex);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    activeSpellIndex = 1;
+                    canvasManager.ChangeSpell(activeSpellIndex);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    activeSpellIndex = 2;
+                    canvasManager.ChangeSpell(activeSpellIndex);
                 }
             }
 
