@@ -6,9 +6,10 @@ using UnityEngine;
 public class FreezeModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private float duration         = 5f;
-    [SerializeField] public float slowAmount        = 5f;
-    [SerializeField] private GameObject graphics    = null;
+    [SerializeField] private float duration             = 5f;
+    [SerializeField] private float slowAmount           = 5f;
+    [SerializeField] private float moistSlowMultiplier  = 1.5f;
+    [SerializeField] private GameObject graphics        = null;
 
     public override void AddSpellModifier(Spell spell)
     {
@@ -17,11 +18,12 @@ public class FreezeModifier : SpellScriptableModifier
         if (freeze != null)
         {
             // modify freeze values
-            freeze.slowAmount   += this.slowAmount;
-            freeze.duration     += this.duration;
+            freeze.slowAmount           += this.slowAmount;
+            freeze.duration             += this.duration;
+            freeze.moistSlowMultiplier  += moistSlowMultiplier;
             return;
         }
 
-        spell.statusEffects.Add(new FreezeEffect(duration, graphics, slowAmount));
+        spell.statusEffects.Add(new FreezeEffect(duration, graphics, slowAmount, moistSlowMultiplier));
     }
 }

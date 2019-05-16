@@ -28,6 +28,7 @@ public class Bounce : SpellModifier
         copy.direction = reflectionDir;
         copy.GetComponent<Bounce>().bounceCount--;
         copy.isMaster = false;
+        copy.statusEffects = gameObject.GetComponent<Spell>().statusEffects;
 
         var homing = copy.GetComponent<Homing>();
         if(homing != null)
@@ -57,6 +58,7 @@ public class Bounce : SpellModifier
                 beamCopy.GetComponent<Bounce>().bounceCount--;
                 beam = beamCopy.GetComponent<Beam>();
                 beam.isMaster = false;
+                beam.statusEffects = gameObject.GetComponent<Spell>().statusEffects;
             }
 
             beam.Range = gameObject.GetComponent<Beam>().Range - distance;

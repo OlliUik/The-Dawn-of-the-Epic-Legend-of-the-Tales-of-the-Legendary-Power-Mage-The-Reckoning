@@ -5,16 +5,48 @@ using UnityEngine;
 public class ExplosiveCask : Transformation
 {
 
+    public bool activated;
+
     public float explosionRadius = 10f;
     public float explosionForce = 1000f;
     public GameObject explosionParticles;
+    private Material mat;
 
+    [SerializeField] private float health = 100f;
+    [SerializeField] private float timeToExplode = 2f;
+
+    protected override void Start()
+    {
+        base.Start();
+        mat = GetComponent<MeshRenderer>().material;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if(activated)
+        {
+            if(timeToExplode > 0)
+            {
+                mat.color = Color.Lerp(Color.white, Color.red, Mathf.PingPong(Time.time, 0.5f));
+                timeToExplode -= Time.deltaTime;
+            }
+            else
+            {
+                Explode();
+            }
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.GetComponent<Spell>() != null)
+        health -= collision.relativeVelocity.magnitude;
+
+
+        if (collision.gameObject.GetComponent<Spell>() != null || health <= 0f)
         {
-            Explode();
+            activated = true;
         }
     }
 

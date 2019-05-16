@@ -11,6 +11,7 @@ public class Beam : Spell
     #region Variables
 
     [Header("-- Beam --")]
+    public bool usingCylinder = true;
     [SerializeField] private float baseDamage       = 1.0f;
     [SerializeField] private float baseRange        = 150.0f;
     [SerializeField] private float baseRadius       = 1f;
@@ -24,6 +25,8 @@ public class Beam : Spell
     }
 
     [SerializeField] private GameObject graphics    = null;
+    private ParticleSystem beamParticles;
+    private List<ParticleCollisionEvent> collisionEvents;
 
     public Vector3 startPos                         = Vector3.zero;
     public Vector3 endPos                           = Vector3.zero;
@@ -46,6 +49,9 @@ public class Beam : Spell
 
     private void Start()
     {
+        beamParticles = graphics.GetComponent<ParticleSystem>();
+        collisionEvents = new List<ParticleCollisionEvent>();
+
         if(isMaster)
         {
             spellbook = caster.GetComponent<Spellbook>();
@@ -117,6 +123,34 @@ public class Beam : Spell
 
     }
 
+    private void OnParticleCollision(GameObject other)
+    {
+        var rb = other.GetComponent<Rigidbody>();
+        if(rb != null)
+        {
+            ParticlePhysicsExtensions.GetCollisionEvents(beamParticles, other, collisionEvents);
+            for (int i = 0; i < collisionEvents.Count; i++)
+            {
+                var health = other.GetComponent<Health>();
+                if (health != null)
+                {
+                    base.DealDamage(health, baseDamage * Time.deltaTime);
+                }
+
+                var effectManager = other.GetComponent<StatusEffectManager>();
+                if (effectManager != null)
+                {
+                    base.ApplyStatusEffects(effectManager, statusEffects);
+                }
+                
+                foreach (SpellModifier modifier in modifiers)
+                {
+                    modifier.BeamCollide(hit, direction, distanceTravelled);
+                }
+            }
+        }
+    }
+
     #endregion
 
     #region Custom_Methods
@@ -156,17 +190,26 @@ public class Beam : Spell
 
     public void UpdateBeam(Vector3 startPosition, Vector3 direction)
     {
-        // position
-        Vector3 offset = endPos - startPos;
-        Vector3 position = startPos + (offset * 0.5f);
-        graphics.transform.position = position;
+        if(usingCylinder)
+        {
+            // position
+            Vector3 offset = endPos - startPos;
+            Vector3 position = startPos + (offset * 0.5f);
+            graphics.transform.position = position;
+            
+            // scale
+            Vector3 localScale = graphics.transform.localScale;
+            localScale.y = (endPos - startPos).magnitude * 0.5f;
+            graphics.transform.localScale = localScale;
 
-        // scale
-        Vector3 localScale = graphics.transform.localScale;
-        localScale.y = (endPos - startPos).magnitude * 0.5f;
-        graphics.transform.localScale = localScale;
-        
-        graphics.transform.rotation = Quaternion.FromToRotation(Vector3.up, offset);
+            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction);
+        }
+        else
+        {
+            graphics.transform.position = startPosition;
+            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
+        }
+
     }
 
     //IEnumerator CastBeam(GameObject self, Spellbook spellbook, SpellData data)

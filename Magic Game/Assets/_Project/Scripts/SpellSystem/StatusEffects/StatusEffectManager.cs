@@ -77,6 +77,7 @@ public class StatusEffectManager : MonoBehaviour
             if (affectingEffects[i].GetType() == effect.GetType())
             {
                 // found the effect we want to remove
+                Debug.Log("Removed " + affectingEffects[i].name);
                 affectingEffects[i].OnLeave();
                 affectingEffects.RemoveAt(i);
                 return;

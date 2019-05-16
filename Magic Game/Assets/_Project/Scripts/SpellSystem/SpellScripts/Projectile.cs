@@ -28,7 +28,7 @@ public class Projectile : Spell
 
     #region Unitys_Methods
 
-    void Start()
+    private void Start()
     {
         if (!inited) Init();
     }
@@ -49,11 +49,11 @@ public class Projectile : Spell
     private void OnCollisionEnter(Collision collision)
     {
         // DEAL DAMAGE
-        var health = collision.gameObject.GetComponent<Health>();
-        if (health != null)
-        {
-            base.DealDamage(health, baseDamage);
-        }
+        //var health = collision.gameObject.GetComponent<Health>();
+        //if (health != null)
+        //{
+        //    base.DealDamage(health, baseDamage);
+        //}
 
         // APPLY STATUSEFFECTS
         var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();
@@ -89,16 +89,21 @@ public class Projectile : Spell
 
     private void Init()
     {
-        spellType = SpellType.PROJECTILE;
-        GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
-        graphicsCopy.transform.SetParent(gameObject.transform);
+        if(graphics != null)
+        {
+            GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
+            graphicsCopy.transform.SetParent(transform);
+        }
         lastPos = transform.position;
         modifiers = GetComponents<SpellModifier>();
     }
 
     private void DestroyProjectile()
     {
-        Instantiate(explosionParticle, transform.position, transform.rotation);
+        if(explosionParticle != null)
+        {
+            Instantiate(explosionParticle, transform.position, transform.rotation);
+        }
         Destroy(gameObject);
     }
 
@@ -120,7 +125,7 @@ public class Projectile : Spell
         // get the direction from the spellbook and spawn projectile accodring to that
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
-        Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
+        Projectile projectile = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Projectile>();
         projectile.direction = direction;
         projectile.caster = spellbook.gameObject;
         projectile.isMaster = true;
