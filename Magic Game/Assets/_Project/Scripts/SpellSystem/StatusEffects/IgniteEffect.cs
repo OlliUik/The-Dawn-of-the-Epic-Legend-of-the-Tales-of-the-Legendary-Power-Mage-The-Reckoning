@@ -27,7 +27,7 @@ public class IgniteEffect : StatusEffect
         if (target != null)
         {
             var health = target.GetComponent<Health>();
-            health.Hurt(damagePerTick);
+            health.Hurt(damagePerTick, true);
         }
         else
         {

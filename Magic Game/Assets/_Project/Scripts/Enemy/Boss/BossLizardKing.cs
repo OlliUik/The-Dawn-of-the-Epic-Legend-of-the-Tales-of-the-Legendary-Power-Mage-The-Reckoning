@@ -1,204 +1,342 @@
-﻿//using System.Collections;
+﻿using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class BossLizardKing : EnemyCore
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class BossLizardKing : EnemyMagicRanged
 {
-    public enum EBossAttackPattern
+    public enum EBossPattern
     {
-        NONE,
-        ATTACK_MELEE,
-        ATTACK_RANGED,
-        CIRCLE_AROUND_TARGET,
-        TAUNT
-    };
+        PROJECTILE,
+        PROJECTILE_BEAM_ANIM,
+        BEAM,
+        AOE,
+        GROUND_SMASH,
+        DASH
+    }
 
-    [SerializeField] private Image bossHealthBar = null;
-
-    private GameObject targetGO = null;
-    private EBossAttackPattern currentPattern = EBossAttackPattern.TAUNT;
-    private float tauntTimer = 5.0f;
-
-    protected override void Update()
+    [System.Serializable]
+    private class PatternPreference
     {
-        AdvanceTimers();
+        public Color color = Color.yellow;
+        public Vector2 range = Vector2.up;
+        public BossAttackPattern[] patterns = null;
+    }
 
-        if (currentState != EState.DISABLED)
+    [Header("Boss -> Behaviour")]
+    [SerializeField] private BossAttackPattern defaultPattern;
+    [SerializeField] private PatternPreference[] patternPreferences;
+    //[SerializeField] private BossAttackPattern[] patterns;
+
+    private BossAttackPattern currentPattern;
+    private float patternTimer = 0.0f;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        isRanged = false;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        //ApplyPattern(patterns[0]);
+        ApplyRandomPattern();
+
+        //if (patterns.Length == 0)
+        //{
+        //    Debug.LogError(this.gameObject + " has no patterns attached!");
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < patterns.Length; i++)
+        //    {
+        //        if (patterns[i] == null)
+        //        {
+        //            Debug.LogWarning(this.gameObject + " pattern slot number " + i + " is empty!");
+        //        }
+        //    }
+        //}
+    }
+
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+
+        #if UNITY_EDITOR
+        for (int i = 0; i < patternPreferences.Length; i++)
         {
-            switch (currentState)
-            {
-                case EState.ATTACK: AIAttack(); break;
-                case EState.CASTING: AICasting(); break;
-                case EState.SEARCH: AISearch(); break;
-                default: currentState = EState.DISABLED; break;
-            }
-
-            if (GlobalVariables.bAnyPlayersAlive == false)
-            {
-                currentState = EState.DISABLED;
-            }
+            //Gizmos.color = patternPreferences[i].color;
+            //Gizmos.DrawWireSphere(transform.position, patternPreferences[i].range.x);
+            //Gizmos.DrawWireSphere(transform.position, patternPreferences[i].range.y);
+            Handles.color = patternPreferences[i].color;
+            Handles.DrawWireDisc(transform.position + Vector3.up * i * 0.1f, Vector3.up, patternPreferences[i].range.x);
+            Handles.DrawWireDisc(transform.position + Vector3.up * i * 0.1f, Vector3.up, patternPreferences[i].range.y);
         }
+        #endif
+    }
 
-        if (vision.targetGO != null && vision.targetGO != targetGO)
+    public override void OnDeath()
+    {
+        currentState = EState.DISABLED;
+        GlobalVariables.teamBadBoys.Remove(this.gameObject);
+
+        //Detach the enemy model and ragdoll it
+        //animator.enabled = false;
+        //animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false);
+        //animator.transform.parent = null;
+
+        Destroy(this.gameObject);
+    }
+
+    protected override void EnemyStateMachine()
+    {
+        switch (currentState)
         {
-            targetGO = vision.targetGO;
-        }
-        else
-        {
-            if (targetGO != null)
-            {
-                targetPosition = targetGO.transform.position;
-            }
+            case EState.DISABLED: break;
+            case EState.ATTACK: AIAttack(); break;
+            case EState.CASTING: AICasting(); break;
+            case EState.ESCAPE: AIAttack(); break;
+            default: currentState = EState.ATTACK; break;
         }
     }
 
-    public override void OnHurt()
+    private void ApplyRandomPattern()
     {
-        animator.SetTrigger("Take Damage");
-        if (bossHealthBar != null)
+        //Initialize counter
+        int counter = 0;
+
+        //Find the amount of all possible patterns, and initialize array with that amount
+        for (int i = 0; i < patternPreferences.Length; i++)
         {
-            bossHealthBar.rectTransform.localScale = new Vector3(cHealth.health / cHealth.maxHealth, 1.0f, 1.0f);
+            counter += patternPreferences[i].patterns.Length;
         }
+        BossAttackPattern[] possiblePatterns = new BossAttackPattern[counter];
+
+        //Reset counter, so it can be re-used
+        counter = 0;
+        
+        //If player is within a certain range, add all the patterns in that range to possible patterns
+        for (int outerLoop = 0; outerLoop < patternPreferences.Length; outerLoop++)
+        {
+            if ((transform.position - cVision.targetLocation).sqrMagnitude > patternPreferences[outerLoop].range.x * patternPreferences[outerLoop].range.x
+                && (transform.position - cVision.targetLocation).sqrMagnitude < patternPreferences[outerLoop].range.y * patternPreferences[outerLoop].range.y)
+            {
+                for (int innerLoop = 0; innerLoop < patternPreferences[outerLoop].patterns.Length; innerLoop++)
+                {
+                    possiblePatterns[counter] = patternPreferences[outerLoop].patterns[innerLoop];
+                    counter++;
+                }
+            }
+        }
+
+        if (counter == 0)
+        {
+            if (defaultPattern != null)
+            {
+                Debug.LogWarning(this.gameObject + " found no fitting pattern, using the default one...");
+                ApplyPattern(defaultPattern);
+                return;
+            }
+            else
+            {
+                Debug.LogError(this.gameObject + " couldn't find any fitting patterns, and is missing default pattern!");
+                currentState = EState.DISABLED;
+                return;
+            }
+        }
+        else
+        {
+            //Apply a random pattern from the list of possible patterns
+            ApplyPattern(possiblePatterns[Mathf.RoundToInt(Random.Range(0, counter))]);
+        }
+    }
+
+    private void ApplyPattern(BossAttackPattern pattern)
+    {
+        currentPattern = pattern;
+
+        //Spellcasting
+        cSpellBook.spells[0].spell = pattern.spell;
+        //cSpellBook.spells[0].type = pattern.spellType;
+        cSpellBook.spells[0].cards.Clear();
+        if (pattern.cards.Length > 0)
+        {
+            bool canApply = true;
+
+            for (int i = 0; i < pattern.cards.Length; i++)
+            {
+                if (pattern.cards[i] == null)
+                {
+                    Debug.LogWarning(pattern + " has empty card slots!");
+                    canApply = false;
+                }
+            }
+
+            if (canApply)
+            {
+                cSpellBook.spells[0].cards.AddRange(pattern.cards);
+                Debug.Log("Cards applied successfully.");
+            }
+        }
+
+        switch (pattern.attackPattern)
+        {
+            case EBossPattern.PROJECTILE: attackAnimation = 0; break;
+            case EBossPattern.PROJECTILE_BEAM_ANIM: attackAnimation = 1; break;
+            case EBossPattern.BEAM: attackAnimation = 1; break;
+            case EBossPattern.AOE: attackAnimation = 2; break;
+            case EBossPattern.DASH: attackAnimation = 4; break;
+            default: attackAnimation = 0; break;
+        }
+
+        moveWhileCasting = pattern.moveWhileCasting;
+        standStillAfterCasting = pattern.standStillAfterCasting;
+        castInBursts = pattern.castInBursts;
+        castingTime = pattern.castingTime;
+        burstCount = pattern.burstCount;
+        timeBetweenCasts = pattern.timeBetweenCasts;
+        castingCooldown = pattern.castingCooldown;
+        
+        //Navigation
+        cNavigation.minDistanceFromAttackTarget = pattern.minDistanceFromAttackTarget;
+        cNavigation.walkingSpeed = pattern.walkingSpeed;
+        cNavigation.walkingAcceleration = pattern.walkingAcceleration;
+        cNavigation.runningSpeed = pattern.runningSpeed;
+        cNavigation.runningAcceleration = pattern.runningAcceleration;
+        cNavigation.panicSpeed = pattern.panicSpeed;
+        cNavigation.panicAcceleration = pattern.panicAcceleration;
+
+        Debug.Log("Pattern applied successfully.");
     }
 
     protected override void AIAttack()
     {
-        if (vision.bCanSeeTarget)
+        if (cVision.bCanSeeTarget)
         {
-            switch (currentPattern)
+            if ((transform.position - cVision.targetLocation).sqrMagnitude < currentPattern.attackDistance * currentPattern.attackDistance)
             {
-                case EBossAttackPattern.NONE: break;
-                case EBossAttackPattern.ATTACK_MELEE:
-                    {
-                        currentEnemyType = EEnemyType.MELEE;
+                patternTimer = 0.0f;
 
-                        if (Vector3.Distance(transform.position, vision.targetLocation) < meleeAttackDistance)
-                        {
-                            if (castingStandstillTimer > 0.0f)
-                            {
-                                animator.SetTrigger("Interrupt Spell");
-                                return;
-                            }
-                            castingStandstillTimer = castingStandstill;
-                            animator.SetTrigger("Cast Spell");
-                            animator.SetInteger("Spell Type", castingSpellType);
-                            currentState = EState.CASTING;
-                        }
-                        else if (Vector3.Distance(transform.position, vision.targetLocation) > rangedEscapeDistance * 2)
-                        {
-                            currentPattern = EBossAttackPattern.ATTACK_RANGED;
-                        }
-                        break;
-                    }
-                case EBossAttackPattern.ATTACK_RANGED:
+                if (castingCooldownTimer <= 0.0f)
+                {
+                    if (castInBursts)
                     {
-                        currentEnemyType = EEnemyType.RANGED;
+                        shotsLeft = burstCount;
+                    }
+                    else
+                    {
+                        shotsLeft = 1;
+                    }
 
-                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeDistance)
-                        {
-                            currentPattern = EBossAttackPattern.ATTACK_MELEE;
-                            return;
-                        }
-
-                        if (shootIntervalTimer <= 0.0f)
-                        {
-                            shootIntervalTimer = castingInterval;
-                            castingTimer = castingTime;
-                            castingStandstillTimer = castingStandstill;
-                            animator.SetTrigger("Cast Spell");
-                            animator.SetInteger("Spell Type", castingSpellType);
-                            currentState = EState.CASTING;
-                        }
-                        break;
-                    }
-                case EBossAttackPattern.CIRCLE_AROUND_TARGET:
-                    {
-                        break;
-                    }
-                case EBossAttackPattern.TAUNT:
-                    {
-                        if (Vector3.Distance(transform.position, vision.targetLocation) < meleeAttackDistance)
-                        {
-                            currentPattern = EBossAttackPattern.ATTACK_MELEE;
-                        }
-                        else
-                        {
-                            if (tauntTimer > 0.0f)
-                            {
-                                tauntTimer -= Time.deltaTime;
-                            }
-                            else
-                            {
-                                currentPattern = EBossAttackPattern.ATTACK_MELEE;
-                            }
-                        }
-                        break;
-                    }
+                    castingCooldownTimer = castingCooldown;
+                    castingTimer = castingTime;
+                    castStandStillTimer = standStillAfterCasting;
+                    animator.SetTrigger("Cast Spell");
+                    animator.SetInteger("Spell Type", attackAnimation);
+                    animator.SetInteger("Casts Left", shotsLeft);
+                    currentState = EState.CASTING;
+                }
             }
-        }
-        else
-        {
-            currentState = EState.SEARCH;
+
+            patternTimer += logicInterval;
+            if (patternTimer > 8.0f)
+            {
+                Debug.Log(this.gameObject + " took too long to attack, switching pattern...");
+                patternTimer = 0.0f;
+                ApplyRandomPattern();
+            }
         }
     }
 
     protected override void AICasting()
     {
-        if (currentPattern == EBossAttackPattern.ATTACK_MELEE)
+        switch (currentPattern.attackPattern)
         {
-            if (!bCastedProjectile)
-            {
-                vision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
-                bCastedProjectile = true;
-            }
+            case EBossPattern.PROJECTILE_BEAM_ANIM:
+                {
+                    /*------------------------------------------------------------------------------------*/
+                    
+                    if (castingTimer <= 0.0f)
+                    {
+                        if (shotsLeft > 0)
+                        {
+                            cSpellBook.CastSpell(0);
+                            shotsLeft--;
+                            animator.SetInteger("Casts Left", shotsLeft);
 
-            if (castingStandstillTimer <= 0.0f)
-            {
-                bCastedProjectile = false;
-                currentState = EState.ATTACK;
-            }
+                            if (!cVision.bCanSeeTarget)
+                            {
+                                bCastedProjectile = false;
+                                currentState = EState.ATTACK;
+                                castingCooldownTimer *= 0.25f;
+                                return;
+                            }
+                            castingTimer = timeBetweenCasts;
+                        }
+                        else
+                        {
+                            if (castStandStillTimer <= 0.0f)
+                            {
+                                bCastedProjectile = false;
+                                currentState = EState.ATTACK;
+                            }
+                        }
+                    }
+                    else if (!bCastedProjectile)
+                    {
+                        bCastedProjectile = true;
+                        animator.SetTrigger("Release Hold");
+                    }
+
+                    /*------------------------------------------------------------------------------------*/
+
+                    break;
+                }
+            case EBossPattern.DASH:
+                {
+                    /*------------------------------------------------------------------------------------*/
+
+                    if (!bCastedProjectile)
+                    {
+                        bCastedProjectile = true;
+                        //StartCoroutine("DashCoroutine");
+
+                        Debug.LogWarning(this.gameObject + " Dashing is currently disabled in code!");
+                        bCastedProjectile = false;
+                        currentState = EState.ATTACK;
+                    }
+
+                    /*------------------------------------------------------------------------------------*/
+
+                    break;
+                }
+            default:
+                {
+                    base.AICasting();
+                    break;
+                }
         }
-        else
-        {
-            if (castingTimer <= 0.0f)
-            {
-                if (!bCastedProjectile)
-                {
-                    //CastProjectile();
-                    cSpellBook.CastSpell(0);
-                    bCastedProjectile = true;
-                }
 
-                if (castingStandstillTimer <= 0.0f)
-                {
-                    bCastedProjectile = false;
-                    currentState = EState.ATTACK;
-                }
-            }
+        if (currentState == EState.ATTACK)
+        {
+            ApplyRandomPattern();
         }
     }
 
-    protected override void AISearch()
-    {
-        if (searchPlayerAfterAttack)
-        {
-            if (vision.bCanSeeTarget)
-            {
-                currentState = EState.ATTACK;
-            }
-            else
-            {
-                if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(vision.targetLocation.x, vision.targetLocation.z)) < navigation.navigationErrorMargin
-                    || vision.targetLocation == Vector3.zero)
-                {
-                    currentState = EState.IDLE;
-                }
-            }
-        }
-        else
-        {
-            currentState = EState.ATTACK;
-        }
-    }
+    //IEnumerator DashCoroutine()
+    //{
+    //    cNavigation.cAgent.ResetPath();
+    //    cNavigation.cAgent.velocity = Vector3.zero;
+    //    cNavigation.cAgent.SetDestination(cVision.targetLocation);
+    //    yield return new WaitForSeconds(castingTime);
+    //    bCastedProjectile = false;
+    //    currentState = EState.ATTACK;
+    //    yield return null;
+    //}
 }

@@ -6,19 +6,30 @@ public class EnemyNavigation : MonoBehaviour
 {
     #region VARIABLES
 
-    [SerializeField] private bool moveWhileCasting = false;
-    [SerializeField] private float navigationInterval = 1.0f;
-    [SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
+    [Header("Movement Speed")]
+    public float walkingSpeed = 5.0f;
+    public float walkingAcceleration = 8.0f;
+    public float runningSpeed = 10.0f;
+    public float runningAcceleration = 8.0f;
+    public float panicSpeed = 12.0f;
+    public float panicAcceleration = 8.0f;
+    [Header("Navigation")]
+    //[SerializeField] private bool moveWhileCasting = false;
+    //[SerializeField] private float navigationInterval = 1.0f;
+    //[SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
+    public float minDistanceFromAttackTarget = 2.0f;
+    [SerializeField] private float paranoidMoveInterval = 1.0f;
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
     [SerializeField] private Vector3[] patrolPoints = null;
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
-    public NavMeshAgent agent { get; private set; } = null;
+    public NavMeshAgent cAgent { get; private set; } = null;
 
     private int navCurrentPoint = 0;
     private float navTimer = 0.0f;
     private float waitTimer = 0.0f;
-    private int validPathAttempts = 10;
+    private float navErrorTimer = 0.0f;
+    private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
 
     #endregion
@@ -28,56 +39,90 @@ public class EnemyNavigation : MonoBehaviour
     void Start()
     {
         cEnemyCore = GetComponent<EnemyCore>();
-        agent = GetComponent<NavMeshAgent>();
+        cAgent = GetComponent<NavMeshAgent>();
         navTimer = Random.Range(0.0f, 2.0f);
     }
 
-    void Update()
+    public void NavigationLoop()
     {
-        if (navTimer <= 0.0f)
+        switch (cEnemyCore.currentState)
         {
-            navTimer = cEnemyCore.vision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
-            switch (cEnemyCore.currentState)
-            {
-                case EnemyCore.EState.IDLE: AIIdle(); break;
-                case EnemyCore.EState.PATROL: AIPatrol(); break;
-                case EnemyCore.EState.ALERTED: AIAlerted(); break;
-                case EnemyCore.EState.PARANOID: AIParanoid(); break;
-                case EnemyCore.EState.SEARCH: AISearch(); break;
-                case EnemyCore.EState.ATTACK: AIAttack(); break;
-                case EnemyCore.EState.CASTING: AICasting(); break;
-                case EnemyCore.EState.ESCAPE: AIEscape(); break;
-                case EnemyCore.EState.PANIC: AIPanic(); break;
-                case EnemyCore.EState.RAGDOLLED: break;
-                default: if (agent.hasPath) agent.ResetPath(); break;
-            }
-
-            if (!agent.hasPath && !cEnemyCore.vision.bCanSeeTarget && cEnemyCore.vision.targetLocation != Vector3.zero)
-            {
-                if (validPathAttempts > 0)
-                {
-                    validPathAttempts--;
-                }
-                else
-                {
-                    cEnemyCore.vision.targetLocation = Vector3.zero;
-                }
-            }
-            else
-            {
-                validPathAttempts = 10;
-            }
+            case EnemyCore.EState.IDLE: AIIdle(); break;
+            case EnemyCore.EState.PATROL: AIPatrol(); break;
+            case EnemyCore.EState.ALERTED: AIAlerted(); break;
+            case EnemyCore.EState.PARANOID: AIParanoid(); break;
+            case EnemyCore.EState.SEARCH: AISearch(); break;
+            case EnemyCore.EState.ATTACK: AIAttack(); break;
+            case EnemyCore.EState.CASTING: AICasting(); break;
+            case EnemyCore.EState.ESCAPE: AIEscape(); break;
+            case EnemyCore.EState.PANIC: AIPanic(); break;
+            case EnemyCore.EState.RAGDOLLED: break;
+            default: if (cAgent.hasPath) cAgent.ResetPath(); break;
+        }
+        
+        if (cEnemyCore.currentState == EnemyCore.EState.IDLE
+            || cEnemyCore.currentState == EnemyCore.EState.PATROL
+            || cEnemyCore.currentState == EnemyCore.EState.PARANOID
+            || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+        {
+            cAgent.speed = walkingSpeed;
+            cAgent.acceleration = walkingAcceleration;
+        }
+        else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
+        {
+            cAgent.speed = panicSpeed;
+            cAgent.acceleration = panicAcceleration;
         }
         else
         {
-            navTimer -= Time.deltaTime;
+            cAgent.speed = runningSpeed;
+            cAgent.acceleration = runningAcceleration;
         }
 
-        if (waitTimer > 0.0f)
+        if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
         {
-            waitTimer -= Time.deltaTime;
+            cAgent.stoppingDistance = 1.0f;
         }
+        else
+        {
+            cAgent.stoppingDistance = 0.0f;
+        }
+
+        //When walking away from player, give more acceleration
+        float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
+        cAgent.acceleration += accel;
     }
+
+    //void Update()
+    //{
+    //    if (navTimer <= 0.0f)
+    //    {
+    //        navTimer = cEnemyCore.cVision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
+    //        switch (cEnemyCore.currentState)
+    //        {
+    //            case EnemyCore.EState.IDLE: AIIdle(); break;
+    //            case EnemyCore.EState.PATROL: AIPatrol(); break;
+    //            case EnemyCore.EState.ALERTED: AIAlerted(); break;
+    //            case EnemyCore.EState.PARANOID: AIParanoid(); break;
+    //            case EnemyCore.EState.SEARCH: AISearch(); break;
+    //            case EnemyCore.EState.ATTACK: AIAttack(); break;
+    //            case EnemyCore.EState.CASTING: AICasting(); break;
+    //            case EnemyCore.EState.ESCAPE: AIEscape(); break;
+    //            case EnemyCore.EState.PANIC: AIPanic(); break;
+    //            case EnemyCore.EState.RAGDOLLED: break;
+    //            default: if (cAgent.hasPath) cAgent.ResetPath(); break;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        navTimer -= Time.deltaTime;
+    //    }
+
+    //    if (waitTimer > 0.0f)
+    //    {
+    //        waitTimer -= Time.deltaTime;
+    //    }
+    //}
 
     void OnDrawGizmosSelected()
     {
@@ -112,7 +157,7 @@ public class EnemyNavigation : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
         {
-            agent.SetDestination(cEnemyCore.spawnPosition);
+            cAgent.SetDestination(cEnemyCore.spawnPosition);
         }
     }
 
@@ -135,7 +180,7 @@ public class EnemyNavigation : MonoBehaviour
 
             if (waitTimer <= 0.0f)
             {
-                agent.SetDestination(patrolPoints[navCurrentPoint]);
+                cAgent.SetDestination(patrolPoints[navCurrentPoint]);
             }
         }
         else
@@ -146,70 +191,144 @@ public class EnemyNavigation : MonoBehaviour
 
     void AIAlerted()
     {
-        //agent.SetDestination(GlobalVariables.player.transform.position);
+        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
     }
 
     void AIParanoid()
     {
-        Vector3 randomPosition = Vector3.zero;
-        randomPosition.x = Random.Range(-1.0f, 1.0f);
-        randomPosition.y = 0.0f;
-        randomPosition.z = Random.Range(-1.0f, 1.0f);
+        if (paranoidTimer <= 0.0f)
+        {
+            paranoidTimer = paranoidMoveInterval;
 
-        agent.SetDestination(transform.position + randomPosition);
+            Vector3 randomPosition = Vector3.zero;
+            randomPosition.x = Random.Range(-1.0f, 1.0f);
+            randomPosition.y = 0.0f;
+            randomPosition.z = Random.Range(-1.0f, 1.0f);
+
+            cAgent.SetDestination(transform.position + randomPosition);
+        }
+        else
+        {
+            paranoidTimer -= cEnemyCore.LogicInterval;
+        }
     }
 
     void AISearch()
     {
-        agent.SetDestination(cEnemyCore.vision.targetLocation);
+        //if (cAgent.remainingDistance < navigationErrorMargin)
+        //{
+        //    cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        //}
+        //else
+        //{
+        //    if (navErrorTimer < 3.0f && cAgent.velocity.sqrMagnitude < 1.0f)
+        //    {
+        //        navErrorTimer += cEnemyCore.LogicInterval;
+        //    }
+        //    else if (navErrorTimer >= 3.0f)
+        //    {
+        //        Debug.LogWarning(this.gameObject + " seems to have no valid path towards given location...");
+        //        navErrorTimer = 0.0f;
+        //        //cEnemyCore.currentState = EnemyCore.EState.PARANOID;
+        //    }
+        //}
+
+        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+
+        if (navErrorTimer < 3.0f && cAgent.velocity.sqrMagnitude < 1.0f)
+        {
+            navErrorTimer += cEnemyCore.LogicInterval;
+        }
+        else if (navErrorTimer >= 3.0f)
+        {
+            Debug.LogWarning(this.gameObject + " seems to have no valid path towards given location...");
+            navErrorTimer = 0.0f;
+            cEnemyCore.cVision.targetLocation = Vector3.zero;
+        }
+
+
+        //NavMeshHit navHit;
+        //if (NavMesh.Raycast(cEnemyCore.cVision.targetLocation, cEnemyCore.cVision.targetLocation + Vector3.down * 5.0f, out navHit, NavMesh.AllAreas))
+        //{
+        //}
+        //else
+        //{
+        //    if (navErrorTimer < 3.0f && agent.velocity.sqrMagnitude < 1.0f)
+        //    {
+        //        navErrorTimer += navigationInterval;
+        //    }
+        //    else if (navErrorTimer >= 3.0f)
+        //    {
+        //        Debug.LogWarning(this.gameObject + " seems to have no valid path towards given location...");
+        //        navErrorTimer = 0.0f;
+        //        //cEnemyCore.currentState = EnemyCore.EState.PARANOID;
+        //    }
+        //}
     }
 
     void AIAttack()
     {
-        if (!moveWhileCasting && cEnemyCore.currentEnemyType != EnemyCore.EEnemyType.MELEE)
+        if (cEnemyCore.isRanged)
         {
-            if (agent.hasPath)
+            float escapeDistance = (cEnemyCore as EnemyRanged).rangedEscapeDistance;
+            if ((transform.position - cEnemyCore.cVision.targetLocation).sqrMagnitude > escapeDistance * escapeDistance)
             {
-                agent.ResetPath();
+                return;
             }
         }
-        else
-        {
-            agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
-        }
+
+        Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
+        cAgent.SetDestination(nearTargetLocation);
+
+        //if (!cEnemyCore.MoveWhileCasting)
+        //{
+        //    if (agent.hasPath)
+        //    {
+        //        agent.ResetPath();
+        //    }
+        //}
+        //else
+        //{
+        //    agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
+        //}
     }
 
     void AICasting()
     {
-        if (moveWhileCasting)
+        if (cEnemyCore.MoveWhileCasting)
         {
-            agent.SetDestination(GetComponent<EnemyVision>().targetLocation);
+            Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
+            cAgent.SetDestination(nearTargetLocation);
         }
         else
         {
-            if (agent.hasPath)
+            if (cAgent.hasPath)
             {
-                agent.ResetPath();
+                cAgent.ResetPath();
             }
-
-            if (cEnemyCore.currentEnemyType == EnemyCore.EEnemyType.MELEE)
-            {
-                agent.velocity = new Vector3(0.0f, agent.velocity.y, 0.0f);
-            }
+            cAgent.velocity = new Vector3(0.0f, cAgent.velocity.y, 0.0f);
         }
     }
 
     void AIEscape()
     {
-        if (Vector3.Distance(transform.position, cEnemyCore.vision.targetLocation) < 20.0f)
+        if (Vector3.Distance(transform.position, cEnemyCore.cVision.targetLocation) < 20.0f)
         {
-            agent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.vision.targetLocation) * 5.0f);
+            cAgent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);
         }
     }
 
     void AIPanic()
     {
+        if (cAgent.remainingDistance < 2.0f)
+        {
+            Vector3 randomPosition = Vector3.zero;
+            randomPosition.x = Random.Range(-5.0f, 5.0f);
+            randomPosition.y = 0.0f;
+            randomPosition.z = Random.Range(-5.0f, 5.0f);
 
+            cAgent.SetDestination(transform.position + randomPosition);
+        }
     }
 
     #endregion

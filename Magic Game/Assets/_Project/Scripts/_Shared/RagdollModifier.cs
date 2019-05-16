@@ -7,13 +7,14 @@ public class RagdollModifier : MonoBehaviour
 {
     [SerializeField] private string armatureName = "Armature";
     [SerializeField] private List<Rigidbody> excludeFromKinematicToggle = new List<Rigidbody>();
+
     private List<Transform> armatureBones = new List<Transform>();
-    
+
     void Start()
     {
         GetBones(armatureBones, armatureName);
         SetDepenetrationValues(armatureBones, 3.0f);
-        SetKinematic(true);
+        SetKinematic(true, false);
     }
 
     void GetBones(List<Transform> list, string armatureName)
@@ -59,12 +60,12 @@ public class RagdollModifier : MonoBehaviour
         }
     }
 
-    public void SetKinematic(bool b)
+    public void SetKinematic(bool setKinematic, bool detectCollisions)
     {
-        SetKinematic(b, armatureBones);
+        SetKinematic(setKinematic, detectCollisions, armatureBones);
     }
 
-    void SetKinematic(bool b, List<Transform> list)
+    void SetKinematic(bool setKinematic, bool detectCollisions, List<Transform> list)
     {
         if (list.Count > 0)
         {
@@ -75,11 +76,12 @@ public class RagdollModifier : MonoBehaviour
                 {
                     if (!excludeFromKinematicToggle.Contains(rigid))
                     {
-                        rigid.isKinematic = b;
+                        rigid.isKinematic = setKinematic;
+                        rigid.detectCollisions = detectCollisions;
                     }
                 }
             }
-            Debug.Log("Set ragdoll's rigidbodies' isKinematic to " + (b ? "true." : "false."));
+            Debug.Log("Set ragdoll's rigidbodies' isKinematic to " + (setKinematic ? "true." : "false."));
         }
     }
 }
