@@ -37,7 +37,7 @@ public class StatusEffect
         endTime = Time.time + duration;
         this.target = target;
         effectManager = target.GetComponent<StatusEffectManager>();
-        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
+        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + Vector3.up * 2, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
         graphicsCopy.transform.SetParent(target.transform);
     }
 
