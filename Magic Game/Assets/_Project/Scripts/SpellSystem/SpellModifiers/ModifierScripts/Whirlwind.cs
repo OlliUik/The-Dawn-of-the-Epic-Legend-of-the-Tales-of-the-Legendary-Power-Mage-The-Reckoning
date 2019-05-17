@@ -5,7 +5,7 @@ using UnityEngine;
 public class Whirlwind : SpellModifier
 {
 
-    public GameObject tornadoPrefab = null;
+    public GameObject tornadoPrefab;
     public WhirlwindVariables variables;
 
 

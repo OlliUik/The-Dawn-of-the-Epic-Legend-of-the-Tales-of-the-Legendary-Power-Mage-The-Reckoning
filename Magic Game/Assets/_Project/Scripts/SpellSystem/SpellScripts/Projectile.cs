@@ -9,8 +9,9 @@ public class Projectile : Spell
     #region Variables
 
     [Header("Projectile variables")]
-    [SerializeField] protected float baseDamage         = 50.0f;
+    public float baseDamage                             = 50.0f;
     public float baseSpeed                              = 15.0f;
+    private float miniAoeRadius                         = 3f;
 
     public GameObject graphics                          = null;
     public GameObject explosionParticle                 = null;
@@ -48,20 +49,28 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
-        // DEAL DAMAGE
-        //var health = collision.gameObject.GetComponent<Health>();
-        //if (health != null)
-        //{
-        //    base.DealDamage(health, baseDamage);
-        //}
+        bool hitLiving = false;
 
-        // APPLY STATUSEFFECTS
-        var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();
-        if (effectManager != null)
+        // DEAL DAMAGE
+        Collider[] hitObjects = Physics.OverlapSphere(transform.position, miniAoeRadius);
+        foreach (Collider go in hitObjects)
         {
-            base.ApplyStatusEffects(effectManager, statusEffects);
+            var health = go.gameObject.GetComponent<Health>();
+            if (health != null)
+            {
+                hitLiving = true;
+                base.DealDamage(health, baseDamage);
+            }
+
+            // APPLY STATUSEFFECTS
+            var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();
+            if (effectManager != null)
+            {
+                base.ApplyStatusEffects(effectManager, statusEffects);
+            }
         }
-        else
+
+        if(!hitLiving || hitObjects.Length <= 0)
         {
             // loop all effects and if there is water spawn them
             foreach (StatusEffect effect in statusEffects)
@@ -78,9 +87,15 @@ public class Projectile : Spell
                 modifier.ProjectileCollide(collision, direction);
             }
         }
-
+        
         // DESTROY ORGINAL
         DestroyProjectile();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, miniAoeRadius);
     }
 
     #endregion
