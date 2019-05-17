@@ -27,7 +27,7 @@ public class ArrowSpawner : MonoBehaviour
         arrow.position = spawnPoint.position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         timer -= Time.deltaTime;
 
