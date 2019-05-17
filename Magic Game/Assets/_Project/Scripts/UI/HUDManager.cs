@@ -31,7 +31,10 @@ public class HUDManager : MonoBehaviour
 
     private void Awake()
     {
-        spellEditingController = spellEditingUI.GetComponent<SpellEditorController>();
+        if(spellEditingUI != null)
+        {
+            spellEditingController = spellEditingUI.GetComponent<SpellEditorController>();
+        }
     }
 
     void Update()
