@@ -10,25 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81d1dd9de5de699458252f2dd86ccc70, type: 3}
-  m_Name: Projectile Flurry
+  m_Name: Fireball (Faster Bursts)
   m_EditorClassIdentifier: 
-  behaviourName: Projectile Flurry
-  behaviourDescription: Casts a series of deadly, homing projectiles. Has a somewhat
-    lengthy cast time.
+  behaviourName: Fireball
+  behaviourDescription: Casts a simple fireball.
   spellType: 1
-  spell: {fileID: 8270804939085402177, guid: 7c44ba9bf00ca8b40ae9a2910c61585b, type: 3}
+  spell: {fileID: 7140969940134153365, guid: 5bfb6d0466f97a74cacb25c7a85ad3f9, type: 3}
   cards:
   - {fileID: 11400000, guid: e92b6a603310cb04d87ee2b44fe91a8c, type: 2}
-  attackPattern: 1
-  attackDistance: 500
-  moveWhileCasting: 0
+  attackPattern: 0
+  attackDistance: 50
+  moveWhileCasting: 1
   standStillAfterCasting: 1
   castInBursts: 1
-  castingTime: 2
+  castingTime: 1
   burstCount: 5
-  timeBetweenCasts: 0.2
-  castingCooldown: 2
-  minDistanceFromAttackTarget: 10
+  timeBetweenCasts: 0.5
+  castingCooldown: 4
+  minDistanceFromAttackTarget: 20
   walkingSpeed: 5
   walkingAcceleration: 8
   runningSpeed: 10

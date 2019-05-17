@@ -14,6 +14,7 @@ public class PlayerCore : MonoBehaviour
     public Transform ragdollPosition = null;
 
     [Header("Serialized")]
+    [SerializeField] private bool enableForcedRagdolling = false;
     [SerializeField] private HUDManager canvasManager = null;
     [SerializeField] private GameObject ragdollObject = null;
     [SerializeField] private PlayerAnimationHandler cAnimHandler = null;
@@ -96,9 +97,12 @@ public class PlayerCore : MonoBehaviour
 
                 if (Input.GetButtonDown("Fire2"))
                 {
-                    if (!bIsRagdolled)
+                    if (enableForcedRagdolling)
                     {
-                        EnableRagdoll(true);
+                        if (!bIsRagdolled)
+                        {
+                            EnableRagdoll(true);
+                        }
                     }
                 }
 

@@ -33,6 +33,7 @@ public class BossLizardKing : EnemyMagicRanged
 
     private BossAttackPattern currentPattern;
     private float patternTimer = 0.0f;
+    private Vector2 currentPatternRange = Vector2.one;
 
     protected override void Awake()
     {
@@ -45,23 +46,7 @@ public class BossLizardKing : EnemyMagicRanged
     {
         base.Start();
 
-        //ApplyPattern(patterns[0]);
         ApplyRandomPattern();
-
-        //if (patterns.Length == 0)
-        //{
-        //    Debug.LogError(this.gameObject + " has no patterns attached!");
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < patterns.Length; i++)
-        //    {
-        //        if (patterns[i] == null)
-        //        {
-        //            Debug.LogWarning(this.gameObject + " pattern slot number " + i + " is empty!");
-        //        }
-        //    }
-        //}
     }
 
     protected override void OnDrawGizmosSelected()
@@ -104,6 +89,14 @@ public class BossLizardKing : EnemyMagicRanged
             case EState.ESCAPE: AIAttack(); break;
             default: currentState = EState.ATTACK; break;
         }
+
+        if (cVision.targetGO != null)
+        {
+            if (animator.GetComponent<RotateTowardsTarget>().targetTransform != cVision.targetGO.transform)
+            {
+                animator.GetComponent<RotateTowardsTarget>().targetTransform = cVision.targetGO.transform;
+            }
+        }
     }
 
     private void ApplyRandomPattern()
@@ -117,6 +110,7 @@ public class BossLizardKing : EnemyMagicRanged
             counter += patternPreferences[i].patterns.Length;
         }
         BossAttackPattern[] possiblePatterns = new BossAttackPattern[counter];
+        Vector2[] patternRanges = new Vector2[counter];
 
         //Reset counter, so it can be re-used
         counter = 0;
@@ -130,6 +124,7 @@ public class BossLizardKing : EnemyMagicRanged
                 for (int innerLoop = 0; innerLoop < patternPreferences[outerLoop].patterns.Length; innerLoop++)
                 {
                     possiblePatterns[counter] = patternPreferences[outerLoop].patterns[innerLoop];
+                    patternRanges[counter] = patternPreferences[outerLoop].range;
                     counter++;
                 }
             }
@@ -141,6 +136,7 @@ public class BossLizardKing : EnemyMagicRanged
             {
                 Debug.LogWarning(this.gameObject + " found no fitting pattern, using the default one...");
                 ApplyPattern(defaultPattern);
+                currentPatternRange = new Vector2(0.0f, Mathf.Infinity);
                 return;
             }
             else
@@ -153,7 +149,9 @@ public class BossLizardKing : EnemyMagicRanged
         else
         {
             //Apply a random pattern from the list of possible patterns
-            ApplyPattern(possiblePatterns[Mathf.RoundToInt(Random.Range(0, counter))]);
+            int random = Mathf.RoundToInt(Random.Range(0, counter));
+            ApplyPattern(possiblePatterns[random]);
+            currentPatternRange = patternRanges[random];
         }
     }
 
@@ -225,6 +223,14 @@ public class BossLizardKing : EnemyMagicRanged
 
                 if (castingCooldownTimer <= 0.0f)
                 {
+                    //If current pattern is no longer in valid preference range, randomize pattern
+                    if ((transform.position - cVision.targetLocation).sqrMagnitude < currentPatternRange.x * currentPatternRange.x
+                || (transform.position - cVision.targetLocation).sqrMagnitude > currentPatternRange.y * currentPatternRange.y)
+                    {
+                        Debug.LogWarning(this.gameObject + " pattern range is no longer valid, randomizing attack pattern...");
+                        ApplyRandomPattern();
+                    }
+
                     if (castInBursts)
                     {
                         shotsLeft = burstCount;

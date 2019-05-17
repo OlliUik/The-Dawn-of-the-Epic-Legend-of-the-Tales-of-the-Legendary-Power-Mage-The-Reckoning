@@ -40,15 +40,22 @@ public class RotateTowardsTarget : MonoBehaviour
             return;
         }
 
-        Debug.LogError(this.gameObject + " has no transform attached to " + this);
+        Debug.LogError(this.gameObject + " has no head transform attached to " + this);
         this.enabled = false;
     }
 
     void LateUpdate()
     {
-        headTransform.LookAt(targetTransform, Vector3.up);
-        headTransform.localRotation *= offsetQuaternion;
-        headTransform.localRotation = Quaternion.Lerp(previousRotation, headTransform.localRotation, Time.deltaTime * rotationSpeed);
-        previousRotation = headTransform.localRotation;
+        if (targetTransform != null)
+        {
+            headTransform.LookAt(targetTransform, Vector3.up);
+            headTransform.localRotation *= offsetQuaternion;
+            headTransform.localRotation = Quaternion.Lerp(previousRotation, headTransform.localRotation, Time.deltaTime * rotationSpeed);
+            previousRotation = headTransform.localRotation;
+        }
+        else
+        {
+            headTransform.localRotation = Quaternion.Euler(originalRotation);
+        }
     }
 }

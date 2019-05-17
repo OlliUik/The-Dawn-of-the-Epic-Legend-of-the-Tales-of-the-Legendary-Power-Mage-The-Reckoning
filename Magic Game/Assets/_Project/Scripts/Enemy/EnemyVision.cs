@@ -132,6 +132,11 @@ public class EnemyVision : MonoBehaviour
         {
             foreach (GameObject entity in (cEnemyCore.status.isConfused ? GlobalVariables.teamBadBoys : GlobalVariables.teamGoodGuys))
             {
+                if (entity == gameObject)
+                {
+                    continue;
+                }
+
                 Vector3 entityPosition = entity.transform.position + Vector3.up * checkHeightOffset;
 
                 if (alwaysSeeTarget)

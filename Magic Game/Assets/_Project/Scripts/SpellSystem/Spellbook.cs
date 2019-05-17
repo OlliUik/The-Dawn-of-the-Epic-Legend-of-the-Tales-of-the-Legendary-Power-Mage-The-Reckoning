@@ -106,7 +106,8 @@ public class Spellbook : MonoBehaviour
             Projectile proj = spells[0].spell as Projectile;
             if (proj != null)
             {
-                prediction = GetComponent<EnemyCore>().PredictTargetPosition(spellPos.position, proj.baseSpeed, GetComponent<EnemyCore>().cVision.targetLocation, GetComponent<EnemyCore>().cVision.targetGO.GetComponent<CharacterController>().velocity);
+                EnemyCore ec = GetComponent<EnemyCore>();
+                prediction = ec.PredictTargetPosition(spellPos.position, proj.baseSpeed, ec.cVision.targetLocation, ec.status.isConfused ? ec.cVision.targetGO.GetComponent<UnityEngine.AI.NavMeshAgent>().velocity : ec.cVision.targetGO.GetComponent<CharacterController>().velocity);
             }
             direction = -Vector3.Normalize(lookTransform.position - prediction);
         }
