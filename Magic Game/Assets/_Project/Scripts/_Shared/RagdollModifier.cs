@@ -7,6 +7,7 @@ public class RagdollModifier : MonoBehaviour
 {
     [SerializeField] private string armatureName = "Armature";
     [SerializeField] private List<Rigidbody> excludeFromKinematicToggle = new List<Rigidbody>();
+    [SerializeField] private List<Transform> hiddenWhenNotKinematic = new List<Transform>();
 
     private List<Transform> armatureBones = new List<Transform>();
 
@@ -82,6 +83,11 @@ public class RagdollModifier : MonoBehaviour
                 }
             }
             Debug.Log("Set ragdoll's rigidbodies' isKinematic to " + (setKinematic ? "true." : "false."));
+        }
+
+        foreach (Transform item in hiddenWhenNotKinematic)
+        {
+            item.gameObject.SetActive(setKinematic);
         }
     }
 }

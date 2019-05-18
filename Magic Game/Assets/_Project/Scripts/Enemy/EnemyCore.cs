@@ -85,6 +85,10 @@ public class EnemyCore : MonoBehaviour
     [Header("Core -> Ragdoll")]
     [SerializeField] protected Rigidbody ragdoll = null;
 
+    [Header("Core -> Other")]
+    [SerializeField] protected bool spawnAsGoodGuy = false;
+    [SerializeField] protected bool spawnAsConfused = false;
+
     public bool MoveWhileCasting { get { return moveWhileCasting; } }
     public float LogicInterval { get { return logicInterval; } }
 
@@ -101,8 +105,18 @@ public class EnemyCore : MonoBehaviour
 
     protected virtual void Awake()
     {
-        GlobalVariables.teamBadBoys.Add(this.gameObject);
-        entitySpawnNumber = GlobalVariables.teamBadBoys.Count;
+        if (spawnAsGoodGuy)
+        {
+            GlobalVariables.teamGoodGuys.Add(this.gameObject);
+            entitySpawnNumber = GlobalVariables.teamGoodGuys.Count;
+            status = new StatusEffects(status.isOnFire, !spawnAsConfused, status.isFrozen, status.isKnocked);
+        }
+        else
+        {
+            GlobalVariables.teamBadBoys.Add(this.gameObject);
+            entitySpawnNumber = GlobalVariables.teamBadBoys.Count;
+            status = new StatusEffects(status.isOnFire, spawnAsConfused, status.isFrozen, status.isKnocked);
+        }
     }
 
     protected virtual void Start()

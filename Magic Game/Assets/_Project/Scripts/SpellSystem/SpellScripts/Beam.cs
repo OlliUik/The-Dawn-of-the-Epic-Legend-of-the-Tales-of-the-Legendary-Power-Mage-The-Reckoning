@@ -107,13 +107,14 @@ public class Beam : Spell
             }
         }
 
+        Debug.DrawLine(startPos, endPos, Color.red);
         UpdateBeam(startPos, direction);
 
         // stop casting here
         if((Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0)) || (isMaster && spellbook.mana.mana <= 0f))
         {
             CastingEnd();
-
+        
             if (isMaster)
             {
                 spellbook.StopCasting();
@@ -161,6 +162,7 @@ public class Beam : Spell
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
         Beam beam = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Beam>();
+        beam.transform.SetParent(spellbook.transform);
         beam.caster = spellbook.gameObject;
         beam.isMaster = true;
         
@@ -206,8 +208,8 @@ public class Beam : Spell
         }
         else
         {
-            graphics.transform.position = startPosition;
-            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
+            graphics.transform.position = startPos;
+            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.right, direction);
         }
 
     }

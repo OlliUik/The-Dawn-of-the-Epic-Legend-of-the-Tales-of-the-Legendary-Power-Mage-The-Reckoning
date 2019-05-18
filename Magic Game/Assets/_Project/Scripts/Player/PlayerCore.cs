@@ -14,6 +14,8 @@ public class PlayerCore : MonoBehaviour
     public Transform ragdollPosition = null;
 
     [Header("Serialized")]
+    [SerializeField][Range(0,1)] private int spellControls = 0;
+    [SerializeField] private bool enableForcedRagdolling = false;
     [SerializeField] private HUDManager canvasManager = null;
     [SerializeField] private GameObject ragdollObject = null;
     [SerializeField] private PlayerAnimationHandler cAnimHandler = null;
@@ -79,72 +81,125 @@ public class PlayerCore : MonoBehaviour
         {
             if (bInputEnabled)
             {
-                if (Input.GetButtonDown("Fire1") || Input.GetAxisRaw("Fire1") != 0.0f)
-                {
-                    //Don't allow repeated input from controller axis
-                    if (!bShotFired)
-                    {
-                        cSpellBook.CastSpell(activeSpellIndex);
-                        bShotFired = true;
-                        cAnimHandler.CastSpell(activeSpellIndex);
-                    }
-                }
-                else
-                {
-                    bShotFired = false;
-                }
 
-                if (Input.GetButtonDown("Fire2"))
-                {
-                    if (!bIsRagdolled)
-                    {
-                        EnableRagdoll(true);
-                    }
-                }
+                #region TRADITIONAL_FPS_INPUT
 
-                // CHANGING ACTIVE SPELL
-                if(Input.mouseScrollDelta.y != 0 && !cSpellBook.isCasting)
+                if (spellControls == 0)
                 {
-                    if(Input.mouseScrollDelta.y > 0)
+                    if (Input.GetButtonDown("Fire1") || Input.GetAxisRaw("Fire1") != 0.0f)
                     {
-                        activeSpellIndex++;
-
-                        if(activeSpellIndex > 2)
+                        //Don't allow repeated input from controller axis
+                        if (!bShotFired)
                         {
-                            activeSpellIndex = 0;
+                            cSpellBook.CastSpell(activeSpellIndex);
+                            bShotFired = true;
+                            cAnimHandler.CastSpell(activeSpellIndex);
                         }
                     }
                     else
                     {
-                        activeSpellIndex--;
+                        bShotFired = false;
+                    }
 
-                        if(activeSpellIndex < 0)
+                    if (Input.GetButtonDown("Fire2"))
+                    {
+                        if (enableForcedRagdolling)
                         {
-                            activeSpellIndex = 2;
+                            if (!bIsRagdolled)
+                            {
+                                EnableRagdoll(true);
+                            }
                         }
                     }
 
-                    canvasManager.ChangeSpell(activeSpellIndex);
+                    // CHANGING ACTIVE SPELL
+                    if (Input.mouseScrollDelta.y != 0 && !cSpellBook.isCasting)
+                    {
+                        if (Input.mouseScrollDelta.y > 0)
+                        {
+                            activeSpellIndex++;
+
+                            if (activeSpellIndex > 2)
+                            {
+                                activeSpellIndex = 0;
+                            }
+                        }
+                        else
+                        {
+                            activeSpellIndex--;
+
+                            if (activeSpellIndex < 0)
+                            {
+                                activeSpellIndex = 2;
+                            }
+                        }
+
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        activeSpellIndex = 0;
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Alpha2))
+                    {
+                        activeSpellIndex = 1;
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Alpha3))
+                    {
+                        activeSpellIndex = 2;
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
                 }
 
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+                #endregion
+
+                #region MMO_STYLE_SKILL_INPUT
+
+                if (spellControls == 1)
                 {
-                    activeSpellIndex = 0;
-                    canvasManager.ChangeSpell(activeSpellIndex);
+                    if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.E))
+                    {
+                        if (!bShotFired)
+                        {
+                            //Determine spell index
+                            if (Input.GetButtonDown("Fire1"))
+                            {
+                                activeSpellIndex = 1;
+                            }
+
+                            if (Input.GetButtonDown("Fire2"))
+                            {
+                                activeSpellIndex = 0;
+                            }
+
+                            if (Input.GetKeyDown(KeyCode.E))
+                            {
+                                activeSpellIndex = 2;
+                            }
+
+                            //Update UI icons
+                            canvasManager.ChangeSpell(activeSpellIndex);
+
+                            //Cast spell
+                            cSpellBook.CastSpell(activeSpellIndex);
+                            bShotFired = true;
+                            cAnimHandler.CastSpell(activeSpellIndex);
+                        }
+                    }
+                    else if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2") || Input.GetKeyUp(KeyCode.E))
+                    {
+                        bShotFired = false;
+                    }
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    activeSpellIndex = 1;
-                    canvasManager.ChangeSpell(activeSpellIndex);
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-                    activeSpellIndex = 2;
-                    canvasManager.ChangeSpell(activeSpellIndex);
-                }
+
+                #endregion
+
             }
 
-            if(Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return))
             {
                 ToggleSpellEditingUI();
             }

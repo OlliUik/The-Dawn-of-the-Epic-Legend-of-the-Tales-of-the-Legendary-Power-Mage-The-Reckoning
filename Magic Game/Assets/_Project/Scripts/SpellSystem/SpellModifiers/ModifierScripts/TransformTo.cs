@@ -29,11 +29,19 @@ public class TransformTo : SpellModifier
         if(orginal.GetComponent<Rigidbody>() != null && orginal.transform.GetComponent<Transformation>() == null && orginal.transform.parent == null)
         {
             orginal.SetActive(false);
-            Transformation tempTransform = Instantiate(transformPrefab, orginal.transform.position, Quaternion.identity).GetComponent<Transformation>();
-            tempTransform.TransformedObject = orginal;
-            tempTransform.duration = duration;
-            tempTransform.transformationParticles = transformationParticles;
-            Instantiate(transformationParticles, orginal.transform.position, Quaternion.identity);
+
+            if(transformPrefab != null)
+            {
+                Transformation tempTransform = Instantiate(transformPrefab, orginal.transform.position, Quaternion.identity).GetComponent<Transformation>();
+                tempTransform.TransformedObject = orginal;
+                tempTransform.duration = duration;
+                tempTransform.transformationParticles = transformationParticles;
+            }
+
+            if(transformPrefab != null)
+            {
+                Instantiate(transformationParticles, orginal.transform.position, Quaternion.identity);
+            }
         }
     }
 
