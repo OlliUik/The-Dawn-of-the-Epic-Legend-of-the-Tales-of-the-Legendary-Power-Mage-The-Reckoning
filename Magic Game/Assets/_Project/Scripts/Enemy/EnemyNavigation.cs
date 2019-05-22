@@ -67,42 +67,42 @@ public class EnemyNavigation : Enemy
             || cEnemyCore.currentState == EnemyCore.EState.PARANOID
             || cEnemyCore.currentState == EnemyCore.EState.CASTING)
         {
-            cAgent.speed = walkingSpeed;
-            cAgent.acceleration = walkingAcceleration;
+            //cAgent.speed = walkingSpeed;
+            //cAgent.acceleration = walkingAcceleration;
 
             cEnemy.speed = walkingSpeed; //testing for a*
         }
         else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
         {
-            cAgent.speed = panicSpeed;
-            cAgent.acceleration = panicAcceleration;
+            //cAgent.speed = panicSpeed;
+            //cAgent.acceleration = panicAcceleration;
 
             cEnemy.speed = panicSpeed; //testing for a*
         }
         else
         {
-            cAgent.speed = runningSpeed;
-            cAgent.acceleration = runningAcceleration;
+            //cAgent.speed = runningSpeed;
+            //cAgent.acceleration = runningAcceleration;
 
             cEnemy.speed = runningSpeed; //testing for a*
         }
 
         if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
         {
-            cAgent.stoppingDistance = 1.0f;
+            //cAgent.stoppingDistance = 1.0f;
 
             cEnemy.stoppingDistance = 1.0f; //testing for a*
         }
         else
         {
-            cAgent.stoppingDistance = 0.0f;
+            //cAgent.stoppingDistance = 0.0f;
 
             cEnemy.stoppingDistance = 0.0f; //testing for a*
         }
 
         //When walking away from player, give more acceleration
-        float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
-        cAgent.acceleration += accel;
+        //float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
+        //cAgent.acceleration += accel;
     }
 
     //void Update()
@@ -169,16 +169,17 @@ public class EnemyNavigation : Enemy
     {
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
         {
-            cAgent.SetDestination(cEnemyCore.spawnPosition);
+            print("enemy is idle");
+            //cAgent.SetDestination(cEnemyCore.spawnPosition);
 
-            //cEnemy.SetTargetPosition(cEnemyCore.spawnPosition);//testing for a*
-            //cEnemy.StartCoroutine(UpdatePath());
+            cEnemy.SetTargetPosition(cEnemyCore.spawnPosition);//testing for a*
+            StartCoroutine(cEnemy.UpdatePath());
         }
     }
 
-    //TODO: change patrolpoints to node positions?
     void AIPatrol()
     {
+        print("enemy is patrolling");
         if (patrolPoints.Length > 1)
         {
             Vector2 entityPos = new Vector2(transform.position.x, transform.position.z);
@@ -196,10 +197,10 @@ public class EnemyNavigation : Enemy
 
             if (waitTimer <= 0.0f)
             {
-                cAgent.SetDestination(patrolPoints[navCurrentPoint]);
+                //cAgent.SetDestination(patrolPoints[navCurrentPoint]);
 
-                //cEnemy.SetTargetPosition(patrolPoints[navCurrentPoint]);//testing for a*
-                //cEnemy.StartCoroutine(UpdatePath());
+                cEnemy.SetTargetPosition(patrolPoints[navCurrentPoint]);//testing for a*
+                StartCoroutine(cEnemy.UpdatePath());
             }
         }
         else
@@ -210,14 +211,17 @@ public class EnemyNavigation : Enemy
 
     void AIAlerted()
     {
-        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        //cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
 
-        //cEnemy.SetTargetPosition(cEnemyCore.cVision.targetLocation);//testing for a*
-        //cEnemy.StartCoroutine(UpdatePath());
+        print("enemy is alerted");
+
+        cEnemy.SetTargetPosition(cEnemyCore.cVision.targetLocation);//testing for a*
+        StartCoroutine(cEnemy.UpdatePath());
     }
 
     void AIParanoid()
     {
+        print("enemy is paranoid");
         if (paranoidTimer <= 0.0f)
         {
             paranoidTimer = paranoidMoveInterval;
@@ -227,10 +231,10 @@ public class EnemyNavigation : Enemy
             randomPosition.y = 0.0f;
             randomPosition.z = Random.Range(-1.0f, 1.0f);
 
-            cAgent.SetDestination(transform.position + randomPosition);
+            //cAgent.SetDestination(transform.position + randomPosition);
 
-            //cEnemy.SetTargetPosition(transform.position + randomPosition);//testing for a*
-            //cEnemy.StartCoroutine(UpdatePath());
+            cEnemy.SetTargetPosition(transform.position + randomPosition);//testing for a*
+            StartCoroutine(cEnemy.UpdatePath());
         }
         else
         {
@@ -258,10 +262,12 @@ public class EnemyNavigation : Enemy
         //    }
         //}
 
-        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        //cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
 
-        //cEnemy.SetTargetPosition(cEnemyCore.cVision.targetLocation);//testing for a*
-        //cEnemy.StartCoroutine(UpdatePath());
+        print("enemy is searching");
+
+        cEnemy.SetTargetPosition(cEnemyCore.cVision.targetLocation);//testing for a*
+        StartCoroutine(cEnemy.UpdatePath());
 
         if (navErrorTimer < 3.0f && cAgent.velocity.sqrMagnitude < 1.0f)
         {
@@ -296,6 +302,8 @@ public class EnemyNavigation : Enemy
 
     void AIAttack()
     {
+        print("enemy is attacking");
+
         if (cEnemyCore.isRanged)
         {
             float escapeDistance = (cEnemyCore as EnemyRanged).rangedEscapeDistance;
@@ -306,10 +314,10 @@ public class EnemyNavigation : Enemy
         }
 
         Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
-        cAgent.SetDestination(nearTargetLocation);
+        //cAgent.SetDestination(nearTargetLocation);
 
-        //cEnemy.SetTargetPosition(nearTargetLocation);//testing for a*
-        //cEnemy.StartCoroutine(UpdatePath());
+        cEnemy.SetTargetPosition(nearTargetLocation);//testing for a*
+        StartCoroutine(cEnemy.UpdatePath());
 
         //if (!cEnemyCore.MoveWhileCasting)
         //{
@@ -326,13 +334,14 @@ public class EnemyNavigation : Enemy
 
     void AICasting()
     {
+        print("enemy is casting");
         if (cEnemyCore.MoveWhileCasting)
         {
             Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
-            cAgent.SetDestination(nearTargetLocation);
+            //cAgent.SetDestination(nearTargetLocation);
 
-            //cEnemy.SetTargetPosition(nearTargetLocation);//testing for a*
-            //cEnemy.StartCoroutine(UpdatePath());
+            cEnemy.SetTargetPosition(nearTargetLocation);//testing for a*
+            StartCoroutine(cEnemy.UpdatePath());
         }
         else
         {
@@ -346,12 +355,13 @@ public class EnemyNavigation : Enemy
 
     void AIEscape()
     {
+        print("enemy is escaping");
         if (Vector3.Distance(transform.position, cEnemyCore.cVision.targetLocation) < 20.0f)
         {
-            cAgent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);
+            //cAgent.SetDestination(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);
 
-            //cEnemy.SetTargetPosition(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);//testing for a*
-            //cEnemy.StartCoroutine(UpdatePath());
+            cEnemy.SetTargetPosition(transform.position + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * 5.0f);//testing for a*
+            StartCoroutine(cEnemy.UpdatePath());
         }
     }
 
@@ -364,10 +374,12 @@ public class EnemyNavigation : Enemy
             randomPosition.y = 0.0f;
             randomPosition.z = Random.Range(-5.0f, 5.0f);
 
-            cAgent.SetDestination(transform.position + randomPosition);
+            //cAgent.SetDestination(transform.position + randomPosition);
 
-            //cEnemy.SetTargetPosition(transform.position + randomPosition); //testing for a*
-            //cEnemy.StartCoroutine(UpdatePath());
+            print("enemy is panicing");
+
+            cEnemy.SetTargetPosition(transform.position + randomPosition); //testing for a*
+            StartCoroutine(cEnemy.UpdatePath());
         }
     }
 

@@ -43,6 +43,7 @@ public class Enemy : MonoBehaviour
     bool bGrounded;
     bool bMovingToPlayer = false;
 
+
     private void Start()
     {
         myCollider = GetComponent<CapsuleCollider>();
@@ -50,26 +51,28 @@ public class Enemy : MonoBehaviour
 
         tempAttackRange = attackRange;
         normStoppingDist = stoppingDistance;
-
     }
 
     //private void Update()
     //{
-    //    DrawDebugLines();
-    //    CalculateForward();
-    //    CheckGround();
-    //    ApplyGravity();
+        //DrawDebugLines();
+        //CalculateForward();
+        //CheckGround();
+        //ApplyGravity();
 
+        //if(bMovingToPlayer)
+        //{
+        //    StartCoroutine(FollowPath());
+        //}
 
-
-    //    if(bGrounded /*&& Vector3.Distance(transform.position, target.position) < 20 ||bMovingToPlayer*/)
-    //    {
-    //        if(!bMovingToPlayer)
-    //        {
-    //            bMovingToPlayer = true;
-    //        }
-    //        StartCoroutine(UpdatePath());
-    //    }
+        //if (bGrounded /*&& Vector3.Distance(transform.position, target.position) < 20 ||bMovingToPlayer*/)
+        //{
+        //    if (!bMovingToPlayer)
+        //    {
+        //        bMovingToPlayer = true;
+        //    }
+        //    StartCoroutine(UpdatePath());
+        //}
 
     //}
 
@@ -156,7 +159,6 @@ public class Enemy : MonoBehaviour
         {
             Vector2 position2d = new Vector2(transform.position.x, transform.position.z);
 
-            //check if crossed smoothing line for turning
             while (path.turnBoundaries[pathIndex].HasCrossedLine(position2d))
             {
                 if (pathIndex == path.finishedLineIndex)
