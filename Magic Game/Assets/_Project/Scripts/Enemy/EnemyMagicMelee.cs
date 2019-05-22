@@ -45,6 +45,7 @@ public class EnemyMagicMelee : EnemyMagicRanged
                 
                 animator.SetTrigger("Cast Spell");
                 animator.SetInteger("Spell Type", attackAnimation);
+                animator.SetInteger("Casts Left", shotsLeft);
                 currentState = EState.CASTING;
             }
         }

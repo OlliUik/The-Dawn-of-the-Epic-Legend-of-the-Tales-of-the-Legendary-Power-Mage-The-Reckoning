@@ -60,6 +60,7 @@ public class EnemyRanged : EnemyCore
                 }
                 else
                 {
+                    shotsLeft = 1;
                     castStandStillTimer = castingTime + standStillAfterCasting;
                 }
 

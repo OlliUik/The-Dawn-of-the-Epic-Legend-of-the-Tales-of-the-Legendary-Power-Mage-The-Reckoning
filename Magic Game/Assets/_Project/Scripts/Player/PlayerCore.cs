@@ -305,6 +305,12 @@ public class PlayerCore : MonoBehaviour
 
     public void EnableRagdoll(bool b)
     {
+        if (b && bIsRagdolled)
+        {
+            Debug.Log("Tried to enable ragdoll while already ragdolled!");
+            return;
+        }
+
         bIsRagdolled = b;
         cTPCamera.isRagdolled = b;
         ragdollSleepTimer = 3.0f;
