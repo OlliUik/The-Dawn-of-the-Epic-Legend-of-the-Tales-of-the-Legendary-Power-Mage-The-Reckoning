@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,64 +18,77 @@ public class Tornado : MonoBehaviour
 {
 
     public WhirlwindVariables variables;
-    public List<Rigidbody> hitObjects = new List<Rigidbody>();    
+    public List<Rigidbody> hitObjects = new List<Rigidbody>();
+    private bool fullGrown = false;
+    private float timer = 0f;
+
 
     void Start()
     {
-        StartCoroutine(Grow());
+        timer = variables.duration;
     }
 
-    private IEnumerator Grow()
+    void FixedUpdate()
     {
-        while(transform.parent.localScale.x < variables.size)
-        {
-            Vector3 newScale = transform.parent.localScale + Vector3.one * variables.growSpeed * Time.deltaTime;
-            transform.parent.localScale = newScale;
-            yield return null;
-        }
-
-        Invoke("StartShrink", variables.duration);
-    }
-    private void StartShrink()
-    {
-        StartCoroutine(Shrink());
-    }
-    private IEnumerator Shrink()
-    {
-        while(transform.parent.localScale.x > 0.1f)
-        {
-            Vector3 newScale = transform.parent.localScale - Vector3.one * variables.growSpeed * Time.deltaTime;
-            transform.parent.localScale = newScale;
-            yield return null;
-        }
-
-        Destroy(transform.parent.gameObject);
-    }
-
-    void Update()
-    {
-
+        GrowAndShrink();
 
         // move the objects on a circular trajectory
         foreach (Rigidbody rb in hitObjects)
         {
-
             if(rb != null)
             {
-                Vector3 normalizedDifference = (transform.position - rb.transform.position).normalized;
-                //Vector3 crossProd = Vector3.Cross(Vector3.up, normalizedDifference);
-                //rb.AddForce(crossProd * variables.strength);
-                rb.AddForce(Vector3.up * variables.strength * rb.mass);
-                rb.AddTorque(Vector3.up * variables.rotateSpeed * 0.2f);
-                //rb.AddForce(normalizedDifference * (transform.position - rb.transform.position).sqrMagnitude);
+                var difference = transform.position - rb.transform.position;
+
+                if(difference.magnitude > variables.size * 0.25)
+                {
+                    rb.AddForce(difference.normalized * variables.pullInSpeed * rb.mass);
+                }
+
                 rb.transform.RotateAround(transform.position, transform.up, variables.rotateSpeed * Time.deltaTime);
-
+                rb.AddForce(Vector3.up * variables.strength * rb.mass);
+                rb.AddTorque(Vector3.up * variables.rotateSpeed);
             }
-
         }
 
         // also check if tornados strength is stronger than enemies will and ragdoll them
 
+    }
+
+    // Handles tornados size changing and destroying it after
+    private void GrowAndShrink()
+    {
+        if (!fullGrown)
+        {
+            // Grow
+            if (transform.parent.localScale.y < variables.size)
+            {
+                Vector3 newScale = transform.parent.localScale + Vector3.one * variables.growSpeed * Time.deltaTime;
+                transform.parent.localScale = newScale;
+            }
+            else
+            {
+                fullGrown = true;
+            }
+        }
+
+        if (fullGrown)
+        {
+            timer -= Time.fixedDeltaTime;
+        }
+
+        if (timer <= 0f)
+        {
+            // Shrink
+            if (transform.parent.localScale.y > 0f)
+            {
+                Vector3 newScale = transform.parent.localScale - Vector3.one * variables.growSpeed * Time.deltaTime;
+                transform.parent.localScale = newScale;
+            }
+            else
+            {
+                Destroy(transform.parent.gameObject);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)

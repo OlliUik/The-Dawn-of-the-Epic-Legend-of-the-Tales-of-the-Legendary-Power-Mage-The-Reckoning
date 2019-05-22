@@ -10,7 +10,7 @@ public class CastTime : SpellBalance
 
     public override void ApplyBalance(Spellbook spellbook)
     {
-        // longer castTime
+        return;
     }
 
     public float GetCastingTime()

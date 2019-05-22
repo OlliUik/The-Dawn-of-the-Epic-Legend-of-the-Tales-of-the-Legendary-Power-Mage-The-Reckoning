@@ -14,7 +14,18 @@ public class TrapGeneric : MonoBehaviour
     private Rigidbody rb;
 
     [SerializeField]
+    private GameObject damagePart;
+
+    [SerializeField]
     private Vector3 direction;
+
+    void Start()
+    {
+        if (damagePart)
+        {
+            damagePart.SetActive(false);
+        }
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -28,6 +39,7 @@ public class TrapGeneric : MonoBehaviour
 
             if (gameObject.tag == "Falling")
             {
+                damagePart.SetActive(true);
                 rb.AddForceAtPosition(direction * 200f, rb.position);
                 Destroy(gameObject);
             }

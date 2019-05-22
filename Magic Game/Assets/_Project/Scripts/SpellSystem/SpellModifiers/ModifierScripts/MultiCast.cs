@@ -13,27 +13,31 @@ public class MultiCast : SpellModifier
     public override void OnSpellCast(Spell spell)
     {
 
-        if(spell.GetType() == typeof(Projectile))
+        if(spell.spellType == SpellType.PROJECTILE)
         {
             for (int i = 0; i < copyCount; i++)
             {
-                Spell copy = Instantiate(spell, gameObject.transform.position, gameObject.transform.rotation);
-                Destroy(copy.GetComponent<MultiCast>());
-            
-                copy.transform.Rotate(Vector3.up * Random.Range(upDownRotation.x, upDownRotation.y));    // randomize left-right rotation
-                copy.transform.Rotate(Vector3.right * Random.Range(leftRightRotation.x, leftRightRotation.y)); // randomize up-down rotation
-            
+                Projectile copyFrom = (Projectile)spell;
+                Projectile copy = Instantiate(copyFrom, gameObject.transform.position, gameObject.transform.rotation);
+                copy.name = "MultiCast copy " + i.ToString();
+                copy.direction = copyFrom.direction;
+
+                copy.direction = Quaternion.Euler(Random.Range(upDownRotation.x, upDownRotation.y), Random.Range(leftRightRotation.x, leftRightRotation.y), 0) * copy.direction;
                 copy.caster = spell.caster;
+                copy.statusEffects = copyFrom.statusEffects;
             }
+
+            return;
         }
 
-        if(spell.GetType() == typeof(Beam))
+        if(spell.spellType == SpellType.BEAM)
         {
             for (int i = 0; i < copyCount; i++)
             {
                 Beam copy = Instantiate(gameObject, transform.position, transform.rotation).GetComponent<Beam>();
                 copy.name = "MultiCast copy " + i.ToString();
                 copy.isMaster = true;               
+                copy.statusEffects = gameObject.GetComponent<Spell>().statusEffects;
 
                 if(i < copyCount * 0.5)
                 {
@@ -44,6 +48,8 @@ public class MultiCast : SpellModifier
                     copy.angle = 15f * i;
                 }
             }
+
+            return;
         }
     }
 

@@ -6,9 +6,12 @@ using UnityEngine;
 public class Beam : Spell
 {
 
+    // TODO:: Make the beam collide with explosive casks
+
     #region Variables
 
     [Header("-- Beam --")]
+    public bool usingCylinder = true;
     [SerializeField] private float baseDamage       = 1.0f;
     [SerializeField] private float baseRange        = 150.0f;
     [SerializeField] private float baseRadius       = 1f;
@@ -22,6 +25,8 @@ public class Beam : Spell
     }
 
     [SerializeField] private GameObject graphics    = null;
+    private ParticleSystem beamParticles;
+    private List<ParticleCollisionEvent> collisionEvents;
 
     public Vector3 startPos                         = Vector3.zero;
     public Vector3 endPos                           = Vector3.zero;
@@ -30,7 +35,7 @@ public class Beam : Spell
 
     private Spellbook spellbook;
     private RaycastHit hit;
-    int spellIndex                                  = 0;
+    int spellIndex                                  = -1;
 
     public bool isMaster                            = false;
     SpellModifier[] modifiers;
@@ -40,28 +45,20 @@ public class Beam : Spell
 
     #endregion
 
-    public override void CastSpell(Spellbook spellbook, SpellData data)
-    {
-        // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
-        direction = spellbook.GetDirection();
-        Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
-        Beam beam = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Beam>();
-        beam.caster = spellbook.gameObject;
-        beam.isMaster = true;
-        
-        // apply all spellmodifiers to the beam
-        ApplyModifiers(beam.gameObject, data);
-
-    }
+    #region Unity_Methods
 
     private void Start()
     {
+        beamParticles = graphics.GetComponent<ParticleSystem>();
+        collisionEvents = new List<ParticleCollisionEvent>();
+
         if(isMaster)
         {
             spellbook = caster.GetComponent<Spellbook>();
         }
 
         modifiers = GetComponents<SpellModifier>();
+        spellType = SpellType.BEAM;
     }
 
     private void Update()
@@ -110,19 +107,67 @@ public class Beam : Spell
             }
         }
 
+        Debug.DrawLine(startPos, endPos, Color.red);
         UpdateBeam(startPos, direction);
 
         // stop casting here
         if((Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0)) || (isMaster && spellbook.mana.mana <= 0f))
         {
             CastingEnd();
-
+        
             if (isMaster)
             {
                 spellbook.StopCasting();
             }
             Destroy(gameObject);
         }
+
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        var rb = other.GetComponent<Rigidbody>();
+        if(rb != null)
+        {
+            ParticlePhysicsExtensions.GetCollisionEvents(beamParticles, other, collisionEvents);
+            for (int i = 0; i < collisionEvents.Count; i++)
+            {
+                var health = other.GetComponent<Health>();
+                if (health != null)
+                {
+                    base.DealDamage(health, baseDamage * Time.deltaTime);
+                }
+
+                var effectManager = other.GetComponent<StatusEffectManager>();
+                if (effectManager != null)
+                {
+                    base.ApplyStatusEffects(effectManager, statusEffects);
+                }
+                
+                foreach (SpellModifier modifier in modifiers)
+                {
+                    modifier.BeamCollide(hit, direction, distanceTravelled);
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Custom_Methods
+
+    public override void CastSpell(Spellbook spellbook, SpellData data)
+    {
+        // get the look direction from spellbook and spawn new beam according to that // also child it to player to follow pos and rot
+        direction = spellbook.GetDirection();
+        Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
+        Beam beam = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Beam>();
+        beam.transform.SetParent(spellbook.transform);
+        beam.caster = spellbook.gameObject;
+        beam.isMaster = true;
+        
+        // apply all spellmodifiers to the beam
+        ApplyModifiers(beam.gameObject, data);
 
     }
 
@@ -136,25 +181,37 @@ public class Beam : Spell
 
     public void CastingEnd()
     {
-        foreach (SpellModifier modifier in modifiers)
+        if(modifiers.Length > 0)
         {
-            modifier.BeamCastingEnd();
+            foreach (SpellModifier modifier in modifiers)
+            {
+                modifier.BeamCastingEnd();
+            }
         }
     }
 
     public void UpdateBeam(Vector3 startPosition, Vector3 direction)
     {
-        // position
-        Vector3 offset = endPos - startPos;
-        Vector3 position = startPos + (offset * 0.5f);
-        graphics.transform.position = position;
+        if(usingCylinder)
+        {
+            // position
+            Vector3 offset = endPos - startPos;
+            Vector3 position = startPos + (offset * 0.5f);
+            graphics.transform.position = position;
+            
+            // scale
+            Vector3 localScale = graphics.transform.localScale;
+            localScale.y = (endPos - startPos).magnitude * 0.5f;
+            graphics.transform.localScale = localScale;
 
-        // scale
-        Vector3 localScale = graphics.transform.localScale;
-        localScale.y = (endPos - startPos).magnitude * 0.5f;
-        graphics.transform.localScale = localScale;
-        
-        graphics.transform.rotation = Quaternion.FromToRotation(Vector3.up, offset);
+            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction);
+        }
+        else
+        {
+            graphics.transform.position = startPos;
+            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.right, direction);
+        }
+
     }
 
     //IEnumerator CastBeam(GameObject self, Spellbook spellbook, SpellData data)
@@ -288,11 +345,6 @@ public class Beam : Spell
         baseDamage += amount;
     }
 
-    public void ModifyRange(float amount)
-    {
-        baseRange += amount;
-    }
-
     public void ModifyRadius(float amount)
     {
         baseRadius += amount;
@@ -311,5 +363,7 @@ public class Beam : Spell
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(startPos, baseRadius * 0.5f);
     }
+
+    #endregion
 
 }

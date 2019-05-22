@@ -13,7 +13,7 @@ public class OnStatusEffectRequirement : CastRequirement
         StatusEffectManager effectManager = spellbook.GetComponent<StatusEffectManager>();
         if(effectManager != null)
         {
-            if(effectManager.AppliedEffects[type])
+            if(effectManager.AppliedEffects[type] == true)
             {
                 return true;
             }

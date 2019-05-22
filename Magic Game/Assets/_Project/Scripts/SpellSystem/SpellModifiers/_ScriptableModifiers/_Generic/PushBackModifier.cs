@@ -6,18 +6,24 @@ using UnityEngine;
 public class PushBackModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private float pushBackForce = 0f;
+    [SerializeField] private float aoeForce         = 10f;
+    [SerializeField] private float beamForce        = 10f;
+    [SerializeField] private float projectileForce  = 100f;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        var compo = spellObject.GetComponent<PushBack>();
+        var compo = spell.GetComponent<PushBack>();
         if (compo != null)
         {
-            // do what
+            compo.aoeForce += aoeForce;
+            compo.beamForce += beamForce;
+            compo.projectileForce += projectileForce;
             return;
         }
 
-        PushBack component = spellObject.AddComponent<PushBack>();
-        component.pushbackForce = pushBackForce;
+        PushBack comp = spell.gameObject.AddComponent<PushBack>();
+        comp.aoeForce = aoeForce;
+        comp.beamForce = beamForce;
+        comp.projectileForce = projectileForce;
     }
 }

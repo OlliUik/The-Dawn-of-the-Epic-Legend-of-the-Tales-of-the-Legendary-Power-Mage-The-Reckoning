@@ -12,11 +12,10 @@ public class SpellSlot : MonoBehaviour
     // called from SpellEditorController
     public void Init(SpellData data)
     {
-        this.data.type = data.type;
         this.data.cards = data.cards;
         this.data.spell = data.spell;
         spellSlotText = GetComponentInChildren<Text>();
-        spellSlotText.text = this.data.type.ToString();
+        spellSlotText.text = this.data.spell.spellType.ToString();
     }
 
 }

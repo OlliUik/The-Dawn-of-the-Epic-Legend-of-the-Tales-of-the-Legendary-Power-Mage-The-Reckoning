@@ -43,11 +43,11 @@ public class Health : MonoBehaviour
 
     #region CUSTOM_METHODS
     
-    public void Hurt(float amount)
+    public void Hurt(float amount, bool ignoreIFrames)
     {
         if (!bIsDead)
         {
-            if (iftTimer <= 0.0f)
+            if (ignoreIFrames || iftTimer <= 0.0f)
             {
 
                 if(effectManager != null && effectManager.AppliedEffects[StatusEffectManager.EffectType.StackingDamage])
@@ -73,6 +73,11 @@ public class Health : MonoBehaviour
                 else
                 {
                     GetComponent<EnemyCore>().OnHurt();
+
+                    if (amount > ragdollDamageThreshold)
+                    {
+                        GetComponent<EnemyCore>().EnableRagdoll(true);
+                    }
                 }
 
                 if (health <= 0.0f)

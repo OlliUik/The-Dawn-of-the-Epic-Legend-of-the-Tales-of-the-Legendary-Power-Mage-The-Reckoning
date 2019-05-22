@@ -9,8 +9,7 @@ public class MinManaRequirement : CastRequirement
 
     public override bool isMet(Spellbook spellbook)
     {
-        Mana mana = spellbook.GetComponent<Mana>();
-
+        Mana mana = spellbook.mana;
         if(mana != null)
         {
             if(mana.mana >= requiredAmount)

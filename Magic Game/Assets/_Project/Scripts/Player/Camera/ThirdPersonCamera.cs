@@ -16,6 +16,8 @@ public class ThirdPersonCamera : MonoBehaviour
     public GameObject cameraObject = null;
     public bool invertY = false;
     public Vector2 sensitivity = new Vector2(1.0f, 1.0f);
+    public bool slowdownEnabled = false;
+    public Vector2 slowdownMaxTurn = new Vector2(25.0f, 25.0f);
 
     public bool isEnabled { get; private set; } = true;
     public Vector3 lookDirection { get; private set; } = Vector3.zero;
@@ -100,7 +102,15 @@ public class ThirdPersonCamera : MonoBehaviour
     {
         if (isEnabled)
         {
-            Look(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
+            if (slowdownEnabled)
+            {
+                float time = Time.deltaTime;
+                Look(Mathf.Clamp(Input.GetAxis(horizontalAxis), -slowdownMaxTurn.x * time, slowdownMaxTurn.x * time), Mathf.Clamp(Input.GetAxis(verticalAxis), -slowdownMaxTurn.y * time, slowdownMaxTurn.y * time));
+            }
+            else
+            {
+                Look(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
+            }
 
             if (cameraFOVLerp != cameraFOV)
             {

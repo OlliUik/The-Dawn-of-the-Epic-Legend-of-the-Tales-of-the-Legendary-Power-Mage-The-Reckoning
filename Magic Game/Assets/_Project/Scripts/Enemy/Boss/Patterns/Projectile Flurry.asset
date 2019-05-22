@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d1dd9de5de699458252f2dd86ccc70, type: 3}
+  m_Name: Projectile Flurry
+  m_EditorClassIdentifier: 
+  behaviourName: Projectile Flurry
+  behaviourDescription: Casts a series of deadly, homing projectiles. Has a somewhat
+    lengthy cast time.
+  spellType: 1
+  spell: {fileID: 8270804939085402177, guid: 7c44ba9bf00ca8b40ae9a2910c61585b, type: 3}
+  cards:
+  - {fileID: 11400000, guid: e92b6a603310cb04d87ee2b44fe91a8c, type: 2}
+  attackPattern: 1
+  attackDistance: 500
+  moveWhileCasting: 0
+  standStillAfterCasting: 1
+  castInBursts: 1
+  castingTime: 2
+  burstCount: 5
+  timeBetweenCasts: 0.2
+  castingCooldown: 2
+  minDistanceFromAttackTarget: 10
+  walkingSpeed: 5
+  walkingAcceleration: 8
+  runningSpeed: 10
+  runningAcceleration: 8
+  panicSpeed: 12
+  panicAcceleration: 8

@@ -9,8 +9,7 @@ public class MinHealthRequierment : CastRequirement
 
     public override bool isMet(Spellbook spellbook)
     {
-        Health health = spellbook.GetComponent<Health>();
-
+        Health health = spellbook.health;
         if(health != null)
         {
             if(health.health >= reuiqredAmount)

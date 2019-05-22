@@ -7,7 +7,8 @@ public class IgniteEffect : StatusEffect
 
     public float damagePerTick      = 1f;
     public float timeBetweenTicks   = 1.0f;
-    private float timer;
+    private float timeToBurn;
+    private Health health;
 
     public IgniteEffect(float duration, GameObject graphics, float damagePerTick, float timeBetweenTicks) : base(duration, graphics)
     {
@@ -22,12 +23,11 @@ public class IgniteEffect : StatusEffect
     private void Burn()
     {
         // deal damage to target
-        timer = 0f;
+        timeToBurn = 0f;
 
         if (target != null)
         {
-            var health = target.GetComponent<Health>();
-            health.Hurt(damagePerTick);
+            health.Hurt(damagePerTick, true);
         }
         else
         {
@@ -40,6 +40,7 @@ public class IgniteEffect : StatusEffect
 
         base.OnApply(target, allEffectsInSpell);
 
+        health = target.GetComponent<Health>();
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Ignite] = true;
         endTime = Time.time + duration;
 
@@ -48,13 +49,13 @@ public class IgniteEffect : StatusEffect
 
     public override void OnTick()
     {
-        if (timer > timeBetweenTicks)
+        if (timeToBurn > timeBetweenTicks)
         {
             Burn();
         }
         else
         {
-            timer += Time.deltaTime;
+            timeToBurn += Time.deltaTime;
         }
     }
 

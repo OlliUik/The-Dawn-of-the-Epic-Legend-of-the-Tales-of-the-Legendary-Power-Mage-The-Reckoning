@@ -5,13 +5,17 @@ using UnityEngine;
 public class MoisturizeEffect : StatusEffect
 {
 
+    public GameObject waterPoolPrefab;
+    public float size = 1;
 
 
-    public MoisturizeEffect(float duration, GameObject graphics) : base(duration, graphics)
+    public MoisturizeEffect(float duration, GameObject graphics, GameObject waterPoolPrefab, float size) : base(duration, graphics)
     {
         name = "Moisturize";
         this.duration = duration;
         this.graphics = graphics;
+        this.waterPoolPrefab = waterPoolPrefab;
+        this.size = size;
     }
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
@@ -23,6 +27,16 @@ public class MoisturizeEffect : StatusEffect
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize] = true;
 
         CheckForCounterEffects(allEffectsInSpell);
+    }
+
+    public override void HitNonlivingObject(Collision collision)
+    {
+        var water = collision.collider.GetComponent<Water>();
+        if(water == null)
+        {
+            GameObject waterPool = GameObject.Instantiate(waterPoolPrefab, collision.contacts[0].point, Quaternion.identity);
+            waterPool.transform.localScale *= size;
+        }
     }
 
     public override void CheckForCounterEffects(List<StatusEffect> allEffectsInSpell)

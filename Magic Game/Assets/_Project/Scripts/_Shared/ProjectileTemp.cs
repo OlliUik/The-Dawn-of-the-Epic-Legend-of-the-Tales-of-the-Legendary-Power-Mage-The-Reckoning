@@ -69,7 +69,7 @@ public class ProjectileTemp : MonoBehaviour
         {
             if (hitTarget.GetComponent<Health>() != null)
             {
-                hitTarget.GetComponent<Health>().Hurt(damage);
+                hitTarget.GetComponent<Health>().Hurt(damage, false);
             }
             Instantiate(explosion, this.transform.position, Quaternion.identity, null);
         }
