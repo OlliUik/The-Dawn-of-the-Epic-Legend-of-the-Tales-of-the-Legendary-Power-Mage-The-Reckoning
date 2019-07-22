@@ -27,7 +27,7 @@ public class PlayerCore : MonoBehaviour
     public CharacterController cCharacter { get; private set; } = null;
     public PlayerMovement cMovement { get; private set; } = null;
     public Spellbook cSpellBook { get; private set; } = null;
-    public InputManager cInputManager { get; private set; } = null;
+    public InputManager inputManager { get; private set; } = null;
 
     private bool bInputEnabled = true;
     private bool bIsDead = false;
@@ -53,7 +53,7 @@ public class PlayerCore : MonoBehaviour
         cMovement = GetComponent<PlayerMovement>();
         cCharacter = GetComponent<CharacterController>();
         cSpellBook = GetComponent<Spellbook>();
-        cInputManager = GetComponent<InputManager>();
+        inputManager = GetComponent<InputManager>();
     }
 
     void Start()
@@ -162,7 +162,8 @@ public class PlayerCore : MonoBehaviour
 
                 if (spellControls == 1)
                 {
-                    if (cInputManager.controllerId == 1)
+                    if (inputManager.controllerId == 1)
+                    {
                         if (Input.GetAxis("Xbox_Fire1") > 0.5f || Input.GetAxis("Xbox_Fire2") > 0.5f || Input.GetButtonDown("Xbox_Fire3"))
                         {
                             if (!bShotFired)
@@ -196,8 +197,9 @@ public class PlayerCore : MonoBehaviour
                         {
                             bShotFired = false;
                         }
+                    }
 
-                    if (cInputManager.controllerId == 2)
+                    if (inputManager.controllerId == 2)
                     {
                         if (Input.GetAxis("PS_Fire1") > 0 || Input.GetAxis("PS_Fire2") > 0 || Input.GetButtonDown("PS_Fire3"))
                         {

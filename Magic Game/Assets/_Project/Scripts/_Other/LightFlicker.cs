@@ -21,7 +21,7 @@ public class LightFlicker : MonoBehaviour
 
     private const string EMISSION_COLOR = "_EmissionColor";
 
-    public void Reset()
+    void Reset()
     {
         maxReduction = 0.2f;
         maxIncrease = 0.2f;
@@ -29,7 +29,7 @@ public class LightFlicker : MonoBehaviour
         strength = 300;
     }
 
-    public void Start()
+    void OnEnable()
     {
         lightSource = GetComponent<Light>();
 
@@ -91,7 +91,6 @@ public class LightFlicker : MonoBehaviour
         }
 
         isFlickering = false;
-
     }
 
     private IEnumerator DoFlickerWithoutEmission()
@@ -107,6 +106,5 @@ public class LightFlicker : MonoBehaviour
         }
 
         isFlickering = false;
-
     }
 }

@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
 
     private ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
-    private InputManager cInputManager = null;
+    private InputManager inputManager = null;
 
     //Input
     private Vector2 movementInput = Vector2.zero;
@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
     {
         cCharacter = GetComponent<CharacterController>();
         cTPCamera = GetComponent<ThirdPersonCamera>();
-        cInputManager = GetComponent<InputManager>();
+        inputManager = GetComponent<InputManager>();
     }
 
     void Start()
@@ -88,13 +88,13 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (cInputManager.controllerId == 1)
+        if (inputManager.controllerId == 1)
         {
             jumpButton = "Xbox_Jump";
             GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
         }
 
-        if (cInputManager.controllerId == 2)
+        if (inputManager.controllerId == 2)
         {
             jumpButton = "PS_Jump";
             GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
