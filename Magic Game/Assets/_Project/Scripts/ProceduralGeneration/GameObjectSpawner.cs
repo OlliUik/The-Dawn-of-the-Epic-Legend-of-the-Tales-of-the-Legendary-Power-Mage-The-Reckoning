@@ -11,13 +11,13 @@ public class GameObjectSpawner : MonoBehaviour
     //List of spawned objects
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
-    //Percent for opening a door
+    //Percent for spawning
     [SerializeField, Range(0, 1)]
     private float spawnPercent;
 
     //Destroy one random game object
     [SerializeField]
-    private bool isDestroyingOneRandom;
+    private bool isDestroyingRandom;
 
     void Start()
     {
@@ -25,15 +25,18 @@ public class GameObjectSpawner : MonoBehaviour
         {
             if (Random.value < spawnPercent)
             {
-                //Spawn object
-                GameObject newObject = Instantiate(obj, gameObject.transform) as GameObject;
-                spawnedObjects.Add(newObject);
+                obj.SetActive(true);
+                spawnedObjects.Add(obj);
+            }
+
+            else
+            {
+                Destroy(obj);
             }
         }
-
-        if (isDestroyingOneRandom && spawnedObjects.Count > 0)
+        
+        if (isDestroyingRandom)
         {
-            //Destroy one game object in the list
             Destroy(spawnedObjects[Random.Range(0, spawnedObjects.Count)]);
         }
     }
