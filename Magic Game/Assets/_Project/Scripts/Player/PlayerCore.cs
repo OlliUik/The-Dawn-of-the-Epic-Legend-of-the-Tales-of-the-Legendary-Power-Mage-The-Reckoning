@@ -27,6 +27,7 @@ public class PlayerCore : MonoBehaviour
     public CharacterController cCharacter { get; private set; } = null;
     public PlayerMovement cMovement { get; private set; } = null;
     public Spellbook cSpellBook { get; private set; } = null;
+    public InputManager inputManager { get; private set; } = null;
 
     private bool bInputEnabled = true;
     private bool bIsDead = false;
@@ -52,6 +53,7 @@ public class PlayerCore : MonoBehaviour
         cMovement = GetComponent<PlayerMovement>();
         cCharacter = GetComponent<CharacterController>();
         cSpellBook = GetComponent<Spellbook>();
+        inputManager = GetComponent<InputManager>();
     }
 
     void Start()
@@ -160,38 +162,115 @@ public class PlayerCore : MonoBehaviour
 
                 if (spellControls == 1)
                 {
-                    if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2") || Input.GetKeyDown(KeyCode.E))
+                    if (inputManager.controllerId == 1)
                     {
-                        if (!bShotFired)
+                        if (Input.GetAxis("Xbox_Fire1") > 0.5f || Input.GetAxis("Xbox_Fire2") > 0.5f || Input.GetButtonDown("Xbox_Fire3"))
                         {
-                            //Determine spell index
-                            if (Input.GetButtonDown("Fire1"))
+                            if (!bShotFired)
                             {
-                                activeSpellIndex = 1;
+                                //Determine spell index
+                                if (Input.GetAxis("Xbox_Fire1") > 0.5f)
+                                {
+                                    activeSpellIndex = 1;
+                                }
+
+                                if (Input.GetAxis("Xbox_Fire2") > 0.5f)
+                                {
+                                    activeSpellIndex = 0;
+                                }
+
+                                if (Input.GetButtonDown("Xbox_Fire3"))
+                                {
+                                    activeSpellIndex = 2;
+                                }
+
+                                //Update UI icons
+                                canvasManager.ChangeSpell(activeSpellIndex);
+
+                                //Cast spell
+                                cSpellBook.CastSpell(activeSpellIndex);
+                                bShotFired = true;
+                                cAnimHandler.CastSpell(activeSpellIndex);
                             }
-
-                            if (Input.GetButtonDown("Fire2"))
-                            {
-                                activeSpellIndex = 0;
-                            }
-
-                            if (Input.GetKeyDown(KeyCode.E))
-                            {
-                                activeSpellIndex = 2;
-                            }
-
-                            //Update UI icons
-                            canvasManager.ChangeSpell(activeSpellIndex);
-
-                            //Cast spell
-                            cSpellBook.CastSpell(activeSpellIndex);
-                            bShotFired = true;
-                            cAnimHandler.CastSpell(activeSpellIndex);
+                        }
+                        else if (Input.GetAxis("Xbox_Fire1") < 0.5f || Input.GetAxis("Xbox_Fire2") < 0.5f || Input.GetButtonUp("Xbox_Fire3"))
+                        {
+                            bShotFired = false;
                         }
                     }
-                    else if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2") || Input.GetKeyUp(KeyCode.E))
+
+                    if (inputManager.controllerId == 2)
                     {
-                        bShotFired = false;
+                        if (Input.GetAxis("PS_Fire1") > 0 || Input.GetAxis("PS_Fire2") > 0 || Input.GetButtonDown("PS_Fire3"))
+                        {
+                            if (!bShotFired)
+                            {
+                                //Determine spell index
+                                if (Input.GetAxis("PS_Fire1") > 0)
+                                {
+                                    activeSpellIndex = 1;
+                                }
+
+                                if (Input.GetAxis("PS_Fire2") > 0)
+                                {
+                                    activeSpellIndex = 0;
+                                }
+
+                                if (Input.GetButtonDown("PS_Fire3"))
+                                {
+                                    activeSpellIndex = 2;
+                                }
+
+                                //Update UI icons
+                                canvasManager.ChangeSpell(activeSpellIndex);
+
+                                //Cast spell
+                                cSpellBook.CastSpell(activeSpellIndex);
+                                bShotFired = true;
+                                cAnimHandler.CastSpell(activeSpellIndex);
+                            }
+                        }
+                        else if (Input.GetAxis("PS_Fire1") < 0 || Input.GetAxis("PS_Fire2") < 0 || Input.GetButtonUp("PS_Fire3"))
+                        {
+                            bShotFired = false;
+                        }
+                    }
+
+                    else
+                    {
+                        if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2") || Input.GetButtonDown("Fire3"))
+                        {
+                            if (!bShotFired)
+                            {
+                                //Determine spell index
+                                if (Input.GetButtonDown("Fire1"))
+                                {
+                                    activeSpellIndex = 1;
+                                }
+
+                                if (Input.GetButtonDown("Fire2"))
+                                {
+                                    activeSpellIndex = 0;
+                                }
+
+                                if (Input.GetButtonDown("Fire3"))
+                                {
+                                    activeSpellIndex = 2;
+                                }
+
+                                //Update UI icons
+                                canvasManager.ChangeSpell(activeSpellIndex);
+
+                                //Cast spell
+                                cSpellBook.CastSpell(activeSpellIndex);
+                                bShotFired = true;
+                                cAnimHandler.CastSpell(activeSpellIndex);
+                            }
+                        }
+                        else if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2") || Input.GetButtonDown("Fire3"))
+                        {
+                            bShotFired = false;
+                        }
                     }
                 }
 

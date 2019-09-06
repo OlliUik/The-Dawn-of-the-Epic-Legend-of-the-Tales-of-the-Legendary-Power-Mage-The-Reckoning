@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Input")]
     [SerializeField] private string horizontalAxis = "Horizontal";
     [SerializeField] private string verticalAxis = "Vertical";
-    [SerializeField] private string jumpButton = "Jump";
+    [SerializeField] private string jumpButton;
     [SerializeField] private string dashButton = "Fire3";
 
     [HideInInspector] public float accelerationMultiplier = 1.0f;
@@ -45,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
 
     private ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
+    private InputManager inputManager = null;
 
     //Input
     private Vector2 movementInput = Vector2.zero;
@@ -77,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
     {
         cCharacter = GetComponent<CharacterController>();
         cTPCamera = GetComponent<ThirdPersonCamera>();
+        inputManager = GetComponent<InputManager>();
     }
 
     void Start()
@@ -86,7 +88,24 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        if (inputManager.controllerId == 1)
+        {
+            jumpButton = "Xbox_Jump";
+            GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        }
+
+        if (inputManager.controllerId == 2)
+        {
+            jumpButton = "PS_Jump";
+            GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        }
+
+        else
+        {
+            jumpButton = "Jump";
+            GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        }
+
     }
 
     void FixedUpdate()
