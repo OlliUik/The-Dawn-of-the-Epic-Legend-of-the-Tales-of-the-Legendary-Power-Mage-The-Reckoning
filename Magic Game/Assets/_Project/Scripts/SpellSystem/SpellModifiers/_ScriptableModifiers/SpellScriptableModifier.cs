@@ -3,6 +3,6 @@
 public abstract class SpellScriptableModifier : ScriptableObject
 {
 
-    public abstract void AddSpellModifier(GameObject spellObject);
+    public abstract void AddSpellModifier(Spell spell);
 
 }

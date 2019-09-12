@@ -8,9 +8,16 @@ public class TeleportSelfModifier : SpellScriptableModifier
 
     [SerializeField] private GameObject teleportParticles = null;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        TeleportSelf tp = spellObject.AddComponent<TeleportSelf>();
+        var compo = spell.GetComponent<TeleportSelf>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
+        TeleportSelf tp = spell.gameObject.AddComponent<TeleportSelf>();
         tp.teleportParticles = teleportParticles;
     }
 }

@@ -9,6 +9,10 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
+        //Remove all entities from global entity lists during level load
+        GlobalVariables.teamBadBoys.Clear();
+        GlobalVariables.teamGoodGuys.Clear();
+
         if (GlobalVariables.scenesInBuild.Count == 0)
         {
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
@@ -41,7 +45,7 @@ public class LevelManager : MonoBehaviour
     
     IEnumerator LoadLevelAsync(string levelName)
     {
-        GlobalVariables.entityList.Clear();
+        GlobalVariables.teamBadBoys.Clear();
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelName);
         while (!asyncLoad.isDone)
         {

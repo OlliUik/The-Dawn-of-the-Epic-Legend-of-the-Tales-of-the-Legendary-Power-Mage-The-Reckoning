@@ -13,9 +13,10 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image manaBar = null;
     [SerializeField] private Image hurtFlash = null;
     [SerializeField] private Image fadeIn = null;
+    [SerializeField] private SpellIconSwitcher switcher = null;
 
     [SerializeField] private GameObject spellEditingUI = null;
-    private SpellEditorController controller = null;
+    public SpellEditorController spellEditingController { get; private set; } 
     public bool bIsEditingSpells { get; private set; } = false;
     
     public bool bIsPaused { get; private set; } = false;
@@ -28,35 +29,47 @@ public class HUDManager : MonoBehaviour
 
     #region UNITY_DEFAULT_METHODS
 
-    private void Start()
+    private void Awake()
     {
-        controller = spellEditingUI.GetComponent<SpellEditorController>();
+        if(spellEditingUI != null)
+        {
+            spellEditingController = spellEditingUI.GetComponent<SpellEditorController>();
+        }
     }
 
     void Update()
     {
-        if (hurtFlash.color.a > 0.0f)
+        if (hurtFlash != null)
         {
-            hurtFlash.color = new Color(1.0f, 0.0f, 0.0f, hurtFlash.color.a - hurtFlashReduceAmount * Time.deltaTime);
-        }
-        else
-        {
-            hurtFlash.color = Color.clear;
+            if (hurtFlash.color.a > 0.0f)
+            {
+                hurtFlash.color = new Color(1.0f, 0.0f, 0.0f, hurtFlash.color.a - hurtFlashReduceAmount * Time.deltaTime);
+            }
+            else
+            {
+                hurtFlash.color = Color.clear;
+            }
         }
 
-        if (fadeIn.color.a > 0.0f)
+        if (fadeIn != null)
         {
-            fadeIn.color = new Color(0.0f, 0.0f, 0.0f, fadeIn.color.a - Time.deltaTime / 1.0f);
-        }
-        else
-        {
-            fadeIn.color = Color.clear;
+            if (fadeIn.color.a > 0.0f)
+            {
+                fadeIn.color = new Color(0.0f, 0.0f, 0.0f, fadeIn.color.a - Time.deltaTime / 1.0f);
+            }
+            else
+            {
+                fadeIn.color = Color.clear;
+            }
         }
     }
 
     void OnEnable()
     {
-        fadeIn.color = Color.black;
+        if (fadeIn != null)
+        {
+            fadeIn.color = Color.black;
+        }
     }
 
     #endregion
@@ -70,7 +83,8 @@ public class HUDManager : MonoBehaviour
 
     public void SetMana(float amount, float max)
     {
-        manaBar.rectTransform.localScale = new Vector3(amount / max, 1.0f, 1.0f);
+        //manaBar.rectTransform.localScale = new Vector3(amount / max, 1.0f, 1.0f);
+        manaBar.fillAmount = amount / max;
     }
 
     public bool FlipPauseState(PlayerCore pc)
@@ -93,8 +107,8 @@ public class HUDManager : MonoBehaviour
         goHPAndManaBars.SetActive(!bIsEditingSpells);
         Time.timeScale = bIsEditingSpells ? 0.0f : 1.0f;
 
-        controller.useCrystalButton.gameObject.SetActive(true);
-        controller.useCrystalButton.interactable = controller.crystalsLeft > 0 ? true : false;
+        spellEditingController.useCrystalButton.gameObject.SetActive(true);
+        spellEditingController.useCrystalButton.interactable = spellEditingController.crystalsLeft > 0 ? true : false;
 
         return bIsEditingSpells;
     }
@@ -106,6 +120,14 @@ public class HUDManager : MonoBehaviour
         if (cPlayerCore != null)
         {
             cPlayerCore.EnableControls(!FlipPauseState(cPlayerCore));
+        }
+    }
+
+    public void ChangeSpell(int spellNumber)
+    {
+        if (switcher != null)
+        {
+            switcher.ChangeIcon(spellNumber);
         }
     }
 

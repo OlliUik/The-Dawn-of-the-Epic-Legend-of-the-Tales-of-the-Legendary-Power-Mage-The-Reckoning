@@ -25,7 +25,7 @@ public class TeleportSelf : SpellModifier
        
     }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
 
         Spell spell = gameObject.GetComponent<Spell>();

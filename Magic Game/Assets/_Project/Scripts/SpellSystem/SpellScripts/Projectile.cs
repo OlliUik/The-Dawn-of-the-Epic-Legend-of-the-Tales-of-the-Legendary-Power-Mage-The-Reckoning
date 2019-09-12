@@ -9,81 +9,118 @@ public class Projectile : Spell
     #region Variables
 
     [Header("Projectile variables")]
-    [SerializeField] protected float baseDamage         = 50.0f;
-    [SerializeField] protected float baseRange          = 1000.0f;
-    public float baseSpeed          = 15.0f;
+    public float baseDamage                             = 50.0f;
+    public float baseSpeed                              = 15.0f;
+    private float miniAoeRadius                         = 3f;
+
+    public GameObject graphics                          = null;
+    public GameObject explosionParticle                 = null;
 
     public Vector3 direction                            { get; set; }
     private Vector3 lastPos                             = Vector3.zero;
     private float distanceTravelled                     = 0.0f;
 
+    public SpellModifier[] modifiers;
+    public bool isMaster = false;
+
+    private bool inited = false;
+
     #endregion
 
     #region Unitys_Methods
 
-    void Start()
+    private void Start()
     {
-        lastPos = transform.position;
-        direction = transform.forward;
+        if (!inited) Init();
     }
 
     void FixedUpdate()
     {
         distanceTravelled += Vector3.Distance(transform.position, lastPos);
         lastPos = transform.position;
+        transform.position += direction * baseSpeed * Time.fixedDeltaTime;
 
-        if(distanceTravelled < baseRange)
-        {
-            transform.position += direction * baseSpeed * Time.fixedDeltaTime;
-        }
-        else
+        if (distanceTravelled > range)
         {
             print("Out of range");
-            // explosion particle ??
-            Destroy(gameObject);
+            DestroyProjectile();
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        bool hitLiving = false;
 
-        // COLLISION TO PLAYER OR ENEMY --> DEAL DAMAGE AND APPLY STATUSEFFECTS
-
-        if(collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
+        // DEAL DAMAGE
+        Collider[] hitObjects = Physics.OverlapSphere(transform.position, miniAoeRadius);
+        foreach (Collider go in hitObjects)
         {
-
-            var health = collision.gameObject.GetComponent<Health>();
-
-            if(health != null)
+            var health = go.gameObject.GetComponent<Health>();
+            if (health != null)
             {
-                health.Hurt(baseDamage);
+                hitLiving = true;
+                base.DealDamage(health, baseDamage);
             }
-        
-            //foreach (ScriptableEffect effect in effects)
-            //{
-            //    print("Applied: " + effect.name);
-            //    collision.gameObject.GetComponent<StatusEffectManager>().AddStatusEffect(effect.InitializeEffect(collision.gameObject));
-            //}
-            //
-            //foreach (StatusEffectBase effectBase in statusEffects)
-            //{
-            //    collision.gameObject.GetComponent<StatusEffectManagerBase>().AddStatusEffect(effectBase);
-            //}
+
+            // APPLY STATUSEFFECTS
+            var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();
+            if (effectManager != null)
+            {
+                base.ApplyStatusEffects(effectManager, statusEffects);
+            }
+        }
+
+        if(!hitLiving || hitObjects.Length <= 0)
+        {
+            // loop all effects and if there is water spawn them
+            foreach (StatusEffect effect in statusEffects)
+            {
+                effect.HitNonlivingObject(collision);
+            }
         }
 
         // APPLY ALL COLLISION MODIFIERS
-        SpellModifier[] modifiers = GetComponents<SpellModifier>();
-        foreach (SpellModifier modifier in modifiers)
+        if(modifiers.Length > 0)
         {
-            modifier.ProjectileCollide(collision, direction);
+            foreach (SpellModifier modifier in modifiers)
+            {
+                modifier.ProjectileCollide(collision, direction);
+            }
         }
+        
+        // DESTROY ORGINAL
+        DestroyProjectile();
+    }
 
-        Destroy(gameObject);
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, miniAoeRadius);
     }
 
     #endregion
 
     #region Custom_Methods
+
+    private void Init()
+    {
+        if(graphics != null)
+        {
+            GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
+            graphicsCopy.transform.SetParent(transform);
+        }
+        lastPos = transform.position;
+        modifiers = GetComponents<SpellModifier>();
+    }
+
+    private void DestroyProjectile()
+    {
+        if(explosionParticle != null)
+        {
+            Instantiate(explosionParticle, transform.position, transform.rotation);
+        }
+        Destroy(gameObject);
+    }
 
     public override void CastSpell(Spellbook spellbook, SpellData data)
     {
@@ -103,9 +140,10 @@ public class Projectile : Spell
         // get the direction from the spellbook and spawn projectile accodring to that
         direction = spellbook.GetDirection();
         Quaternion rot = Quaternion.LookRotation(direction, Vector3.up);
-        Projectile projectile = Instantiate(this, spellbook.spellPos.position, rot);
+        Projectile projectile = Instantiate(gameObject, spellbook.spellPos.position, rot).GetComponent<Projectile>();
         projectile.direction = direction;
         projectile.caster = spellbook.gameObject;
+        projectile.isMaster = true;
 
         // apply all modifiers to the projectile ( this is inherited from spell class )
         ApplyModifiers(projectile.gameObject, data);
@@ -119,11 +157,6 @@ public class Projectile : Spell
     public void ModifyDamage(float amount)
     {
         baseDamage += amount;
-    }
-
-    public void ModifyRange(float amount)
-    {
-        baseRange += amount;
     }
 
     public void ModifySpeed(float amount)

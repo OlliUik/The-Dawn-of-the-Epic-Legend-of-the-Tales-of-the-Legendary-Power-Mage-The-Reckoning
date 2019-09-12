@@ -144,6 +144,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     {
         cAnimator.SetInteger("Spell Type", spellType);
         cAnimator.SetTrigger("Cast Spell");
+        cAnimator.SetTrigger("Release Hold");
     }
 
     public void TakeDamage()

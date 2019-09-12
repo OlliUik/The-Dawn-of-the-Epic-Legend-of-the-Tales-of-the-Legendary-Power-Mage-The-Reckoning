@@ -7,10 +7,77 @@ public class Aoe : Spell
 
     #region Variables
 
-    //[Header("AoE varialbes")]
-    [SerializeField] public float radius    { get; private set; } = 7.0f;
-    [SerializeField] public float duration  { get; private set; } = 10.0f;
-    [SerializeField] public float damagePerSecond = 1.0f;
+    [Header("AoE varialbes")]
+    [SerializeField] public float damagePerSecond   = 1.0f;
+    [SerializeField] public float radius            = 7.0f;
+    [SerializeField] public float duration          = 10.0f;
+    public GameObject graphics                      = null;
+
+    private SpellModifier[] modifiers               = null;
+
+    #endregion
+
+    #region UnityMethods
+
+    private void Start()
+    {
+        spellType = SpellType.AOE;
+        GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
+        copyGraphics.transform.SetParent(gameObject.transform);
+        modifiers = GetComponents<SpellModifier>();
+    }
+
+    private void Update()
+    {
+        // find out what is inside the radius
+        var auraArea = Physics.OverlapSphere(transform.position, radius);
+        foreach (var objectHit in auraArea)
+        {
+            // check if objectHit is enemy
+            if (objectHit.transform.tag != caster.tag)
+            {
+                var health = objectHit.GetComponent<Health>();
+                if(health != null)
+                {
+                    base.DealDamage(health, (damagePerSecond * Time.deltaTime));
+                }
+
+                var effectManager = objectHit.GetComponent<StatusEffectManager>();
+                if (effectManager != null)
+                {
+                    base.ApplyStatusEffects(effectManager, statusEffects);
+                }
+
+                // apply all modifiers here to the enemy inside radius
+                foreach (SpellModifier modifier in modifiers)
+                {
+                    modifier.AoeCollide(objectHit.gameObject);
+                }
+            }
+        }
+    }
+
+    // debug stuff
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        DrawCircle(this.transform.position, radius);
+    }
+    private void DrawCircle(Vector3 position, float radius, int precision = 32)
+    {
+        Vector3 previousPoint = position + this.transform.right * radius;
+
+        for (int i = 1; i <= precision; i++)
+        {
+            var angle = 2 * Mathf.PI * (i / (float)precision);
+
+            Vector3 newPoint = position
+                + this.transform.right * radius * Mathf.Cos(angle)
+                + this.transform.forward * radius * Mathf.Sin(angle);
+            Gizmos.DrawLine(newPoint, previousPoint);
+            previousPoint = newPoint;
+        }
+    }
 
     #endregion
 
@@ -44,7 +111,7 @@ public class Aoe : Spell
 
     }
 
-    public void ModifyRange(float amount)
+    public override void ModifyRange(float amount)
     {
         radius += amount;
         print("Radius increased to " + radius);
@@ -65,56 +132,5 @@ public class Aoe : Spell
 
     #endregion
 
-    #region UnityMethods
-
-    private void Update()
-    {
-        // find out what is inside the radius
-        var auraArea = Physics.OverlapSphere(transform.position, radius);
-        foreach (var objectHit in auraArea)
-        {
-            // check if objectHit is enemy
-            if (objectHit.transform.tag != caster.tag)
-            {
-
-                var health = objectHit.GetComponent<Health>();
-                if(health != null)
-                {
-                    health.Hurt(damagePerSecond * Time.deltaTime);
-                }
-
-                // apply all modifiers here to the enemy inside radius
-                SpellModifier[] modifiers = GetComponents<SpellModifier>();
-                foreach (SpellModifier modifier in modifiers)
-                {
-                    modifier.AoeCollide(objectHit.gameObject);
-                }
-            }
-        }
-    }
-
-    // debug stuff
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        DrawCircle(this.transform.position, radius);
-    }
-    private void DrawCircle(Vector3 position, float radius, int precision = 32)
-    {
-        Vector3 previousPoint = position + this.transform.right * radius;
-
-        for (int i = 1; i <= precision; i++)
-        {
-            var angle = 2 * Mathf.PI * (i / (float)precision);
-
-            Vector3 newPoint = position
-                + this.transform.right * radius * Mathf.Cos(angle)
-                + this.transform.forward * radius * Mathf.Sin(angle);
-            Gizmos.DrawLine(newPoint, previousPoint);
-            previousPoint = newPoint;
-        }
-    }
-
-    #endregion
 
 }

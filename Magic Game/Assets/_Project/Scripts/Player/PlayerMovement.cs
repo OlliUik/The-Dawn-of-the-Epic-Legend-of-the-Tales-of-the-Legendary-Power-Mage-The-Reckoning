@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(ThirdPersonCamera))]
 [RequireComponent(typeof(CharacterController))]
@@ -9,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Input")]
     [SerializeField] private string horizontalAxis = "Horizontal";
     [SerializeField] private string verticalAxis = "Vertical";
-    [SerializeField] private string jumpButton = "Jump";
+    [SerializeField] private string jumpButton;
     [SerializeField] private string dashButton = "Fire3";
 
     [HideInInspector] public float accelerationMultiplier = 1.0f;
@@ -19,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Serialized")]
     [SerializeField] private bool bAllowMidairDashing = true;
+    [SerializeField] private bool bDashingGivesIFrames = false;
+    [SerializeField] private bool bAllowInfiniteWallJumps = true;
     [SerializeField] private float acceleration = 100.0f;
     [SerializeField] private float airAcceleration = 20.0f;
     [SerializeField] private float friction = 5.5f;
@@ -33,11 +38,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashCooldown = 1.0f;
     [SerializeField] private float gravityWallSliding = -1.0f;
     [SerializeField] private float wallSlidingTime = 2.0f;
+    [SerializeField] private float wallJumpForce = 25.0f;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     [SerializeField] private Transform ragdollTransform = null;
+    [SerializeField] private bool bStunned;
 
     private ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
+    private InputManager inputManager = null;
 
     //Input
     private Vector2 movementInput = Vector2.zero;
@@ -70,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
     {
         cCharacter = GetComponent<CharacterController>();
         cTPCamera = GetComponent<ThirdPersonCamera>();
+        inputManager = GetComponent<InputManager>();
     }
 
     void Start()
@@ -79,7 +88,24 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        if (inputManager.controllerId == 1)
+        {
+            jumpButton = "Xbox_Jump";
+            GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        }
+
+        if (inputManager.controllerId == 2)
+        {
+            jumpButton = "PS_Jump";
+            GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        }
+
+        else
+        {
+            jumpButton = "Jump";
+            GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        }
+
     }
 
     void FixedUpdate()
@@ -182,12 +208,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (ragdollTransform != null)
         {
-            Teleport(ragdollTransform.position);
+            //Teleport(ragdollTransform.position);
             moveVector = Vector3.zero;
         }
     }
 
-    void Move(float inputX, float inputY, bool inputJump, bool inputDash)
+    public void Move(float inputX, float inputY, bool inputJump, bool inputDash)
     {
         dt = Time.fixedDeltaTime;
 
@@ -215,6 +241,14 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 bIsWallSliding = false;
+
+                if (bAllowInfiniteWallJumps)
+                {
+                    if ((cCharacter.collisionFlags & CollisionFlags.Sides) == 0)
+                    {
+                        wstTimer = wallSlidingTime;
+                    }
+                }
             }
         }
         else
@@ -301,10 +335,15 @@ public class PlayerMovement : MonoBehaviour
                     {
                         moveDirection = -lookVector;
                     }
-                    if (GetComponent<Health>() != null)
+
+                    if (bDashingGivesIFrames)
                     {
-                        GetComponent<Health>().AddInvulnerability(dashDuration);
+                        if (GetComponent<Health>() != null)
+                        {
+                            GetComponent<Health>().AddInvulnerability(dashDuration);
+                        }
                     }
+                    
                     dDurationTimer = dashDuration;
                     dCooldownTimer = dashCooldown;
                     tempVector = moveDirection * dashSpeed * accelerationMultiplier;
@@ -331,8 +370,13 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Vector3 wallHorizontalNormal = Vector3.Normalize(new Vector3(currentHit.normal.x, 0.0f, currentHit.normal.z));
 
-                    tempVector.y = 0.0f;
-                    tempVector += Vector3.Normalize(wallHorizontalNormal + Vector3.up * 0.5f) * jumpForce;
+                    //tempVector.y = 0.0f;
+                    //tempVector += Vector3.Normalize(wallHorizontalNormal + Vector3.up) * wallJumpForce;
+
+                    Vector3 wallSlideDirection = Vector3.ProjectOnPlane(tempVector, wallHorizontalNormal);
+                    wallSlideDirection.y = 0.0f;
+
+                    tempVector = Vector3.Normalize(wallHorizontalNormal + Vector3.up + wallSlideDirection.normalized) * wallJumpForce;
 
                     jgtTimer = 0.0f;
                     //tempVector.y = jumpForce;
@@ -353,8 +397,8 @@ public class PlayerMovement : MonoBehaviour
         //Do something else when on a steep slope
         else
         {
-            Vector3 tempVector = moveDirection * airAcceleration * dt;
-            tempVector = Vector3.ProjectOnPlane(tempVector, slopeNormal);
+            Vector3 tempVector = Vector3.Project(moveDirection, new Vector3(slopeNormalPerpendicular.x, 0.0f, slopeNormalPerpendicular.y)) * airAcceleration * dt;
+            //tempVector = Vector3.ProjectOnPlane(tempVector, slopeNormal);
             moveVector = Vector3.ProjectOnPlane(moveVector, slopeNormal);
             moveVector += tempVector + slopeDownDirection * -gravity * dt;
 
@@ -406,6 +450,14 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             cCharacter.Move(finalMovement);
+        }
+    }
+
+    public void Move(Vector3 direction)
+    {
+        if(!bStunned)
+        {
+            cCharacter.Move(direction);
         }
     }
 
@@ -479,6 +531,18 @@ public class PlayerMovement : MonoBehaviour
             equal = false;
         }
         return equal;
+    }
+
+    public void Stun(float duration)
+    {
+        bStunned = true;
+        StartCoroutine(Stunned(duration));
+    }
+
+    IEnumerator Stunned(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        bStunned = false;
     }
 
     #endregion

@@ -4767,6 +4767,7 @@ GameObject:
   - component: {fileID: 3749696051667347142}
   - component: {fileID: 8868722399563768401}
   - component: {fileID: 6140846389390852150}
+  - component: {fileID: 6087698935270641889}
   m_Layer: 0
   m_Name: TeleportParticles
   m_TagString: Untagged
@@ -5306,8 +5307,8 @@ ParticleSystem:
     startRotation:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.7853981
-      minScalar: -0.7853981
+      scalar: 6.283185
+      minScalar: -6.283185
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5804,6 +5805,15 @@ ParticleSystem:
           weightedMode: 0
           inWeight: 0
           outWeight: 0
+        - serializedVersion: 3
+          time: 0.11030353
+          value: 0.6114983
+          inSlope: 1.6174887
+          outSlope: 1.6174887
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.23240471
         - serializedVersion: 3
           time: 1
           value: 1
@@ -9469,7 +9479,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b96fed1f29bc59c46b656f34c0750a62, type: 2}
+  - {fileID: 2100000, guid: a2d312fdbf9140d4ba02012cdb882f2f, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -9513,3 +9523,15 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &6087698935270641889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6973130805649521536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc742b114fbe1b42abc3bcad60b3f71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

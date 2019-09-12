@@ -6,7 +6,7 @@ public class LevelBuilder : MonoBehaviour
 {
     public Room startRoomPrefab, endRoomPrefab;
     public List<Room> roomPrefabs = new List<Room>();
-    public Vector2 iterationRange = new Vector2(3, 10);
+    public Vector2 iterationRange = new Vector2();
 
     List<Doorway> availableDoorways = new List<Doorway>();
 
@@ -24,10 +24,10 @@ public class LevelBuilder : MonoBehaviour
 
     IEnumerator GenerateLevel()
     {
-        WaitForSeconds startup = new WaitForSeconds(1);
+            //WaitForSeconds startup = new WaitForSeconds(1);
         WaitForFixedUpdate interval = new WaitForFixedUpdate();
 
-        yield return startup;
+            //yield return startup;
 
         //Place start room
         PlaceStartRoom();

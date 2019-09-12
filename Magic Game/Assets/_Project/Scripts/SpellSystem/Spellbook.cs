@@ -21,8 +21,8 @@ public class Spellbook : MonoBehaviour
     [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     // Components
-    private Health health;
-    private Mana mana;
+    public Health health { get; private set; }
+    public Mana mana { get; private set; }
 
     #endregion
 
@@ -102,11 +102,12 @@ public class Spellbook : MonoBehaviour
         else
         {
             //direction = -Vector3.Normalize(lookTransform.position - GetComponent<EnemyCore>().vision.targetLocation);
-            Vector3 prediction = GetComponent<EnemyCore>().vision.targetLocation;
+            Vector3 prediction = GetComponent<EnemyCore>().cVision.targetLocation;
             Projectile proj = spells[0].spell as Projectile;
             if (proj != null)
             {
-                prediction = GetComponent<EnemyCore>().PredictTargetPosition(spellPos.position, proj.baseSpeed, GetComponent<EnemyCore>().vision.targetLocation, GetComponent<EnemyCore>().vision.targetGO.GetComponent<CharacterController>().velocity);
+                EnemyCore ec = GetComponent<EnemyCore>();
+                prediction = ec.PredictTargetPosition(spellPos.position, proj.baseSpeed, ec.cVision.targetLocation, ec.status.isConfused ? ec.cVision.targetGO.GetComponent<UnityEngine.AI.NavMeshAgent>().velocity : ec.cVision.targetGO.GetComponent<CharacterController>().velocity);
             }
             direction = -Vector3.Normalize(lookTransform.position - prediction);
         }
@@ -120,7 +121,7 @@ public class Spellbook : MonoBehaviour
     //    Vector3 direction = Vector3.zero;
 
     //    RaycastHit hit;
-    //    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
     //    if(Physics.Raycast(ray, out hit))
     //    {
@@ -187,6 +188,10 @@ public class Spellbook : MonoBehaviour
         return castingTime;
     }
 
+
+    /// This func should be called when some spell is about to be casted
+    /// We should pass an animation as parameter (how the spell is charged)
+    /// After charging the spell the animation can call "CastSpell()" with anim event
     private IEnumerator StartCastingSpell(int spellIndex)
     {
         isCasting = true;
@@ -198,12 +203,15 @@ public class Spellbook : MonoBehaviour
             mana.UseMana(spells[spellIndex].spell.ManaCost);
         }
 
-        foreach (Card card in spells[spellIndex].cards)
+        if(spells[spellIndex].cards.Count > 0)
         {
-            foreach (SpellBalance balance in card.balances)
+            foreach (Card card in spells[spellIndex].cards)
             {
-                // take spell extra cost here
-                balance.ApplyBalance(this);
+                foreach (SpellBalance balance in card.balances)
+                {
+                    // take spell extra cost here
+                    balance.ApplyBalance(this);
+                }
             }
         }
 

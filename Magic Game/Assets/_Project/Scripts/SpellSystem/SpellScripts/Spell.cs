@@ -8,11 +8,12 @@ public class Spell : MonoBehaviour
     public GameObject caster;
 
     [Header("Spell")]
-    [SerializeField] protected float cooldown = 5.0f;
-    [SerializeField] protected float castTime = 5.0f;
-    [SerializeField] protected float manaCost = 5.0f;
-    [SerializeField] protected List<ScriptableEffect> effects = new List<ScriptableEffect>();
-    [SerializeField] protected List<StatusEffectBase> statusEffects = new List<StatusEffectBase>();
+    public SpellType spellType                  = SpellType.GENERIC;
+    [SerializeField] protected float cooldown   = 5.0f;
+    [SerializeField] protected float castTime   = 5.0f;
+    [SerializeField] protected float manaCost   = 5.0f;
+    [SerializeField] protected float range      = 250.0f;
+    public List<StatusEffect> statusEffects     = new List<StatusEffect>();
 
     public float Cooldown
     {
@@ -63,50 +64,62 @@ public class Spell : MonoBehaviour
     public virtual void ApplyModifiers(GameObject go, SpellData data)
     {
         Spell spell = go.GetComponent<Spell>();
-        spell.effects.Clear();          // this makes sure all previous effects will be removed from the list
-        spell.statusEffects.Clear();    // same
 
         foreach (Card card in data.cards)
         {
             // add all modifiers to spell
             foreach (SpellScriptableModifier modifier in card.modifiers)
             {
-                modifier.AddSpellModifier(go);
+                modifier.AddSpellModifier(spell);
                 print("Added: " + modifier.name);
             }
 
-            // add all effects from cards to spells list of effects
-            foreach (ScriptableEffect effect in card.effects)
+            // Instantiate all graphics from cards
+            switch (spell.spellType)
             {
-                spell.effects.Add(effect);
+                case SpellType.PROJECTILE:
+                    if(card.graphicsProjecile != null)
+                    {
+                        GameObject graphics = Instantiate(card.graphicsProjecile, go.transform.position, Quaternion.identity);
+                        graphics.transform.SetParent(go.transform);
+                    }
+                    break;
+                case SpellType.BEAM:
+                    if (card.graphicsBeam != null)
+                    {
+                        GameObject graphics = Instantiate(card.graphicsProjecile, go.transform.position, Quaternion.identity);
+                        graphics.transform.SetParent(go.transform);
+                    }
+                    break;
+                case SpellType.AOE:
+                    if (card.graphicsAoe != null)
+                    {
+                        GameObject graphics = Instantiate(card.graphicsProjecile, go.transform.position, Quaternion.identity);
+                        graphics.transform.SetParent(go.transform);
+                    }
+                    break;
+                default:
+                    Debug.Log("Error: Instantiating spells graphics");
+                    break;
             }
-
-            foreach (StatusEffectBase statusEffect in card.statusEffects)
-            {
-                spell.statusEffects.Add(statusEffect);
-            }
-
-            /* Graphics old
 
             // check if card has graphics assained if so add them to the spell
-            if(card.graphics != null)
-            {
-                // first check if spell has primary graphics
-        
-                // if not add these 
-                GameObject graphics = Instantiate(card.graphics, go.transform.position, card.graphics.transform.rotation);
-                graphics.transform.SetParent(go.transform);
-                break; // if primary graphics get added don't and secendary of the same ( fire particles on fire projectile )
-            }
-        
-            if(card.secendaryGraphics != null)
-            {
-                // card has some secendary graphics
-                GameObject graphics = Instantiate(card.secendaryGraphics, go.transform.position, go.transform.rotation);
-                graphics.transform.parent = go.transform;
-            }
-
-            */        
+            //if(card.graphics != null)
+            //{
+            //    // first check if spell has primary graphics
+            //
+            //    // if not add these 
+            //    GameObject graphics = Instantiate(card.graphics, go.transform.position, card.graphics.transform.rotation);
+            //    graphics.transform.SetParent(go.transform);
+            //    break; // if primary graphics get added don't and secendary of the same ( fire particles on fire projectile )
+            //}
+            //
+            //if(card.secendaryGraphics != null)
+            //{
+            //    // card has some secendary graphics
+            //    GameObject graphics = Instantiate(card.secendaryGraphics, go.transform.position, go.transform.rotation);
+            //    graphics.transform.parent = go.transform;
+            //}
 
         }
 
@@ -116,6 +129,31 @@ public class Spell : MonoBehaviour
             mod.OnSpellCast(spell);
         }
 
+    }
+
+    public virtual void ModifyRange(float increaseAmount) { range += increaseAmount; }
+
+    public virtual void ModifyCooldown(float cooldownDercrease)
+    {
+        cooldown -= cooldownDercrease;
+        if(cooldown < 0f)
+        {
+            cooldown = 0f;
+        }
+    }
+
+    public virtual void DealDamage(Health health, float amount)
+    {
+        health.Hurt(amount, true);
+    }
+
+    public virtual void ApplyStatusEffects(StatusEffectManager manager, List<StatusEffect> effects)
+    {
+        // call ApplyStatusEffect in the hitObjects StatusEffectManager and do null checks there
+        foreach (StatusEffect effect in statusEffects)
+        {
+            manager.ApplyStatusEffect(effect, statusEffects);
+        }
     }
 
 }

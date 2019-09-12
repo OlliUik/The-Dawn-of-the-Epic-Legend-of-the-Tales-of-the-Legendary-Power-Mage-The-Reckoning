@@ -40,7 +40,7 @@ public class SwitchPlaces : SpellModifier
         Debug.Log("SwitchPlaces is not compatible with aoe");
     }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
 
         var rb = hitInfo.collider.GetComponent<Rigidbody>();

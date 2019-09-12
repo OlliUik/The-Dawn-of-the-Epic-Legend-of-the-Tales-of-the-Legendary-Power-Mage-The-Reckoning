@@ -16,8 +16,8 @@ public class EnemyFlyingNavigationFollower : MonoBehaviour
 
     void Update()
     {
-        Vector3 currentPosition = cEnemyCore.navigation.transform.position;
-        currentHeight = Mathf.Lerp(currentHeight, cEnemyCore.navigation.transform.position.y + desiredHeight, Time.deltaTime);
+        Vector3 currentPosition = cEnemyCore.cNavigation.transform.position;
+        currentHeight = Mathf.Lerp(currentHeight, cEnemyCore.cNavigation.transform.position.y + desiredHeight, Time.deltaTime);
         currentPosition.y = currentHeight;
 
         transform.position = currentPosition;

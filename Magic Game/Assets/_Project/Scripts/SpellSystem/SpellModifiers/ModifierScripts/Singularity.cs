@@ -29,7 +29,7 @@ public class Singularity : SpellModifier
         }
     }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
         // singularity on and pull towards hitInfo.point
 

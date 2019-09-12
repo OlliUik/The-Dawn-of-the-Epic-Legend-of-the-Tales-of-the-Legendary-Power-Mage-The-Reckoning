@@ -10,10 +10,15 @@ public class PlayerCore : MonoBehaviour
 {
     #region VARIABLES
 
+    [Header("Public")]
+    public Transform ragdollPosition = null;
+
     [Header("Serialized")]
+    [SerializeField][Range(0,1)] private int spellControls = 0;
+    [SerializeField] private bool enableForcedRagdolling = false;
     [SerializeField] private HUDManager canvasManager = null;
     [SerializeField] private GameObject ragdollObject = null;
-    [SerializeField] private Transform ragdollPosition = null;
+    [SerializeField] private PlayerAnimationHandler cAnimHandler = null;
     [SerializeField] private Text debugText = null;
 
     public Health cHealth { get; private set; } = null;
@@ -21,8 +26,8 @@ public class PlayerCore : MonoBehaviour
     public ThirdPersonCamera cTPCamera { get; private set; } = null;
     public CharacterController cCharacter { get; private set; } = null;
     public PlayerMovement cMovement { get; private set; } = null;
-    //public PlayerSpellCaster cSpellCaster { get; private set; } = null;
     public Spellbook cSpellBook { get; private set; } = null;
+    public InputManager inputManager { get; private set; } = null;
 
     private bool bInputEnabled = true;
     private bool bIsDead = false;
@@ -31,14 +36,15 @@ public class PlayerCore : MonoBehaviour
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
     public int activeSpellIndex = 0;
+    public bool openSpellEditingOnStart = false;
 
     #endregion
-    
+
     #region UNITY_DEFAULT_METHODS
 
     void Awake()
     {
-        GlobalVariables.entityList.Add(this.gameObject);
+        GlobalVariables.teamGoodGuys.Add(this.gameObject);
         GlobalVariables.bAnyPlayersAlive = true;
 
         cHealth = GetComponent<Health>();
@@ -46,20 +52,16 @@ public class PlayerCore : MonoBehaviour
         cTPCamera = GetComponent<ThirdPersonCamera>();
         cMovement = GetComponent<PlayerMovement>();
         cCharacter = GetComponent<CharacterController>();
-
-        if (GetComponent<Spellbook>() != null)
-        {
-            cSpellBook = GetComponent<Spellbook>();
-        }
-        //if (GetComponent<PlayerSpellCaster>() != null)
-        //{
-        //    cSpellCaster = GetComponent<PlayerSpellCaster>();
-        //}
+        cSpellBook = GetComponent<Spellbook>();
+        inputManager = GetComponent<InputManager>();
     }
 
     void Start()
     {
-        SetRagdollDepenetrationValues("Armature", 3.0f);
+        if(openSpellEditingOnStart)
+            ToggleSpellEditingUI();
+
+        canvasManager.ChangeSpell(activeSpellIndex);
 
         //Quaternion spawnRotation = transform.localRotation;
         //transform.localRotation = Quaternion.Euler(Vector3.zero);
@@ -75,76 +77,215 @@ public class PlayerCore : MonoBehaviour
 
         if (bIsDead)
         {
-            //Camera.main.transform.LookAt(playerModel.transform);
+            cTPCamera.cameraObject.transform.LookAt(ragdollPosition.position);
         }
         else
         {
-
-
             if (bInputEnabled)
             {
-                //cTPCamera.Look(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-                //cMovement.GetInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetButtonDown("Jump"), Input.GetButtonDown("Fire3"));
 
-                if (Input.GetButtonDown("Fire1") || Input.GetAxisRaw("Fire1") != 0.0f)
+                #region TRADITIONAL_FPS_INPUT
+
+                if (spellControls == 0)
                 {
-                    //Don't allow repeated input from controller axis
-                    if (!bShotFired)
+                    if (Input.GetButtonDown("Fire1") || Input.GetAxisRaw("Fire1") != 0.0f)
                     {
-                        //cSpellCaster.CastSpell();
-                        cSpellBook.CastSpell(activeSpellIndex);
-                        //GetComponent<PlayerAnimations>().CastSpell(0);
-                        bShotFired = true;
-                    }
-                }
-                else
-                {
-                    bShotFired = false;
-                }
-
-                if (Input.GetButtonDown("Fire2"))
-                {
-                    if (!bIsRagdolled)
-                    {
-                        EnableRagdoll(true);
-                    }
-                    //cTPCamera.SwitchSide();
-                }
-
-                // CHANGING ACTIVE SPELL
-                if(Input.mouseScrollDelta.y != 0 && !cSpellBook.isCasting)
-                {
-                    if(Input.mouseScrollDelta.y > 0)
-                    {
-                        activeSpellIndex++;
-
-                        if(activeSpellIndex > 2)
+                        //Don't allow repeated input from controller axis
+                        if (!bShotFired)
                         {
-                            activeSpellIndex = 0;
+                            cSpellBook.CastSpell(activeSpellIndex);
+                            bShotFired = true;
+                            cAnimHandler.CastSpell(activeSpellIndex);
                         }
                     }
                     else
                     {
-                        activeSpellIndex--;
+                        bShotFired = false;
+                    }
 
-                        if(activeSpellIndex < 0)
+                    if (Input.GetButtonDown("Fire2"))
+                    {
+                        if (enableForcedRagdolling)
                         {
-                            activeSpellIndex = 2;
+                            if (!bIsRagdolled)
+                            {
+                                EnableRagdoll(true);
+                            }
+                        }
+                    }
+
+                    // CHANGING ACTIVE SPELL
+                    if (Input.mouseScrollDelta.y != 0 && !cSpellBook.isCasting)
+                    {
+                        if (Input.mouseScrollDelta.y > 0)
+                        {
+                            activeSpellIndex++;
+
+                            if (activeSpellIndex > 2)
+                            {
+                                activeSpellIndex = 0;
+                            }
+                        }
+                        else
+                        {
+                            activeSpellIndex--;
+
+                            if (activeSpellIndex < 0)
+                            {
+                                activeSpellIndex = 2;
+                            }
+                        }
+
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Alpha1))
+                    {
+                        activeSpellIndex = 0;
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Alpha2))
+                    {
+                        activeSpellIndex = 1;
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
+                    if (Input.GetKeyDown(KeyCode.Alpha3))
+                    {
+                        activeSpellIndex = 2;
+                        canvasManager.ChangeSpell(activeSpellIndex);
+                    }
+                }
+
+                #endregion
+
+                #region MMO_STYLE_SKILL_INPUT
+
+                if (spellControls == 1)
+                {
+                    if (inputManager.controllerId == 1)
+                    {
+                        if (Input.GetAxis("Xbox_Fire1") > 0.5f || Input.GetAxis("Xbox_Fire2") > 0.5f || Input.GetButtonDown("Xbox_Fire3"))
+                        {
+                            if (!bShotFired)
+                            {
+                                //Determine spell index
+                                if (Input.GetAxis("Xbox_Fire1") > 0.5f)
+                                {
+                                    activeSpellIndex = 1;
+                                }
+
+                                if (Input.GetAxis("Xbox_Fire2") > 0.5f)
+                                {
+                                    activeSpellIndex = 0;
+                                }
+
+                                if (Input.GetButtonDown("Xbox_Fire3"))
+                                {
+                                    activeSpellIndex = 2;
+                                }
+
+                                //Update UI icons
+                                canvasManager.ChangeSpell(activeSpellIndex);
+
+                                //Cast spell
+                                cSpellBook.CastSpell(activeSpellIndex);
+                                bShotFired = true;
+                                cAnimHandler.CastSpell(activeSpellIndex);
+                            }
+                        }
+                        else if (Input.GetAxis("Xbox_Fire1") < 0.5f || Input.GetAxis("Xbox_Fire2") < 0.5f || Input.GetButtonUp("Xbox_Fire3"))
+                        {
+                            bShotFired = false;
+                        }
+                    }
+
+                    if (inputManager.controllerId == 2)
+                    {
+                        if (Input.GetAxis("PS_Fire1") > 0 || Input.GetAxis("PS_Fire2") > 0 || Input.GetButtonDown("PS_Fire3"))
+                        {
+                            if (!bShotFired)
+                            {
+                                //Determine spell index
+                                if (Input.GetAxis("PS_Fire1") > 0)
+                                {
+                                    activeSpellIndex = 1;
+                                }
+
+                                if (Input.GetAxis("PS_Fire2") > 0)
+                                {
+                                    activeSpellIndex = 0;
+                                }
+
+                                if (Input.GetButtonDown("PS_Fire3"))
+                                {
+                                    activeSpellIndex = 2;
+                                }
+
+                                //Update UI icons
+                                canvasManager.ChangeSpell(activeSpellIndex);
+
+                                //Cast spell
+                                cSpellBook.CastSpell(activeSpellIndex);
+                                bShotFired = true;
+                                cAnimHandler.CastSpell(activeSpellIndex);
+                            }
+                        }
+                        else if (Input.GetAxis("PS_Fire1") < 0 || Input.GetAxis("PS_Fire2") < 0 || Input.GetButtonUp("PS_Fire3"))
+                        {
+                            bShotFired = false;
+                        }
+                    }
+
+                    else
+                    {
+                        if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2") || Input.GetButtonDown("Fire3"))
+                        {
+                            if (!bShotFired)
+                            {
+                                //Determine spell index
+                                if (Input.GetButtonDown("Fire1"))
+                                {
+                                    activeSpellIndex = 1;
+                                }
+
+                                if (Input.GetButtonDown("Fire2"))
+                                {
+                                    activeSpellIndex = 0;
+                                }
+
+                                if (Input.GetButtonDown("Fire3"))
+                                {
+                                    activeSpellIndex = 2;
+                                }
+
+                                //Update UI icons
+                                canvasManager.ChangeSpell(activeSpellIndex);
+
+                                //Cast spell
+                                cSpellBook.CastSpell(activeSpellIndex);
+                                bShotFired = true;
+                                cAnimHandler.CastSpell(activeSpellIndex);
+                            }
+                        }
+                        else if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2") || Input.GetButtonDown("Fire3"))
+                        {
+                            bShotFired = false;
                         }
                     }
                 }
 
+                #endregion
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                ToggleSpellEditingUI();
             }
 
             if (Input.GetButtonDown("Escape"))
             {
                 EnableControls(!canvasManager.FlipPauseState(this));
-            }
-
-            if(Input.GetKeyDown(KeyCode.Return))
-            {
-                // OPEN SPELL EDITING MENU // ALSO CLOSES IT
-                EnableControls(!canvasManager.FlipSpellEditingState(this));
             }
         }
     }
@@ -153,9 +294,11 @@ public class PlayerCore : MonoBehaviour
     {
         if (!bIsDead && bIsRagdolled && ragdollPosition != null)
         {
+            cMovement.Teleport(ragdollPosition.position);
+
             cHealth.AddInvulnerability(Time.fixedDeltaTime);
 
-            if (Vector3.Distance(ragdollPosition.position, ragdollPrevPosition) < 0.2f)
+            if ((ragdollPosition.position - ragdollPrevPosition).sqrMagnitude < 0.04f)
             {
                 if (ragdollSleepTimer > 0.0f)
                 {
@@ -184,7 +327,7 @@ public class PlayerCore : MonoBehaviour
             }
             else
             {
-                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage);
+                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
             }
         }
     }
@@ -206,6 +349,11 @@ public class PlayerCore : MonoBehaviour
 
     #region CUSTOM_METHODS
 
+    public void ToggleSpellEditingUI()
+    {
+        EnableControls(!canvasManager.FlipSpellEditingState(this));
+    }
+
     public HUDManager GetHUD()
     {
         return canvasManager;
@@ -213,88 +361,71 @@ public class PlayerCore : MonoBehaviour
 
     public void EnableControls(bool b)
     {
-        bInputEnabled = b;
-        cMovement.enableControls = b;
-        cTPCamera.EnableCameraControls(b);
+        if (canvasManager.bIsPaused || canvasManager.bIsEditingSpells)
+        {
+            cTPCamera.EnableCameraControls(false);
+        }
+        else
+        {
+            cTPCamera.EnableCameraControls(b);
+        }
 
-        //if (cSpellCaster != null)
-        //{
-        //    cSpellCaster.CastBeamActive(b);
-        //}
+        if (!bIsRagdolled)
+        {
+            bInputEnabled = b;
+            cMovement.enableControls = b;
+        }
+        else
+        {
+            bInputEnabled = false;
+            cMovement.enableControls = false;
+        }
     }
 
     public void EnableRagdoll(bool b)
     {
+        if (b && bIsRagdolled)
+        {
+            Debug.Log("Tried to enable ragdoll while already ragdolled!");
+            return;
+        }
+
         bIsRagdolled = b;
         cTPCamera.isRagdolled = b;
-        cMovement.enableControls = !b;
         ragdollSleepTimer = 3.0f;
 
+        ragdollObject.GetComponent<RagdollModifier>().SetKinematic(!b, b);
         ragdollObject.GetComponent<Animator>().enabled = !b;
         ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
+        
+        ragdollObject.transform.parent = b ? null : transform;
+
+        //ragdollPosition.GetComponent<Rigidbody>().AddForce(cCharacter.velocity, ForceMode.VelocityChange);
+        ragdollPosition.GetComponent<Rigidbody>().velocity = cCharacter.velocity * 6.0f;
 
         if (!b)
         {
+            ragdollObject.transform.localPosition = Vector3.zero;
             cMovement.OnDisableRagdoll();
         }
-    }
 
-    void SetRagdollDepenetrationValues(string armatureName, float amount)
-    {
-        List<Transform> armatureBones = new List<Transform>();
-
-        if (ragdollObject != null)
-        {
-            foreach (Transform item in ragdollObject.transform)
-            {
-                if (item.name == armatureName)
-                {
-                    Debug.Log("Found the armature, looping through all of its child transforms...");
-                    GetAllChildren(item, armatureBones);
-                    Debug.Log("Found " + armatureBones.Count + " bones.");
-                }
-            }
-        }
-
-        if (armatureBones.Count > 0)
-        {
-            foreach (Transform item in armatureBones)
-            {
-                if (item.GetComponent<Rigidbody>() != null)
-                {
-                    item.GetComponent<Rigidbody>().maxDepenetrationVelocity = amount;
-                }
-            }
-        }
-
-        Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
-    }
-
-    void GetAllChildren(Transform parent, List<Transform> list)
-    {
-        foreach (Transform item in parent)
-        {
-            list.Add(item);
-            if (item.childCount > 0)
-            {
-                GetAllChildren(item, list);
-            }
-        }
+        EnableControls(true);
     }
 
     public void OnHurt()
     {
         canvasManager.OnPlayerHurt();
+        ragdollObject.GetComponent<Animator>().SetTrigger("Take Damage");
         //GetComponent<PlayerAnimations>().TakeDamage();
     }
 
     public void OnDeath()
     {
         bIsDead = true;
-        GlobalVariables.entityList.Remove(this.gameObject);
+        GlobalVariables.teamGoodGuys.Remove(this.gameObject);
 
         GlobalVariables.bAnyPlayersAlive = false;
-        foreach (GameObject item in GlobalVariables.entityList)
+        foreach (GameObject item in GlobalVariables.teamGoodGuys)
         {
             if (item.tag == "Player")
             {
@@ -303,6 +434,7 @@ public class PlayerCore : MonoBehaviour
         }
 
         canvasManager.OnPlayerDeath();
+        EnableRagdoll(true);
         EnableControls(false);
         //cCharacter.enabled = false;
         //cMovement.enabled = false;

@@ -8,7 +8,7 @@ public class CrystalSpawner : MonoBehaviour
     [SerializeField]
     private GameObject crystalPrefab;
 
-    //List of empty game objects where crystal can spawn
+    //Vector3's where crystal can spawn
     [SerializeField]
     private Vector3[] spawns;
 
@@ -17,9 +17,7 @@ public class CrystalSpawner : MonoBehaviour
     
     //List of random number order of spawn location count
     List<int> randomOrder = new List<int>();
-
-    Vector3 newPosition;
-
+    
     void Start()
     {
         for (int n = 0; n < spawns.Length; n++)
@@ -43,16 +41,13 @@ public class CrystalSpawner : MonoBehaviour
             if (Random.value < spawnPercent)
             {
                 //Position of crystal randomly picked from list of spawn locations
-                newPosition = spawns[randomOrder[index]];
+                Vector3 spawnPosition = spawns[randomOrder[index]];
 
                 //Add spawner's position to Vector3
-                newPosition = newPosition + gameObject.transform.position;
+                Vector3 newPosition = gameObject.transform.TransformPoint(spawnPosition);
 
                 //Spawn crystal
-                GameObject newCrystal = Instantiate(crystalPrefab, newPosition, Quaternion.identity) as GameObject;
-
-                //Make spawner as crystal's parent
-                newCrystal.transform.parent = gameObject.transform;
+                GameObject newCrystal = Instantiate(crystalPrefab, newPosition, Quaternion.identity, gameObject.transform) as GameObject;
             }
 
             randomOrder.RemoveAt(index);
@@ -65,9 +60,11 @@ public class CrystalSpawner : MonoBehaviour
 
         foreach (Vector3 spawn in spawns)
         {
-            Vector3 newGizmoPosition = transform.position + spawn;
+            Gizmos.matrix = transform.localToWorldMatrix;
 
-            Gizmos.DrawWireCube(newGizmoPosition, new Vector3(1, 1, 1));
+            Vector3 newGizmoPosition = Vector3.zero + spawn;
+
+            Gizmos.DrawWireCube(newGizmoPosition, Vector3.one);
         }
     }
 }

@@ -17,6 +17,8 @@ public class Health : MonoBehaviour
     private bool bIsPlayer = false;
     private float iftTimer = 0.0f;
 
+    private StatusEffectManager effectManager;
+
     #endregion
 
     #region UNITY_DEFAULT_METHODS
@@ -28,6 +30,8 @@ public class Health : MonoBehaviour
         {
             bIsPlayer = true;
         }
+
+        effectManager = GetComponent<StatusEffectManager>();
     }
 
     void Update()
@@ -39,12 +43,20 @@ public class Health : MonoBehaviour
 
     #region CUSTOM_METHODS
     
-    public void Hurt(float amount)
+    public void Hurt(float amount, bool ignoreIFrames)
     {
         if (!bIsDead)
         {
-            if (iftTimer <= 0.0f)
+            if (ignoreIFrames || iftTimer <= 0.0f)
             {
+
+                if(effectManager != null && effectManager.AppliedEffects[StatusEffectManager.EffectType.StackingDamage])
+                {
+                    // this is effected by stacking damage
+                    var stackingDamage = (StackingDamageEffect)effectManager.affectingEffects.Find(x => x.GetType() == typeof(StackingDamageEffect));
+                    amount = stackingDamage.ModifyDamage(amount);
+                }
+
                 iftTimer = iFrameTime;
                 health -= amount;
 
@@ -61,6 +73,11 @@ public class Health : MonoBehaviour
                 else
                 {
                     GetComponent<EnemyCore>().OnHurt();
+
+                    if (amount > ragdollDamageThreshold)
+                    {
+                        GetComponent<EnemyCore>().EnableRagdoll(true);
+                    }
                 }
 
                 if (health <= 0.0f)
