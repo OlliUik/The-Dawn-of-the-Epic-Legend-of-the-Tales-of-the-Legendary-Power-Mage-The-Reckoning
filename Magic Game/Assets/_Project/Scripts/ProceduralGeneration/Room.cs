@@ -11,7 +11,6 @@ public class Room : MonoBehaviour
     {
         get 
         {
-            GetComponent<NavMeshSurface>().BuildNavMesh();
             return boxCollider.bounds; //return meshCollider.bounds
         }
     }

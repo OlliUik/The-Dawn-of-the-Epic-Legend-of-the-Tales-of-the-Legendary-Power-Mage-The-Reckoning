@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.AI;
 public class LevelBuilder : MonoBehaviour
 {
     public Room startRoomPrefab, endRoomPrefab;
@@ -51,10 +51,12 @@ public class LevelBuilder : MonoBehaviour
 
         //Level generation finished
         Debug.Log("Level generation finished");
-        
+
         //FOR TESTING PURPOSES!
         //yield return new WaitForSeconds(1);
         //ResetLevelGenerator();
+        //GetComponent<NavMeshSurface>().BuildNavMesh();
+
     }
 
     void PlaceStartRoom()
@@ -186,6 +188,8 @@ public class LevelBuilder : MonoBehaviour
             }
         }
 
+
+
         return false;
     }
 
@@ -285,6 +289,7 @@ public class LevelBuilder : MonoBehaviour
                 {
                     if (c.transform.parent.gameObject.Equals(room.gameObject))
                     {
+                        GetComponent<NavMeshSurface>().BuildNavMesh();
                         continue;
                     }
 
@@ -293,6 +298,7 @@ public class LevelBuilder : MonoBehaviour
                         Debug.LogError("FUCK YOU OVERLAP");
                         ResetLevelGenerator();
                     }
+                    //GetComponent<NavMeshSurface>().BuildNavMesh();
                 }
             }
         }
