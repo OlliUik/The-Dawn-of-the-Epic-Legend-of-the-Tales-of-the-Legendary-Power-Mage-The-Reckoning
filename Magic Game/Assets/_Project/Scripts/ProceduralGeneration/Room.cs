@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.AI;
 public class Room : MonoBehaviour
 {
     public Doorway[] doorways;
@@ -9,8 +9,9 @@ public class Room : MonoBehaviour
 
     public Bounds RoomBounds
     {
-        get
+        get 
         {
+            GetComponent<NavMeshSurface>().BuildNavMesh();
             return boxCollider.bounds; //return meshCollider.bounds
         }
     }
