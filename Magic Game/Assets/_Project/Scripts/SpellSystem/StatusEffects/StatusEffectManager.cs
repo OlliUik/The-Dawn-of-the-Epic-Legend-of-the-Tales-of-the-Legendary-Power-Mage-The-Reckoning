@@ -14,6 +14,7 @@ public class StatusEffectManager : MonoBehaviour
         Moisturize,
         Confuse,
         StackingDamage,
+        LeechLife,
     };
 
     public List<StatusEffect> affectingEffects = new List<StatusEffect>();
@@ -30,6 +31,7 @@ public class StatusEffectManager : MonoBehaviour
         AppliedEffects.Add(EffectType.Moisturize, false);
         AppliedEffects.Add(EffectType.Confuse, false);
         AppliedEffects.Add(EffectType.StackingDamage, false);
+        AppliedEffects.Add(EffectType.LeechLife, false);
     }
 
     // Loop through all the affecting StatusEffects and call OnTick()
