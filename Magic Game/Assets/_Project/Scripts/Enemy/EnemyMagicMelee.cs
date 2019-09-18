@@ -37,6 +37,7 @@ public class EnemyMagicMelee : EnemyMagicRanged
                 }
                 else
                 {
+                    shotsLeft = 1;
                     castStandStillTimer = castingTime + standStillAfterCasting;
                 }
 
