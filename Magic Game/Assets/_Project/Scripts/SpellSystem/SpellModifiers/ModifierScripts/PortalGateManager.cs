@@ -4,11 +4,13 @@ using UnityEngine;
 
 public sealed class PortalGateManager
 {
-    
-    //Singleton things
 
+    #region Singleton
+
+    //Singleton things
     private static readonly object padlock = new object();
     private static PortalGateManager instance = null;
+
     public static PortalGateManager Instance
     {
         get
@@ -26,10 +28,13 @@ public sealed class PortalGateManager
 
     // =============================================================
 
+    #endregion
+
     List<GameObject> portalGates;
     public int maximumPortals = 2;
 
     List<GameObject> telepotingObjects;
+    public GameObject portalActiveParticle;
 
     private PortalGateManager()
     {
@@ -70,7 +75,18 @@ public sealed class PortalGateManager
             telepotingObjects.Add(toTeleport);
             if (CreatedPortalsAmount() > 1)
             {
-                toTeleport.transform.position = GetRandomPortal(steppedPortalGate).transform.position;
+                CharacterController characterController = toTeleport.GetComponent<CharacterController>();
+                Debug.Log(characterController);
+                if (characterController != null)
+                {
+                    characterController.enabled = false;
+                    characterController.transform.position = GetRandomPortal(steppedPortalGate).transform.position;
+                    characterController.enabled = true;
+                }
+                else
+                {
+                    toTeleport.transform.position = GetRandomPortal(steppedPortalGate).transform.position;
+                }
             }
         }
         else

@@ -9,6 +9,7 @@ public class PortalGate : MonoBehaviour
     {
         if (other.gameObject.GetComponent<PlayerCore>() || other.gameObject.GetComponent<EnemyCore>())
         {
+            Instantiate(PortalGateManager.Instance.portalActiveParticle, other.transform.position, other.transform.rotation);
             PortalGateManager.Instance.StepIn(other.gameObject, gameObject);
         }
     }

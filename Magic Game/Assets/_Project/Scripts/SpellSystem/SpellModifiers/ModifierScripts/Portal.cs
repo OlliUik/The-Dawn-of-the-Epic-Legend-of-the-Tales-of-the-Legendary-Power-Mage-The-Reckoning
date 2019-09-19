@@ -6,6 +6,12 @@ public class Portal : SpellModifier
 {
 
     public GameObject portalGatePrefab;
+    public int maximumPortals = 2;
+
+    private void Start()
+    {
+        PortalGateManager.Instance.maximumPortals = maximumPortals;
+    }
 
     public override void OnSpellCast(Spell spell)
     {
