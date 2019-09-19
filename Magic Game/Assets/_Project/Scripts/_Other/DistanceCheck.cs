@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DistanceCheck : MonoBehaviour
 {
@@ -22,8 +23,9 @@ public class DistanceCheck : MonoBehaviour
         foreach (GameObject child in childrenToHide)
         {
             if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
-            {
+            {   
                 child.SetActive(true);
+
             }
 
             else

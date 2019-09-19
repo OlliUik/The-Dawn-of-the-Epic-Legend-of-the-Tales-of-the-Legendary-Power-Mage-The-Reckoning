@@ -33,6 +33,7 @@ public class LevelBuilder : MonoBehaviour
         PlaceStartRoom();
         yield return interval;
 
+
         //Random iterations
         int iterations = Random.Range((int)iterationRange.x, (int)iterationRange.y);
 
@@ -47,6 +48,7 @@ public class LevelBuilder : MonoBehaviour
         PlaceEndRoom();
         yield return interval;
 
+
         CheckRooms();
 
         //Level generation finished
@@ -55,7 +57,6 @@ public class LevelBuilder : MonoBehaviour
         //FOR TESTING PURPOSES!
         //yield return new WaitForSeconds(1);
         //ResetLevelGenerator();
-        //GetComponent<NavMeshSurface>().BuildNavMesh();
 
     }
 
@@ -71,6 +72,7 @@ public class LevelBuilder : MonoBehaviour
         //Position room
         startRoom.transform.position = Vector3.zero;
         startRoom.transform.rotation = Quaternion.identity;
+
     }
 
     void AddDoorwaysToList(Room room, ref List<Doorway> list)
@@ -143,6 +145,9 @@ public class LevelBuilder : MonoBehaviour
             Destroy(currentRoom.gameObject);
             ResetLevelGenerator();
         }
+
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+
     }
 
     void PositionRoomAtDoorway(ref Room room, Doorway roomDoorway, Doorway targetDoorway)
@@ -177,6 +182,7 @@ public class LevelBuilder : MonoBehaviour
             {
                 if (c.transform.parent.gameObject.Equals(room.gameObject))
                 {
+                    GetComponent<NavMeshSurface>().BuildNavMesh();
                     continue;
                 }
 
@@ -187,9 +193,6 @@ public class LevelBuilder : MonoBehaviour
                 }
             }
         }
-
-
-
         return false;
     }
 
@@ -236,6 +239,7 @@ public class LevelBuilder : MonoBehaviour
         {
             ResetLevelGenerator();
         }
+        GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
     void ResetLevelGenerator()
@@ -289,7 +293,6 @@ public class LevelBuilder : MonoBehaviour
                 {
                     if (c.transform.parent.gameObject.Equals(room.gameObject))
                     {
-                        GetComponent<NavMeshSurface>().BuildNavMesh();
                         continue;
                     }
 
@@ -298,7 +301,7 @@ public class LevelBuilder : MonoBehaviour
                         Debug.LogError("FUCK YOU OVERLAP");
                         ResetLevelGenerator();
                     }
-                    //GetComponent<NavMeshSurface>().BuildNavMesh();
+                    GetComponent<NavMeshSurface>().BuildNavMesh();
                 }
             }
         }

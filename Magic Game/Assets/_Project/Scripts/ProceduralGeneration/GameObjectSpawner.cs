@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameObjectSpawner : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class GameObjectSpawner : MonoBehaviour
             {
                 obj.SetActive(true);
                 spawnedObjects.Add(obj);
+
             }
 
             else
