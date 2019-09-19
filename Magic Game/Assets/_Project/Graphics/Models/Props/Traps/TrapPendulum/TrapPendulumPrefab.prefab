@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5874228005455312018}
   m_Layer: 0
-  m_Name: TrapPendulum
+  m_Name: TrapPendulumPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -137,7 +137,8 @@ GameObject:
   - component: {fileID: 8073275460309586910}
   - component: {fileID: 8616499971692938028}
   - component: {fileID: 5984030534784371405}
-  m_Layer: 0
+  - component: {fileID: 4772993322028253467}
+  m_Layer: 15
   m_Name: PendulumHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,3 +219,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300002, guid: d3b5cf4ced199d84e869406ebfbefb4d, type: 3}
+--- !u!114 &4772993322028253467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5458357464858529424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d07ce676d7afda4dabb3b0f7dd5e654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
