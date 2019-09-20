@@ -7,19 +7,26 @@ public class ScoreCalculator : MonoBehaviour
     #region VARIABLES
     [SerializeField] private float defaultScore = 0f;       //Default score enemy type gives
     [SerializeField] private float score = 0f;              //Score that will be send to score system
-    [SerializeField] private float currentMultiplier = 1f;  //Player's current multiplier (is this needed?)
+    [SerializeField] private float currentMultiplier = 1f;  //Player's current multiplier
 
-    private float tempIncrease = 0f;                        //Temporary increment to the multiplier?
+    private float tempIncrease = 0f;                        //Temporary increment to the multiplier for kill (if applied)
     private ScoreSystem scoreSystem;
 
     #endregion
 
-    void Update()
+    #region UNITY_FUNCTIONS
+
+    private void Update()
     {
         CountScore();           //Count score
         SendScore(score);       //Send counted score to score system
     }
 
+    #endregion
+
+    #region CUSTOM_FUNCTIONS
+
+    /// <summary>Starts counting score for the kill</summary>
     private void CountScore()
     {
         EnemyType();     //Check enemy's type
@@ -46,4 +53,6 @@ public class ScoreCalculator : MonoBehaviour
         //We need way to check what effects where on enemy upon dying
         return tempIncrease;
     }
+
+    #endregion
 }
