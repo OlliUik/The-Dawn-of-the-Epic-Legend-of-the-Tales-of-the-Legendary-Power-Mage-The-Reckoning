@@ -12187,7 +12187,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16932
+  m_Name: pb_Mesh9456
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -12705,6 +12705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1205841464}
   - component: {fileID: 1205841463}
+  - component: {fileID: 1205841465}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -12726,6 +12727,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 500
   maxMana: 100
+  team: 1
+  viewPivot: {x: 0, y: 0, z: 0}
 --- !u!4 &1205841464
 Transform:
   m_ObjectHideFlags: 0
@@ -12740,6 +12743,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &1205841465
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205841462}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1209776731
 GameObject:
   m_ObjectHideFlags: 0
@@ -13032,7 +13053,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16462
+  m_Name: pb_Mesh8984
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -15719,7 +15740,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16430
+  m_Name: pb_Mesh8952
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2

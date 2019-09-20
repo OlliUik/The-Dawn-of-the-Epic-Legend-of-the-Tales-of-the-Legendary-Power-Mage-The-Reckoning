@@ -8,7 +8,8 @@ using UnityEditor;
 namespace PowerMage
 {
     [RequireComponent(typeof(CharacterController))]
-    public abstract class Entity : MonoBehaviour
+    [DisallowMultipleComponent]
+    public abstract class EntityBase : MonoBehaviour
     {
         #region HEALTH
 
@@ -59,6 +60,13 @@ namespace PowerMage
 
             OnUseMana();
         }
+
+        #endregion
+
+        #region TEAM
+
+        [SerializeField] protected Teams.Team team = Teams.Team.NONE;
+        private Color teamColor = Color.gray;
 
         #endregion
 
@@ -122,30 +130,58 @@ namespace PowerMage
         protected virtual void OnUseMana() { }
 
         protected virtual void OnSetOnFire() { }
-        protected virtual void OnConfused() { }
+
+        protected virtual void OnConfused()
+        {
+            Teams.RemoveFromTeam(this, team);
+            Teams.Team newTeam;
+            switch (team)
+            {
+                case Teams.Team.GOODGUYS: newTeam = Teams.Team.BADBOYS; break;
+                case Teams.Team.BADBOYS: newTeam = Teams.Team.GOODGUYS; break;
+                default: newTeam = Teams.Team.NONE; break;
+            }
+            Teams.AddToTeam(this, newTeam);
+            team = newTeam;
+        }
+
         protected virtual void OnFrozen() { }
         protected virtual void OnRagdolled() { }
 
         protected virtual void OnDeath()
         {
+            Teams.RemoveFromTeam(this, team);
             Destroy(gameObject);
         }
 
         #endregion
 
+        private void UpdateTeamColor()
+        {
+            switch (team)
+            {
+                case Teams.Team.BADBOYS: teamColor = Color.red; break;
+                case Teams.Team.GOODGUYS: teamColor = Color.green; break;
+                default: teamColor = Color.gray; break;
+            }
+        }
+
         public virtual void Awake()
         {
             health = maxHealth;
             mana = maxMana;
+            Teams.AddToTeam(this, team);
+        }
+
+        public virtual void OnValidate()
+        {
+            UpdateTeamColor();
         }
 
         public virtual void OnDrawGizmos()
         {
             #if UNITY_EDITOR
-
-            //Implement this later!
-            Color teamColor = Color.green;
-
+            
             if (Selection.activeGameObject != gameObject)
             {
                 //Draw gizmos when NOT selected
