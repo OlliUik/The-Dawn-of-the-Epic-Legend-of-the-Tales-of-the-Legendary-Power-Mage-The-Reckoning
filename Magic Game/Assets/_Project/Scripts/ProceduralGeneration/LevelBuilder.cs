@@ -57,8 +57,6 @@ public class LevelBuilder : MonoBehaviour
         //FOR TESTING PURPOSES!
         //yield return new WaitForSeconds(1);
         //ResetLevelGenerator();
-        GetComponent<NavMeshSurface>().BuildNavMesh();
-
 
     }
 
@@ -149,9 +147,6 @@ public class LevelBuilder : MonoBehaviour
             Destroy(currentRoom.gameObject);
             ResetLevelGenerator();
         }
-
-        //GetComponent<NavMeshSurface>().BuildNavMesh();
-
     }
 
     void PositionRoomAtDoorway(ref Room room, Doorway roomDoorway, Doorway targetDoorway)
@@ -242,7 +237,6 @@ public class LevelBuilder : MonoBehaviour
         {
             ResetLevelGenerator();
         }
-        //GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
     void ResetLevelGenerator()
@@ -304,7 +298,6 @@ public class LevelBuilder : MonoBehaviour
                         Debug.LogError("FUCK YOU OVERLAP");
                         ResetLevelGenerator();
                     }
-                    //GetComponent<NavMeshSurface>().BuildNavMesh();
                 }
             }
         }
