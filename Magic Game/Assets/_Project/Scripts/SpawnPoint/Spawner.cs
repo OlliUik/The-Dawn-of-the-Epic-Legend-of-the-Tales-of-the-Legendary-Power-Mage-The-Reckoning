@@ -16,8 +16,13 @@ public class Spawner : MonoBehaviour
     {
         while(true)
         {
-            GameObject enemy = enemies[Random.Range(0, enemies.Count)];
-            Instantiate(enemy, GetComponent<Transform>());
+            int range = enemies.Count;
+            
+            if (range > 0)
+            {
+                GameObject enemy = enemies[Random.Range(0, range)];
+                Instantiate(enemy, GetComponent<Transform>());
+            }
 
             yield return new WaitForSeconds(frequency);
         }
