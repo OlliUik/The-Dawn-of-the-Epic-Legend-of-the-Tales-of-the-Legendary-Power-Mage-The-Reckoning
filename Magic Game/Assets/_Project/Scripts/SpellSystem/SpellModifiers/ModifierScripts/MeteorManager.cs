@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class MeteorManager
 {
-    
-    public float damageAmount = 20;
-    public float miniAoeRadius = 3f;
-    public float projectileForce = 10f;
     public float explosionForce = 20f;
+    public float currentScale = 1f;
 
     #region Singleton
 
@@ -31,7 +28,24 @@ public class MeteorManager
         }
     }
 
-    // =============================================================
+    private MeteorManager()
+    {
+        Init();
+    }
+
+    public void Init()
+    {
+        explosionForce = 20f;
+        currentScale = 1f;
+    }
+
+    public static void ResetVariables()
+    {
+        if (instance != null)
+        {
+            instance.Init();
+        }
+    }
 
     #endregion
 

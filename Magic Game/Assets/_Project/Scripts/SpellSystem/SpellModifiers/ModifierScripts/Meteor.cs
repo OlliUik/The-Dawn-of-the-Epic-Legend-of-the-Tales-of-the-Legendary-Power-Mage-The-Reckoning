@@ -5,6 +5,10 @@ using UnityEngine;
 public class Meteor : MonoBehaviour
 {
 
+    public float damageAmount = 20;
+    public float miniAoeRadius = 3f;
+    public float projectileForce = 10f;
+
     public GameObject[] explosionParticles;
 
     private void OnCollisionEnter(Collision collision)
@@ -12,14 +16,14 @@ public class Meteor : MonoBehaviour
         bool hitLiving = false;
 
         // DEAL DAMAGE
-        Collider[] hitObjects = Physics.OverlapSphere(transform.position, MeteorManager.Instance.miniAoeRadius);
+        Collider[] hitObjects = Physics.OverlapSphere(transform.position, miniAoeRadius);
         foreach (Collider go in hitObjects)
         {
             var health = go.gameObject.GetComponent<Health>();
             if (health != null)
             {
                 hitLiving = true;
-                health.Hurt(MeteorManager.Instance.damageAmount, true);
+                health.Hurt(damageAmount, true);
             }
         }
 
@@ -47,20 +51,20 @@ public class Meteor : MonoBehaviour
     private void ExplosionForce()
     {
         Vector3 explosionPos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, MeteorManager.Instance.miniAoeRadius);
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, miniAoeRadius);
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             if (rb != null)
-                rb.AddExplosionForce(MeteorManager.Instance.explosionForce, explosionPos, MeteorManager.Instance.miniAoeRadius * 2, 3.0F);
+                rb.AddExplosionForce(MeteorManager.Instance.explosionForce, explosionPos, miniAoeRadius * 2, 3.0F);
         }
     }
 
     IEnumerator WaitForParticleAndDestroy()
     {
         yield return new WaitForSeconds(1);
-        Destroy(gameObject);
+        Destroy(gameObject.transform.parent.gameObject);
     }
 
 }

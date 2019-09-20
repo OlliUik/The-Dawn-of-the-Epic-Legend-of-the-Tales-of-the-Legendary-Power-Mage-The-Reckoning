@@ -63,6 +63,8 @@ public class Spellbook : MonoBehaviour
 
         health = GetComponent<Health>();
         mana = GetComponent<Mana>();
+
+        ResetAllSpellManagersSingleton();
     }
 
     public void CastSpell(int spellIndex)
@@ -236,4 +238,12 @@ public class Spellbook : MonoBehaviour
         cooldowns[lastCastedSpell] = Time.time + spells[lastCastedSpell].spell.Cooldown; // check if some spells card has extra cooldown and add it here
         isCasting = false;
     }
+
+    // Reset all instances of the spell
+    private void ResetAllSpellManagersSingleton()
+    {
+        PortalGateManager.ResetVariables();
+        MeteorManager.ResetVariables();
+    }
+
 }

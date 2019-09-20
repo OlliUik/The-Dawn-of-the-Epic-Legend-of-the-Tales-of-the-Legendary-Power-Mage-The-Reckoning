@@ -26,26 +26,39 @@ public sealed class PortalGateManager
         }
     }
 
-    // =============================================================
+    private PortalGateManager()
+    {
+        Init();
+    }
+
+    public void Init()
+    {
+        portalGates = new List<GameObject>();
+        telepotingObjects = new List<GameObject>();
+        usingMaximumPortals = maximumPortals;
+    }
+
+    public static void ResetVariables()
+    {
+        if(instance != null)
+        {
+            instance.Init();
+        }
+    }
 
     #endregion
 
     List<GameObject> portalGates;
     public int maximumPortals = 2;
+    int usingMaximumPortals;
 
     List<GameObject> telepotingObjects;
     public GameObject portalActiveParticle;
 
-    private PortalGateManager()
-    {
-        portalGates = new List<GameObject>();
-        telepotingObjects = new List<GameObject>();
-    }
-
     // Put instantiated Portal Gate in here to check for older portals
     public void CreatePortalGate(GameObject portalGate)
     {
-        if(CreatedPortalsAmount() >= maximumPortals)
+        if(CreatedPortalsAmount() >= usingMaximumPortals)
         {
             GameObject.Destroy(portalGates[0]);
             portalGates.RemoveAt(0);
