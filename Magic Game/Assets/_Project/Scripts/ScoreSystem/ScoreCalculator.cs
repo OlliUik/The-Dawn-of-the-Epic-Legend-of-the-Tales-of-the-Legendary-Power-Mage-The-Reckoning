@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class ScoreCalculator : MonoBehaviour
 {
+    #region VARIABLES
     [SerializeField] private float defaultScore = 0f;       //Default score enemy type gives
     [SerializeField] private float score = 0f;              //Score that will be send to score system
-    [SerializeField] private float currentMultiplier = 1f;  //Player's current multiplier
+    [SerializeField] private float currentMultiplier = 1f;  //Player's current multiplier (is this needed?)
 
-    private float tempIncrease = 0f;                        //Temporary increment to the multiplier
-
-    [SerializeField] private GameObject player;
+    private float tempIncrease = 0f;                        //Temporary increment to the multiplier?
     private ScoreSystem scoreSystem;
 
-    void Start()
-    {
-        scoreSystem = player.GetComponent<ScoreSystem>();
-    }
+    #endregion
 
     void Update()
     {
@@ -28,14 +24,14 @@ public class ScoreCalculator : MonoBehaviour
     {
         EnemyType();     //Check enemy's type
 
-        currentMultiplier = scoreSystem.multiplier;
+        currentMultiplier = scoreSystem.multiplier;         //Current multiplier gets the current permanent multiplier
         currentMultiplier += AddMultiplier();
         score = defaultScore * currentMultiplier;
     }
 
-    private void SendScore(float newScore)
+    private void SendScore(float addScore)
     {
-        scoreSystem.score += newScore;
+        scoreSystem.score += addScore;
         //Update multipliers
     }
 

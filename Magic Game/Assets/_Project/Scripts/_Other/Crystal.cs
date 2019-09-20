@@ -6,6 +6,14 @@ public class Crystal : MonoBehaviour
 {
     public float rotationSpeed = 5f;
 
+    [SerializeField]
+    private ScoreSystem scoreSystem;
+
+    private void Start()
+    {
+        scoreSystem = FindObjectOfType<ScoreSystem>();
+    }
+
     private void Update()
     {
         transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
@@ -15,6 +23,7 @@ public class Crystal : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
+            scoreSystem.crystalFound = true;
             other.GetComponent<PlayerCore>().GetHUD().spellEditingController.crystalsLeft++;
             other.gameObject.GetComponent<PlayerCore>().ToggleSpellEditingUI();
             Destroy(gameObject);
