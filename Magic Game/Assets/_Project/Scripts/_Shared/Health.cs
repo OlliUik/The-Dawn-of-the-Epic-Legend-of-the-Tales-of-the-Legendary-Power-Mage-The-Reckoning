@@ -55,6 +55,7 @@ public class Health : MonoBehaviour
                     // this is effected by stacking damage
                     var stackingDamage = (StackingDamageEffect)effectManager.affectingEffects.Find(x => x.GetType() == typeof(StackingDamageEffect));
                     amount = stackingDamage.ModifyDamage(amount);
+                    Debug.Log(amount);
                 }
 
                 iftTimer = iFrameTime;

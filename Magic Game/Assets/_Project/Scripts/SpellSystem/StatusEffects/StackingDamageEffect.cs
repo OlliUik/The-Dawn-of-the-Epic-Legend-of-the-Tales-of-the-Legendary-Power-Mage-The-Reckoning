@@ -16,7 +16,6 @@ public class StackingDamageEffect : StatusEffect
         return amount;
     }
 
-
     public StackingDamageEffect(float duration, GameObject graphics, float extraDamage) : base(duration, graphics)
     {
         name = "StackingDamage";

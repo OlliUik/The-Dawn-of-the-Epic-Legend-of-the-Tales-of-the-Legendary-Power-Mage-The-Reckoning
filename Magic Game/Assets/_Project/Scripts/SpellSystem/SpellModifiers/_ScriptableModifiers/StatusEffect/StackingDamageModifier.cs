@@ -17,8 +17,8 @@ public class StackingDamageModifier : SpellScriptableModifier
         if (stackingDamage != null)
         {
             // modify stackingDamage values
-            stackingDamage.extraDamage  += this.extraDamage;
-            stackingDamage.duration     += this.duration;
+            Debug.Log("Extra damage: " + stackingDamage.extraDamage);
+            Debug.Log("Extra duration: " + stackingDamage.duration);
             return;
         }
 
