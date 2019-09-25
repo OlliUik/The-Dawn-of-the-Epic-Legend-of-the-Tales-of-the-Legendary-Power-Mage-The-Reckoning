@@ -28,12 +28,7 @@ public class ScoreCombo : MonoBehaviour
         defaultTimer = comboTimer;
     }
 
-    #endregion
-
-    #region CUSTOM_FUNCTIONS
-
-    /// <summary>If player kills an enemy, combo timer starts running.</summary>
-    private void Combo()
+    private void Update()
     {
         //Player kills enemy, combo goes to 1
         if (combo >= 1)
@@ -48,6 +43,10 @@ public class ScoreCombo : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
+    #region CUSTOM_FUNCTIONS
 
     /// <summary>Resets combo and timer.</summary>
     private void ResetCombo()
