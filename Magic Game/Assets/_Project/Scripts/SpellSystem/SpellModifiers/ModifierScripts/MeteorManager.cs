@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class MeteorManager
 {
-    public float explosionForce = 20f;
-    public float currentScale = 1f;
 
     #region Singleton
 
@@ -35,8 +33,7 @@ public class MeteorManager
 
     public void Init()
     {
-        explosionForce = 20f;
-        currentScale = 1f;
+        currentExplosionForce = explosionForce;
     }
 
     public static void ResetVariables()
@@ -48,5 +45,13 @@ public class MeteorManager
     }
 
     #endregion
+
+    public float explosionForce = 20f;
+    float currentExplosionForce = 20f;
+
+    public float GetExplosionForce()
+    {
+        return currentExplosionForce;
+    }
 
 }
