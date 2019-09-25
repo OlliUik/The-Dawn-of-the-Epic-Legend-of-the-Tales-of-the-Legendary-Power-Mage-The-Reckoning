@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class ScoreCombo : MonoBehaviour
 {
+    public static ScoreCombo scoreCombo;
+
     #region VARIABLES
+
+    public int combo = 0;
 
     [SerializeField]
     private float comboTimer = 3f;
     private float defaultTimer;
     private float comboScore = 0;
-    private int combo = 0;
+
+    private ScoreSystem scoreSystem;
 
     #endregion
 
@@ -18,6 +23,8 @@ public class ScoreCombo : MonoBehaviour
 
     private void Start()
     {
+        scoreCombo = this;
+        scoreSystem = FindObjectOfType<ScoreSystem>();
         defaultTimer = comboTimer;
     }
 
@@ -29,29 +36,27 @@ public class ScoreCombo : MonoBehaviour
     private void Combo()
     {
         //Player kills enemy, combo goes to 1
-
-        if (combo > 1)
+        if (combo >= 1)
         {
-            comboScore = 0;
             comboTimer -= Time.deltaTime;
 
-            //If player kills within timer
-            //combo++;
-        }
-
-        //If timer goes to 0, combo resets
-        if (comboTimer <= 0)
-        {
-            GiveScore();
-            ResetCombo();
+            //If timer goes to 0, combo resets
+            if (comboTimer <= 0)
+            {
+                GiveScore();
+                ResetCombo();
+            }
         }
     }
 
     /// <summary>Resets combo and timer.</summary>
     private void ResetCombo()
     {
-        combo = 0;
+        scoreSystem.score += comboScore;
+
+        comboScore = 0;
         comboTimer = defaultTimer;
+        combo = 0;
     }
     
     /// <summary>Checks combo and rewards player accordingly.</summary>

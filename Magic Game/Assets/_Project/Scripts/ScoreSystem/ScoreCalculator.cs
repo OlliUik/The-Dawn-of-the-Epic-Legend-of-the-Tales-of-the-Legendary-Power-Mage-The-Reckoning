@@ -4,22 +4,33 @@ using UnityEngine;
 
 public class ScoreCalculator : MonoBehaviour
 {
+    public static ScoreCalculator scoreCalc;
+
     #region VARIABLES
-    [SerializeField] private float defaultScore = 0f;       //Default score enemy type gives
+
+    [SerializeField] private bool isSendable = false;
     [SerializeField] private float score = 0f;              //Score that will be send to score system
     [SerializeField] private float currentMultiplier = 1f;  //Player's current multiplier
 
-    private float tempIncrease = 0f;                        //Temporary increment to the multiplier for kill (if applied)
     private ScoreSystem scoreSystem;
+    private float effectMultiplier = 0f;                    //Temporary increment to the multiplier for kill (if applied)
 
     #endregion
 
     #region UNITY_FUNCTIONS
 
+    private void Start()
+    {
+        scoreCalc = this;
+        scoreSystem = FindObjectOfType<ScoreSystem>();
+    }
+
     private void Update()
     {
-        CountScore();           //Count score
-        SendScore(score);       //Send counted score to score system
+        if (isSendable)
+        {
+            SendScore(score);       //Send counted score to score system
+        }
     }
 
     #endregion
@@ -27,31 +38,31 @@ public class ScoreCalculator : MonoBehaviour
     #region CUSTOM_FUNCTIONS
 
     /// <summary>Starts counting score for the kill</summary>
-    private void CountScore()
+    public void CountScore(float enemyScore)
     {
-        EnemyType();     //Check enemy's type
+        //enemyScore comes from EnemyCore
 
-        currentMultiplier = scoreSystem.multiplier;         //Current multiplier gets the current permanent multiplier
-        currentMultiplier += AddMultiplier();
-        score = defaultScore * currentMultiplier;
+        currentMultiplier = scoreSystem.multiplier;                     //Updates current multiplier to be the current permanent multiplier
+        AddMultiplier();                                                //Adds multiplier if effects were on enemy upon dying
+        score = enemyScore * (currentMultiplier + effectMultiplier);    //Score from enemy is multiplied with current multiplier and multiplier from effect
+
+        isSendable = true;
     }
 
     private void SendScore(float addScore)
     {
         scoreSystem.score += addScore;
-        //Update multipliers
-    }
+        
+        score = 0;
+        effectMultiplier = 0;
 
-    private void EnemyType()
-    {
-        //We need way to check enemy type
-        AddMultiplier();
+        isSendable = false;
     }
 
     private float AddMultiplier()
     {
-        //We need way to check what effects where on enemy upon dying
-        return tempIncrease;
+        //We need way to check what effects were on enemy upon dying
+        return effectMultiplier;
     }
 
     #endregion
