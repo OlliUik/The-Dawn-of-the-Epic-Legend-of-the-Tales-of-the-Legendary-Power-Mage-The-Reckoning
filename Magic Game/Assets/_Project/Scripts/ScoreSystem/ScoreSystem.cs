@@ -13,6 +13,15 @@ public class ScoreSystem : MonoBehaviour
 
     #endregion
 
+    #region UNITY_FUNCTIONS
+
+    private void Update()
+    {
+        CrystalBoost();
+    }
+
+    #endregion
+
     #region CUSTOM_FUNCTIONS
 
     /// <summary>If player finds crystal, multiplier will changes 0.1x permanently.</summary>
