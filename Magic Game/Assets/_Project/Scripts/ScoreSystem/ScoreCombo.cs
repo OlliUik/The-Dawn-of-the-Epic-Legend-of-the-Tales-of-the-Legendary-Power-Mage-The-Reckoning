@@ -8,6 +8,7 @@ public class ScoreCombo : MonoBehaviour
 
     #region VARIABLES
 
+    public bool isEnemyKilled = false;
     public int combo = 0;
 
     [SerializeField]
@@ -30,6 +31,13 @@ public class ScoreCombo : MonoBehaviour
 
     private void Update()
     {
+        if (isEnemyKilled)
+        {
+            combo++;
+            comboTimer = defaultTimer;
+            isEnemyKilled = false;
+        }
+
         //Player kills enemy, combo goes to 1
         if (combo >= 1)
         {

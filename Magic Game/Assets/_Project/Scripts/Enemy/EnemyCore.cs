@@ -281,7 +281,7 @@ public class EnemyCore : MonoBehaviour
 
     public virtual void OnDeath()
     {
-        ScoreCombo.scoreCombo.combo++;
+        ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCalculator.scoreCalc.CountScore(score);
 
         currentState = EState.DISABLED;
