@@ -2,24 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour  
+public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> enemies;
     [SerializeField] private float frequency;
     private float defaultFrequency = 1f;
-    
+
     void Start()
     {
+        // Check if the inputted frequency value is lower than one or not, if so use the default value which is one instead.
         if (frequency < defaultFrequency)
         {
             Debug.LogWarning("Your inputted frequency value is too low. Now using default value which is 1.");
         }
+
         StartCoroutine(SpawnEnememy());
     }
 
     IEnumerator SpawnEnememy()
     {
-        while(true)
+        while (true)
         {
             int range = enemies.Count;
             GameObject enemy = enemies[Random.Range(0, range)];
@@ -30,15 +32,17 @@ public class Spawner : MonoBehaviour
                 {
                     Instantiate(enemy, GetComponent<Transform>());
                 }
-            } else
+            }
+            else
             {
-                Debug.LogError("You have input some non-enemy object into the list.");
+                Debug.LogWarning("You have inputted some non-enemy object into the list which will not be spawn.");
             }
 
             if (frequency < defaultFrequency)
             {
                 yield return new WaitForSeconds(defaultFrequency);
-            } else
+            }
+            else
             {
                 yield return new WaitForSeconds(frequency);
             }
