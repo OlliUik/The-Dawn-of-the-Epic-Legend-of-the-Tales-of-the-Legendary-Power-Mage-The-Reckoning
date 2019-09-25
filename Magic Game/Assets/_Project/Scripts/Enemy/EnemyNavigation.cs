@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -22,15 +23,37 @@ public class EnemyNavigation : MonoBehaviour
     [SerializeField] private float waitAtPatrolPoint = 0.0f;
     [SerializeField] private Vector3[] patrolPoints = null;
 
+    //Dictates whether the agentwaits on each node.
+    [SerializeField]  bool patrolWait;
+
+    //Total time that the patrol wait on each node.
+    [SerializeField] float totalWaitTime;
+
+    //Probality of switching node.
+    [SerializeField]  float switchProbalitiy = 0.2f;
+
+    [SerializeField] List<Waypoint> patrolPoint;
+
+
+
+  
+
+
     public float navigationErrorMargin { get; private set; } = 0.5f;
     public NavMeshAgent cAgent { get; private set; } = null;
+    //public NavMeshAgent cAgent;
 
-    private int navCurrentPoint = 0;
     private float navTimer = 0.0f;
-    private float waitTimer = 0.0f;
+    //private float waitTimer = 0.0f;
     private float navErrorTimer = 0.0f;
     private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
+
+    int navCurrentPoint;
+    bool isTravel;
+    bool isWaiting;
+    bool patrolForward;
+    float waitTimer;
 
     #endregion
 
@@ -39,8 +62,25 @@ public class EnemyNavigation : MonoBehaviour
     void Start()
     {
         cEnemyCore = GetComponent<EnemyCore>();
-        cAgent = GetComponent<NavMeshAgent>();
-        navTimer = Random.Range(0.0f, 2.0f);
+        cAgent = this.GetComponent<NavMeshAgent>();
+        //cAgent.updateRotation = false;
+        //navTimer = Random.Range(0.0f, 2.0f);
+        if (cAgent == null)
+        {
+            Debug.Log("no mesh agent");
+        }
+        else
+        {
+            if (patrolPoint != null && patrolPoint.Count >= 2)
+            {
+                navCurrentPoint = 0;
+                SetDestination();
+            }
+            else
+            {
+                Debug.Log("not enough patrolpoint");
+            }
+        }
     }
 
     public void NavigationLoop()
@@ -92,38 +132,79 @@ public class EnemyNavigation : MonoBehaviour
         float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
         cAgent.acceleration += accel;
     }
+       
+    
+    void Update()
+    {
+        //    if (navTimer <= 0.0f)
+        //    {
+        //        navTimer = cEnemyCore.cVision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
+        //        switch (cEnemyCore.currentState)
+        //        {
+        //            case EnemyCore.EState.IDLE: AIIdle(); break;
+        //            case EnemyCore.EState.PATROL: AIPatrol(); break;
+        //            case EnemyCore.EState.ALERTED: AIAlerted(); break;
+        //            case EnemyCore.EState.PARANOID: AIParanoid(); break;
+        //            case EnemyCore.EState.SEARCH: AISearch(); break;
+        //            case EnemyCore.EState.ATTACK: AIAttack(); break;
+        //            case EnemyCore.EState.CASTING: AICasting(); break;
+        //            case EnemyCore.EState.ESCAPE: AIEscape(); break;
+        //            case EnemyCore.EState.PANIC: AIPanic(); break;
+        //            case EnemyCore.EState.RAGDOLLED: break;
+        //            default: if (cAgent.hasPath) cAgent.ResetPath(); break;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        navTimer -= Time.deltaTime;
+        //    }
 
-    //void Update()
-    //{
-    //    if (navTimer <= 0.0f)
-    //    {
-    //        navTimer = cEnemyCore.cVision.bCanSeeTarget ? navigationIntervalPlayerLocated : navigationInterval;
-    //        switch (cEnemyCore.currentState)
-    //        {
-    //            case EnemyCore.EState.IDLE: AIIdle(); break;
-    //            case EnemyCore.EState.PATROL: AIPatrol(); break;
-    //            case EnemyCore.EState.ALERTED: AIAlerted(); break;
-    //            case EnemyCore.EState.PARANOID: AIParanoid(); break;
-    //            case EnemyCore.EState.SEARCH: AISearch(); break;
-    //            case EnemyCore.EState.ATTACK: AIAttack(); break;
-    //            case EnemyCore.EState.CASTING: AICasting(); break;
-    //            case EnemyCore.EState.ESCAPE: AIEscape(); break;
-    //            case EnemyCore.EState.PANIC: AIPanic(); break;
-    //            case EnemyCore.EState.RAGDOLLED: break;
-    //            default: if (cAgent.hasPath) cAgent.ResetPath(); break;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        navTimer -= Time.deltaTime;
-    //    }
+        //    if (waitTimer > 0.0f)
+        //    {
+        //        waitTimer -= Time.deltaTime;
+        //    }
+        /*
+        if(cAgent.remainingDistance > cAgent.stoppingDistance)
+            {
+                cAgent.SetDestination(cAgent.desiredVelocity);
+            }
+            else
+            {
+                cAgent.SetDestination(Vector3.zero);
 
-    //    if (waitTimer > 0.0f)
-    //    {
-    //        waitTimer -= Time.deltaTime;
-    //    }
-    //}
+            }
+          */
+        Debug.Log("Now Entering Patrol State");
+        //check if we're close to the destination.
+        if (isTravel && cAgent.remainingDistance <= 1.0f)
+        {
+            isTravel = false;
 
+            //wait?
+            if (isWaiting)
+            {
+                isWaiting = true;
+                waitTimer = 0;
+            }
+            else
+            {
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
+        if (isWaiting)
+        {
+            waitTimer += Time.deltaTime;
+            if (waitTimer >= totalWaitTime)
+            {
+                isWaiting = true;
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
+    }
+   
+    /*
     void OnDrawGizmosSelected()
     {
         int patrolLength = patrolPoints.Length;
@@ -148,6 +229,7 @@ public class EnemyNavigation : MonoBehaviour
             }
         }
     }
+    */
 
     #endregion
 
@@ -155,14 +237,19 @@ public class EnemyNavigation : MonoBehaviour
 
     void AIIdle()
     {
+        Debug.Log("Now Entering Idle state");
+        
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
         {
             cAgent.SetDestination(cEnemyCore.spawnPosition);
         }
+        
+       
     }
-
+    
     void AIPatrol()
     {
+        /*
         if (patrolPoints.Length > 1)
         {
             Vector2 entityPos = new Vector2(transform.position.x, transform.position.z);
@@ -187,7 +274,70 @@ public class EnemyNavigation : MonoBehaviour
         {
             Debug.LogWarning(this.gameObject + " is trying to patrol but has less than 2 patrol points!");
         }
+        */
+        Debug.Log("Now Entering Patrol State");
+        //check if we're close to the destination.
+        if(isTravel && cAgent.remainingDistance <= 1.0f)
+        {
+            isTravel = false;
+
+            //wait?
+            if (isWaiting)
+            {
+                isWaiting = true;
+                waitTimer = 0;
+            }
+            else
+            {
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
+        if(isWaiting)
+        {
+            waitTimer += Time.deltaTime;
+            if(waitTimer >= totalWaitTime)
+            {
+                isWaiting = true;
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
+        
     }
+
+    //set the destination of the enemy wizard
+    private void SetDestination()
+    {
+        if (patrolPoint != null)
+        {
+            Vector3 targetVector = patrolPoint[navCurrentPoint].transform.position;
+            cAgent.SetDestination(targetVector);
+            isTravel = true;
+        }
+    }
+
+    //Change the destination of the enemy wizard
+    private void ChangePatrolPoint()
+    {
+        if(UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
+        {
+            patrolForward = !patrolForward;
+        }
+        if(patrolForward)
+        {
+            navCurrentPoint = (navCurrentPoint + 1) % patrolPoint.Count;
+        }
+        else
+        {
+            if(--navCurrentPoint < 0)
+            {
+                navCurrentPoint = patrolPoint.Count - 1;
+            }
+        }
+    }
+
+   
 
     void AIAlerted()
     {

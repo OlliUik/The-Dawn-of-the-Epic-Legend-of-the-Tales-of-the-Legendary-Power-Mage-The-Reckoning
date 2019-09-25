@@ -73,7 +73,6 @@ public class LevelBuilder : MonoBehaviour
         startRoom.transform.position = Vector3.zero;
         startRoom.transform.rotation = Quaternion.identity;
 
-        //GetComponent<NavMeshSurface>().BuildNavMesh();
 
     }
 
@@ -140,6 +139,7 @@ public class LevelBuilder : MonoBehaviour
             }
         }
 
+
         //Room couldn't be placed. Restart generator and try again
         if (!roomPlaced)
         {
@@ -147,6 +147,9 @@ public class LevelBuilder : MonoBehaviour
             Destroy(currentRoom.gameObject);
             ResetLevelGenerator();
         }
+
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+
     }
 
     void PositionRoomAtDoorway(ref Room room, Doorway roomDoorway, Doorway targetDoorway)
