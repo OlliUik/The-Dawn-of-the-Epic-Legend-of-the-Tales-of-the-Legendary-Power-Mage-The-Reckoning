@@ -3,25 +3,25 @@ using System.Collections;
 
 public class LightFlicker : MonoBehaviour
 {
-    public float maxReduction;
-    public float maxIncrease;
-    public float rateDamping;
-    public float strength;
-    public bool stopFlickering;
-    public bool controlEmission;
+    public float maxReduction = 0.0f;
+    public float maxIncrease = 0.0f;
+    public float rateDamping = 0.0f;
+    public float strength = 0.0f;
+    public bool stopFlickering = false;
+    public bool controlEmission = false;
 
-    private Light lightSource;
-    private Material lightMaterial;
-    private Renderer rend;
-    private Color color;
+    private Light lightSource = null;
+    private Material lightMaterial = null;
+    private Renderer rend = null;
+    private Color color = Color.clear;
 
-    private float defaultIntensity;
-    private float defaultRange;
-    private bool isFlickering;
+    private float defaultIntensity = 0.0f;
+    private float defaultRange = 0.0f;
+    private bool isFlickering = false;
 
     private const string EMISSION_COLOR = "_EmissionColor";
 
-    void Reset()
+    private void Reset()
     {
         maxReduction = 0.2f;
         maxIncrease = 0.2f;
@@ -29,7 +29,7 @@ public class LightFlicker : MonoBehaviour
         strength = 300;
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         lightSource = GetComponent<Light>();
 
@@ -60,7 +60,7 @@ public class LightFlicker : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         if (!stopFlickering && !isFlickering)
         {

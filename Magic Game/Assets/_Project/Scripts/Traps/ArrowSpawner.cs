@@ -4,30 +4,23 @@ using UnityEngine;
 
 public class ArrowSpawner : MonoBehaviour
 {
-    public Rigidbody arrow;
+    public Rigidbody arrow = null;
 
-    private Transform spawnPoint;
+    [SerializeField, Range(1.0f, 20f)] private float forceMultiplier = 1f;
+    [SerializeField, Range(1.0f, 5.0f)] private float setTimer = 1f;
+    [SerializeField] private float timer = 0.0f;
+    [SerializeField] private Vector3 direction = Vector3.zero;
 
-    [SerializeField, Range(1.0f, 20f)]
-    private float forceMultiplier;
+    private Transform spawnPoint = null;
 
-    [SerializeField, Range(1.0f, 5.0f)]
-    private float setTimer;
-
-    [SerializeField]
-    private float timer;
-
-    [SerializeField]
-    private Vector3 direction;
-
-    void Start()
+    private void Start()
     {
         spawnPoint = gameObject.transform;
         timer = setTimer;
         arrow.position = spawnPoint.position;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         timer -= Time.deltaTime;
 

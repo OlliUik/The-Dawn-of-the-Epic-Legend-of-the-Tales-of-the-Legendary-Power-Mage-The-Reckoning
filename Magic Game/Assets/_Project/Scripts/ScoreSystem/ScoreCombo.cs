@@ -11,12 +11,12 @@ public class ScoreCombo : MonoBehaviour
     public bool isEnemyKilled = false;
     public int combo = 0;
 
-    [SerializeField]
-    private float comboTimer = 3f;
-    private float defaultTimer;
-    private float comboScore = 0;
+    [SerializeField] private float comboTimer = 3.0f;
 
-    private ScoreSystem scoreSystem;
+    private float defaultTimer = 0.0f;
+    private float comboScore = 0.0f;
+
+    private ScoreSystem scoreSystem = null;
 
     #endregion
 
@@ -39,7 +39,7 @@ public class ScoreCombo : MonoBehaviour
         }
 
         //Player kills enemy, combo goes to 1
-        if (combo >= 1)
+        if (combo > 0)
         {
             comboTimer -= Time.deltaTime;
 
@@ -60,7 +60,6 @@ public class ScoreCombo : MonoBehaviour
     private void ResetCombo()
     {
         scoreSystem.score += comboScore;
-
         comboScore = 0;
         comboTimer = defaultTimer;
         combo = 0;
@@ -71,31 +70,26 @@ public class ScoreCombo : MonoBehaviour
     {
         if (combo >= 2 && combo <= 9)
         {
-            //MORE THAN 2 but LESS THAN 10 enemies killed during combo - Add +777 points
             comboScore = 777;
         }
 
         else if (combo >= 10 && combo <= 19)
         {
-            //MORE THAN 10 but LESS THAN 20 enemies killed during combo - Add +5 000 points
             comboScore = 5000;
         }
 
         else if (combo >= 20 && combo <= 29)
         {
-            //MORE THAN 20 but LESS THAN 30 enemies killed during combo - Add +7 000 points
             comboScore = 7000;
         }
 
         else if (combo >= 30)
         {
-            //MORE THAN 30 enemies killed during combo - Add +10 000 points
             comboScore = 10000;
         }
 
-        else if (combo <= 1)
+        else
         {
-            //If player kills 1 enemy during combo - Add NOTHING >:D
             comboScore = 0;
         }
 

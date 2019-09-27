@@ -4,29 +4,24 @@ using UnityEngine;
 
 public class MovingStaircase : MonoBehaviour
 {
-    [SerializeField, Range(-90, 270)]
-    private float targetY;
+    [SerializeField, Range(-90, 270)] private float targetY = 0.0f;
+    [SerializeField] private float speedDiv = 0.0f;
+    [SerializeField] private float waitingTime = 0.0f;
 
-    [SerializeField]
-    private float speedDiv;
-
-    [SerializeField]
-    private float waitingTime;
-    
-    private Vector3 origin, current;
-    
+    private float moveTime = 0.0f;
+    private float originalWait = 0.0f;
     private bool isPositiveRot = true;
+    private Vector3 origin = Vector3.zero;
+    private Vector3 current = Vector3.zero;
 
-    float moveTime, originalWait;
-
-    void Start()
+    private void Start()
     {
         origin = transform.eulerAngles;
         current = origin;
         originalWait = waitingTime;
     }
 
-    void Update()
+    private void Update()
     {
         if (targetY >= 0)
         {

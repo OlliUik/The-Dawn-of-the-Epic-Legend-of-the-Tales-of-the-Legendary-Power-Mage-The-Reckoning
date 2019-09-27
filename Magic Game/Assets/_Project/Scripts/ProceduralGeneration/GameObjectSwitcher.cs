@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GameObjectSwitcher : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject a, b;
+    [SerializeField] private GameObject a = null;
+    [SerializeField] private GameObject b = null;
 
     //a = wall, Doorway-script
     //b = wall with hole
 
-    void Update()
+    private void Update()
     {
         if (a.activeInHierarchy)
         {
