@@ -33,7 +33,6 @@ public class ScoreCombo : MonoBehaviour
     {
         if (isEnemyKilled)
         {
-            combo++;
             comboTimer = defaultTimer;
             isEnemyKilled = false;
         }

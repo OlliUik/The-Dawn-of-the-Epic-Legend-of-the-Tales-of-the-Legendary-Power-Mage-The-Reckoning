@@ -27,7 +27,7 @@ public class ScoreUI : MonoBehaviour
         scoreText.text = scoreString.Replace("{value}", ScoreSystem.scoreSystem.score.ToString(""));
         multiplierText.text = multiplierString.Replace("{value}", ScoreSystem.scoreSystem.multiplier.ToString(""));
         comboText.text = comboString.Replace("{value}", ScoreCombo.scoreCombo.combo.ToString(""));
-        comboTimerText.text = comboTimerString.Replace("{value}", ScoreCombo.scoreCombo.comboTimer.ToString(""));
+        comboTimerText.text = comboTimerString.Replace("{value}", ScoreCombo.scoreCombo.comboTimer.ToString("F1"));
     }
 
     #endregion
