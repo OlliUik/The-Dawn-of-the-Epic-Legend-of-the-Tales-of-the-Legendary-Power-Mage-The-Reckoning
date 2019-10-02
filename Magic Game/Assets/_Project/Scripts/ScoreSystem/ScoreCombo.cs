@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class ScoreCombo : MonoBehaviour
 {
+    public static ScoreCombo scoreCombo;
+
     #region VARIABLES
 
-    [SerializeField]
-    private float comboTimer = 3f;
-    private float defaultTimer;
-    private float comboScore = 0;
-    private int combo = 0;
+    public bool isEnemyKilled = false;
+    public int combo = 0;
+
+    [SerializeField] private float comboTimer = 3.0f;
+
+    private float defaultTimer = 0.0f;
+    private int comboScore = 0;
+
+    private ScoreSystem scoreSystem = null;
 
     #endregion
 
@@ -18,40 +24,45 @@ public class ScoreCombo : MonoBehaviour
 
     private void Start()
     {
+        scoreCombo = this;
+        scoreSystem = FindObjectOfType<ScoreSystem>();
         defaultTimer = comboTimer;
+    }
+
+    private void Update()
+    {
+        if (isEnemyKilled)
+        {
+            combo++;
+            comboTimer = defaultTimer;
+            isEnemyKilled = false;
+        }
+
+        //Player kills enemy, combo goes to 1
+        if (combo > 0)
+        {
+            comboTimer -= Time.deltaTime;
+
+            //If timer goes to 0, combo resets
+            if (comboTimer <= 0)
+            {
+                GiveScore();
+                ResetCombo();
+            }
+        }
     }
 
     #endregion
 
     #region CUSTOM_FUNCTIONS
 
-    /// <summary>If player kills an enemy, combo timer starts running.</summary>
-    private void Combo()
-    {
-        //Player kills enemy, combo goes to 1
-
-        if (combo > 1)
-        {
-            comboScore = 0;
-            comboTimer -= Time.deltaTime;
-
-            //If player kills within timer
-            //combo++;
-        }
-
-        //If timer goes to 0, combo resets
-        if (comboTimer <= 0)
-        {
-            GiveScore();
-            ResetCombo();
-        }
-    }
-
     /// <summary>Resets combo and timer.</summary>
     private void ResetCombo()
     {
-        combo = 0;
+        scoreSystem.score += comboScore;
+        comboScore = 0;
         comboTimer = defaultTimer;
+        combo = 0;
     }
     
     /// <summary>Checks combo and rewards player accordingly.</summary>
@@ -59,31 +70,26 @@ public class ScoreCombo : MonoBehaviour
     {
         if (combo >= 2 && combo <= 9)
         {
-            //MORE THAN 2 but LESS THAN 10 enemies killed during combo - Add +777 points
             comboScore = 777;
         }
 
         else if (combo >= 10 && combo <= 19)
         {
-            //MORE THAN 10 but LESS THAN 20 enemies killed during combo - Add +5 000 points
             comboScore = 5000;
         }
 
         else if (combo >= 20 && combo <= 29)
         {
-            //MORE THAN 20 but LESS THAN 30 enemies killed during combo - Add +7 000 points
             comboScore = 7000;
         }
 
         else if (combo >= 30)
         {
-            //MORE THAN 30 enemies killed during combo - Add +10 000 points
             comboScore = 10000;
         }
 
-        else if (combo <= 1)
+        else
         {
-            //If player kills 1 enemy during combo - Add NOTHING >:D
             comboScore = 0;
         }
 

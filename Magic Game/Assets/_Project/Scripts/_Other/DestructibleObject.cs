@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class DestructibleObject : MonoBehaviour
 {
-    //destructible = solid prefab
-    //destroyed = cracked prefab
+    [SerializeField] private GameObject destructible = null; //solid prefab
+    [SerializeField] private GameObject destroyed = null; //cracked prefab
 
-    [SerializeField]
-    private GameObject destructible, destroyed;
-
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (destructible.gameObject.tag == "DestructibleWall")
         {
@@ -22,7 +19,7 @@ public class DestructibleObject : MonoBehaviour
         }
     }
     
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (destructible.gameObject.tag == "DestructibleFloor")
         {

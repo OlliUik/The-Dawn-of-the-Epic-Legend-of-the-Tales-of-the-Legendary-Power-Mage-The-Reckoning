@@ -4,20 +4,17 @@ using UnityEngine;
 
 public class DistanceCheck : MonoBehaviour
 {
-    [SerializeField]
-    private float distance;
+    [SerializeField] private float distance = 0.0f;
+    [SerializeField] private GameObject[] childrenToHide = null;
 
-    [SerializeField]
-    private GameObject[] childrenToHide;
+    private GameObject player = null;
 
-    private GameObject player;
-
-    void Start()
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    void Update()
+    private void Update()
     {
         foreach (GameObject child in childrenToHide)
         {
