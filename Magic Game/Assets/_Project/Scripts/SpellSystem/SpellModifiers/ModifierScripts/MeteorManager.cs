@@ -34,6 +34,7 @@ public class MeteorManager
     public void Init()
     {
         currentExplosionForce = explosionForce;
+        currentMeteorScale = meteorScale;
     }
 
     public static void ResetVariables()
@@ -48,10 +49,17 @@ public class MeteorManager
 
     public float explosionForce = 20f;
     float currentExplosionForce = 20f;
+    public float meteorScale = 1;
+    float currentMeteorScale = 1;
 
     public float GetExplosionForce()
     {
         return currentExplosionForce;
+    }
+
+    public float GetMeteorScale()
+    {
+        return currentMeteorScale;
     }
 
 }

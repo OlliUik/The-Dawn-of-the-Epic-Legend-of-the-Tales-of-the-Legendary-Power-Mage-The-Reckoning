@@ -57,7 +57,7 @@ public class Meteor : MonoBehaviour
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             if (rb != null)
-                rb.AddExplosionForce(MeteorManager.Instance.GetExplosionForce(), explosionPos, miniAoeRadius * 2, 3.0F);
+                rb.AddExplosionForce(MeteorManager.Instance.GetExplosionForce(), explosionPos, miniAoeRadius * 2 * MeteorManager.Instance.GetMeteorScale(), 3.0F);
         }
     }
 

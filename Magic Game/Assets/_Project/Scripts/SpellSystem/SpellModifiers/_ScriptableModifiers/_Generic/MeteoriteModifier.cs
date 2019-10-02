@@ -7,8 +7,8 @@ public class MeteoriteModifier : SpellScriptableModifier
 {
 
     public GameObject meteorPrefab;
-    public int increasingScale = 1;
-    public int increasingExplosionForce = 1;
+    public float increasingScale = 1;
+    public float increasingExplosionForce = 1;
 
     public override void AddSpellModifier(Spell spell)
     {
