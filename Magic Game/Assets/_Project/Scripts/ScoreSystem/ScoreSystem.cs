@@ -5,8 +5,10 @@ using UnityEngine;
 /// <summary>Handles player's current score and multiplier</summary>
 public class ScoreSystem : MonoBehaviour
 {
-    #region VARIABLES
+    public static ScoreSystem scoreSystem;
 
+    #region VARIABLES
+    
     public int score = 0;
     public float multiplier = 1.0f;       //Permanent multiplier
     public bool crystalFound = false;
@@ -14,6 +16,11 @@ public class ScoreSystem : MonoBehaviour
     #endregion
 
     #region UNITY_FUNCTIONS
+
+    private void Start()
+    {
+        scoreSystem = this;
+    }
 
     private void Update()
     {

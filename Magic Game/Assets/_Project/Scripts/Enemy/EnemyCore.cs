@@ -281,8 +281,9 @@ public class EnemyCore : MonoBehaviour
 
     public virtual void OnDeath()
     {
-        ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCalculator.scoreCalc.CountScore(score);
+        ScoreCombo.scoreCombo.isEnemyKilled = true;
+        ScoreCombo.scoreCombo.combo++;
 
         currentState = EState.DISABLED;
         GlobalVariables.teamBadBoys.Remove(this.gameObject);

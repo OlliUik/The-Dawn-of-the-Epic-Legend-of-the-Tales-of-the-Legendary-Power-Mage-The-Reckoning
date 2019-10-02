@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>Calculates score from enemy kill and status effects</summary>
 public class ScoreCalculator : MonoBehaviour
 {
     public static ScoreCalculator scoreCalc;
