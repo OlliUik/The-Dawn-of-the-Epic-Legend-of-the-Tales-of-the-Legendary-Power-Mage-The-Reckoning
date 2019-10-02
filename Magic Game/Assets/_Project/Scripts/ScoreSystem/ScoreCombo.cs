@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>Keeps track of player's killstreak/combo and awards player accordingly</summary>
 public class ScoreCombo : MonoBehaviour
 {
     public static ScoreCombo scoreCombo;
@@ -10,8 +11,7 @@ public class ScoreCombo : MonoBehaviour
 
     public bool isEnemyKilled = false;
     public int combo = 0;
-
-    [SerializeField] private float comboTimer = 3.0f;
+    public float comboTimer = 3.0f;
 
     private float defaultTimer = 0.0f;
     private int comboScore = 0;
