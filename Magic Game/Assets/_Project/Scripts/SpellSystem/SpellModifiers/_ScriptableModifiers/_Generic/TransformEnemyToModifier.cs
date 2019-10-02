@@ -19,7 +19,7 @@ public class TransformEnemyToModifier : SpellScriptableModifier
             return;
         }
 
-        var compo = spell.gameObject.AddComponent<TransformTo>();
+        var compo = spell.gameObject.AddComponent<TransformEnemyTo>();
         compo.transformPrefab = transformToPrefabs[Random.Range(0, transformToPrefabs.Count)];
         compo.duration = duration;
         compo.transformationParticles = transformationParticles;
