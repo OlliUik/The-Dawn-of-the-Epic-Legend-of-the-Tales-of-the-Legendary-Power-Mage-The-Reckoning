@@ -48,7 +48,7 @@ public class ScoreCalculator : MonoBehaviour
 
     private void SendScore(float addScore)
     {
-        scoreSystem.score += addScore;
+        scoreSystem.score += Mathf.RoundToInt(addScore);
         score = 0;
         effectMultiplier = 0;
         isSendable = false;

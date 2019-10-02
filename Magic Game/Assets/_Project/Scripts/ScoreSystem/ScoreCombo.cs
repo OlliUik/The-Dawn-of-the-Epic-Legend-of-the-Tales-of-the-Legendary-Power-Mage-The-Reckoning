@@ -14,7 +14,7 @@ public class ScoreCombo : MonoBehaviour
     [SerializeField] private float comboTimer = 3.0f;
 
     private float defaultTimer = 0.0f;
-    private float comboScore = 0.0f;
+    private int comboScore = 0;
 
     private ScoreSystem scoreSystem = null;
 

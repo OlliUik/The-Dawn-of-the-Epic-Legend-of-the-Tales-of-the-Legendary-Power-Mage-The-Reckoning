@@ -7,7 +7,7 @@ public class ScoreSystem : MonoBehaviour
 {
     #region VARIABLES
 
-    public float score = 0.0f;
+    public int score = 0;
     public float multiplier = 1.0f;       //Permanent multiplier
     public bool crystalFound = false;
 
