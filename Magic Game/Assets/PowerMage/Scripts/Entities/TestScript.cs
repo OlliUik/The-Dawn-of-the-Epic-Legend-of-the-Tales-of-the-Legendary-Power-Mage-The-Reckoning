@@ -1,5 +1,5 @@
 ﻿[UnityEngine.AddComponentMenu("PowerMage/Test Entity")]
-public class TestScript : PowerMage.EntityBase
+public class TestScript : PowerMage.Entity
 {
     public override void Awake()
     {

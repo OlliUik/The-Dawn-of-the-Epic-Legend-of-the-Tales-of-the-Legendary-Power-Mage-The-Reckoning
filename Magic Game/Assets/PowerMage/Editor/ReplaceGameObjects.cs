@@ -13,7 +13,7 @@
         public GameObject NewType;
         public GameObject[] OldObjects;
      
-        [MenuItem("Custom/Replace GameObjects")]
+        [MenuItem("Tools/Replace GameObjects")]
      
      
         static void CreateWizard()
