@@ -18,7 +18,9 @@ namespace PowerMage
         public float healthRegenAmount = 5.0f;
         public float healthRegenCooldown = 2.0f;
         public float healthRegenInterval = 1.0f;
-        
+
+        private float healthRegenCooldownLeft = 0.0f;
+
         public void Hurt(float amount)
         {
             health -= Mathf.Abs(amount);
@@ -51,25 +53,41 @@ namespace PowerMage
 
         /* ----- CALLBACKS ----- */
 
-        protected virtual void OnHurt() { }
+        protected virtual void OnHurt()
+        {
+            healthRegenCooldownLeft = healthRegenCooldown;
+        }
+
         protected virtual void OnHeal() { }
 
         protected virtual void OnDeath()
         {
-            Teams.RemoveFromTeam(this, team);
+            StopAllCoroutines();
             Destroy(gameObject);
         }
 
         /* ----- COROUTINES ----- */
 
-        private System.Collections.IEnumerator RegenerateHealth()
+        private System.Collections.IEnumerator RegenerateHealthCoroutine()
         {
             while (true)
             {
                 if (allowHealthRegen)
                 {
-                    RegenerateHealth(healthRegenAmount * healthRegenInterval);
-                    yield return new WaitForSeconds(healthRegenInterval);
+                    if (healthRegenCooldownLeft <= 0.0f)
+                    {
+                        RegenerateHealth(healthRegenAmount * healthRegenInterval);
+                        yield return new WaitForSeconds(healthRegenInterval);
+                    }
+                    else
+                    {
+                        healthRegenCooldownLeft -= Time.deltaTime;
+                        yield return new WaitForSeconds(Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1.0f);
                 }
             }
         }
@@ -84,6 +102,8 @@ namespace PowerMage
         public float manaRegenAmount = 10.0f;
         public float manaRegenCooldown = 2.0f;
         public float manaRegenInterval = 0.2f;
+
+        private float manaRegenCooldownLeft = 0.0f;
         
         public void UseMana(float amount)
         {
@@ -115,19 +135,35 @@ namespace PowerMage
 
         /* ----- CALLBACKS ----- */
 
-        protected virtual void OnUseMana() { }
+        protected virtual void OnUseMana()
+        {
+            manaRegenCooldownLeft = manaRegenCooldown;
+        }
+
         protected virtual void OnGiveMana() { }
 
         /* ----- COROUTINES ----- */
 
-        private System.Collections.IEnumerator RegenerateMana()
+        private System.Collections.IEnumerator RegenerateManaCoroutine()
         {
             while (true)
             {
                 if (allowManaRegen)
                 {
-                    RegenerateMana(manaRegenAmount * manaRegenInterval);
-                    yield return new WaitForSeconds(manaRegenInterval);
+                    if (manaRegenCooldownLeft <= 0.0f)
+                    {
+                        RegenerateMana(manaRegenAmount * manaRegenInterval);
+                        yield return new WaitForSeconds(manaRegenInterval);
+                    }
+                    else
+                    {
+                        manaRegenCooldownLeft -= Time.deltaTime;
+                        yield return new WaitForSeconds(Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1.0f);
                 }
             }
         }
@@ -136,7 +172,8 @@ namespace PowerMage
 
         #region TEAM
 
-        [SerializeField] protected Teams.Team team = Teams.Team.NONE;
+        public Teams.Team team = Teams.Team.NONE;
+
         private Color teamColor = Color.gray;
 
         private void UpdateTeamColor()
@@ -193,7 +230,6 @@ namespace PowerMage
 
         protected virtual void OnConfused()
         {
-            Teams.RemoveFromTeam(this, team);
             Teams.Team newTeam;
             switch (team)
             {
@@ -201,7 +237,6 @@ namespace PowerMage
                 case Teams.Team.BADBOYS: newTeam = Teams.Team.GOODGUYS; break;
                 default: newTeam = Teams.Team.NONE; break;
             }
-            Teams.AddToTeam(this, newTeam);
             team = newTeam;
         }
 
@@ -224,9 +259,9 @@ namespace PowerMage
             set { inputLook = value.normalized; }
         }
 
-        public bool inputJump = false;
-        public bool inputDash = false;
-        public bool inputAttack = false;
+        [HideInInspector] public bool inputJump = false;
+        [HideInInspector] public bool inputDash = false;
+        [HideInInspector] public bool inputAttack = false;
 
         #endregion
 
@@ -265,13 +300,12 @@ namespace PowerMage
             health = maxHealth;
             mana = maxMana;
             GetCharacterController();
-            Teams.AddToTeam(this, team);
         }
 
         public virtual void Start()
         {
-            StartCoroutine("RegenerateHealth");
-            StartCoroutine("RegenerateMana");
+            StartCoroutine("RegenerateHealthCoroutine");
+            StartCoroutine("RegenerateManaCoroutine");
         }
 
         public virtual void OnValidate()

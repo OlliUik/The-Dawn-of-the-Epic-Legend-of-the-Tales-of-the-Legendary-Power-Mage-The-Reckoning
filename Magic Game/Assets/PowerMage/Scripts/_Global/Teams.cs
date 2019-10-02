@@ -4,9 +4,6 @@ namespace PowerMage
 {
     public static class Teams
     {
-        public static List<Entity> teamGoodGuys = new List<Entity>();
-        public static List<Entity> teamBadBoys = new List<Entity>();
-
         public enum Team
         {
             NONE,
@@ -14,40 +11,27 @@ namespace PowerMage
             BADBOYS
         };
 
-        public static void AddToTeam(Entity e, Team t)
+        public static bool IsEnemy(Entity caller, Entity target)
         {
-            Modify(e, t, 0);
-        }
-
-        public static void RemoveFromTeam(Entity e, Team t)
-        {
-            Modify(e, t, 1);
-        }
-
-        private static void Modify(Entity e, Team t, int action)
-        {
-            //List of actions:
-            //Add:      0
-            //Remove:   1
-
-            switch (t)
+            switch (target.team)
             {
-                case Team.NONE: break;
-                case Team.BADBOYS:
-                    {
-                        if (action == 0) teamBadBoys.Add(e);
-                        else teamBadBoys.Remove(e);
-                    }
-                    break;
                 case Team.GOODGUYS:
                     {
-                        if (action == 0) teamGoodGuys.Add(e);
-                        else teamGoodGuys.Remove(e);
+                        if (target.team == Team.BADBOYS)
+                        {
+                            return true;
+                        }
+                        return false;
                     }
-                    break;
-                default:
-                    UnityEngine.Debug.LogError(e + " has an invalid team!");
-                    break;
+                case Team.BADBOYS:
+                    {
+                        if (target.team == Team.GOODGUYS)
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                default: return false;
             }
         }
     }
