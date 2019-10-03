@@ -24,7 +24,7 @@ public class EnemyNavigation : MonoBehaviour
     [SerializeField] private Vector3[] patrolPoints = null;
 
     //Dictates whether the agentwaits on each node.
-    [SerializeField]  bool patrolWait;
+    //[SerializeField]  bool patrolWait;
 
     //Total time that the patrol wait on each node.
     [SerializeField] float totalWaitTime;
@@ -54,7 +54,7 @@ public class EnemyNavigation : MonoBehaviour
 
     int navCurrentPoint;
     bool isTravel;
-    //bool isWaiting;
+    bool isWaiting;
     bool patrolForward;
    
     bool onPath;
@@ -276,9 +276,9 @@ public class EnemyNavigation : MonoBehaviour
             isTravel = false;
 
             //wait?
-            if (UnityEngine.Random.Range(0f, 1f)<= waitProbalitiy)
+            if (isWaiting)
             {
-                patrolWait = true;
+                isWaiting = true;
                 waitTimer = 0f;
             }
             else
@@ -288,12 +288,12 @@ public class EnemyNavigation : MonoBehaviour
             }
         }
 
-        if(UnityEngine.Random.Range(0f, 1f) <= waitProbalitiy)
+        if(isWaiting)
         {
             waitTimer += Time.deltaTime;
             if(waitTimer >= totalWaitTime)
             {
-                patrolWait = false;
+                isWaiting = false;
                 ChangePatrolPoint();
                 SetDestination();
             }
