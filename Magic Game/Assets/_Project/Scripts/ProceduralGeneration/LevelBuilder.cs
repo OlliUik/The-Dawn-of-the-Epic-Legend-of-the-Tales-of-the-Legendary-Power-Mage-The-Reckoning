@@ -149,7 +149,6 @@ public class LevelBuilder : MonoBehaviour
         }
 
         GetComponent<NavMeshSurface>().BuildNavMesh();
-
     }
 
     void PositionRoomAtDoorway(ref Room room, Doorway roomDoorway, Doorway targetDoorway)

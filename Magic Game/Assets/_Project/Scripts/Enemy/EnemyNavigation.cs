@@ -41,7 +41,6 @@ public class EnemyNavigation : MonoBehaviour
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
     public NavMeshAgent cAgent { get; private set; } = null;
-    //public NavMeshAgent cAgent;
 
     private float navTimer = 0.0f;
     //private float waitTimer = 0.0f;
@@ -54,15 +53,17 @@ public class EnemyNavigation : MonoBehaviour
     bool isWaiting;
     bool patrolForward;
     float waitTimer;
+    bool onPath;
 
     #endregion
 
     #region UNITY_DEFAULT_METHODS
 
+
     void Start()
     {
         cEnemyCore = GetComponent<EnemyCore>();
-        cAgent = this.GetComponent<NavMeshAgent>();
+        cAgent = GetComponent<NavMeshAgent>();
         //cAgent.updateRotation = false;
         //navTimer = Random.Range(0.0f, 2.0f);
         if (cAgent == null)
@@ -134,7 +135,7 @@ public class EnemyNavigation : MonoBehaviour
     }
        
     
-    void Update()
+    void FixedUpdate()
     {
         //    if (navTimer <= 0.0f)
         //    {
@@ -174,34 +175,18 @@ public class EnemyNavigation : MonoBehaviour
 
             }
           */
-        Debug.Log("Now Entering Patrol State");
-        //check if we're close to the destination.
-        if (isTravel && cAgent.remainingDistance <= 1.0f)
-        {
-            isTravel = false;
+         if(cAgent.isOnNavMesh)
+         {
+            Debug.Log("On navmesh");
+            onPath = true;
 
-            //wait?
-            if (isWaiting)
-            {
-                isWaiting = true;
-                waitTimer = 0;
-            }
-            else
-            {
-                ChangePatrolPoint();
-                SetDestination();
-            }
+         }
+         else
+         {
+            Debug.Log("not Generate yet");
+            onPath = false;
         }
-        if (isWaiting)
-        {
-            waitTimer += Time.deltaTime;
-            if (waitTimer >= totalWaitTime)
-            {
-                isWaiting = true;
-                ChangePatrolPoint();
-                SetDestination();
-            }
-        }
+     
     }
    
     /*
@@ -238,13 +223,45 @@ public class EnemyNavigation : MonoBehaviour
     void AIIdle()
     {
         Debug.Log("Now Entering Idle state");
-        
+
+        /*
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
         {
             cAgent.SetDestination(cEnemyCore.spawnPosition);
         }
-        
-       
+        */
+        /*
+        Debug.Log("Now Entering Patrol State");
+        //check if we're close to the destination.
+        if (isTravel && cAgent.remainingDistance <= 1.0f)
+        {
+            isTravel = false;
+
+            //wait?
+            if (isWaiting)
+            {
+                isWaiting = true;
+                waitTimer = 0f;
+            }
+            else
+            {
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
+        if (isWaiting)
+        {
+            waitTimer += Time.deltaTime;
+            if (waitTimer >= totalWaitTime)
+            {
+                isWaiting = true;
+                ChangePatrolPoint();
+                SetDestination();
+            }
+        }
+        */
+        AIPatrol();
+
     }
     
     void AIPatrol()
@@ -285,7 +302,7 @@ public class EnemyNavigation : MonoBehaviour
             if (isWaiting)
             {
                 isWaiting = true;
-                waitTimer = 0;
+                waitTimer = 0f;
             }
             else
             {
@@ -311,10 +328,12 @@ public class EnemyNavigation : MonoBehaviour
     {
         if (patrolPoint != null)
         {
-            Vector3 targetVector = patrolPoint[navCurrentPoint].transform.position;
-            cAgent.SetDestination(targetVector);
-            isTravel = true;
+
+                Vector3 targetVector = patrolPoint[navCurrentPoint].transform.position;
+                cAgent.SetDestination(targetVector);
+                isTravel = true;
         }
+        
     }
 
     //Change the destination of the enemy wizard
