@@ -10,12 +10,16 @@ public class LevitationModifier : SpellScriptableModifier
     public GameObject holdingParticle;
     public GameObject lineParticle;
 
+    public float forceMultiplierAddition = 0.5f;
+    public float durationAddition = 3f;
+
     public override void AddSpellModifier(Spell spell)
     {
         var compo = spell.GetComponent<Levitation>();
         if (compo != null)
         {
-            //compo.maximumPortals += increasingPortal;
+            compo.spellDuration += durationAddition;
+            compo.spellForceMultiplier += forceMultiplierAddition;
             return;
         }
 

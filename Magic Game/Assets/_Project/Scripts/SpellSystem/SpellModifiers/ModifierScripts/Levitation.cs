@@ -13,10 +13,15 @@ public class Levitation : SpellModifier
     public GameObject holdingParticle;
     public GameObject lineParticle;
 
+    public float spellDuration = 3f;
+    public float spellForceMultiplier = 1;
+
     GameObject caster;
 
     public override void OnSpellCast(Spell spell)
     {
+        LevitationObject.spellDuration = spellDuration;
+        LevitationObject.spellForceMultiplier = spellForceMultiplier;
         caster = spell.caster;
         Destroy(levitatingLineParticle);
         Destroy(levitatingObject);

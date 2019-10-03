@@ -15,6 +15,9 @@ public class LevitationObject : MonoBehaviour
     bool originalIsKinematic = false;
     bool originalUseGravity = false;
 
+    public static float spellDuration = 3f;
+    public static float spellForceMultiplier = 1;
+
     void Start()
     {
         StartCoroutine(destroySelf());
@@ -27,7 +30,7 @@ public class LevitationObject : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        yield return new WaitForSeconds(4.9f);
+        yield return new WaitForSeconds(spellDuration - 0.1f);
         Destroy(gameObject);
     }
 
@@ -54,11 +57,11 @@ public class LevitationObject : MonoBehaviour
     {
         if(holdingObject != null)
         {
-            AddForceWithMultiplier(2);
+            AddForceWithMultiplier(0.25f);
             if(navMeshAgent != null)
             {
                 //navMeshAgent.velocity = holdingObject.GetComponent<Rigidbody>().velocity;
-                AddForceWithMultiplier(1000);
+                AddForceWithMultiplier(100);
             }
             //holdingObject.GetComponent<Rigidbody>().MovePosition(transform.position);
             //holdingObject.transform.position = transform.position;
@@ -77,7 +80,7 @@ public class LevitationObject : MonoBehaviour
         float errorNumber = 0.2f;
         float reducingVelocityFactor = 0.8f;
 
-        targetRb.AddForce((transform.position - targetPosition) * multiplier);
+        targetRb.AddForce((transform.position - targetPosition) * multiplier * spellForceMultiplier);
         if(transform.position.x - targetPosition.x < errorNumber && transform.position.x - targetPosition.x > -errorNumber)
         {
             targetRb.velocity = new Vector3(targetRb.velocity.x * reducingVelocityFactor, targetRb.velocity.y, targetRb.velocity.z);
