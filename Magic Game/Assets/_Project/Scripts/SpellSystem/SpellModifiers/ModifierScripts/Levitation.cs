@@ -42,7 +42,7 @@ public class Levitation : SpellModifier
             levitatingLineParticle.AddComponent<LevitationLineParticle>();
             levitatingLineParticle.GetComponent<LevitationLineParticle>().caster = caster;
 
-            LevitationObject.holdingParticlePrefeb = holdingParticle;
+            LevitationObject.holdingParticlePrefab = holdingParticle;
         }
     }
 

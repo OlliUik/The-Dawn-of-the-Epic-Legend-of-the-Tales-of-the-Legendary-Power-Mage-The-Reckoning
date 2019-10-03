@@ -9,7 +9,7 @@ public class LevitationObject : MonoBehaviour
     public static GameObject holdingObject;
 
     public static GameObject lineParticle;
-    public static GameObject holdingParticlePrefeb;
+    public static GameObject holdingParticlePrefab;
     static GameObject holdingParticle;
     NavMeshAgent navMeshAgent;
     bool originalIsKinematic = false;
@@ -124,7 +124,7 @@ public class LevitationObject : MonoBehaviour
             originalUseGravity = holdingObject.GetComponent<Rigidbody>().useGravity;
             holdingObject.GetComponent<Rigidbody>().isKinematic = false;
             holdingObject.GetComponent<Rigidbody>().useGravity = false;
-            holdingParticle = Instantiate(holdingParticlePrefeb, holdingObject.transform.position, holdingObject.transform.rotation);
+            holdingParticle = Instantiate(holdingParticlePrefab, holdingObject.transform.position, holdingObject.transform.rotation);
         }
     }
 
