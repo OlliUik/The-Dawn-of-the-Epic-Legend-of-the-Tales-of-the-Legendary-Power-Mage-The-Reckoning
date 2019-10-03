@@ -10,10 +10,17 @@ public class MultiCastModifier : SpellScriptableModifier
     [SerializeField] private Vector2 leftRightRotation  = new Vector2(-15f, 15f);
     [SerializeField] private Vector2 upDownRotation     = new Vector2(-15f, 5f);
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        MultiCast component   = spellObject.AddComponent<MultiCast>();
-        component.copyCount   = copyCounts;
+        var compo = spell.GetComponent<MultiCast>();
+        if (compo != null)
+        {
+            compo.copyCount += 2;
+            return;
+        }
+
+        MultiCast component         = spell.gameObject.AddComponent<MultiCast>();
+        component.copyCount         = copyCounts;
         component.leftRightRotation = leftRightRotation;
         component.upDownRotation    = upDownRotation;
     }

@@ -9,9 +9,16 @@ public class SummonLavaModifier : SpellScriptableModifier
     [SerializeField] private GameObject lavaPrefab = null;
     [SerializeField] private GameObject aoeLavaFountain = null;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        SummonLava component = spellObject.AddComponent<SummonLava>();
+        var compo = spell.GetComponent<SummonLava>();
+        if (compo != null)
+        {
+            // do what
+            return;
+        }
+
+        SummonLava component = spell.gameObject.AddComponent<SummonLava>();
         component.spawnPrefab = lavaPrefab;
         component.aoeLavaFountain = aoeLavaFountain;
     }

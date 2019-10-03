@@ -7,16 +7,20 @@ public class TrapGeneric : MonoBehaviour
     //works for falling bookcases/pillars, wall of death-traps, spike traps and trap doors
     //goes to the trigger/pivot object
     
-    [SerializeField]
-    private Animator anim;
+    [SerializeField] private Animator anim = null;
+    [SerializeField] private Rigidbody rb = null;
+    [SerializeField] private GameObject damagePart = null;
+    [SerializeField] private Vector3 direction = Vector3.zero;
 
-    [SerializeField]
-    private Rigidbody rb;
+    private void Start()
+    {
+        if (damagePart)
+        {
+            damagePart.SetActive(false);
+        }
+    }
 
-    [SerializeField]
-    private Vector3 direction;
-
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
@@ -28,6 +32,7 @@ public class TrapGeneric : MonoBehaviour
 
             if (gameObject.tag == "Falling")
             {
+                damagePart.SetActive(true);
                 rb.AddForceAtPosition(direction * 200f, rb.position);
                 Destroy(gameObject);
             }
@@ -38,17 +43,7 @@ public class TrapGeneric : MonoBehaviour
                 Destroy(gameObject);
             }
 
-            if (gameObject.tag == "WallOfDeathReset")
-            {
-                anim.Play("Kill");
-            }
-
-            if (gameObject.tag == "SpikeTrap")
-            {
-                anim.Play("Kill");
-            }
-
-            if (gameObject.tag == "TrapDoor")
+            if (gameObject.tag == "WallOfDeathReset" || gameObject.tag == "SpikeTrap" || gameObject.tag == "TrapDoor")
             {
                 anim.Play("Kill");
             }

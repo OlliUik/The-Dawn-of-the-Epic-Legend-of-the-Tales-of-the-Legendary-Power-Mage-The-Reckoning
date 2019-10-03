@@ -6,22 +6,18 @@ using UnityEngine;
 public class Card : ScriptableObject
 {
     [Header("Spell editing variables")]
-    public List<SpellType> types                        = new List<SpellType>();
+    public List<SpellType> compatibleSpellTypes         = new List<SpellType>(1) { SpellType.GENERIC };
     public string cardName                              = null;
 
     [TextArea]
     public string cardDescription                       = null;
 
-    // Important 3 ... modifiers are spell spesific (projectile, beam, etc.)
+    // Important 3
     public List<CastRequirement> castRequirements       = new List<CastRequirement>();
     public List<SpellBalance> balances                  = new List<SpellBalance>();
     public List<SpellScriptableModifier> modifiers      = new List<SpellScriptableModifier>();
 
-    // StatusEffects, CastRequirements and balances are generic for all spells
-    public List<ScriptableEffect> effects               = new List<ScriptableEffect>();
-    public List<StatusEffectBase> statusEffects         = new List<StatusEffectBase>();
-
-    [Space(10)]
+    [Space(10)] // TODO:: HOW TO APPLY ALL GRAPHICS TO SPELL 
     public GameObject graphicsProjecile                 = null;
     public GameObject graphicsBeam                      = null;
     public GameObject graphicsAoe                       = null;

@@ -6,15 +6,20 @@ public class ThirdPersonCamera : MonoBehaviour
     #region VARIABLES
 
     [Header("Input")]
-    [SerializeField] private string horizontalAxis = "Mouse X";
-    [SerializeField] private string verticalAxis = "Mouse Y";
+    [SerializeField] private string horizontalAxis;
+    [SerializeField] private string verticalAxis;
+    [SerializeField, Range(0, 20)] private float sensX;
+    [SerializeField, Range(0, 20)] private float sensY;
 
     [HideInInspector] public float cameraFOV = 0.0f;
+    [HideInInspector] public bool isRagdolled = false;
 
     [Header("Public")]
     public GameObject cameraObject = null;
     public bool invertY = false;
     public Vector2 sensitivity = new Vector2(1.0f, 1.0f);
+    public bool slowdownEnabled = false;
+    public Vector2 slowdownMaxTurn = new Vector2(25.0f, 25.0f);
 
     public bool isEnabled { get; private set; } = true;
     public Vector3 lookDirection { get; private set; } = Vector3.zero;
@@ -22,6 +27,7 @@ public class ThirdPersonCamera : MonoBehaviour
     [Header("Serialized")]
     [SerializeField] private float cameraFOVLerpSpeed = 10.0f;
     [SerializeField] private Vector3 pivotPoint = Vector3.zero;
+    [SerializeField] private Transform pivotTransformRagdolled = null;
     [SerializeField] private Vector3 cameraClosePosition = Vector3.zero;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     
@@ -30,6 +36,7 @@ public class ThirdPersonCamera : MonoBehaviour
     private Vector2 minMaxPitch = new Vector2(-85.0f, 85.0f);
     private Camera cameraComponent = null;
     private PostProcessLayer ppLayerComponent = null;
+    private InputManager inputManager = null;
 
     //[SerializeField] private Transform cameraPivot = null;
     //[SerializeField] private CameraWallChecker wallChecker = null;
@@ -44,6 +51,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void Awake()
     {
+        inputManager = GetComponent<InputManager>();
         cameraComponent = cameraObject.GetComponent<Camera>();
         cameraOffset = cameraObject.transform.localPosition - pivotPoint;
         cameraFOV = cameraComponent.fieldOfView;
@@ -94,11 +102,49 @@ public class ThirdPersonCamera : MonoBehaviour
         //}
     }
 
+    void Update()
+    {
+        if (inputManager.controllerId == 1)
+        {
+            horizontalAxis = "Mouse X"; //Xbox_Mouse X
+            verticalAxis = "Mouse Y"; //Xbox_Mouse Y
+            sensX = 10; //Default value?
+            sensY = 10; //Default value?
+            sensitivity = new Vector2(sensX, sensY);
+        }
+
+        if (inputManager.controllerId == 2)
+        {
+            horizontalAxis = "PS_Mouse X";
+            verticalAxis = "PS_Mouse Y";
+            sensX = 10; //Default value?
+            sensY = 10; //Default value?
+            sensitivity = new Vector2(sensX, sensY);
+        }
+
+        else
+        {
+            horizontalAxis = "Mouse X";
+            verticalAxis = "Mouse Y";
+            sensX = 2; //Default value?
+            sensY = 2; //Default value?
+            sensitivity = new Vector2(sensX, sensY);
+        }
+    }
+
     void LateUpdate()
     {
         if (isEnabled)
         {
-            Look(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
+            if (slowdownEnabled)
+            {
+                float time = Time.deltaTime;
+                Look(Mathf.Clamp(Input.GetAxis(horizontalAxis), -slowdownMaxTurn.x * time, slowdownMaxTurn.x * time), Mathf.Clamp(Input.GetAxis(verticalAxis), -slowdownMaxTurn.y * time, slowdownMaxTurn.y * time));
+            }
+            else
+            {
+                Look(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
+            }
 
             if (cameraFOVLerp != cameraFOV)
             {
@@ -130,6 +176,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+    #if UNITY_EDITOR
         //Don't draw certain gizmos when in play mode
         if (!UnityEditor.EditorApplication.isPlaying)
         {
@@ -141,6 +188,7 @@ public class ThirdPersonCamera : MonoBehaviour
         //Draw close position
         Gizmos.color = Color.yellow;
         Gizmos.DrawCube(transform.position + pivotPoint + cameraClosePosition, Vector3.one * 0.18f);
+    #endif
     }
 
     #endregion
@@ -178,11 +226,24 @@ public class ThirdPersonCamera : MonoBehaviour
 
         cameraObject.transform.rotation = Quaternion.Euler(lookDirection);
         Vector3 offset = cameraObject.transform.right * cameraOffset.x + cameraObject.transform.up * cameraOffset.y + cameraObject.transform.forward * cameraOffset.z;
-        cameraObject.transform.position = transform.position + pivotPoint + offset;
+
+        if (isRagdolled)
+        {
+            cameraObject.transform.position = pivotTransformRagdolled.position + cameraObject.transform.forward * -5.0f;
+        }
+        else
+        {
+            cameraObject.transform.position = transform.position + pivotPoint + offset;
+        }
 
         #endregion
 
         #region CAMERA_WALLCHECKING
+
+        if (isRagdolled)
+        {
+            return;
+        }
 
         Vector3 cameraRaycast = cameraObject.transform.right * (cameraOffset.x - cameraClosePosition.x)
             + cameraObject.transform.up * (cameraOffset.y - cameraClosePosition.y)

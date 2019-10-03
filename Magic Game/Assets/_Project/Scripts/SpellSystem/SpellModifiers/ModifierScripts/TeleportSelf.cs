@@ -15,9 +15,8 @@ public class TeleportSelf : SpellModifier
 
         if(movement != null)
         {
-            Instantiate(teleportParticles, movement.transform.position, Quaternion.identity);
-            Instantiate(teleportParticles, collision.contacts[0].point + collision.contacts[0].normal, Quaternion.identity);
-            movement.Teleport(collision.contacts[0].point + collision.contacts[0].normal);
+            Vector3 teleportPos = (collision.contacts[0].point + collision.contacts[0].normal);
+            Teleport(teleportPos, spell.caster);
         }
         else
         {
@@ -26,7 +25,7 @@ public class TeleportSelf : SpellModifier
        
     }
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
 
         Spell spell = gameObject.GetComponent<Spell>();
@@ -34,9 +33,8 @@ public class TeleportSelf : SpellModifier
 
         if (movement != null)
         {
-            Instantiate(teleportParticles, movement.transform.position, Quaternion.identity);
-            Instantiate(teleportParticles, hitInfo.point, Quaternion.identity);
-            movement.Teleport(hitInfo.point + hitInfo.normal);
+            Vector3 teleportPos = (hitInfo.point + hitInfo.normal);
+            Teleport(teleportPos, spell.caster);
         }
         else
         {
@@ -52,14 +50,19 @@ public class TeleportSelf : SpellModifier
 
             Aoe aoe = spell.GetComponent<Aoe>();
 
-            // teleport to random position
-            Instantiate(teleportParticles, transform.position, Quaternion.identity);
+            // get random position
             Vector3 randomPos = Random.onUnitSphere * aoe.radius;
             randomPos.y = Mathf.Abs(randomPos.y);
-            spell.caster.GetComponent<PlayerMovement>().Teleport(randomPos);
+
+            Teleport(randomPos, aoe.caster);
 
         }
     }
 
+    private void Teleport(Vector3 teleportPosition, GameObject caster)
+    {
+        caster.GetComponent<PlayerMovement>().Teleport(teleportPosition);
+        Instantiate(teleportParticles, teleportPosition, teleportParticles.transform.rotation);
+    }
 
 }

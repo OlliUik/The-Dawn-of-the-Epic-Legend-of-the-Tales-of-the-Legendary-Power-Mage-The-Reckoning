@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿//using System.Collections.Generic;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -7,38 +7,10 @@ using UnityEditor;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(EnemyVision))]
-[RequireComponent(typeof(EnemyNavigation))]
+//[RequireComponent(typeof(EnemyNavigation))]
 public class EnemyCore : MonoBehaviour
 {
     #region VARIABLES
-
-    [Header("Melee Only Variables")]
-    [SerializeField] protected float meleeAttackDistance = 2.0f;
-    [SerializeField] protected float meleeDamage = 25.0f;
-
-    [Header("Ranged Only Variables")]
-    [SerializeField] protected float rangedEscapeDistance = 10.0f;
-
-    [Header("Ranged & Melee/Ranged Magic Variables")]
-    [SerializeField] protected bool castInBursts = false;
-    [SerializeField] protected float castingTime = 2.0f;
-    [SerializeField] protected int burstCount = 3;
-    [SerializeField] protected float timeBetweenShots = 0.2f;
-     
-    [Header("Shared Variables")]
-    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
-    [SerializeField] protected EEnemyType enemyType = EEnemyType.MELEE;
-    [SerializeField] protected bool useMagic = false;
-    [SerializeField] protected bool searchPlayerAfterAttack = true;
-    [SerializeField] protected bool alwaysAggressive = true;
-    [SerializeField] protected float aggressiveRadius = 30.0f;
-    [SerializeField] protected float hearingRadius = 10.0f;
-    [SerializeField] protected float radiusCheckInterval = 1.0f;
-    [SerializeField] protected float paranoidDuration = 5.0f;
-    [SerializeField] protected float castingInterval = 1.0f;
-    [SerializeField] protected float castingStandstill = 4.0f;
-    [SerializeField] protected int castingSpellType = 0; //Check the animator controller to find out the desired number!
-    [SerializeField] protected Animator animator = null;
 
     public struct StatusEffects
     {
@@ -82,100 +54,117 @@ public class EnemyCore : MonoBehaviour
         PATROL
     };
 
-    public enum EEnemyType
-    {
-        MELEE,
-        RANGED
-    };
+    public EnemyVision cVision { get; protected set; } = null;
+    public EnemyNavigation cNavigation { get; protected set; } = null;
+    public Health cHealth { get; protected set; } = null;
 
-    [HideInInspector] public EState currentState = EState.IDLE;
-    
-    public Vector3 spawnPosition { get; private set; } = Vector3.zero;
-    public Vector3 spawnRotation { get; private set; } = Vector3.zero;
-    public EEnemyType currentEnemyType { get; protected set; } = EEnemyType.MELEE;
-    public EnemyVision vision { get; private set; } = null;
-    public EnemyNavigation navigation { get; private set; } = null;
-    public Health cHealth { get; private set; } = null;
-    public StatusEffects status { get; private set; } = new StatusEffects(false, false, false, false);
-    public Spellbook cSpellBook { get; private set; } = null;
+    public StatusEffects status { get; protected set; } = new StatusEffects(false, false, false, false);
+    public EState currentState { get; protected set; } = EState.DISABLED;
+    public bool isRanged { get; protected set; } = false;
+    public int entitySpawnNumber { get; protected set; } = 0;
+    public Vector3 spawnPosition { get; protected set; } = Vector3.zero;
+    public Vector3 spawnRotation { get; protected set; } = Vector3.zero;
 
-    //Temporary values
-    protected bool bCastedProjectile = false;
+    [Header("Score")]
+    public int score = 0;
+    public int roundedScore;
+    private bool hasStatusEffect = false;
+
+    [Header("Core -> State Machine")]
+    [SerializeField] protected float logicInterval = 0.5f;
+    [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
+    [SerializeField] protected bool searchPlayerAfterAttack = true;
+    [SerializeField] protected bool alwaysAggressive = true;
+    [SerializeField] protected float aggressiveRadius = 30.0f;
+    [SerializeField] protected bool hearingEnabled = true;
+    [SerializeField] protected float hearingRadius = 10.0f;
+    [SerializeField] protected float radiusCheckInterval = 1.0f;
+    [SerializeField] protected float paranoidDuration = 5.0f;
+
+    [Header("Core -> Attacking")]
+    [SerializeField] protected bool moveWhileCasting = false;
+    [SerializeField] protected float standStillAfterCasting = 4.0f;
+    [SerializeField] protected int attackAnimation = 0; //Check the animator controller to find out the desired number!
+    [SerializeField] protected Animator animator = null;
+
+    [Header("Core -> Ragdoll")]
+    [SerializeField] protected Rigidbody ragdoll = null;
+
+    [Header("Core -> Other")]
+    [SerializeField] protected bool spawnAsGoodGuy = false;
+    [SerializeField] protected bool spawnAsConfused = false;
+
+    public bool MoveWhileCasting { get { return moveWhileCasting; } }
+    public float LogicInterval { get { return logicInterval; } }
+
+    //Core temporary values
     protected float radiusCheckTimer = 0.0f;
     protected float alertedTimer = 0.0f;
     protected float paranoidTimer = 0.0f;
-    protected float shootIntervalTimer = 0.0f;
-    protected float castingTimer = 0.0f;
-    protected float castingStandstillTimer = 0.0f;
-    protected int shotsLeft = 0;
-    protected Vector3 targetPosition = Vector3.zero;
-    protected Vector3 playerOffset = Vector3.zero;
-
-    public float RangedEscapeRadius
-    {
-        get
-        {
-            return rangedEscapeDistance;
-        }
-    }
+    protected float castStandStillTimer = 0.0f;
+    protected float ragdollSleepTimer = 0.0f;
 
     #endregion
 
     #region UNITY_DEFAULT_METHODS
 
-    protected void Awake()
+    protected virtual void Awake()
     {
-        GlobalVariables.entityList.Add(this.gameObject);
+        if (spawnAsGoodGuy)
+        {
+            GlobalVariables.teamGoodGuys.Add(this.gameObject);
+            entitySpawnNumber = GlobalVariables.teamGoodGuys.Count;
+            status = new StatusEffects(status.isOnFire, !spawnAsConfused, status.isFrozen, status.isKnocked);
+        }
+        else
+        {
+            GlobalVariables.teamBadBoys.Add(this.gameObject);
+            entitySpawnNumber = GlobalVariables.teamBadBoys.Count;
+            status = new StatusEffects(status.isOnFire, spawnAsConfused, status.isFrozen, status.isKnocked);
+        }
     }
 
     protected virtual void Start()
     {
-        vision = GetComponent<EnemyVision>();
-        navigation = GetComponent<EnemyNavigation>();
+        cVision = GetComponent<EnemyVision>();
+        cNavigation = GetComponent<EnemyNavigation>();
         cHealth = GetComponent<Health>();
-
-        if (useMagic)
-        {
-            if (GetComponent<Spellbook>() != null)
-            {
-                cSpellBook = GetComponent<Spellbook>();
-            }
-            else
-            {
-                Debug.LogWarning(this.gameObject + " is marked as a spellcaster, but has no spellbook!");
-            }
-        }
 
         spawnPosition = transform.position;
         spawnRotation = transform.rotation.eulerAngles;
         currentState = (EState)defaultState;
-        currentEnemyType = enemyType;
+
+        InvokeRepeating("EnemyLogicLoop", Time.fixedDeltaTime * entitySpawnNumber, Time.fixedDeltaTime * Mathf.FloorToInt(logicInterval / Time.fixedDeltaTime));
     }
 
     protected virtual void Update()
     {
-        AdvanceTimers();
-        targetPosition = vision.targetLocation;
+        float time = Time.deltaTime;
 
-        if (GlobalVariables.bAnyPlayersAlive == false)
-        {
-            currentState = EState.DISABLED;
-        }
+        radiusCheckTimer -= radiusCheckTimer > 0.0f ? time : 0.0f;
+        paranoidTimer -= paranoidTimer > 0.0f ? time : 0.0f;
+        alertedTimer -= alertedTimer > 0.0f ? time : 0.0f;
+        castStandStillTimer -= castStandStillTimer > 0.0f ? time : 0.0f;
 
-        switch (currentState)
+        if (currentState != EState.DISABLED)
         {
-            case EState.DISABLED: break;
-            case EState.IDLE: AIIdle(); break;
-            case EState.PATROL: AIPatrol(); break;
-            case EState.ALERTED: AIAlerted(); break;
-            case EState.PARANOID: AIParanoid(); break;
-            case EState.SEARCH: AISearch(); break;
-            case EState.ATTACK: AIAttack(); break;
-            case EState.CASTING: AICasting(); break;
-            case EState.ESCAPE: AIEscape(); break;
-            case EState.PANIC: AIPanic(); break;
-            case EState.RAGDOLLED: AIRagdolled(); break;
-            default: currentState = EState.DISABLED; break;
+            if (status.isFrozen)
+            {
+                currentState = EState.DISABLED;
+                return;
+            }
+
+            if (status.isKnocked)
+            {
+                currentState = EState.RAGDOLLED;
+                return;
+            }
+
+            if (status.isOnFire)
+            {
+                currentState = EState.PANIC;
+                return;
+            }
         }
     }
 
@@ -189,18 +178,22 @@ public class EnemyCore : MonoBehaviour
             }
             else
             {
-                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage);
+                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
             }
         }
     }
 
-    protected void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         #if UNITY_EDITOR
         Handles.Label(transform.position + Vector3.up * 2.0f, currentState.ToString());
-        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
-        Gizmos.DrawWireSphere(transform.position, hearingRadius);
 
+        if (hearingEnabled)
+        {
+            Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
+            Gizmos.DrawWireSphere(transform.position, hearingRadius);
+        }
+        
         if (!alwaysAggressive)
         {
             Gizmos.color = new Color(0.0f, 1.0f, 0.0f, 0.5f);
@@ -212,45 +205,23 @@ public class EnemyCore : MonoBehaviour
     #endregion
 
     #region CUSTOM_METHODS
-
-    protected void AdvanceTimers()
-    {
-        float time = Time.deltaTime;
-
-        shootIntervalTimer -= shootIntervalTimer > 0.0f ? time : 0.0f;
-        radiusCheckTimer -= radiusCheckTimer > 0.0f ? time : 0.0f;
-        paranoidTimer -= paranoidTimer > 0.0f ? time : 0.0f;
-        alertedTimer -= alertedTimer > 0.0f ? time : 0.0f;
-        castingTimer -= castingTimer > 0.0f ? time : 0.0f;
-
-        if (castingTimer <= 0.0f)
-        {
-            castingStandstillTimer -= castingStandstillTimer > 0.0f ? time : 0.0f;
-        }
-    }
-
+    
     protected void NoiseChecker()
     {
-        if (radiusCheckTimer <= 0.0f)
+        if (hearingEnabled)
         {
-            radiusCheckTimer = radiusCheckInterval;
-            
             GameObject[] soundObjects = GameObject.FindGameObjectsWithTag("SFX");
 
             foreach (GameObject go in soundObjects)
             {
-                if (go.activeInHierarchy && Vector3.Distance(transform.position, go.transform.position) < hearingRadius)
+                if (go.activeInHierarchy && (transform.position - go.transform.position).sqrMagnitude < hearingRadius * hearingRadius)
                 {
-                    if (go.GetComponent<AudioSourceIdentifier>() != null)
+                    AudioSourceIdentifier identifier = go.GetComponent<AudioSourceIdentifier>();
+
+                    if (identifier != null && identifier.isPlayer && identifier.madeNoise)
                     {
-                        if (go.GetComponent<AudioSourceIdentifier>().isPlayer)
-                        {
-                            if (go.GetComponent<AudioSourceIdentifier>().madeNoise)
-                            {
-                                vision.targetLocation = go.transform.position;
-                                currentState = EState.SEARCH;
-                            }
-                        }
+                        cVision.targetLocation = go.transform.position;
+                        currentState = EState.SEARCH;
                     }
                 }
             }
@@ -272,22 +243,34 @@ public class EnemyCore : MonoBehaviour
         return predictedPosition;
     }
 
-    //protected void CastProjectile()
-    //{
-    //    if (projectile != null)
-    //    {
-    //        Vector3 direction = -Vector3.Normalize(transform.position + Vector3.up * 1.0f - (vision.targetLocation));
-    //        Instantiate(projectile).GetComponent<ProjectileTemp>().Initialize(transform.position + Vector3.up * 1.0f, direction, this.gameObject);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning(this.gameObject + " tried to cast a spell, but it has no projectile prefab assigned to it!");
-    //    }
-    //}
+    public void SwitchTeam()
+    {
+
+    }
+
+    public void EnableRagdoll(bool b)
+    {
+        status = new StatusEffects(status.isOnFire, status.isConfused, status.isFrozen, b);
+        animator.enabled = !b;
+        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(!b, b);
+        animator.transform.parent = b ? null : transform;
+        cNavigation.cAgent.enabled = !b;
+        currentState = b ? EState.RAGDOLLED : EState.ATTACK;
+        ragdollSleepTimer = 2.0f;
+
+        if (!b)
+        {
+            cNavigation.cAgent.Warp(ragdoll.transform.position);
+        }
+    }
 
     public virtual void OnHurt()
     {
-        animator.SetTrigger("Take Damage");
+        if (castStandStillTimer <= 0.0f)
+        {
+            //NOTE: move animation handling to another script?
+            animator.SetTrigger("Take Damage");
+        }
 
         switch (currentState)
         {
@@ -298,10 +281,32 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    public void OnDeath()
+    public virtual void OnDeath()
     {
+        roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
+
+        if (hasStatusEffect)
+        {
+            ScoreCalculator.scoreCalc.CountScore(score);
+        }
+
+        else
+        {
+            ScoreSystem.scoreSystem.addedScore = roundedScore;
+            ScoreSystem.scoreSystem.score += roundedScore;
+        }
+
+        ScoreCombo.scoreCombo.isEnemyKilled = true;
+        ScoreCombo.scoreCombo.combo++;
+
         currentState = EState.DISABLED;
-        GlobalVariables.entityList.Remove(this.gameObject);
+        GlobalVariables.teamBadBoys.Remove(this.gameObject);
+
+        //Detach the enemy model and ragdoll it
+        animator.enabled = false;
+        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false, true);
+        animator.transform.parent = null;
+
         Destroy(this.gameObject);
     }
 
@@ -309,20 +314,52 @@ public class EnemyCore : MonoBehaviour
 
     #region AI_LOGIC
 
+    protected void EnemyLogicLoop()
+    {
+        if (GlobalVariables.bAnyPlayersAlive == false)
+        {
+            currentState = EState.DISABLED;
+        }
+
+        EnemyStateMachine();
+        cNavigation.NavigationLoop();
+    }
+
+    protected virtual void EnemyStateMachine()
+    {
+        switch (currentState)
+        {
+            case EState.DISABLED: break;
+            case EState.IDLE: AIIdle(); break;
+            case EState.PATROL: AIPatrol(); break;
+            case EState.ALERTED: AIAlerted(); break;
+            case EState.PARANOID: AIParanoid(); break;
+            case EState.SEARCH: AISearch(); break;
+            case EState.ATTACK: AIAttack(); break;
+            case EState.CASTING: AICasting(); break;
+            case EState.ESCAPE: AIEscape(); break;
+            case EState.PANIC: AIPanic(); break;
+            case EState.RAGDOLLED: AIRagdolled(); break;
+            default: currentState = EState.DISABLED; break;
+        }
+    }
+
     protected virtual void AIIdle()
     {
-        if (vision.bCanSeeTarget)
+        if (cVision.bCanSeeTarget)
         {
             if (!alwaysAggressive)
             {
-                if (Vector3.Distance(transform.position, vision.targetLocation) < aggressiveRadius)
+                if ((transform.position - cVision.targetLocation).sqrMagnitude < aggressiveRadius * aggressiveRadius)
                 {
                     currentState = EState.ATTACK;
+                    return;
                 }
             }
             else
             {
                 currentState = EState.ATTACK;
+                return;
             }
         }
         NoiseChecker();
@@ -330,34 +367,52 @@ public class EnemyCore : MonoBehaviour
 
     protected virtual void AIPatrol()
     {
-        if (vision.bCanSeeTarget)
-        {
-            currentState = EState.ATTACK;
-        }
-        NoiseChecker();
+        //Use idle logic by default
+        AIIdle();
     }
 
     protected virtual void AIAlerted()
     {
-        if (vision.bCanSeeTarget)
-        {
-            currentState = EState.ATTACK;
-        }
-        else
+        if (!cVision.bCanSeeTarget)
         {
             if (alertedTimer <= 0.0f)
             {
                 currentState = EState.PARANOID;
                 paranoidTimer = paranoidDuration;
+                return;
             }
+
+            GameObject target = null;
+
+            foreach (GameObject go in (status.isConfused ? GlobalVariables.teamBadBoys : GlobalVariables.teamGoodGuys))
+            {
+                if (target == null)
+                {
+                    target = go;
+                }
+                else if ((transform.position - go.transform.position).sqrMagnitude < (transform.position - target.transform.position).sqrMagnitude)
+                {
+                    target = go;
+                }
+            }
+
+            if (target != null)
+            {
+                cVision.targetLocation = target.transform.position;
+            }
+        }
+        else
+        {
+            currentState = EState.ATTACK;
         }
     }
 
     protected virtual void AIParanoid()
     {
-        if (vision.bCanSeeTarget)
+        if (cVision.bCanSeeTarget)
         {
             currentState = EState.ATTACK;
+            return;
         }
         else
         {
@@ -373,153 +428,88 @@ public class EnemyCore : MonoBehaviour
     {
         if (searchPlayerAfterAttack)
         {
-            if (vision.bCanSeeTarget)
+            if (cVision.bCanSeeTarget)
             {
                 currentState = EState.ATTACK;
+                return;
             }
             else
             {
-                if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(vision.targetLocation.x, vision.targetLocation.z)) < navigation.navigationErrorMargin 
-                    || vision.targetLocation == Vector3.zero)
+                if ((transform.position - cVision.targetLocation).sqrMagnitude < 3.0f || cVision.targetLocation == Vector3.zero)
                 {
-                    currentState = EState.PARANOID;
                     paranoidTimer = paranoidDuration;
+                    currentState = EState.PARANOID;
                 }
+                
+                //if ((transform.position - cVision.targetLocation).sqrMagnitude < cNavigation.navigationErrorMargin * cNavigation.navigationErrorMargin
+                //    || cVision.targetLocation == Vector3.zero)
+                //{
+                //    paranoidTimer = paranoidDuration;
+                //    currentState = EState.PARANOID;
+                //}
+
+                //if (Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(cVision.targetLocation.x, cVision.targetLocation.z)) < cNavigation.navigationErrorMargin 
+                //    || cVision.targetLocation == Vector3.zero)
+                //{
+                //    paranoidTimer = paranoidDuration;
+                //    currentState = EState.PARANOID;
+                //}
             }
         }
         else
         {
+            paranoidTimer = paranoidDuration;
             currentState = EState.PARANOID;
         }
+        NoiseChecker();
     }
 
     protected virtual void AIAttack()
     {
-        if (vision.bCanSeeTarget)
-        {
-            switch (currentEnemyType)
-            {
-                case EEnemyType.MELEE:
-                    {
-                        if (Vector3.Distance(transform.position, vision.targetLocation) > meleeAttackDistance)
-                        {
-                            return;
-                        }
-                        break;
-                    }
-                case EEnemyType.RANGED:
-                    {
-                        if (Vector3.Distance(transform.position, targetPosition) < rangedEscapeDistance)
-                        {
-                            currentState = EState.ESCAPE;
-                            return;
-                        }
-                        break;
-                    }
-            }
-
-            if (shootIntervalTimer <= 0.0f)
-            {
-                if (castInBursts)
-                {
-                    shotsLeft = burstCount;
-                }
-
-                shootIntervalTimer = castingInterval;
-                castingTimer = castingTime;
-                castingStandstillTimer = castingStandstill;
-                animator.SetTrigger("Cast Spell");
-                animator.SetInteger("Spell Type", castingSpellType);
-                currentState = EState.CASTING;
-            }
-        }
-        else
-        {
-            currentState = EState.SEARCH;
-        }
+        Debug.LogError("Use enemy variant scripts instead of EnemyCore!");
+        currentState = EState.DISABLED;
     }
 
     protected virtual void AICasting()
     {
-        if (!useMagic && currentEnemyType == EEnemyType.MELEE)
-        {
-            if (navigation.agent.hasPath)
-            {
-                navigation.agent.ResetPath();
-                navigation.agent.velocity = new Vector3(0.0f, navigation.agent.velocity.y, 0.0f);
-            }
-
-            if (!bCastedProjectile)
-            {
-                vision.targetGO.GetComponent<Health>().Hurt(meleeDamage);
-                bCastedProjectile = true;
-            }
-
-            if (castingStandstillTimer <= 0.0f)
-            {
-                bCastedProjectile = false;
-                currentState = EState.ATTACK;
-            }
-        }
-        else
-        {
-            if (castingTimer <= 0.0f)
-            {
-                if (!bCastedProjectile)
-                {
-                    //CastProjectile();
-                    cSpellBook.CastSpell(0);
-                    bCastedProjectile = true;
-                }
-
-                if (shotsLeft > 1)
-                {
-                    if (!vision.bCanSeeTarget)
-                    {
-                        currentState = EState.ATTACK;
-                        shootIntervalTimer *= 0.25f;
-                        return;
-                    }
-
-                    animator.SetTrigger("Interrupt Spell");
-                    animator.SetTrigger("Cast Spell");
-                    bCastedProjectile = false;
-                    castingTimer = timeBetweenShots;
-                    shotsLeft--;
-                }
-                else if (castingStandstillTimer <= 0.0f)
-                {
-                    bCastedProjectile = false;
-                    currentState = EState.ATTACK;
-
-                }
-            }
-        }
+        Debug.LogError("Use enemy variant scripts instead of EnemyCore!");
+        currentState = EState.DISABLED;
     }
 
     protected virtual void AIEscape()
     {
-        if (vision.bCanSeeTarget)
-        {
-            if (Vector3.Distance(transform.position, targetPosition) > rangedEscapeDistance * 2)
-            {
-                currentState = EState.ATTACK;
-            }
-        }
-        else
-        {
-            currentState = EState.SEARCH;
-        }
+        Debug.LogError("Use enemy variant scripts instead of EnemyCore!");
+        currentState = EState.DISABLED;
     }
 
     protected virtual void AIPanic()
     {
-
+        if (!status.isOnFire)
+        {
+            currentState = EState.ATTACK;
+        }
     }
 
     protected virtual void AIRagdolled()
     {
-
+        if (status.isKnocked)
+        {
+            if (ragdoll.velocity.sqrMagnitude < 0.1f)
+            {
+                if (ragdollSleepTimer > 0.0f)
+                {
+                    ragdollSleepTimer -= logicInterval;
+                }
+                else
+                {
+                    EnableRagdoll(false);
+                }
+            }
+            else
+            {
+                ragdollSleepTimer = 2.0f;
+            }
+        }
     }
 
     #endregion

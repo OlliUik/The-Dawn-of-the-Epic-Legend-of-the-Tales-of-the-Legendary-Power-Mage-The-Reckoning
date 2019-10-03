@@ -9,12 +9,15 @@ public class Health : MonoBehaviour
 
     [Header("Serialized")]
     [SerializeField] private float iFrameTime = 0.5f;
+    [SerializeField] private float ragdollDamageThreshold = 50.0f;
 
     public bool bIsDead { get; private set; } = false;
     [HideInInspector] public float health /*{ get; private set; }*/ = 0.0f;
 
     private bool bIsPlayer = false;
     private float iftTimer = 0.0f;
+
+    private StatusEffectManager effectManager;
 
     #endregion
 
@@ -27,6 +30,8 @@ public class Health : MonoBehaviour
         {
             bIsPlayer = true;
         }
+
+        effectManager = GetComponent<StatusEffectManager>();
     }
 
     void Update()
@@ -38,12 +43,21 @@ public class Health : MonoBehaviour
 
     #region CUSTOM_METHODS
     
-    public void Hurt(float amount)
+    public void Hurt(float amount, bool ignoreIFrames)
     {
         if (!bIsDead)
         {
-            if (iftTimer <= 0.0f)
+            if (ignoreIFrames || iftTimer <= 0.0f)
             {
+
+                if(effectManager != null && effectManager.AppliedEffects[StatusEffectManager.EffectType.StackingDamage])
+                {
+                    // this is effected by stacking damage
+                    var stackingDamage = (StackingDamageEffect)effectManager.affectingEffects.Find(x => x.GetType() == typeof(StackingDamageEffect));
+                    amount = stackingDamage.ModifyDamage(amount);
+                    Debug.Log(amount);
+                }
+
                 iftTimer = iFrameTime;
                 health -= amount;
 
@@ -51,10 +65,20 @@ public class Health : MonoBehaviour
                 {
                     GetComponent<PlayerCore>().OnHurt();
                     GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
+
+                    if (amount > ragdollDamageThreshold)
+                    {
+                        GetComponent<PlayerCore>().EnableRagdoll(true);
+                    }
                 }
                 else
                 {
                     GetComponent<EnemyCore>().OnHurt();
+
+                    if (amount > ragdollDamageThreshold)
+                    {
+                        GetComponent<EnemyCore>().EnableRagdoll(true);
+                    }
                 }
 
                 if (health <= 0.0f)

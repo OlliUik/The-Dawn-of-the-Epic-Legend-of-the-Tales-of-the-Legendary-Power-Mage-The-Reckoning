@@ -8,9 +8,16 @@ public class BounceModifier : SpellScriptableModifier
 
     [SerializeField] private int bounceCount = 0;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Bounce component = spellObject.AddComponent<Bounce>();
+        var compo = spell.GetComponent<Bounce>();
+        if(compo != null)
+        {
+            compo.bounceCount += 2;
+            return;
+        }
+
+        Bounce component = spell.gameObject.AddComponent<Bounce>();
         component.bounceCount = bounceCount;
     }
 }

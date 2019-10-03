@@ -6,15 +6,14 @@ using UnityEngine;
 public class OnStatusEffectRequirement : CastRequirement
 {
 
-    [SerializeField] private ScriptableEffect requiredStatusEffect = null;
+    [SerializeField] private StatusEffectManager.EffectType type;
 
     public override bool isMet(Spellbook spellbook)
     {
-        StatusEffectManager manager = spellbook.GetComponent<StatusEffectManager>();
-
-        for (int i = 0; i < manager.appliedEffects.Count; i++)
+        StatusEffectManager effectManager = spellbook.GetComponent<StatusEffectManager>();
+        if(effectManager != null)
         {
-            if(manager.appliedEffects[i].effect == requiredStatusEffect)
+            if(effectManager.AppliedEffects[type] == true)
             {
                 return true;
             }

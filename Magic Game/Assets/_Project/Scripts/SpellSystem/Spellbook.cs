@@ -21,8 +21,8 @@ public class Spellbook : MonoBehaviour
     [SerializeField] private LayerMask raycastLayerMask = 3073;
 
     // Components
-    private Health health;
-    private Mana mana;
+    public Health health { get; private set; }
+    public Mana mana { get; private set; }
 
     #endregion
 
@@ -35,6 +35,7 @@ public class Spellbook : MonoBehaviour
     {
         if (GetComponent<PlayerCore>() != null)
         {
+            isPlayer = true;
             lookTransform = Camera.main.transform;
         }
         else
@@ -62,6 +63,8 @@ public class Spellbook : MonoBehaviour
 
         health = GetComponent<Health>();
         mana = GetComponent<Mana>();
+
+        ResetAllSpellManagersSingleton();
     }
 
     public void CastSpell(int spellIndex)
@@ -72,74 +75,7 @@ public class Spellbook : MonoBehaviour
         }
     }
 
-    // Inputs
-    //void Update()
-    //{
-    //    // COMBAT SPELLS
-    //    for (int i = 0; i < spells.Length; i++)
-    //    {
-    //        if(Input.GetKeyDown(spells[i].castKey) && CanCast(i))
-    //        {
-    //            StartCoroutine(StartCastingSpell(i));
-    //        }
-    //    }
-
-    //    // ON_SELF SPELLS
-    //    if(Input.GetKeyDown(onSelfKey) && Time.time > onSelfCooldown)
-    //    {
-    //        // check if OnSelf is not on cooldown
-    //        if(selfSpells[selfIndex] != null)
-    //        {
-    //            selfSpells[selfIndex].CastSpell(this, selfIndex);
-    //        }
-    //    }
-    //    else if(Input.GetKeyDown(onSelfSwapKey))
-    //    {
-    //        if(selfSpells[1] != null)
-    //        {
-    //            selfIndex += 1;
-
-    //            if(selfIndex > 1)
-    //            {
-    //                selfIndex = 0;
-    //            }
-
-    //            print("OnSelf swapped to " + selfSpells[selfIndex].name);
-    //            return;
-    //        }
-
-    //        print("Only one OnSelf spell");
-    //    }
-
-    //    // check if some self spell is invoking and cancel if needed
-    //    //if(Input.GetKeyDown(KeyCode.Space))
-    //    //{
-    //    //    if(activeOnSelfSpell.IsInvoking())
-    //    //    {
-    //    //        activeOnSelfSpell.RemoveEffect();
-    //    //        activeOnSelfSpell.CancelInvoke();
-    //    //        print(activeOnSelfSpell + " effect ended early");
-    //    //    }
-    //    //}
-
-    //}
-
     // works but not centered --> // spells can get this by calling spellbook.GetDirection()
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            spells[1].spell.CastSpell(this, spells[1]);
-        }
-
-        if(Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            spells[2].spell.CastSpell(this, spells[2]);
-        }
-
-    }
-
     public Vector3 GetDirection()
     {
         Vector3 direction = Vector3.zero;
@@ -168,11 +104,12 @@ public class Spellbook : MonoBehaviour
         else
         {
             //direction = -Vector3.Normalize(lookTransform.position - GetComponent<EnemyCore>().vision.targetLocation);
-            Vector3 prediction = GetComponent<EnemyCore>().vision.targetLocation;
+            Vector3 prediction = GetComponent<EnemyCore>().cVision.targetLocation;
             Projectile proj = spells[0].spell as Projectile;
             if (proj != null)
             {
-                prediction = GetComponent<EnemyCore>().PredictTargetPosition(spellPos.position, proj.baseSpeed, GetComponent<EnemyCore>().vision.targetLocation, GetComponent<EnemyCore>().vision.targetGO.GetComponent<CharacterController>().velocity);
+                EnemyCore ec = GetComponent<EnemyCore>();
+                prediction = ec.PredictTargetPosition(spellPos.position, proj.baseSpeed, ec.cVision.targetLocation, ec.status.isConfused ? ec.cVision.targetGO.GetComponent<UnityEngine.AI.NavMeshAgent>().velocity : ec.cVision.targetGO.GetComponent<CharacterController>().velocity);
             }
             direction = -Vector3.Normalize(lookTransform.position - prediction);
         }
@@ -186,7 +123,7 @@ public class Spellbook : MonoBehaviour
     //    Vector3 direction = Vector3.zero;
 
     //    RaycastHit hit;
-    //    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+    //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
     //    if(Physics.Raycast(ray, out hit))
     //    {
@@ -231,37 +168,7 @@ public class Spellbook : MonoBehaviour
         }
 
         return true;
-    }
-    //private bool CanCastOnSelf()
-    //{
-    //    foreach (Card card in onSelfSpell.collectedOnSelfSpells[onSelfIndex].cards)
-    //    {
-    //        // check that every cards requirements are met before doing anything
-    //        foreach (CastRequirement requirement in card.castRequirements)
-    //        {
-    //            if (!requirement.isMet(this))
-    //            {
-    //                print(requirement.name + " was not met");
-    //                return false;
-    //            }
-    //        }
-    //    }
-
-    //    // check cooldown
-    //    if(activeOnSelfSpell.Cooldown > Time.time)
-    //    {
-    //        print("OnSelf on cooldown");
-    //        return false;
-    //    }
-
-    //    // check if player is already casting something
-    //    if (isCasting)
-    //    {
-    //        return false;
-    //    }
-
-    //    return true;
-    //}
+    }   
 
     private float GetCastingTime(int spellIndex)
     {
@@ -283,6 +190,10 @@ public class Spellbook : MonoBehaviour
         return castingTime;
     }
 
+
+    /// This func should be called when some spell is about to be casted
+    /// We should pass an animation as parameter (how the spell is charged)
+    /// After charging the spell the animation can call "CastSpell()" with anim event
     private IEnumerator StartCastingSpell(int spellIndex)
     {
         isCasting = true;
@@ -294,12 +205,15 @@ public class Spellbook : MonoBehaviour
             mana.UseMana(spells[spellIndex].spell.ManaCost);
         }
 
-        foreach (Card card in spells[spellIndex].cards)
+        if(spells[spellIndex].cards.Count > 0)
         {
-            foreach (SpellBalance balance in card.balances)
+            foreach (Card card in spells[spellIndex].cards)
             {
-                // take spell extra cost here
-                balance.ApplyBalance(this);
+                foreach (SpellBalance balance in card.balances)
+                {
+                    // take spell extra cost here
+                    balance.ApplyBalance(this);
+                }
             }
         }
 
@@ -324,4 +238,12 @@ public class Spellbook : MonoBehaviour
         cooldowns[lastCastedSpell] = Time.time + spells[lastCastedSpell].spell.Cooldown; // check if some spells card has extra cooldown and add it here
         isCasting = false;
     }
+
+    // Reset all instances of the spell
+    private void ResetAllSpellManagersSingleton()
+    {
+        PortalGateManager.ResetVariables();
+        MeteorManager.ResetVariables();
+    }
+
 }

@@ -86,4 +86,9 @@ public class SpellEditorController : MonoBehaviour
         }
     }
 
+    public void CloseSpellEditionMenu()
+    {
+        playersSpellbook.GetComponent<PlayerCore>().ToggleSpellEditingUI();
+    }
+
 }

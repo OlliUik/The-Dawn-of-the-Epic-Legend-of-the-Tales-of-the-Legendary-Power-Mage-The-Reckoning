@@ -7,20 +7,85 @@ public class Bounce : SpellModifier
 
     public int bounceCount = 2;
 
+    // BEAM variables
+    GameObject beamCopy;
+    Beam beam;
 
-    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction)
-    {
-       // reflect TODO:
-    }
 
+    /// <summary>
+    /// If projectile has bounces left creates a new instance 
+    /// of the projectile and rotates it to face direction of collision reflect
+    /// </summary>
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        if(bounceCount > 0)
+        var bounce = GetComponent<Bounce>();
+        if (bounce == null || bounceCount <= 0) return;
+
+        Vector3 reflectionDir = Vector3.Reflect(direction, collision.contacts[0].normal);
+        Quaternion rot = Quaternion.LookRotation(reflectionDir, Vector3.up);
+        Projectile copy = Instantiate(gameObject, transform.position, rot).GetComponent<Projectile>();
+        copy.name = "Bounce copy";
+        copy.direction = reflectionDir;
+        copy.GetComponent<Bounce>().bounceCount--;
+        copy.isMaster = false;
+        copy.statusEffects = gameObject.GetComponent<Spell>().statusEffects;
+
+        var homing = copy.GetComponent<Homing>();
+        if(homing != null)
         {
-            GameObject copy = Instantiate(gameObject, transform.position, Quaternion.identity);
-            copy.transform.rotation = Quaternion.FromToRotation(copy.transform.forward, collision.contacts[0].normal);  // also rotate the whole thing for graphics to face the right direction
-            copy.GetComponent<Projectile>().direction = collision.contacts[0].normal;                                   // this changes the direction the projectile is moving
-            copy.GetComponent<Bounce>().bounceCount--;
+            homing.Start();
+            homing.target = homing.FindClosestTarget();
         }
     }
+
+    /// <summary>
+    /// If beam hits a something and it has bounces left create new instance of the colliding beam
+    /// and make it face the direction of collision reflect
+    /// 
+    /// Destroy the copy when beam is not hitting anything TODO:: optimize
+    /// </summary>
+    public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
+    {
+
+        if (hitInfo.collider.GetComponent<Health>() != null) return;
+
+        if (bounceCount > 0)
+        {
+            if(beamCopy == null)
+            {
+                beamCopy = Instantiate(gameObject, transform.position, transform.rotation);
+                beamCopy.name = "BounceCopy";
+                beamCopy.GetComponent<Bounce>().bounceCount--;
+                beam = beamCopy.GetComponent<Beam>();
+                beam.isMaster = false;
+                beam.statusEffects = gameObject.GetComponent<Spell>().statusEffects;
+            }
+
+            beam.Range = gameObject.GetComponent<Beam>().Range - distance;
+            beamCopy.gameObject.SetActive(true);
+            beamCopy.transform.position = hitInfo.point;
+            beam.startPos = hitInfo.point;
+
+            Vector3 reflectDir = Vector3.Reflect(direction, hitInfo.normal);
+            beam.direction = reflectDir;
+            beam.UpdateBeam(hitInfo.point, reflectDir);
+        }
+    }
+    public override void BeamCollisionEnd()
+    {
+        if (beamCopy != null)
+        {
+            beam.CollisionEnd();
+            Destroy(beamCopy);
+        }
+    }
+    public override void BeamCastingEnd()
+    {
+        if(beamCopy != null)
+        {
+            beam.CastingEnd();
+            Destroy(beamCopy);
+        }
+    }
+
 }

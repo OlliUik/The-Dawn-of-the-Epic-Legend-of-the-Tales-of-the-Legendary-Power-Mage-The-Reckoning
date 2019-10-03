@@ -5,37 +5,41 @@ using UnityEngine;
 public class PushBack : SpellModifier
 {
 
-    public float pushbackForce = 15.0f;
+    public float aoeForce;
+    public float beamForce;
+    public float projectileForce;
+
     private Spellbook spellbook;
     private Spell spell;
 
-    private void Start()
+    private void Start() // REDO THIS SCRIPT
     {
-        GameObject player = FindObjectOfType<PlayerCore>().gameObject;
-        spellbook = player.GetComponent<Spellbook>();
         spell = GetComponent<Spell>();
+        spellbook = spell.caster.GetComponent<Spellbook>();
 
-        if(spell.GetType() == typeof(Projectile))
+        if(spell.spellType == SpellType.PROJECTILE)
         {
-            for (int i = 0; i < 3; i++)
+            // apply pushback
+            for (int i = 0; i < 80; i++)
             {
-                PushTargetBackwards();
+                PushTargetBackwards(projectileForce);
             }
         }
     }
 
     void FixedUpdate()
     {        
-        if(spell.GetType() == typeof(Beam))
+        if(spell.spellType == SpellType.BEAM)
         {
-            //Debug.DrawLine(cam.transform.position, cam.transform.forward); // fix this
-            spellbook.transform.position += (spellbook.lookTransform.transform.TransformDirection(-Vector3.forward) * pushbackForce * Time.deltaTime);
+            PushTargetBackwards(beamForce * Time.deltaTime);
         }
     }
 
-    private void PushTargetBackwards()
+    private void PushTargetBackwards(float force) // doesn't work so well with projectile yet plz fix
     {
-        spellbook.transform.Translate(-spellbook.lookTransform.forward * pushbackForce);
+        Vector3 direction = spellbook.GetDirection();
+        direction *= -1;
+        spellbook.GetComponent<PlayerCore>().cMovement.Move(direction * force * Time.deltaTime);
     }
 
 }

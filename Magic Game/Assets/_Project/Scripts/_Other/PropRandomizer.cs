@@ -4,70 +4,48 @@ using UnityEngine;
 
 public class PropRandomizer : MonoBehaviour
 {
-    //Prefabs of props goes here
-    [SerializeField]
-    private List<GameObject> propPrefabs = new List<GameObject>();
+    [SerializeField] private List<GameObject> propPrefabs = new List<GameObject>();
+    [SerializeField] private Vector3[] spawns = null;
+    [SerializeField, Range(0, 1)] private float spawnPercent = 0.0f;
+    [SerializeField, Range(-180, 180)] private List<float> propAngle = new List<float>();
 
-    //List of vectors where props can spawn
-    [SerializeField]
-    private Vector3[] spawns;
-
-    [SerializeField, Range(0, 1)]
-    private float spawnPercent;
-
-    //List of random number order of spawn location count
-    List<int> randomOrder = new List<int>();
-
-    Vector3 newPosition;
-
-    void Start()
-    {
-        for (int n = 0; n < spawns.Length; n++)
-        {
-            randomOrder.Add(n);
-        }
-    }
-
-    void Update()
+    private void Start()
     {
         SpawnProps();
     }
 
-    void SpawnProps()
+    private void SpawnProps()
     {
-        for (int r = 0; r < randomOrder.Count; r++)
+        for (int r = 0; r < spawns.Length; r++)
         {
-            int index = Random.Range(0, randomOrder.Count);
-            int i = randomOrder[index];
-
             if (Random.value < spawnPercent)
             {
-                //Position of props randomly picked from list of spawn locations
-                newPosition = spawns[randomOrder[index]];
+                Vector3 spawnPosition = spawns[r]; //Position of props picked from list of spawn locations
+                Vector3 newPosition = transform.TransformPoint(spawnPosition); //Add spawner's position to Vector3
 
-                //Add spawner's position to Vector3
-                newPosition = newPosition + gameObject.transform.position;
+                Quaternion newRotation = Quaternion.Euler(-90, transform.eulerAngles.y + propAngle[r], transform.eulerAngles.z); //transform.eulerAngles.x //Add rotation from propAngle
+                GameObject newProp = Instantiate(propPrefabs[Random.Range(0, propPrefabs.Count)], newPosition, transform.parent.rotation, gameObject.transform) as GameObject; //Spawn prop with new position
 
-                //Spawn prop
-                GameObject newProp = Instantiate(propPrefabs[Random.Range(0, propPrefabs.Count)], newPosition, Quaternion.identity) as GameObject;
-
-                //Make spawner as crystal's parent
-                newProp.transform.parent = gameObject.transform;
+                newProp.transform.localRotation = newRotation; //Add rotation to prop
             }
-
-            randomOrder.RemoveAt(index);
         }
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
+        int i = 0;
 
         foreach (Vector3 spawn in spawns)
         {
-            Vector3 newGizmoPosition = transform.position + spawn;
+            Vector3 newPosition = transform.parent.transform.position + spawn;
+            Quaternion newRotation = Quaternion.Euler(0, transform.eulerAngles.y + propAngle[i], 0);
+            Matrix4x4 newMatrix = Matrix4x4.TRS(newPosition, newRotation, transform.lossyScale);
 
-            Gizmos.DrawWireCube(newGizmoPosition, new Vector3(1, 1, 1));
+            Gizmos.matrix = newMatrix * transform.localToWorldMatrix;
+            Gizmos.DrawWireCube(newPosition - spawn, Vector3.one);
+
+            i++;
         }
     }
 }

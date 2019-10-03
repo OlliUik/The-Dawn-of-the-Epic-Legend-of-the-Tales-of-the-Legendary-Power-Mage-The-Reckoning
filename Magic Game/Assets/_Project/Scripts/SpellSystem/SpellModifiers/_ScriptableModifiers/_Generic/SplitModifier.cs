@@ -8,9 +8,16 @@ public class SplitModifier : SpellScriptableModifier
 
     [SerializeField] private int splitCount = 2;
 
-    public override void AddSpellModifier(GameObject spellObject)
+    public override void AddSpellModifier(Spell spell)
     {
-        Split component = spellObject.AddComponent<Split>();
+        var compo = spell.GetComponent<Split>();
+        if (compo != null)
+        {
+            compo.splitCount += 2;
+            return;
+        }
+
+        Split component = spell.gameObject.AddComponent<Split>();
         component.splitCount = splitCount;
     }
 }
