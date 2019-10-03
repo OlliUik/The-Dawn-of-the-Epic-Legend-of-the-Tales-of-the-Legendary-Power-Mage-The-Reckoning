@@ -55,16 +55,17 @@ public class ScoreCombo : MonoBehaviour
 
     #region CUSTOM_FUNCTIONS
 
-    /// <summary>Resets combo and timer.</summary>
+    ///<summary>Resets combo and timer.</summary>
     private void ResetCombo()
     {
+        scoreSystem.addedScore = comboScore;
         scoreSystem.score += comboScore;
         comboScore = 0;
         comboTimer = defaultTimer;
         combo = 0;
     }
     
-    /// <summary>Checks combo and rewards player accordingly.</summary>
+    ///<summary>Checks combo and rewards player accordingly.</summary>
     private float GiveScore()
     {
         if (combo >= 2 && combo <= 9)

@@ -38,7 +38,7 @@ public class ScoreCalculator : MonoBehaviour
 
     #region CUSTOM_FUNCTIONS
 
-    /// <summary>Starts counting score for the kill</summary>
+    ///<summary>Starts counting score for the kill</summary>
     public void CountScore(float enemyScore)
     {
         currentMultiplier = scoreSystem.multiplier;                     //Updates current multiplier to be the current permanent multiplier
@@ -50,6 +50,7 @@ public class ScoreCalculator : MonoBehaviour
     private void SendScore(float addScore)
     {
         scoreSystem.score += Mathf.RoundToInt(addScore);
+        ScoreUI.scoreUI.addedScoreString = addScore.ToString("");
         score = 0;
         effectMultiplier = 0;
         isSendable = false;

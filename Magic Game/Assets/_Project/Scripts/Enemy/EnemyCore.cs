@@ -66,7 +66,8 @@ public class EnemyCore : MonoBehaviour
     public Vector3 spawnRotation { get; protected set; } = Vector3.zero;
 
     [Header("Score")]
-    public float score = 0.0f;
+    public int score = 0;
+    public int roundedScore;
     private bool hasStatusEffect = false;
 
     [Header("Core -> State Machine")]
@@ -282,6 +283,8 @@ public class EnemyCore : MonoBehaviour
 
     public virtual void OnDeath()
     {
+        roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
+
         if (hasStatusEffect)
         {
             ScoreCalculator.scoreCalc.CountScore(score);
@@ -289,7 +292,8 @@ public class EnemyCore : MonoBehaviour
 
         else
         {
-            ScoreSystem.scoreSystem.score += Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
+            ScoreSystem.scoreSystem.addedScore = roundedScore;
+            ScoreSystem.scoreSystem.score += roundedScore;
         }
 
         ScoreCombo.scoreCombo.isEnemyKilled = true;
