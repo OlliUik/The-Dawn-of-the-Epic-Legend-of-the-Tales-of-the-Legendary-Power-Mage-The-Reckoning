@@ -6,13 +6,20 @@ public class Levitation : SpellModifier
 {
 
     public GameObject levitationObjectPrefab;
-    public GameObject levitatingObject;
+    public static GameObject levitatingObject;
+    public static GameObject levitatingLineParticle;
+    public static GameObject levitatingHoldParticle;
+
+    public GameObject holdingParticle;
+    public GameObject lineParticle;
 
     GameObject caster;
 
     public override void OnSpellCast(Spell spell)
     {
         caster = spell.caster;
+        Destroy(levitatingLineParticle);
+        Destroy(levitatingObject);
         /*
         if(spell.spellType == SpellType.AOE)
         {
@@ -24,9 +31,19 @@ public class Levitation : SpellModifier
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        Debug.Log("Levitation called");
-        levitatingObject = Instantiate(levitationObjectPrefab, collision.contacts[0].point, Quaternion.identity);
-        levitatingObject.transform.SetParent(caster.transform.Find("Camera").transform);
+        if(levitatingObject == null)
+        {
+            Debug.Log("Levitation called");
+            levitatingObject = Instantiate(levitationObjectPrefab, collision.contacts[0].point, Quaternion.identity) as GameObject;
+            levitatingObject.transform.SetParent(caster.transform.Find("Camera").transform);
+            
+            levitatingLineParticle = Instantiate(lineParticle, transform.position, Quaternion.identity) as GameObject;
+            
+            levitatingLineParticle.AddComponent<LevitationLineParticle>();
+            levitatingLineParticle.GetComponent<LevitationLineParticle>().caster = caster;
+
+            LevitationObject.holdingParticlePrefeb = holdingParticle;
+        }
     }
 
 }

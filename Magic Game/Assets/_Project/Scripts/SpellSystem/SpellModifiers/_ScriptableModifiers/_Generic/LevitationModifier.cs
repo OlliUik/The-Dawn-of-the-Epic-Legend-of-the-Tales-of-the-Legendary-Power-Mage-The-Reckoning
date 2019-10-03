@@ -7,7 +7,8 @@ public class LevitationModifier : SpellScriptableModifier
 {
 
     public GameObject levitationObjectPrefab;
-    public GameObject windParticle;
+    public GameObject holdingParticle;
+    public GameObject lineParticle;
 
     public override void AddSpellModifier(Spell spell)
     {
@@ -20,6 +21,8 @@ public class LevitationModifier : SpellScriptableModifier
 
         Levitation component = spell.gameObject.AddComponent<Levitation>();
         component.levitationObjectPrefab = levitationObjectPrefab;
+        component.holdingParticle = holdingParticle;
+        component.lineParticle = lineParticle;
     }
 
 }

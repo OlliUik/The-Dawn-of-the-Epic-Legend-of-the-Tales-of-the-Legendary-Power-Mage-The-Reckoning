@@ -6,7 +6,11 @@ using UnityEngine.AI;
 public class LevitationObject : MonoBehaviour
 {
 
-    GameObject holdingObject;
+    public static GameObject holdingObject;
+
+    public static GameObject lineParticle;
+    public static GameObject holdingParticlePrefeb;
+    static GameObject holdingParticle;
     NavMeshAgent navMeshAgent;
     bool originalIsKinematic = false;
     bool originalUseGravity = false;
@@ -18,18 +22,31 @@ public class LevitationObject : MonoBehaviour
 
     IEnumerator destroySelf()
     {
-        yield return new WaitForSeconds(5);
-        if(holdingObject != null)
+        yield return new WaitForSeconds(0.1f);
+        if(holdingObject == null)
+        {
+            Destroy(gameObject);
+        }
+        yield return new WaitForSeconds(4.9f);
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (holdingObject != null)
         {
             if (navMeshAgent != null)
             {
                 //TODO: Enable agent
                 navMeshAgent.enabled = true;
             }
+            holdingObject.GetComponent<Rigidbody>().isKinematic = originalIsKinematic;
+            holdingObject.GetComponent<Rigidbody>().useGravity = originalUseGravity;
         }
-        holdingObject.GetComponent<Rigidbody>().isKinematic = originalIsKinematic;
-        holdingObject.GetComponent<Rigidbody>().useGravity = originalUseGravity;
-        Destroy(gameObject);
+        Destroy(lineParticle);
+        Destroy(holdingParticle);
+        holdingObject = null;
+        //Destroy(gameObject);
     }
 
     // Update is called once per frame
@@ -45,6 +62,11 @@ public class LevitationObject : MonoBehaviour
             }
             //holdingObject.GetComponent<Rigidbody>().MovePosition(transform.position);
             //holdingObject.transform.position = transform.position;
+            if(holdingParticle != null)
+            {
+                holdingParticle.transform.position = holdingObject.transform.position;
+                holdingParticle.transform.rotation = new Quaternion();
+            }
         }
     }
 
@@ -72,8 +94,17 @@ public class LevitationObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if(holdingObject == null && collision.gameObject.GetComponent<Rigidbody>())
+        if(holdingObject == null && collision.gameObject.GetComponent<Rigidbody>() != null)
         {
+            holdingObject = collision.gameObject;
+            if (holdingObject.transform.parent != null)
+            {
+                if (holdingObject.transform.root.gameObject.GetComponent<Rigidbody>())
+                {
+                    holdingObject = collision.gameObject.transform.root.gameObject;
+                }
+            }
+            /*
             if(collision.gameObject.transform.parent == null)
             {
                 holdingObject = collision.gameObject;
@@ -82,6 +113,7 @@ public class LevitationObject : MonoBehaviour
             {
                 holdingObject = collision.gameObject.transform.root.gameObject;
             }
+            */
             if (holdingObject.GetComponent<NavMeshAgent>())
             {
                 //TODO: Disable agent
@@ -92,7 +124,13 @@ public class LevitationObject : MonoBehaviour
             originalUseGravity = holdingObject.GetComponent<Rigidbody>().useGravity;
             holdingObject.GetComponent<Rigidbody>().isKinematic = false;
             holdingObject.GetComponent<Rigidbody>().useGravity = false;
+            holdingParticle = Instantiate(holdingParticlePrefeb, holdingObject.transform.position, holdingObject.transform.rotation);
         }
+    }
+
+    public GameObject GetHoldingObject()
+    {
+        return holdingObject;
     }
 
 }
