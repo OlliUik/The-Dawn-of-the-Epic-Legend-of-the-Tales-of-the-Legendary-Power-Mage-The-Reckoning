@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Crystal : MonoBehaviour
 {
-    public float rotationSpeed = 5f;
+    public float rotationSpeed = 5.0f;
+
+    [SerializeField] private ScoreSystem scoreSystem = null;
+
+    private void Start()
+    {
+        scoreSystem = FindObjectOfType<ScoreSystem>();
+    }
 
     private void Update()
     {
@@ -15,6 +22,7 @@ public class Crystal : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
+            scoreSystem.crystalFound = true;
             other.GetComponent<PlayerCore>().GetHUD().spellEditingController.crystalsLeft++;
             other.gameObject.GetComponent<PlayerCore>().ToggleSpellEditingUI();
             Destroy(gameObject);

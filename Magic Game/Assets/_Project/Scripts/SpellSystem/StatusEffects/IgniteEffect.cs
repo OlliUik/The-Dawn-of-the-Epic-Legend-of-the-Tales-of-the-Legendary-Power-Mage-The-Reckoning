@@ -19,9 +19,9 @@ public class IgniteEffect : StatusEffect
         this.timeBetweenTicks = timeBetweenTicks;
     }
 
-
     private void Burn()
     {
+
         // deal damage to target
         timeToBurn = 0f;
 

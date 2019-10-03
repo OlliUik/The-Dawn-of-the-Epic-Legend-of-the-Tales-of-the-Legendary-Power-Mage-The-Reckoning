@@ -5,22 +5,13 @@ using UnityEngine.AI;
 
 public class GameObjectSpawner : MonoBehaviour
 {
-    //List of objects to spawn
-    [SerializeField]
-    private List<GameObject> objects = new List<GameObject>();
+    [SerializeField, Range(0, 1)] private float spawnPercent = 0.0f;
+    [SerializeField] private bool isDestroyingRandom = false;
+    [SerializeField] private List<GameObject> objects = new List<GameObject>();
 
-    //List of spawned objects
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
-    //Percent for spawning
-    [SerializeField, Range(0, 1)]
-    private float spawnPercent;
-
-    //Destroy one random game object
-    [SerializeField]
-    private bool isDestroyingRandom;
-
-    void Start()
+    private void Start()
     {
         foreach (GameObject obj in objects)
         {

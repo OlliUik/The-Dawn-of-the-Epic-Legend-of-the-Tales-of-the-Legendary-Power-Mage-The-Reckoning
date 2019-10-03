@@ -65,6 +65,10 @@ public class EnemyCore : MonoBehaviour
     public Vector3 spawnPosition { get; protected set; } = Vector3.zero;
     public Vector3 spawnRotation { get; protected set; } = Vector3.zero;
 
+    [Header("Score")]
+    public float score = 0.0f;
+    private bool hasStatusEffect = false;
+
     [Header("Core -> State Machine")]
     [SerializeField] protected float logicInterval = 0.5f;
     [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
@@ -278,6 +282,19 @@ public class EnemyCore : MonoBehaviour
 
     public virtual void OnDeath()
     {
+        if (hasStatusEffect)
+        {
+            ScoreCalculator.scoreCalc.CountScore(score);
+        }
+
+        else
+        {
+            ScoreSystem.scoreSystem.score += Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
+        }
+
+        ScoreCombo.scoreCombo.isEnemyKilled = true;
+        ScoreCombo.scoreCombo.combo++;
+
         currentState = EState.DISABLED;
         GlobalVariables.teamBadBoys.Remove(this.gameObject);
 
