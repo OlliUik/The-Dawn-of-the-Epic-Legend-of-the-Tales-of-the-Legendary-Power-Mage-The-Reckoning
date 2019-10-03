@@ -29,8 +29,13 @@ public class EnemyNavigation : MonoBehaviour
     //Total time that the patrol wait on each node.
     [SerializeField] float totalWaitTime;
 
+    [SerializeField] float waitTimer;
+
     //Probality of switching node.
     [SerializeField]  float switchProbalitiy = 0.2f;
+
+    //Probality of waiting on a node.
+    [SerializeField] float waitProbalitiy = 0.2f;
 
     [SerializeField] List<Waypoint> patrolPoint;
 
@@ -43,16 +48,15 @@ public class EnemyNavigation : MonoBehaviour
     public NavMeshAgent cAgent { get; private set; } = null;
 
     private float navTimer = 0.0f;
-    //private float waitTimer = 0.0f;
     private float navErrorTimer = 0.0f;
     private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
 
     int navCurrentPoint;
     bool isTravel;
-    bool isWaiting;
+    //bool isWaiting;
     bool patrolForward;
-    float waitTimer;
+   
     bool onPath;
 
     #endregion
@@ -175,6 +179,8 @@ public class EnemyNavigation : MonoBehaviour
 
             }
           */
+
+        //For checking whether the agent is on the navmesh or not.
          if(cAgent.isOnNavMesh)
          {
             Debug.Log("On navmesh");
@@ -230,36 +236,6 @@ public class EnemyNavigation : MonoBehaviour
             cAgent.SetDestination(cEnemyCore.spawnPosition);
         }
         */
-        /*
-        Debug.Log("Now Entering Patrol State");
-        //check if we're close to the destination.
-        if (isTravel && cAgent.remainingDistance <= 1.0f)
-        {
-            isTravel = false;
-
-            //wait?
-            if (isWaiting)
-            {
-                isWaiting = true;
-                waitTimer = 0f;
-            }
-            else
-            {
-                ChangePatrolPoint();
-                SetDestination();
-            }
-        }
-        if (isWaiting)
-        {
-            waitTimer += Time.deltaTime;
-            if (waitTimer >= totalWaitTime)
-            {
-                isWaiting = true;
-                ChangePatrolPoint();
-                SetDestination();
-            }
-        }
-        */
         AIPatrol();
 
     }
@@ -292,6 +268,7 @@ public class EnemyNavigation : MonoBehaviour
             Debug.LogWarning(this.gameObject + " is trying to patrol but has less than 2 patrol points!");
         }
         */
+
         Debug.Log("Now Entering Patrol State");
         //check if we're close to the destination.
         if(isTravel && cAgent.remainingDistance <= 1.0f)
@@ -299,9 +276,9 @@ public class EnemyNavigation : MonoBehaviour
             isTravel = false;
 
             //wait?
-            if (isWaiting)
+            if (UnityEngine.Random.Range(0f, 1f)<= waitProbalitiy)
             {
-                isWaiting = true;
+                patrolWait = true;
                 waitTimer = 0f;
             }
             else
@@ -310,12 +287,13 @@ public class EnemyNavigation : MonoBehaviour
                 SetDestination();
             }
         }
-        if(isWaiting)
+
+        if(UnityEngine.Random.Range(0f, 1f) <= waitProbalitiy)
         {
             waitTimer += Time.deltaTime;
             if(waitTimer >= totalWaitTime)
             {
-                isWaiting = true;
+                patrolWait = false;
                 ChangePatrolPoint();
                 SetDestination();
             }

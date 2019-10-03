@@ -16,6 +16,8 @@ public class LevelBuilder : MonoBehaviour
 
     LayerMask roomLayerMask;
 
+    public bool isDone;
+
     void Start()
     {
         roomLayerMask = LayerMask.GetMask("Room");
@@ -148,7 +150,6 @@ public class LevelBuilder : MonoBehaviour
             ResetLevelGenerator();
         }
 
-        GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
     void PositionRoomAtDoorway(ref Room room, Doorway roomDoorway, Doorway targetDoorway)
@@ -303,5 +304,7 @@ public class LevelBuilder : MonoBehaviour
                 }
             }
         }
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+        isDone = true;
     }
 }
