@@ -148,7 +148,7 @@ public class LevelBuilder : MonoBehaviour
             ResetLevelGenerator();
         }
 
-        GetComponent<NavMeshSurface>().BuildNavMesh();
+        //GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
     void PositionRoomAtDoorway(ref Room room, Doorway roomDoorway, Doorway targetDoorway)
@@ -303,5 +303,7 @@ public class LevelBuilder : MonoBehaviour
                 }
             }
         }
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+
     }
 }
