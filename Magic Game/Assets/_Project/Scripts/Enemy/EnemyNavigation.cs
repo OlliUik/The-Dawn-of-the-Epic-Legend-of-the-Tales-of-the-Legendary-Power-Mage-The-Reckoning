@@ -67,6 +67,9 @@ public class EnemyNavigation : MonoBehaviour
     {
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
+
+
+        //Agent and patrol point checking
         if (cAgent == null)
         {
             Debug.Log("no mesh agent");
@@ -255,7 +258,6 @@ public class EnemyNavigation : MonoBehaviour
         }
         */
 
-
         walkingSpeed = 3f;
         Debug.Log("Now Entering Patrol/Idle State");       
         //check if we're close to the destination.
@@ -275,11 +277,10 @@ public class EnemyNavigation : MonoBehaviour
                 isWaiting = (Random.value > 0.5f);
             }
         }
-        
-        
-        if(isWaiting)
-        {
 
+        //normal wait checking
+        if (isWaiting)
+        {
             Debug.Log("waiting");
             ChangePatrolPoint();
             SetDestination();
@@ -321,7 +322,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
-    //stop and chilling 
+    //stop and chilling in da castle.
     IEnumerator idleTime()
     {
         Debug.Log("waiting");
