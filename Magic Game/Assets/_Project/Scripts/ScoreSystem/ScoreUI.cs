@@ -11,6 +11,7 @@ public class ScoreUI : MonoBehaviour
     #region VARIABLES
 
     public string addedScoreString = null;
+    public string notificationString = null;
 
     public Color colorChange = new Color();
 
@@ -18,12 +19,14 @@ public class ScoreUI : MonoBehaviour
     private string multiplierString = "Multiplier: {value}x";
     private string comboString = "Killstreak/combo: {value}";
     private string comboTimerString = "{value}";
+    private float notificationTimer = 2.0f;
 
     [SerializeField] private Text scoreText = null;
     [SerializeField] private Text addedScoreText = null;
     [SerializeField] private Text multiplierText = null;
     [SerializeField] private Text comboText = null;
     [SerializeField] private Text comboTimerText = null;
+    [SerializeField] private Text notificationText = null;
 
     #endregion
 
@@ -36,6 +39,30 @@ public class ScoreUI : MonoBehaviour
 
     private void Update()
     {
+        SetTexts();
+
+        if (notificationString != null)
+        {
+            notificationTimer -= Time.deltaTime;
+
+            if (notificationTimer <= 0)
+            {
+                notificationString = null;
+            }
+        }
+
+        else
+        {
+            notificationTimer = 2.0f;
+        }
+    }
+
+    #endregion
+
+    #region CUSTOM_FUNCTIONS
+
+    private void SetTexts()
+    {
         addedScoreText.text = addedScoreString;
         addedScoreText.color = colorChange;
 
@@ -43,6 +70,7 @@ public class ScoreUI : MonoBehaviour
         multiplierText.text = multiplierString.Replace("{value}", ScoreSystem.scoreSystem.multiplier.ToString(""));
         comboText.text = comboString.Replace("{value}", ScoreCombo.scoreCombo.combo.ToString(""));
         comboTimerText.text = comboTimerString.Replace("{value}", ScoreCombo.scoreCombo.comboTimer.ToString("F1"));
+        notificationText.text = notificationString;
     }
 
     #endregion

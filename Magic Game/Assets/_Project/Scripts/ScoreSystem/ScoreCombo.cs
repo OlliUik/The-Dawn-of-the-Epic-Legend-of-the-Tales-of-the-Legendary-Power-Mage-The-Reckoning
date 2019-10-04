@@ -73,21 +73,25 @@ public class ScoreCombo : MonoBehaviour
     {
         if (combo >= 2 && combo <= 9)
         {
+            ScoreUI.scoreUI.notificationString = "Killstreak!";
             comboScore = 777;
         }
 
         else if (combo >= 10 && combo <= 19)
         {
+            ScoreUI.scoreUI.notificationString = "Nice killstreak!";
             comboScore = 5000;
         }
 
         else if (combo >= 20 && combo <= 29)
         {
+            ScoreUI.scoreUI.notificationString = "Great killstreak!";
             comboScore = 7000;
         }
 
         else if (combo >= 30)
         {
+            ScoreUI.scoreUI.notificationString = "Awesome killstreak!";
             comboScore = 10000;
         }
 
