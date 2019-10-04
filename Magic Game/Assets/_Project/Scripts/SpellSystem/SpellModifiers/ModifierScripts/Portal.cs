@@ -7,10 +7,13 @@ public class Portal : SpellModifier
 
     public GameObject portalGatePrefab;
     public int maximumPortals = 2;
+    public float duration = 5;
 
     private void Start()
     {
         PortalGateManager.Instance.maximumPortals = maximumPortals;
+        PortalGateManager.Instance.SpellDuration = duration;
+        PortalGateManager.Instance.UpdateFromModifier();
     }
 
     public override void OnSpellCast(Spell spell)
