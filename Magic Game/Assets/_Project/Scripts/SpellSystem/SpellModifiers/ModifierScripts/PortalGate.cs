@@ -5,6 +5,22 @@ using UnityEngine;
 public class PortalGate : MonoBehaviour
 {
 
+    private void Start()
+    {
+        StartCoroutine(CountToDestroy(PortalGateManager.Instance.SpellDuration));
+    }
+
+    IEnumerator CountToDestroy(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        PortalGateManager.Instance.RemoveOldestPortal();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<PlayerCore>() || other.gameObject.GetComponent<EnemyCore>())
