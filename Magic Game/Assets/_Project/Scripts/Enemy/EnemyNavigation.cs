@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,16 +21,17 @@ public class EnemyNavigation : MonoBehaviour
     //[SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
     public float minDistanceFromAttackTarget = 2.0f;
     [SerializeField] private float paranoidMoveInterval = 1.0f;
-    [SerializeField] private float waitAtPatrolPoint = 0.0f;
-    [SerializeField] private Vector3[] patrolPoints = null;
+    //[SerializeField] private float waitAtPatrolPoint = 0.0f;
+    //[SerializeField] private Vector3[] patrolPoints = null;
 
     //Dictates whether the agentwaits on each node.
     //[SerializeField]  bool patrolWait;
 
     //Total time that the patrol wait on each node.
-    [SerializeField] float totalWaitTime;
+    //[SerializeField] float totalWaitTime;
+    //[SerializeField] float waitTimer;
 
-    [SerializeField] float waitTimer;
+    [Header("Patrolling")]
 
     //Probality of switching node.
     [SerializeField]  float switchProbalitiy = 0.2f;
@@ -39,11 +41,6 @@ public class EnemyNavigation : MonoBehaviour
 
     [SerializeField] List<Waypoint> patrolPoint;
 
-
-
-  
-
-
     public float navigationErrorMargin { get; private set; } = 0.5f;
     public NavMeshAgent cAgent { get; private set; } = null;
 
@@ -52,11 +49,13 @@ public class EnemyNavigation : MonoBehaviour
     private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
 
+    [SerializeField]
+    float min, max;
+
     int navCurrentPoint;
     bool isTravel;
     bool isWaiting;
-    bool patrolForward;
-   
+    bool patrolForward;  
     bool onPath;
 
     #endregion
@@ -68,8 +67,6 @@ public class EnemyNavigation : MonoBehaviour
     {
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
-        //cAgent.updateRotation = false;
-        //navTimer = Random.Range(0.0f, 2.0f);
         if (cAgent == null)
         {
             Debug.Log("no mesh agent");
@@ -139,7 +136,7 @@ public class EnemyNavigation : MonoBehaviour
     }
        
     
-    void FixedUpdate()
+    void Update()
     {
         //    if (navTimer <= 0.0f)
         //    {
@@ -180,19 +177,8 @@ public class EnemyNavigation : MonoBehaviour
             }
           */
 
-        //For checking whether the agent is on the navmesh or not.
-         if(cAgent.isOnNavMesh)
-         {
-            Debug.Log("On navmesh");
-            onPath = true;
+       
 
-         }
-         else
-         {
-            Debug.Log("not Generate yet");
-            onPath = false;
-        }
-     
     }
    
     /*
@@ -228,7 +214,7 @@ public class EnemyNavigation : MonoBehaviour
 
     void AIIdle()
     {
-        Debug.Log("Now Entering Idle state");
+        //Debug.Log("Now Entering Idle/Patrol state");
 
         /*
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
@@ -269,36 +255,38 @@ public class EnemyNavigation : MonoBehaviour
         }
         */
 
-        Debug.Log("Now Entering Patrol State");
+
+        walkingSpeed = 3f;
+        Debug.Log("Now Entering Patrol/Idle State");       
         //check if we're close to the destination.
-        if(isTravel && cAgent.remainingDistance <= 1.0f)
+        if (isTravel && cAgent.remainingDistance <= 1.0f)
         {
             isTravel = false;
-
             //wait?
             if (isWaiting)
             {
-                isWaiting = true;
-                waitTimer = 0f;
+                //isWaiting = false;
+                StartCoroutine(idleTime());
             }
             else
             {
                 ChangePatrolPoint();
                 SetDestination();
-            }
-        }
-
-        if(isWaiting)
-        {
-            waitTimer += Time.deltaTime;
-            if(waitTimer >= totalWaitTime)
-            {
-                isWaiting = false;
-                ChangePatrolPoint();
-                SetDestination();
+                isWaiting = (Random.value > 0.5f);
             }
         }
         
+        
+        if(isWaiting)
+        {
+
+            Debug.Log("waiting");
+            ChangePatrolPoint();
+            SetDestination();
+            StartCoroutine(idleTime());
+            isWaiting = (Random.value > 0.5f);
+        }
+
     }
 
     //set the destination of the enemy wizard
@@ -311,7 +299,6 @@ public class EnemyNavigation : MonoBehaviour
                 cAgent.SetDestination(targetVector);
                 isTravel = true;
         }
-        
     }
 
     //Change the destination of the enemy wizard
@@ -334,10 +321,22 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
-   
+    //stop and chilling 
+    IEnumerator idleTime()
+    {
+        Debug.Log("waiting");
+        float randomNum = Random.Range(min,max);
+        cAgent.isStopped = true;
+        yield return new WaitForSeconds(randomNum);
+        cAgent.isStopped = false;
+
+    }
+
+
 
     void AIAlerted()
     {
+        cAgent.isStopped = false;
         cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
     }
 
