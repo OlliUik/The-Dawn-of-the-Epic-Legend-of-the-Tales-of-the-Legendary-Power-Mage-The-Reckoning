@@ -31,7 +31,7 @@ public class EnemyNavigation : MonoBehaviour
     //[SerializeField] float totalWaitTime;
     //[SerializeField] float waitTimer;
 
-    [Header("Patrolling")]
+    [Header("Patroling")]
 
     //Probality of switching node.
     [SerializeField]  float switchProbalitiy = 0.2f;
