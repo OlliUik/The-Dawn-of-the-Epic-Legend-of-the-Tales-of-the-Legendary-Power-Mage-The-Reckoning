@@ -12,6 +12,8 @@ public class ScoreUI : MonoBehaviour
 
     public string addedScoreString = null;
 
+    public Color colorChange = new Color();
+
     private string scoreString = "Score: {value}";
     private string multiplierString = "Multiplier: {value}x";
     private string comboString = "Killstreak/combo: {value}";
@@ -35,6 +37,8 @@ public class ScoreUI : MonoBehaviour
     private void Update()
     {
         addedScoreText.text = addedScoreString;
+        addedScoreText.color = colorChange;
+
         scoreText.text = scoreString.Replace("{value}", ScoreSystem.scoreSystem.score.ToString(""));
         multiplierText.text = multiplierString.Replace("{value}", ScoreSystem.scoreSystem.multiplier.ToString(""));
         comboText.text = comboString.Replace("{value}", ScoreCombo.scoreCombo.combo.ToString(""));
