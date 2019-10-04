@@ -15,7 +15,7 @@ public class LevelGenerator : MonoBehaviour
     private List<Doorway> availableDoorways = new List<Doorway>();
     private LayerMask layerMask = 0;
 
-    bool isDone;
+    public bool isDone;
 
     #endregion
 

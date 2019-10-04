@@ -6,13 +6,13 @@ public class EnemyAiActivate : MonoBehaviour
 
 {
 
-    public LevelBuilder builder;
+    public LevelGenerator builder;
 
     public GameObject enemy;
     // Start is called before the first frame update
     void Start()
     {
-        builder.GetComponent<LevelBuilder>();
+        builder.GetComponent<LevelGenerator>();
     }
 
     // Update is called once per frame
