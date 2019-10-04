@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Doorway : MonoBehaviour
 {
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         Ray ray = new Ray(transform.position, transform.rotation * Vector3.forward);
 
