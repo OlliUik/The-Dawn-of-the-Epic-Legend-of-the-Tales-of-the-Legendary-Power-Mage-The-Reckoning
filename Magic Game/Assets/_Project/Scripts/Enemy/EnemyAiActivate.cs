@@ -18,7 +18,7 @@ public class EnemyAiActivate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if(builder.isDone)
+       if(builder.isDone && enemy != null)
         {
             enemy.gameObject.SetActive(true);
         }
