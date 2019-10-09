@@ -18,7 +18,7 @@ public class DistanceCheck : MonoBehaviour
 
     private void Update()
     {   
-        /*
+        
         foreach (GameObject child in childrenToHide)
         {
             if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
@@ -31,6 +31,6 @@ public class DistanceCheck : MonoBehaviour
                child.SetActive(false);
             }
         }
-        */
+        
     }
 }
