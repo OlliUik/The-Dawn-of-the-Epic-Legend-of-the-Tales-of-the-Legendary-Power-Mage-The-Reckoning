@@ -7,6 +7,7 @@ public class DistanceCheck : MonoBehaviour
 {
     [SerializeField] private float distance = 0.0f;
     [SerializeField] private GameObject[] childrenToHide = null;
+    //[SerializeField] private GameObject[] enemyToHide = null;
 
     private GameObject player = null;
 
@@ -16,7 +17,8 @@ public class DistanceCheck : MonoBehaviour
     }
 
     private void Update()
-    {
+    {   
+        /*
         foreach (GameObject child in childrenToHide)
         {
             if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
@@ -29,5 +31,6 @@ public class DistanceCheck : MonoBehaviour
                child.SetActive(false);
             }
         }
+        */
     }
 }

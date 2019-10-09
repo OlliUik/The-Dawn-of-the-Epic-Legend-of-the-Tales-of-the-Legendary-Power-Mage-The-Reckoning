@@ -39,10 +39,15 @@ public class EnemyNavigation : MonoBehaviour
     //Probality of waiting on a node.
     [SerializeField] float waitProbalitiy = 0.2f;
 
-    [SerializeField] List<Waypoint> patrolPoint;
+    [SerializeField] GameObject patrolPointGroup;
+
+    [SerializeField]  List<Waypoint> patrolPoint;
+
+
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
     public NavMeshAgent cAgent { get; private set; } = null;
+
 
     private float navTimer = 0.0f;
     private float navErrorTimer = 0.0f;
@@ -68,6 +73,17 @@ public class EnemyNavigation : MonoBehaviour
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
 
+        //List<GameObject> temp = new List<GameObject>(GameObject.FindGameObjectsWithTag("patrolPoint"));
+        foreach (Transform child in patrolPointGroup.transform)
+        {
+                patrolPoint.Add(child.GetComponent<Waypoint>());
+          
+        }
+
+  
+
+
+
 
         //Agent and patrol point checking
         if (cAgent == null)
@@ -76,6 +92,8 @@ public class EnemyNavigation : MonoBehaviour
         }
         else
         {
+       
+
             if (patrolPoint != null && patrolPoint.Count >= 2)
             {
                 navCurrentPoint = 0;
@@ -259,7 +277,7 @@ public class EnemyNavigation : MonoBehaviour
         */
 
         walkingSpeed = 3f;
-        Debug.Log("Now Entering Patrol/Idle State");       
+        //Debug.Log("Now Entering Patrol/Idle State");       
         //check if we're close to the destination.
         if (isTravel && cAgent.remainingDistance <= 1.0f)
         {
@@ -281,7 +299,7 @@ public class EnemyNavigation : MonoBehaviour
         //normal wait checking
         if (isWaiting)
         {
-            Debug.Log("waiting");
+            //Debug.Log("waiting");
             ChangePatrolPoint();
             SetDestination();
             StartCoroutine(idleTime());
@@ -325,7 +343,7 @@ public class EnemyNavigation : MonoBehaviour
     //stop and chilling in da castle.
     IEnumerator idleTime()
     {
-        Debug.Log("waiting");
+        //Debug.Log("waiting");
         float randomNum = Random.Range(min,max);
         cAgent.isStopped = true;
         yield return new WaitForSeconds(randomNum);
