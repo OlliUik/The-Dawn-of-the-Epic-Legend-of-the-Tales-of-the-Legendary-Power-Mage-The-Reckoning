@@ -7,20 +7,43 @@ public class EnemyAiActivate : MonoBehaviour
 {
 
     public LevelGenerator builder;
+    public List<EnemyMagicRanged> enemies;
 
-    public GameObject enemy;
+    [SerializeField] GameObject enemiesGroup;
+    [SerializeField] private float distance = 0.0f;
+
+
+    private GameObject player = null;
     // Start is called before the first frame update
     void Start()
     {
         builder.GetComponent<LevelGenerator>();
+        player = GameObject.FindGameObjectWithTag("Player");
+
+
+        foreach (Transform child in enemiesGroup.transform)
+        {
+            enemies.Add(child.GetComponent<EnemyMagicRanged>());
+            Debug.Log(child.name.ToString());
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-       if(builder.isDone && enemy != null)
+        foreach (EnemyMagicRanged child in enemies)
         {
-            enemy.gameObject.SetActive(true);
+            if (builder.isDone)
+            {
+                if (child != null )
+                {
+                    if(Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                    {
+                        child.gameObject.SetActive(true);
+                    }
+                }
+            }
         }
+        
     }
 }
