@@ -33,7 +33,7 @@ public class EnemyAiActivate : MonoBehaviour
     {
         foreach (EnemyMagicRanged child in enemies)
         {
-            if (builder.isDone)
+            //if (builder.isDone)
             {
                 if (child != null )
                 {   

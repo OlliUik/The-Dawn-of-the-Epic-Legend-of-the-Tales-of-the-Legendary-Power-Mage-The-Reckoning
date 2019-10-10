@@ -43,6 +43,10 @@ public class EnemyNavigation : MonoBehaviour
 
     [SerializeField]  List<Waypoint> patrolPoint;
 
+    private Rigidbody rb;
+
+    [SerializeField] private float jumpSpeed;
+
 
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
@@ -57,11 +61,12 @@ public class EnemyNavigation : MonoBehaviour
     [SerializeField]
     float min, max;
 
+    //patrol's variables
     int navCurrentPoint;
     bool isTravel;
     bool isWaiting;
-    bool patrolForward;  
-    bool onPath;
+    bool patrolForward;
+
 
     #endregion
 
@@ -72,6 +77,7 @@ public class EnemyNavigation : MonoBehaviour
     {
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
+        rb = gameObject.GetComponent<Rigidbody>();
 
         //get list of patrol points in a section.
         foreach (Transform child in patrolPointGroup.transform)
@@ -198,8 +204,6 @@ public class EnemyNavigation : MonoBehaviour
             }
           */
 
-       
-
     }
    
     /*
@@ -274,7 +278,6 @@ public class EnemyNavigation : MonoBehaviour
             StartCoroutine(idleTime());
             isWaiting = (Random.value > 0.5f);
         }
-
     }
     
     void AIPatrol()
@@ -381,7 +384,6 @@ public class EnemyNavigation : MonoBehaviour
         cAgent.isStopped = false;
 
     }
-
 
 
     void AIAlerted()

@@ -12,9 +12,14 @@ public class Controller : MonoBehaviour
 
     public ThirdPersonCharacter character;
 
+    public Rigidbody rb;
+
+    bool isGrounded;
+
     private void Start()
     {
         agent.updateRotation = false;
+        rb.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -42,5 +47,8 @@ public class Controller : MonoBehaviour
         {
             character.Move(Vector3.zero, false, false);
         }
+
     }
+
+   
 }
