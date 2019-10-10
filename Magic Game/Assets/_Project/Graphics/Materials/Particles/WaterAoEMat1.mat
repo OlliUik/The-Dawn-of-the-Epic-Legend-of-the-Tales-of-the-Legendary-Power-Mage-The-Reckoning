@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AuraShaderMat1
-  m_Shader: {fileID: 4800000, guid: a39cca3bf7cdcc9479a595ec59277aa8, type: 3}
-  m_ShaderKeywords: _CULLOFF_OFF
+  m_Name: WaterAoEMat1
+  m_Shader: {fileID: 4800000, guid: 7438bec971d4f834d9d6349221bb1f1a, type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -20,8 +20,8 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 8e3cd65546c595d45abec85eae36f1d8, type: 3}
+        m_Scale: {x: 4, y: 4}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
@@ -40,8 +40,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f0351a05a48ed344898550db8a9c86ee, type: 3}
-        m_Scale: {x: 2, y: 2}
+        m_Texture: {fileID: 2800000, guid: 142eecdb03630724a8ecc5917aa49424, type: 3}
+        m_Scale: {x: 1, y: 4}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -57,23 +57,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
-    - _CullOff: 0
+    - _CullOff: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Distort: 10
+    - _Distort: 100
     - _DstBlend: 0
-    - _Fresnel: 200
-    - _FresnelWidth: 0.5
+    - _Fresnel: 112
+    - _FresnelWidth: 1.67
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _IntersectionThreshold: 0.15
-    - _Mask: 0.659
+    - _IntersectionThreshold: 0.3
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _ScrollSpeedU: 0
+    - _ScrollSpeedU: 6
     - _ScrollSpeedV: 8
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -83,4 +82,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MainColor: {r: 0, g: 0.77999973, b: 1, a: 1}
+    - _MainColor: {r: 0.47534698, g: 0.65815336, b: 0.9245283, a: 1}
