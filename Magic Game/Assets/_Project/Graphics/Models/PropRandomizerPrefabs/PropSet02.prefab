@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3304984679477660443}
+  - component: {fileID: 3622336940038252223}
   m_Layer: 0
   m_Name: PropSet02
   m_TagString: Untagged
@@ -36,6 +37,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
+--- !u!1818360609 &3622336940038252223
+RotationConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849510124977091175}
+  m_Enabled: 1
+  m_Weight: 1
+  m_RotationAtRest: {x: 90, y: 0, z: 0}
+  m_RotationOffset: {x: 90, y: 0, z: 0}
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_IsContraintActive: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1001 &345152213486351602
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -189,12 +209,12 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.013994413
       objectReference: {fileID: 0}
-    - target: {fileID: 5897777091222471870, guid: 73a2ee8c8f69dde47824392ffbde5c34,
+    - target: {fileID: 1944046792316452210, guid: 73a2ee8c8f69dde47824392ffbde5c34,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1944046792316452210, guid: 73a2ee8c8f69dde47824392ffbde5c34,
+    - target: {fileID: 5897777091222471870, guid: 73a2ee8c8f69dde47824392ffbde5c34,
         type: 3}
       propertyPath: m_Mesh
       value: 
