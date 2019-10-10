@@ -7,7 +7,9 @@ public class DistanceCheck : MonoBehaviour
 {
     [SerializeField] private float distance = 0.0f;
     [SerializeField] private GameObject[] childrenToHide = null;
-    //[SerializeField] private GameObject[] enemyToHide = null;
+    [SerializeField] private NavMeshSurface surface;
+    [SerializeField] private GameObject disableBlock;
+    [SerializeField] private LevelGenerator gen;
 
     private GameObject player = null;
 
@@ -20,16 +22,22 @@ public class DistanceCheck : MonoBehaviour
     {   
         
         foreach (GameObject child in childrenToHide)
-        {
-            if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+        {   
+            if(gen.isDone)
             {
-                child.SetActive(true);
-            }
+                if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                {
+                    child.SetActive(true);
+                    disableBlock.SetActive(false);
+                }
 
-            else
-            {
-               child.SetActive(false);
+                else
+                {
+                    child.SetActive(false);
+                    disableBlock.SetActive(true);
+                }
             }
+          
         }
         
     }

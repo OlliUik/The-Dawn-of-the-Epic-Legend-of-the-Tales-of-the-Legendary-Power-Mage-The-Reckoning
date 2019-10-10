@@ -36,8 +36,9 @@ public class EnemyAiActivate : MonoBehaviour
             if (builder.isDone)
             {
                 if (child != null )
-                {
-                    if(Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                {   
+                    //spawn when player is close to enemies
+                    //if(Vector3.Distance(player.transform.position, child.transform.position) < distance)
                     {
                         child.gameObject.SetActive(true);
                     }

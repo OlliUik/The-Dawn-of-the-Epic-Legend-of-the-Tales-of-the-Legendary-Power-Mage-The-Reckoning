@@ -73,7 +73,7 @@ public class EnemyNavigation : MonoBehaviour
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
 
-        //List<GameObject> temp = new List<GameObject>(GameObject.FindGameObjectsWithTag("patrolPoint"));
+        //get list of patrol points in a section.
         foreach (Transform child in patrolPointGroup.transform)
         {
                 patrolPoint.Add(child.GetComponent<Waypoint>());
@@ -232,7 +232,8 @@ public class EnemyNavigation : MonoBehaviour
     #endregion
 
     #region AI_LOGIC
-
+    
+    //Idle is now switching between patrol and idle randomly.
     void AIIdle()
     {
         //Debug.Log("Now Entering Idle/Patrol state");
@@ -243,7 +244,36 @@ public class EnemyNavigation : MonoBehaviour
             cAgent.SetDestination(cEnemyCore.spawnPosition);
         }
         */
-        AIPatrol();
+        //AIPatrol();
+
+        walkingSpeed = 3f;
+        //check if we're close to the destination.
+        if (isTravel && cAgent.remainingDistance <= 1.0f)
+        {
+            isTravel = false;
+            //wait?
+            if (isWaiting)
+            {
+                //isWaiting = false;
+                StartCoroutine(idleTime());
+            }
+            else
+            {
+                ChangePatrolPoint();
+                SetDestination();
+                isWaiting = (Random.value > 0.5f);
+            }
+        }
+
+        //normal wait checking
+        if (isWaiting)
+        {
+            //Debug.Log("waiting");
+            ChangePatrolPoint();
+            SetDestination();
+            StartCoroutine(idleTime());
+            isWaiting = (Random.value > 0.5f);
+        }
 
     }
     
@@ -276,6 +306,7 @@ public class EnemyNavigation : MonoBehaviour
         }
         */
 
+        /*
         walkingSpeed = 3f;
         //Debug.Log("Now Entering Patrol/Idle State");       
         //check if we're close to the destination.
@@ -305,7 +336,7 @@ public class EnemyNavigation : MonoBehaviour
             StartCoroutine(idleTime());
             isWaiting = (Random.value > 0.5f);
         }
-
+        */
     }
 
     //set the destination of the enemy wizard
