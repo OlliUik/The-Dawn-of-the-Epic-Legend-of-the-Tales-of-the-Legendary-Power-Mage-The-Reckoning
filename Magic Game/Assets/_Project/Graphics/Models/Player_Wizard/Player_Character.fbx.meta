@@ -164,6 +164,11 @@ ModelImporter:
     7400074: Armature|AoE_Slow_Windup
     7400076: Armature|AoE_Slow_Hold
     7400078: Armature|AoE_Slow_Cast
+    7400080: Armature|Projectile02
+    7400082: Armature|Projectile02Fast
+    7400084: Armature|RunFwdAlt
+    7400086: Armature|RunFwdRightAlt
+    7400088: Armature|RunFwdLeftAlt
     9500000: //RootNode
     13700000: Plane.005
     13700002: Player_Body
@@ -196,9 +201,204 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: 
-    animationRetargetingWarnings: 
-    animationDoRetargetingWarnings: 0
+    animationImportWarnings: "\nClip 'Armature|Projectile02' has import animation
+      warnings that might lower retargeting quality:\n\t'UpArm_R' has scale animation
+      that will be discarded.\n\t'ForeArm_R' has scale animation that will be discarded.\n\nClip
+      'Armature|Projectile02FastDemo' has import animation warnings that might lower
+      retargeting quality:\n\t'UpArm_R' has scale animation that will be discarded.\n\t'ForeArm_R'
+      has scale animation that will be discarded.\n"
+    animationRetargetingWarnings: "\nRetargeting quality report for clip 'Armature|AoE_Quick':\n\tRightHand
+      average position error 0.8 mm and maximum position error 2.4 mm at time 0:32
+      (45.1%) Frame 32\n\nRetargeting quality report for clip 'Armature|AoE_Slow':\n\tRightHand
+      average position error 0.3 mm and maximum position error 1.1 mm at time 0:53
+      (45.7%) Frame 53\n\nRetargeting quality report for clip 'Armature|BeamBackup':\n\tRightHand
+      average position error 1.1 mm and maximum position error 2.9 mm at time 0:57
+      (57.0%) Frame 57\n\nRetargeting quality report for clip 'Armature|BeamEnd':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|BeamLoop':\n\tRetargeting quality is good.
+      No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|BeamStart':\n\tRetargeting quality is good.
+      No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|DashBack':\n\tRightFoot average position error
+      0.2 mm and maximum position error 4.3 mm at time 0: 7 (10.9%) Frame 7\n\tLeftUpperArm
+      average position error 1.6 mm and maximum position error 3.7 mm at time 0:44
+      (68.8%) Frame 44\n\tLeftLowerArm average position error 1.6 mm and maximum position
+      error 3.7 mm at time 0:44 (68.8%) Frame 44\n\tLeftHand average position error
+      1.6 mm and maximum position error 3.8 mm at time 0:53 (82.8%) Frame 53\n\tRightUpperArm
+      average position error 1.6 mm and maximum position error 3.8 mm at time 0:46
+      (71.9%) Frame 46\n\tRightLowerArm average position error 1.6 mm and maximum
+      position error 3.8 mm at time 0:46 (71.9%) Frame 46\n\tRightHand average position
+      error 1.6 mm and maximum position error 3.8 mm at time 0:46 (71.9%) Frame 46\n\nRetargeting
+      quality report for clip 'Armature|DashFwd':\n\tRightFoot average position error
+      0.1 mm and maximum position error 1.6 mm at time 0: 6 (9.4%) Frame 6\n\tLeftUpperArm
+      average position error 1.6 mm and maximum position error 3.7 mm at time 0:44
+      (68.8%) Frame 44\n\tLeftLowerArm average position error 1.6 mm and maximum position
+      error 3.7 mm at time 0:44 (68.8%) Frame 44\n\tLeftHand average position error
+      1.6 mm and maximum position error 3.7 mm at time 0:47 (73.4%) Frame 47\n\tRightUpperArm
+      average position error 1.6 mm and maximum position error 3.8 mm at time 0:46
+      (71.9%) Frame 46\n\tRightLowerArm average position error 1.6 mm and maximum
+      position error 3.8 mm at time 0:46 (71.9%) Frame 46\n\tRightHand average position
+      error 1.6 mm and maximum position error 3.8 mm at time 0:46 (71.9%) Frame 46\n\nRetargeting
+      quality report for clip 'Armature|DashInMotion':\n\tRightFoot average position
+      error 0.1 mm and maximum position error 1.6 mm at time 0: 6 (9.4%) Frame 6\n\tLeftUpperArm
+      average position error 1.5 mm and maximum position error 4.2 mm at time 0:44
+      (68.8%) Frame 44\n\tLeftLowerArm average position error 1.5 mm and maximum position
+      error 4.2 mm at time 0:44 (68.8%) Frame 44\n\tLeftHand average position error
+      1.5 mm and maximum position error 4.3 mm at time 0:44 (68.8%) Frame 44\n\tRightUpperArm
+      average position error 1.5 mm and maximum position error 4.3 mm at time 0:45
+      (70.3%) Frame 45\n\tRightLowerArm average position error 1.5 mm and maximum
+      position error 4.3 mm at time 0:45 (70.3%) Frame 45\n\tRightHand average position
+      error 1.5 mm and maximum position error 4.3 mm at time 0:45 (70.3%) Frame 45\n\nRetargeting
+      quality report for clip 'Armature|DashInMotion_Back':\n\tLeftFoot average position
+      error 0.3 mm and maximum position error 5.2 mm at time 0:35 (54.7%) Frame 35\n\tRightFoot
+      average position error 0.2 mm and maximum position error 4.2 mm at time 0: 7
+      (10.9%) Frame 7\n\tLeftUpperArm average position error 1.6 mm and maximum position
+      error 4.2 mm at time 0:44 (68.8%) Frame 44\n\tLeftLowerArm average position
+      error 1.6 mm and maximum position error 4.2 mm at time 0:44 (68.8%) Frame 44\n\tLeftHand
+      average position error 1.6 mm and maximum position error 4.3 mm at time 0:45
+      (70.3%) Frame 45\n\tRightUpperArm average position error 1.6 mm and maximum
+      position error 4.3 mm at time 0:45 (70.3%) Frame 45\n\tRightLowerArm average
+      position error 1.6 mm and maximum position error 4.3 mm at time 0:45 (70.3%)
+      Frame 45\n\tRightHand average position error 1.6 mm and maximum position error
+      4.3 mm at time 0:45 (70.3%) Frame 45\n\nRetargeting quality report for clip
+      'Armature|DashLeft':\n\tRightFoot average position error 0.2 mm and maximum
+      position error 3.9 mm at time 0: 7 (10.9%) Frame 7\n\tLeftUpperArm average position
+      error 1.6 mm and maximum position error 4.2 mm at time 0:44 (68.8%) Frame 44\n\tLeftLowerArm
+      average position error 1.6 mm and maximum position error 4.2 mm at time 0:44
+      (68.8%) Frame 44\n\tLeftHand average position error 1.6 mm and maximum position
+      error 4.2 mm at time 0:44 (68.8%) Frame 44\n\tRightUpperArm average position
+      error 1.6 mm and maximum position error 4.3 mm at time 0:45 (70.3%) Frame 45\n\tRightLowerArm
+      average position error 1.6 mm and maximum position error 4.3 mm at time 0:45
+      (70.3%) Frame 45\n\tRightHand average position error 1.6 mm and maximum position
+      error 4.3 mm at time 0:45 (70.3%) Frame 45\n\nRetargeting quality report for
+      clip 'Armature|DashRight':\n\tLeftUpperArm average position error 1.6 mm and
+      maximum position error 4.2 mm at time 0:44 (68.8%) Frame 44\n\tLeftLowerArm
+      average position error 1.6 mm and maximum position error 4.2 mm at time 0:44
+      (68.8%) Frame 44\n\tLeftHand average position error 1.6 mm and maximum position
+      error 4.2 mm at time 0:44 (68.8%) Frame 44\n\tRightUpperArm average position
+      error 1.6 mm and maximum position error 4.3 mm at time 0:45 (70.3%) Frame 45\n\tRightLowerArm
+      average position error 1.6 mm and maximum position error 4.3 mm at time 0:45
+      (70.3%) Frame 45\n\tRightHand average position error 1.6 mm and maximum position
+      error 4.3 mm at time 0:45 (70.3%) Frame 45\n\nRetargeting quality report for
+      clip 'Armature|DashStationary':\n\tRetargeting quality is good. No significant
+      differences with original animation were found.\n\nRetargeting quality report
+      for clip 'Armature|FallBack':\n\tLeftUpperArm average position error 3.2 mm
+      and maximum position error 3.2 mm at time 0:33 (55.0%) Frame 33\n\tLeftLowerArm
+      average position error 3.2 mm and maximum position error 3.2 mm at time 0:36
+      (60.0%) Frame 36\n\tLeftHand average position error 3.3 mm and maximum position
+      error 3.5 mm at time 0:52 (86.7%) Frame 52\n\tRightUpperArm average position
+      error 3.2 mm and maximum position error 3.2 mm at time 0:16 (26.7%) Frame 16\n\tRightLowerArm
+      average position error 3.2 mm and maximum position error 3.2 mm at time 0:57
+      (95.0%) Frame 57\n\tRightHand average position error 3.2 mm and maximum position
+      error 3.2 mm at time 0:43 (71.7%) Frame 43\n\nRetargeting quality report for
+      clip 'Armature|FallFwd':\n\tLeftUpperArm average position error 3.2 mm and maximum
+      position error 3.2 mm at time 0:18 (30.0%) Frame 18\n\tLeftLowerArm average
+      position error 3.2 mm and maximum position error 3.2 mm at time 0:22 (36.7%)
+      Frame 22\n\tLeftHand average position error 3.3 mm and maximum position error
+      3.3 mm at time 0: 7 (11.7%) Frame 7\n\tRightUpperArm average position error
+      3.2 mm and maximum position error 3.2 mm at time 0:16 (26.7%) Frame 16\n\tRightLowerArm
+      average position error 3.2 mm and maximum position error 3.2 mm at time 0:44
+      (73.3%) Frame 44\n\tRightHand average position error 3.2 mm and maximum position
+      error 3.2 mm at time 0:43 (71.7%) Frame 43\n\nRetargeting quality report for
+      clip 'Armature|FallLeft':\n\tLeftUpperArm average position error 3.2 mm and
+      maximum position error 3.2 mm at time 0:42 (70.0%) Frame 42\n\tLeftLowerArm
+      average position error 3.2 mm and maximum position error 3.2 mm at time 0: 7
+      (11.7%) Frame 7\n\tLeftHand average position error 3.3 mm and maximum position
+      error 3.3 mm at time 0: 7 (11.7%) Frame 7\n\tRightUpperArm average position
+      error 3.2 mm and maximum position error 3.2 mm at time 0:51 (85.0%) Frame 51\n\tRightLowerArm
+      average position error 3.2 mm and maximum position error 3.2 mm at time 0:51
+      (85.0%) Frame 51\n\tRightHand average position error 3.2 mm and maximum position
+      error 3.2 mm at time 0:43 (71.7%) Frame 43\n\nRetargeting quality report for
+      clip 'Armature|FallRight':\n\tLeftUpperArm average position error 3.2 mm and
+      maximum position error 3.2 mm at time 0: 3 (5.0%) Frame 3\n\tLeftLowerArm average
+      position error 3.2 mm and maximum position error 3.2 mm at time 0:12 (20.0%)
+      Frame 12\n\tLeftHand average position error 3.3 mm and maximum position error
+      3.3 mm at time 0: 4 (6.7%) Frame 4\n\tRightUpperArm average position error 3.2
+      mm and maximum position error 3.2 mm at time 0:49 (81.7%) Frame 49\n\tRightLowerArm
+      average position error 3.2 mm and maximum position error 3.2 mm at time 0: 6
+      (10.0%) Frame 6\n\tRightHand average position error 3.2 mm and maximum position
+      error 3.2 mm at time 0:43 (71.7%) Frame 43\n\nRetargeting quality report for
+      clip 'Armature|FlyBack':\n\tRetargeting quality is good. No significant differences
+      with original animation were found.\n\nRetargeting quality report for clip 'Armature|FlyFwd':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|FlyHurt':\n\tRetargeting quality is good.
+      No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|FlyLeft':\n\tRetargeting quality is good.
+      No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|Hurt':\n\tRetargeting quality is good. No
+      significant differences with original animation were found.\n\nRetargeting quality
+      report for clip 'Armature|Idle':\n\tRightHand average position error 0.5 mm
+      and maximum position error 1.0 mm at time 0:43 (43.0%) Frame 43\n\nRetargeting
+      quality report for clip 'Armature|OLDFallBack':\n\tLeftUpperArm average position
+      error 1.9 mm and maximum position error 1.9 mm at time 0:36 (60.0%) Frame 36\n\tLeftLowerArm
+      average position error 1.9 mm and maximum position error 1.9 mm at time 0:19
+      (31.7%) Frame 19\n\tLeftHand average position error 1.9 mm and maximum position
+      error 1.9 mm at time 0:38 (63.3%) Frame 38\n\tRightUpperArm average position
+      error 3.2 mm and maximum position error 3.2 mm at time 0:56 (93.3%) Frame 56\n\tRightLowerArm
+      average position error 3.2 mm and maximum position error 3.2 mm at time 0:56
+      (93.3%) Frame 56\n\tRightHand average position error 3.2 mm and maximum position
+      error 3.2 mm at time 0:55 (91.7%) Frame 55\n\nRetargeting quality report for
+      clip 'Armature|Projectile':\n\tRightHand average position error 0.3 mm and maximum
+      position error 3.6 mm at time 0:33 (42.9%) Frame 33\n\nRetargeting quality report
+      for clip 'Armature|Projectile.001':\n\tRightHand average position error 0.3
+      mm and maximum position error 3.5 mm at time 0:33 (42.9%) Frame 33\n\nRetargeting
+      quality report for clip 'Armature|Projectile02':\n\tRightUpperArm average position
+      error 3.2 mm and maximum position error 8.6 mm at time 0:37 (41.6%) Frame 37\n\tRightLowerArm
+      average position error 3.2 mm and maximum position error 8.6 mm at time 0:37
+      (41.6%) Frame 37\n\tRightHand average position error 4.3 mm and maximum position
+      error 21.2 mm at time 0:37 (41.6%) Frame 37\n\nRetargeting quality report for
+      clip 'Armature|Projectile02Fast':\n\tRightUpperArm average position error 1.9
+      mm and maximum position error 8.3 mm at time 0:13 (16.9%) Frame 13\n\tRightLowerArm
+      average position error 1.9 mm and maximum position error 8.3 mm at time 0:13
+      (16.9%) Frame 13\n\tRightHand average position error 2.6 mm and maximum position
+      error 14.3 mm at time 0:19 (24.7%) Frame 19\n\nRetargeting quality report for
+      clip 'Armature|Projectile02FastDemo':\n\tRightUpperArm average position error
+      2.1 mm and maximum position error 8.6 mm at time 0:15 (10.4%) Frame 15\n\tRightLowerArm
+      average position error 2.1 mm and maximum position error 8.6 mm at time 0:15
+      (10.4%) Frame 15\n\tRightHand average position error 2.7 mm and maximum position
+      error 21.3 mm at time 0:15 (10.4%) Frame 15\n\nRetargeting quality report for
+      clip 'Armature|RunBack':\n\tRetargeting quality is good. No significant differences
+      with original animation were found.\n\nRetargeting quality report for clip 'Armature|RunBackLeft':\n\tRetargeting
+      quality is good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|RunBackRight':\n\tRetargeting quality is good.
+      No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|RunFwd':\n\tRetargeting quality is good. No
+      significant differences with original animation were found.\n\nRetargeting quality
+      report for clip 'Armature|RunFwdAlt':\n\tRetargeting quality is good. No significant
+      differences with original animation were found.\n\nRetargeting quality report
+      for clip 'Armature|RunFwdLeft':\n\tRetargeting quality is good. No significant
+      differences with original animation were found.\n\nRetargeting quality report
+      for clip 'Armature|RunFwdLeftAlt':\n\tRightFoot average position error 0.2 mm
+      and maximum position error 3.3 mm at time 0:18 (45.0%) Frame 18\n\nRetargeting
+      quality report for clip 'Armature|RunFwdRight':\n\tRetargeting quality is good.
+      No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|RunFwdRightAlt':\n\tRetargeting quality is
+      good. No significant differences with original animation were found.\n\nRetargeting
+      quality report for clip 'Armature|RunLeft':\n\tLeftUpperArm average position
+      error 1.8 mm and maximum position error 7.0 mm at time 0:20 (50.0%) Frame 20\n\tLeftLowerArm
+      average position error 1.8 mm and maximum position error 7.0 mm at time 0:20
+      (50.0%) Frame 20\n\tLeftHand average position error 1.8 mm and maximum position
+      error 6.9 mm at time 0:20 (50.0%) Frame 20\n\nRetargeting quality report for
+      clip 'Armature|RunRight':\n\tLeftUpperArm average position error 10.4 mm and
+      maximum position error 11.9 mm at time 0:35 (87.5%) Frame 35\n\tLeftLowerArm
+      average position error 10.4 mm and maximum position error 11.9 mm at time 0:35
+      (87.5%) Frame 35\n\tLeftHand average position error 10.4 mm and maximum position
+      error 11.9 mm at time 0:35 (87.5%) Frame 35\n\tRightUpperArm average position
+      error 9.5 mm and maximum position error 11.9 mm at time 0:37 (92.5%) Frame 37\n\tRightLowerArm
+      average position error 9.5 mm and maximum position error 11.9 mm at time 0:37
+      (92.5%) Frame 37\n\tRightHand average position error 9.5 mm and maximum position
+      error 11.9 mm at time 0:37 (92.5%) Frame 37\n\nRetargeting quality report for
+      clip 'Armature|T-Pose':\n\tRightHand average position error 1.3 mm and maximum
+      position error 1.3 mm at time 0: 0 (0.0%) Frame 0\n\nRetargeting quality report
+      for clip 'Armature|WallGrabBack':\n\tRetargeting quality is good. No significant
+      differences with original animation were found.\n\nRetargeting quality report
+      for clip 'Armature|WallGrabLeft':\n\tRetargeting quality is good. No significant
+      differences with original animation were found.\n\nRetargeting quality report
+      for clip 'Armature|WallrunLeft':\n\tRightFoot average position error 0.4 mm
+      and maximum position error 4.9 mm at time 0:22 (55.0%) Frame 22\n\nRetargeting
+      quality report for clip 'Armature|WallrunRight':\n\tLeftFoot average position
+      error 0.4 mm and maximum position error 5.5 mm at time 0:20 (50.0%) Frame 20\n"
+    animationDoRetargetingWarnings: 1
     importAnimatedCustomProperties: 0
     importConstraints: 0
     animationCompression: 3
@@ -2995,6 +3195,462 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Book
+        weight: 0
+      - path: Armature/Book/Book_end
+        weight: 1
+      - path: Armature/RootBone
+        weight: 1
+      - path: Armature/RootBone/Hips
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head/Head_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L/FingersEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L/ThumbEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R/FingersEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R/ThumbEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L/Toe_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R/Toe_R_end
+        weight: 1
+      - path: Plane.005
+        weight: 0
+      - path: Player_Body
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|Projectile02Fast
+      takeName: Armature|Projectile02Fast
+      firstFrame: 11
+      lastFrame: 43
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Book
+        weight: 0
+      - path: Armature/Book/Book_end
+        weight: 1
+      - path: Armature/RootBone
+        weight: 1
+      - path: Armature/RootBone/Hips
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head/Head_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L/FingersEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L/ThumbEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R/FingersEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R/ThumbEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L/Toe_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R/Toe_R_end
+        weight: 1
+      - path: Plane.005
+        weight: 0
+      - path: Player_Body
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|RunFwdAlt
+      takeName: Armature|RunFwdAlt
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Book
+        weight: 0
+      - path: Armature/Book/Book_end
+        weight: 1
+      - path: Armature/RootBone
+        weight: 1
+      - path: Armature/RootBone/Hips
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head/Head_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L/FingersEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L/ThumbEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R/FingersEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R/ThumbEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L/Toe_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R/Toe_R_end
+        weight: 1
+      - path: Plane.005
+        weight: 0
+      - path: Player_Body
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|RunFwdRightAlt
+      takeName: Armature|RunFwdRightAlt
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Book
+        weight: 0
+      - path: Armature/Book/Book_end
+        weight: 1
+      - path: Armature/RootBone
+        weight: 1
+      - path: Armature/RootBone/Hips
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Neck/Head/Head_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Fingers_L/FingersEnd_L/FingersEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_L/UpArm_L/ForeArm_L/Hand_L/Thumb_L/ThumbEnd_L/ThumbEnd_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Fingers_R/FingersEnd_R/FingersEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R
+        weight: 1
+      - path: Armature/RootBone/Hips/Spine/Chest/Shoulder_R/UpArm_R/ForeArm_R/Hand_R/Thumb_R/ThumbEnd_R/ThumbEnd_R_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_L/Leg_L/Foot_L/Toe_L/Toe_L_end
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R
+        weight: 1
+      - path: Armature/RootBone/Hips/UpLeg_R/Leg_R/Foot_R/Toe_R/Toe_R_end
+        weight: 1
+      - path: Plane.005
+        weight: 0
+      - path: Player_Body
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|RunFwdLeftAlt
+      takeName: Armature|RunFwdLeftAlt
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

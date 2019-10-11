@@ -104,13 +104,39 @@ public class Projectile : Spell
 
     private void Init()
     {
-        if(graphics != null)
+        List<GameObject> elementPrefabs = new List<GameObject>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            if (modifier.projecttileElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(modifier.projecttileElementGraphic))
+                {
+                    elementPrefabs.Add(modifier.projecttileElementGraphic);
+                }
+            }
+        }
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            if (statusEffect.projecttileElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(statusEffect.projecttileElementGraphic))
+                {
+                    elementPrefabs.Add(statusEffect.projecttileElementGraphic);
+                }
+            }
+        }
+        foreach (GameObject elementPrefab in elementPrefabs)
+        {
+            Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(transform);
+        }
+        if (graphics != null && elementPrefabs.Count == 0)
         {
             GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
             graphicsCopy.transform.SetParent(transform);
         }
         lastPos = transform.position;
         modifiers = GetComponents<SpellModifier>();
+        inited = true;
     }
 
     private void DestroyProjectile()

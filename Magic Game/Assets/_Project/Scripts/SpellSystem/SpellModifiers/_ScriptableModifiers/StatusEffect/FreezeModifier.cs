@@ -24,6 +24,9 @@ public class FreezeModifier : SpellScriptableModifier
             return;
         }
 
-        spell.statusEffects.Add(new FreezeEffect(duration, graphics, slowAmount, moistSlowMultiplier));
+        FreezeEffect temp = new FreezeEffect(duration, graphics, slowAmount, moistSlowMultiplier);
+        temp.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
+        spell.statusEffects.Add(temp);
+
     }
 }
