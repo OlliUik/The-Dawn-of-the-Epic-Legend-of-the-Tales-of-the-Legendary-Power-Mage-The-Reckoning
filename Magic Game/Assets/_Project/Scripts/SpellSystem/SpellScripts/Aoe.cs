@@ -22,8 +22,36 @@ public class Aoe : Spell
     private void Start()
     {
         spellType = SpellType.AOE;
-        GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
-        copyGraphics.transform.SetParent(gameObject.transform);
+        List<GameObject> elementPrefabs = new List<GameObject>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            if (modifier.aoeElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(modifier.aoeElementGraphic))
+                {
+                    elementPrefabs.Add(modifier.aoeElementGraphic);
+                }
+            }
+        }
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            if (statusEffect.aoeElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(statusEffect.aoeElementGraphic))
+                {
+                    elementPrefabs.Add(statusEffect.aoeElementGraphic);
+                }
+            }
+        }
+        foreach (GameObject elementPrefab in elementPrefabs)
+        {
+            Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(gameObject.transform);
+        }
+        if (graphics != null && elementPrefabs.Count == 0)
+        {
+            GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
+            copyGraphics.transform.SetParent(gameObject.transform);
+        }
         modifiers = GetComponents<SpellModifier>();
     }
 
