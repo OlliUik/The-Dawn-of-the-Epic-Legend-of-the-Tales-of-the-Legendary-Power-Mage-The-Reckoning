@@ -33,12 +33,12 @@ public class EnemyAiActivate : MonoBehaviour
     {
         foreach (EnemyMagicRanged child in enemies)
         {
-            //if (builder.isDone)
+          //  if (builder.isDone)
             {
                 if (child != null )
                 {   
                     //spawn when player is close to enemies
-                    //if(Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                  //  if(Vector3.Distance(player.transform.position, child.transform.position) < distance)
                     {
                         child.gameObject.SetActive(true);
                     }
