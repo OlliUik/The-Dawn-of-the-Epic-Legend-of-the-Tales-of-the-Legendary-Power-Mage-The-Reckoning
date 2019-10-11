@@ -21,4 +21,11 @@ public abstract class SpellModifier : MonoBehaviour
 
     public virtual void AoeCollide(GameObject hitObject) { }
 
+    public void SetElementParticles(GameObject projecttileParticle, GameObject beamParticle, GameObject aoeParticle)
+    {
+        projecttileElementGraphic = projecttileParticle;
+        beamElementGraphic = beamParticle;
+        aoeElementGraphic = aoeParticle;
+    }
+
 }

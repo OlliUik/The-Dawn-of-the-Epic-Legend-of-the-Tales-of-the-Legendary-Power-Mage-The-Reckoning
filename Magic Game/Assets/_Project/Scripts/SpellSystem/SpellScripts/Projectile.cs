@@ -115,6 +115,16 @@ public class Projectile : Spell
                 }
             }
         }
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            if (statusEffect.projecttileElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(statusEffect.projecttileElementGraphic))
+                {
+                    elementPrefabs.Add(statusEffect.projecttileElementGraphic);
+                }
+            }
+        }
         foreach (GameObject elementPrefab in elementPrefabs)
         {
             Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(transform);

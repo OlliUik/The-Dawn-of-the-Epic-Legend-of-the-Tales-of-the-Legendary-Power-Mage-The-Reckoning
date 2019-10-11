@@ -10,9 +10,6 @@ public class FreezeModifier : SpellScriptableModifier
     [SerializeField] private float slowAmount           = 5f;
     [SerializeField] private float moistSlowMultiplier  = 1.5f;
     [SerializeField] private GameObject graphics        = null;
-    [SerializeField] private GameObject projectileGraphics = null;
-    [SerializeField] private GameObject beamGraphics = null;
-    [SerializeField] private GameObject aoeGraphics = null;
 
     public override void AddSpellModifier(Spell spell)
     {
@@ -27,6 +24,9 @@ public class FreezeModifier : SpellScriptableModifier
             return;
         }
 
-        spell.statusEffects.Add(new FreezeEffect(duration, graphics, slowAmount, moistSlowMultiplier));
+        FreezeEffect temp = new FreezeEffect(duration, graphics, slowAmount, moistSlowMultiplier);
+        temp.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
+        spell.statusEffects.Add(temp);
+
     }
 }
