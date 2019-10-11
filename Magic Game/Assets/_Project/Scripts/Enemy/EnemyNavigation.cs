@@ -400,6 +400,7 @@ public class EnemyNavigation : MonoBehaviour
     private void Jump()
     {      
         Debug.Log("Jumping/Falling & disabled agent");
+
         cAgent.isStopped = true;
         Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
         rb.isKinematic = false;
