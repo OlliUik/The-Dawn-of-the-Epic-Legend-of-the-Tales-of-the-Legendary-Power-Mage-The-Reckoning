@@ -21,6 +21,11 @@ public class ConfusionEffect : StatusEffect
         endTime = Time.time + duration;
 
         // make player/enemy confused
+        var enemyCore = target.GetComponent<EnemyCore>();
+        if (enemyCore != null)
+        {
+            //Set enemy to confusion stage
+        }
     }
 
     public override void ReApply(List<StatusEffect> allEffectsInSpell)

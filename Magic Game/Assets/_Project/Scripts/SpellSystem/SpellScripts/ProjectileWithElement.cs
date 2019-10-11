@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : Spell
+public class ProjectileWithElement : Spell
 {
 
     #region Variables
@@ -104,29 +104,13 @@ public class Projectile : Spell
 
     private void Init()
     {
-        List<GameObject> elementPrefabs = new List<GameObject>();
-        foreach (SpellModifier modifier in modifiers)
-        {
-            if (modifier.projecttileElementGraphic != null)
-            {
-                if (!elementPrefabs.Contains(modifier.projecttileElementGraphic))
-                {
-                    elementPrefabs.Add(modifier.projecttileElementGraphic);
-                }
-            }
-        }
-        foreach (GameObject elementPrefab in elementPrefabs)
-        {
-            Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(transform);
-        }
-        if (graphics != null && elementPrefabs.Count == 0)
+        if(graphics != null)
         {
             GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
             graphicsCopy.transform.SetParent(transform);
         }
         lastPos = transform.position;
         modifiers = GetComponents<SpellModifier>();
-        inited = true;
     }
 
     private void DestroyProjectile()
@@ -160,6 +144,22 @@ public class Projectile : Spell
         projectile.direction = direction;
         projectile.caster = spellbook.gameObject;
         projectile.isMaster = true;
+
+        List<GameObject> elementPrefabs = new List<GameObject>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            if(modifier.projecttileElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(modifier.projecttileElementGraphic))
+                {
+                    elementPrefabs.Add(modifier.projecttileElementGraphic);
+                }
+            }
+        }
+        foreach (GameObject elementPrefab in elementPrefabs)
+        {
+            Instantiate(elementPrefab, spellbook.spellPos.position, rot).transform.parent = projectile.transform;
+        }
 
         // apply all modifiers to the projectile ( this is inherited from spell class )
         ApplyModifiers(projectile.gameObject, data);

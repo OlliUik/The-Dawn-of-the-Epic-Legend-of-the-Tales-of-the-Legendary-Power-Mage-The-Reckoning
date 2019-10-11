@@ -10,6 +10,9 @@ public class FreezeModifier : SpellScriptableModifier
     [SerializeField] private float slowAmount           = 5f;
     [SerializeField] private float moistSlowMultiplier  = 1.5f;
     [SerializeField] private GameObject graphics        = null;
+    [SerializeField] private GameObject projectileGraphics = null;
+    [SerializeField] private GameObject beamGraphics = null;
+    [SerializeField] private GameObject aoeGraphics = null;
 
     public override void AddSpellModifier(Spell spell)
     {
