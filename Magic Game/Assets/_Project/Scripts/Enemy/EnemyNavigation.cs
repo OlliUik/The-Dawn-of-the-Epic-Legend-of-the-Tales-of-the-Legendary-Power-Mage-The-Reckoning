@@ -67,7 +67,6 @@ public class EnemyNavigation : MonoBehaviour
     bool isWaiting;
     bool patrolForward;
     bool isGrounded;
-    bool needRotate;
 
     private Vector3 targetVector;
 
@@ -200,17 +199,15 @@ public class EnemyNavigation : MonoBehaviour
             }
           */
 
-        if(needRotate)
-        {
-            transform.LookAt(targetVector);
-        }
+     
 
         Debug.Log(isGrounded.ToString());
-        if (cAgent.isOnOffMeshLink && isGrounded)
+        
+        if (cAgent.isOnOffMeshLink && isGrounded )
         {
-            //StartCoroutine(rotateEnemy());
-            //needRotate = true;
-            //StartCoroutine(rotate());
+            //rotate();
+            //.LookAt(patrolPoint[navCurrentPoint].transform.position);
+            //isLookAt = true;
             Jump();
             cAgent.updatePosition = true;
         }
@@ -396,44 +393,28 @@ public class EnemyNavigation : MonoBehaviour
 
     }
 
-    
-    private void Jump()
-    {      
-        Debug.Log("Jumping/Falling & disabled agent");
 
+    private void Jump()
+    {
+        Debug.Log("Jumping/Falling & disabled agent");
         cAgent.isStopped = true;
         Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
         rb.isKinematic = false;
         Debug.Log("rb.isKinematic is " + rb.isKinematic.ToString());
         rb.useGravity = true;
         Debug.Log("rb.useGravity is " + rb.useGravity.ToString());
+        Quaternion direction = Quaternion.LookRotation(targetVector);
+        rb.MoveRotation(direction);
         rb.AddRelativeForce(new Vector3(0f, 1000f, 1000f), ForceMode.Impulse);
         isGrounded = false;
     }
-
-
-    /*
-    IEnumerator Jump()
-   {
-       Debug.Log("Jumping/Falling & disabled agent");
-       cAgent.isStopped = true;
-       Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
-       rb.isKinematic = false;
-       Debug.Log("rb.isKinematic is " + rb.isKinematic.ToString());
-       rb.useGravity = true;
-       Debug.Log("rb.useGravity is " + rb.useGravity.ToString());
-       rb.AddRelativeForce(new Vector3(0f, 10f, 5f), ForceMode.Impulse);
-       yield return new WaitForSeconds(1f);
-       isGrounded = false;
-   }
-   */
     
 
     IEnumerator rotate()
     {
         //Debug.Log(transform.rotation.ToString());
-        transform.LookAt(targetVector);
-        yield return new WaitForSeconds(4f);
+        cAgent.isStopped = true;
+        yield return new WaitForSeconds(10f);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -453,7 +434,6 @@ public class EnemyNavigation : MonoBehaviour
                 if (patrolPoint[navCurrentPoint].transform.position != null)
                 {
                     cAgent.SetDestination(targetVector);
-
                 }
             }
         }
