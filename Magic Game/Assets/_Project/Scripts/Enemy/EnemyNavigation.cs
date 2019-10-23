@@ -158,7 +158,7 @@ public class EnemyNavigation : MonoBehaviour
     }
        
     
-    void FixedUpdate()
+    void Update()
     {
         //    if (navTimer <= 0.0f)
         //    {
@@ -205,11 +205,10 @@ public class EnemyNavigation : MonoBehaviour
         
         if (cAgent.isOnOffMeshLink && isGrounded )
         {
-            //rotate();
-            //.LookAt(patrolPoint[navCurrentPoint].transform.position);
-            //isLookAt = true;
+   
             Jump();
             cAgent.updatePosition = true;
+            
         }
 
     }
@@ -316,38 +315,6 @@ public class EnemyNavigation : MonoBehaviour
             Debug.LogWarning(this.gameObject + " is trying to patrol but has less than 2 patrol points!");
         }
         */
-
-        /*
-        walkingSpeed = 3f;
-        //Debug.Log("Now Entering Patrol/Idle State");       
-        //check if we're close to the destination.
-        if (isTravel && cAgent.remainingDistance <= 1.0f)
-        {
-            isTravel = false;
-            //wait?
-            if (isWaiting)
-            {
-                //isWaiting = false;
-                StartCoroutine(idleTime());
-            }
-            else
-            {
-                ChangePatrolPoint();
-                SetDestination();
-                isWaiting = (Random.value > 0.5f);
-            }
-        }
-
-        //normal wait checking
-        if (isWaiting)
-        {
-            //Debug.Log("waiting");
-            ChangePatrolPoint();
-            SetDestination();
-            StartCoroutine(idleTime());
-            isWaiting = (Random.value > 0.5f);
-        }
-        */
     }
 
     //set the destination of the enemy wizard
@@ -398,24 +365,19 @@ public class EnemyNavigation : MonoBehaviour
     {
         Debug.Log("Jumping/Falling & disabled agent");
         cAgent.isStopped = true;
-        Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
         rb.isKinematic = false;
-        Debug.Log("rb.isKinematic is " + rb.isKinematic.ToString());
         rb.useGravity = true;
-        Debug.Log("rb.useGravity is " + rb.useGravity.ToString());
-        Quaternion direction = Quaternion.LookRotation(targetVector);
-        rb.MoveRotation(direction);
-        rb.AddRelativeForce(new Vector3(0f, 1000f, 1000f), ForceMode.Impulse);
+        StartCoroutine(jumpCoroutine());
         isGrounded = false;
     }
     
-
-    IEnumerator rotate()
+    IEnumerator jumpCoroutine()
     {
-        //Debug.Log(transform.rotation.ToString());
-        cAgent.isStopped = true;
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(3f);
+        rb.AddRelativeForce(new Vector3(0f, 1000f, 1000f), ForceMode.Impulse);
+
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {

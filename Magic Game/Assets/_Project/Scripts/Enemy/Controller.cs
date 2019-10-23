@@ -18,7 +18,7 @@ public class Controller : MonoBehaviour
 
     private void Start()
     {
-        agent.updateRotation = false;
+        //agent.updateRotation = false;
     }
 
     // Update is called once per frame
