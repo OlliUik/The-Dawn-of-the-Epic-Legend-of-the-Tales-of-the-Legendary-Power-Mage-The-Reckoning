@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(ThirdPersonCamera))]
+[RequireComponent(typeof(PowerMage.ThirdPersonCamera))]
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform ragdollTransform = null;
     [SerializeField] private bool bStunned;
 
-    private ThirdPersonCamera cTPCamera = null;
+    private PowerMage.ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
     private InputManager inputManager = null;
 
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         cCharacter = GetComponent<CharacterController>();
-        cTPCamera = GetComponent<ThirdPersonCamera>();
+        cTPCamera = GetComponent<PowerMage.ThirdPersonCamera>();
         inputManager = GetComponent<InputManager>();
     }
 

@@ -23,7 +23,7 @@ public class PlayerCore : MonoBehaviour
 
     public Health cHealth { get; private set; } = null;
     public Mana cMana { get; private set; } = null;
-    public ThirdPersonCamera cTPCamera { get; private set; } = null;
+    public PowerMage.ThirdPersonCamera cTPCamera { get; private set; } = null;
     public CharacterController cCharacter { get; private set; } = null;
     public PlayerMovement cMovement { get; private set; } = null;
     public Spellbook cSpellBook { get; private set; } = null;
@@ -49,7 +49,7 @@ public class PlayerCore : MonoBehaviour
 
         cHealth = GetComponent<Health>();
         cMana = GetComponent<Mana>();
-        cTPCamera = GetComponent<ThirdPersonCamera>();
+        cTPCamera = GetComponent<PowerMage.ThirdPersonCamera>();
         cMovement = GetComponent<PlayerMovement>();
         cCharacter = GetComponent<CharacterController>();
         cSpellBook = GetComponent<Spellbook>();

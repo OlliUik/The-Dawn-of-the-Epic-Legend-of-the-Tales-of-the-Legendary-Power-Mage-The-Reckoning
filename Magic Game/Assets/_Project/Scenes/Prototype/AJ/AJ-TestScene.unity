@@ -12704,8 +12704,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1205841464}
-  - component: {fileID: 1205841465}
-  - component: {fileID: 1205841463}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -12713,24 +12711,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!143 &1205841463
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1205841462}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!4 &1205841464
 Transform:
   m_ObjectHideFlags: 0
@@ -12745,33 +12725,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1205841465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1205841462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca68b5f68204f514e97d980fdb5edf23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  allowHealthRegen: 0
-  healthRegenAmount: 5
-  healthRegenCooldown: 2
-  healthRegenInterval: 1
-  maxMana: 100
-  allowManaRegen: 1
-  manaRegenAmount: 10
-  manaRegenCooldown: 2
-  manaRegenInterval: 0.2
-  team: 1
-  inputJump: 0
-  inputDash: 0
-  inputAttack: 0
-  viewPivot: {x: 0, y: 0, z: 0}
 --- !u!1 &1209776731
 GameObject:
   m_ObjectHideFlags: 0
@@ -16073,11 +16026,12 @@ PrefabInstance:
       propertyPath: spellControls
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5368165616332325514, guid: 14f3d020090e13745a23f198dcab5c97,
+    - target: {fileID: 7066670760798350497, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
-      propertyPath: spellEditingUI
+      propertyPath: spells.Array.data[1].spell
       value: 
-      objectReference: {fileID: 1986870459}
+      objectReference: {fileID: 2971589555194763752, guid: d151ec80c3a14ee4ea6ee43f636f109b,
+        type: 3}
     - target: {fileID: 5303135430551391158, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -16203,12 +16157,26 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: 8.731149e-11
       objectReference: {fileID: 0}
-    - target: {fileID: 7066670760798350497, guid: 14f3d020090e13745a23f198dcab5c97,
+    - target: {fileID: 2236418114573752095, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
-      propertyPath: spells.Array.data[1].spell
-      value: 
-      objectReference: {fileID: 2971589555194763752, guid: d151ec80c3a14ee4ea6ee43f636f109b,
+      propertyPath: m_AnchoredPosition.y
+      value: 34.899902
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336649305733341367, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 34.899902
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085204525191956519, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 34.899902
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642719796650419896, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 34.899902
+      objectReference: {fileID: 0}
     - target: {fileID: 7955851043706749429, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
       propertyPath: slowdownMaxTurn.x
@@ -16219,6 +16187,11 @@ PrefabInstance:
       propertyPath: slowdownMaxTurn.y
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 5368165616332325514, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: spellEditingUI
+      value: 
+      objectReference: {fileID: 1986870459}
     - target: {fileID: 2307447049640960598, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
       propertyPath: hiddenWhenNotKinematic.Array.size

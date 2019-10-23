@@ -1,7 +1,12 @@
-﻿namespace PowerMage
+﻿using UnityEngine;
+
+namespace PowerMage
 {
-    [UnityEngine.RequireComponent(typeof(Spellbook))]
-    [UnityEngine.AddComponentMenu("PowerMage/Player Character")]
+    [RequireComponent(typeof(MovementController))]
+    [RequireComponent(typeof(InputPlayer))]
+    [RequireComponent(typeof(ThirdPersonCamera))]
+    [RequireComponent(typeof(Spellbook))]
+    [AddComponentMenu("PowerMage/Player Character")]
     public class PlayerCharacter : Entity
     {
 

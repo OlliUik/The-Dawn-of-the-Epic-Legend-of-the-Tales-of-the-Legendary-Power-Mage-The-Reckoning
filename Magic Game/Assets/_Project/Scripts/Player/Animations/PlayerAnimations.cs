@@ -9,7 +9,7 @@ public class PlayerAnimations : MonoBehaviour
     [SerializeField] private float animationBlendingMultiplier = 0.0625f;
 
     private Animator cAnimator = null;
-    private ThirdPersonCamera cTPCamera = null;
+    private PowerMage.ThirdPersonCamera cTPCamera = null;
     private CharacterController cCharacter = null;
     private PlayerMovement cMovement = null;
 

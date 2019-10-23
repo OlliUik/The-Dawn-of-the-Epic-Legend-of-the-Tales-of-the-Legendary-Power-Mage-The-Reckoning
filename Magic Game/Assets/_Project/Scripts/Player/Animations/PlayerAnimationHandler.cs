@@ -15,7 +15,7 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     private CharacterController cCharacter = null;
     private PlayerMovement cMovement = null;
-    private ThirdPersonCamera cTPCamera = null;
+    private PowerMage.ThirdPersonCamera cTPCamera = null;
     private Animator cAnimator = null;
     private Transform pointOfInterest = null;
 
@@ -29,7 +29,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         GameObject parentGO = transform.parent.gameObject;
         cCharacter = parentGO.GetComponent<CharacterController>();
         cMovement = parentGO.GetComponent<PlayerMovement>();
-        cTPCamera = parentGO.GetComponent<ThirdPersonCamera>();
+        cTPCamera = parentGO.GetComponent<PowerMage.ThirdPersonCamera>();
     }
 
     void Update()
