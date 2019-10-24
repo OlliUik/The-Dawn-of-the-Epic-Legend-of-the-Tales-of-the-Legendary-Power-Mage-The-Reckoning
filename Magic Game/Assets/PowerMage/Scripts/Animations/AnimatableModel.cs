@@ -6,14 +6,20 @@ namespace PowerMage
 {
     public class AnimatableModel : MonoBehaviour
     {
+        #region VARIABLES
+
         public GameObject model = null;
         public RuntimeAnimatorController controller = null;
         public Color color = Color.blue;
 
         [SerializeField] private bool blenderFix = false;
 
-        private GameObject instantiatedModel = null;
-        private Animator animator = null;
+        public GameObject instantiatedModel { get; private set; } = null;
+        public Animator animator { get; private set; } = null;
+
+        #endregion
+
+        #region MONOBEHAVIOUR
 
         protected virtual void Awake()
         {
@@ -87,5 +93,6 @@ namespace PowerMage
 
 #endif
 
+        #endregion
     }
 }

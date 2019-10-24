@@ -15031,6 +15031,208 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1548155898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1548155906}
+  - component: {fileID: 1548155905}
+  - component: {fileID: 1548155904}
+  - component: {fileID: 1548155903}
+  - component: {fileID: 1548155902}
+  - component: {fileID: 1548155901}
+  - component: {fileID: 1548155900}
+  - component: {fileID: 1548155899}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1548155899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb565c824d8e0d4781a27d9f0c2118b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  model: {fileID: 1548155901}
+  team: 1
+--- !u!114 &1548155900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f9b5870bd854df4d86a902428808f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isCasting: 0
+  spellPos: {fileID: 0}
+  spells:
+  - spell: {fileID: 0}
+    cards: []
+  - spell: {fileID: 0}
+    cards: []
+  - spell: {fileID: 0}
+    cards: []
+  lookTransform: {fileID: 0}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 3073
+--- !u!114 &1548155901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 124fa62d1f61f294d939c25eef0f76ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  model: {fileID: 4983210572270528736, guid: 188a39c8d1aed0643beb7cc5a09fccc9, type: 3}
+  controller: {fileID: 9100000, guid: 053adb37b95d05244948f3acbc8bdea7, type: 2}
+  color: {r: 0, g: 1, b: 0, a: 1}
+  blenderFix: 0
+--- !u!114 &1548155902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ca1f4bb94730ea4f860ca0beda35578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  horizontalAxis: 
+  verticalAxis: 
+  sensX: 0
+  sensY: 0
+  cameraFOV: 0
+  isRagdolled: 0
+  cameraObject: {fileID: 0}
+  invertY: 0
+  sensitivity: {x: 1, y: 1}
+  slowdownEnabled: 0
+  slowdownMaxTurn: {x: 25, y: 25}
+  cameraFOVLerpSpeed: 10
+  pivotPoint: {x: 0, y: 0, z: 0}
+  pivotTransformRagdolled: {fileID: 0}
+  cameraClosePosition: {x: 0, y: 0, z: 0}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+--- !u!114 &1548155903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94865e7bd44ecc4c833636a6e26a508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputMoveHorizontal: []
+  inputMoveVertical: []
+  inputLookHorizontal: []
+  inputLookVertical: []
+  inputJump: []
+  inputDash: []
+  inputAttack: []
+--- !u!114 &1548155904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e389777e018180d4b96b6b904f88b811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  horizontalAxis: Horizontal
+  verticalAxis: Vertical
+  jumpButton: 
+  dashButton: Fire3
+  accelerationMultiplier: 1
+  midAirJumps: 0
+  enableControls: 1
+  isRagdolled: 0
+  bAllowMidairDashing: 1
+  bDashingGivesIFrames: 0
+  bAllowInfiniteWallJumps: 1
+  acceleration: 100
+  airAcceleration: 20
+  friction: 5.5
+  airFriction: 1.5
+  gravity: -30
+  smoothStepDown: 0.5
+  jumpForce: 15
+  jumpGraceTime: 0.2
+  dashSpeed: 20
+  dashJumpForce: 8
+  dashDuration: 0.2
+  dashCooldown: 1
+  gravityWallSliding: -1
+  wallSlidingTime: 2
+  wallJumpForce: 25
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  ragdollTransform: {fileID: 0}
+  bStunned: 0
+--- !u!143 &1548155905
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1.7
+  m_Radius: 0.5
+  m_SlopeLimit: 32.5
+  m_StepOffset: 0.4
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0
+  m_Center: {x: 0, y: 0.85, z: 0}
+--- !u!4 &1548155906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548155898}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: -0.5, z: -7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1600667736
 GameObject:
   m_ObjectHideFlags: 0

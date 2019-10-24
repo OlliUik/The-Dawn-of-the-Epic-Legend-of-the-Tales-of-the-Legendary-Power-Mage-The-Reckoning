@@ -6,16 +6,19 @@ using UnityEditor;
 
 namespace PowerMage
 {
+    [RequireComponent(typeof(RegenHealth))]
+    [RequireComponent(typeof(MovementController))]
     [DisallowMultipleComponent]
     public abstract class Entity : MonoBehaviour
     {
-        public IResource health = null;
-        public IInput input = null;
-        public IVision vision = null;
-        public IPhysicsCharacter character = null;
+        [HideInInspector] public IResource health = null;
+        [HideInInspector] public IInput input = null;
+        [HideInInspector] public IVision vision = null;
+        [HideInInspector] public IPhysicsCharacter character = null;
+        [HideInInspector] public AnimatableModel model = null;
 
         private InputContainer container = new InputContainer();
-
+        private Animator animator = null;
         
 
 
@@ -111,9 +114,12 @@ namespace PowerMage
         protected virtual void Awake()
         {
             health = GetComponent<IResource>();
-            health.Initialize(this);
             input = GetComponent<IInput>();
             character = GetComponent<IPhysicsCharacter>();
+            model = GetComponent<AnimatableModel>();
+            animator = model.animator;
+
+            health.Initialize(this);
         }
 
         protected virtual void Update()
@@ -142,41 +148,49 @@ namespace PowerMage
         {
 #if UNITY_EDITOR
 
-            //if (controller == null)
-            //{
-            //    return;
-            //}
-
-            //if (Selection.activeGameObject != gameObject)
-            //{
-            //    //Draw when NOT selected
-
-            //    //Draw a faded circle at the pivot point
-            //    Handles.color = Color.Lerp(teamColor, Color.clear, 0.9f);
-            //    Handles.DrawSolidDisc(transform.position, transform.up, controller.radius);
-
-            //    Handles.color = Color.Lerp(teamColor, Color.clear, 0.3f);
-            //    Handles.DrawWireDisc(transform.position, transform.up, controller.radius);
-
-            //    Gizmos.color = Handles.color;
-            //    Gizmos.DrawCube(transform.position, Vector3.up * 0.01f + (Vector3.one - Vector3.up) * 0.15f);
-            //}
-            //else
-            //{
-            //    //Draw when selected
-
-            //    //Draw a circle at the pivot point
-
-            //    Handles.color = Color.Lerp(teamColor, Color.clear, 0.8f);
-            //    Handles.DrawSolidDisc(transform.position, transform.up, controller.radius);
-
-            //    Handles.color = Color.Lerp(teamColor, Color.clear, 0.0f);
-            //    Handles.DrawWireDisc(transform.position, transform.up, controller.radius);
-
-            //    Gizmos.color = Handles.color;
-            //    Gizmos.DrawCube(transform.position, Vector3.up * 0.01f + (Vector3.one - Vector3.up) * 0.15f);
-            //}
+            if (model == null)
+            {
+                model = GetComponent<AnimatableModel>();
+                if (model != null)
+                {
+                    model.color = teamColor;
+                }
+            }
+            else
+            {
+                model.color = teamColor;
+            }
             
+            if (Selection.activeGameObject != gameObject)
+            {
+                //Draw when NOT selected
+
+                //Draw a faded circle at the pivot point
+                Handles.color = Color.Lerp(teamColor, Color.clear, 0.9f);
+                Handles.DrawSolidDisc(transform.position, transform.up, 0.5f);
+
+                Handles.color = Color.Lerp(teamColor, Color.clear, 0.3f);
+                Handles.DrawWireDisc(transform.position, transform.up, 0.5f);
+
+                Gizmos.color = Handles.color;
+                Gizmos.DrawCube(transform.position, Vector3.up * 0.01f + (Vector3.one - Vector3.up) * 0.15f);
+            }
+            else
+            {
+                //Draw when selected
+
+                //Draw a circle at the pivot point
+
+                Handles.color = Color.Lerp(teamColor, Color.clear, 0.8f);
+                Handles.DrawSolidDisc(transform.position, transform.up, 0.5f);
+
+                Handles.color = Color.Lerp(teamColor, Color.clear, 0.0f);
+                Handles.DrawWireDisc(transform.position, transform.up, 0.5f);
+
+                Gizmos.color = Handles.color;
+                Gizmos.DrawCube(transform.position, Vector3.up * 0.01f + (Vector3.one - Vector3.up) * 0.15f);
+            }
+
 #endif
         }
 
