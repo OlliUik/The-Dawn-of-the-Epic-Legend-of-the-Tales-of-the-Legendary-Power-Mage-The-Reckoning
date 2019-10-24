@@ -15,7 +15,7 @@ public class MovingStaircase : MonoBehaviour
     
     private Vector3 origin, current;
     
-    private bool isPositiveRot = true;
+    public bool isPositiveRot = true;
 
     float moveTime, originalWait;
 
