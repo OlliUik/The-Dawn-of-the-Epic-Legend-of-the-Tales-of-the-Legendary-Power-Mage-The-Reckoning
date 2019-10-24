@@ -8,12 +8,13 @@ public class Aoe : Spell
     #region Variables
 
     [Header("AoE varialbes")]
-    [SerializeField] public float damagePerSecond   = 1.0f;
-    [SerializeField] public float radius            = 7.0f;
-    [SerializeField] public float duration          = 10.0f;
-    public GameObject graphics                      = null;
+    [SerializeField] public float damagePerSecond = 1.0f;
+    [SerializeField] public float radius = 7.0f;
+    [SerializeField] public float duration = 10.0f;
+    public GameObject graphics = null;
+    public float graphicUpScale = 0f;
 
-    private SpellModifier[] modifiers               = null;
+    private SpellModifier[] modifiers = null;
 
     #endregion
 
@@ -22,36 +23,9 @@ public class Aoe : Spell
     private void Start()
     {
         spellType = SpellType.AOE;
-        List<GameObject> elementPrefabs = new List<GameObject>();
-        foreach (SpellModifier modifier in modifiers)
-        {
-            if (modifier.aoeElementGraphic != null)
-            {
-                if (!elementPrefabs.Contains(modifier.aoeElementGraphic))
-                {
-                    elementPrefabs.Add(modifier.aoeElementGraphic);
-                }
-            }
-        }
-        foreach (StatusEffect statusEffect in statusEffects)
-        {
-            if (statusEffect.aoeElementGraphic != null)
-            {
-                if (!elementPrefabs.Contains(statusEffect.aoeElementGraphic))
-                {
-                    elementPrefabs.Add(statusEffect.aoeElementGraphic);
-                }
-            }
-        }
-        foreach (GameObject elementPrefab in elementPrefabs)
-        {
-            Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(gameObject.transform);
-        }
-        if (graphics != null && elementPrefabs.Count == 0)
-        {
-            GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
-            copyGraphics.transform.SetParent(gameObject.transform);
-        }
+        GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
+        copyGraphics.transform.localScale += new Vector3(graphicUpScale, graphicUpScale, graphicUpScale);
+        copyGraphics.transform.SetParent(gameObject.transform);
         modifiers = GetComponents<SpellModifier>();
     }
 
@@ -65,7 +39,7 @@ public class Aoe : Spell
             if (objectHit.transform.tag != caster.tag)
             {
                 var health = objectHit.GetComponent<Health>();
-                if(health != null)
+                if (health != null)
                 {
                     base.DealDamage(health, (damagePerSecond * Time.deltaTime));
                 }

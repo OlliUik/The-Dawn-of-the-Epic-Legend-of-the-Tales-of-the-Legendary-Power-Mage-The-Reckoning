@@ -6,7 +6,7 @@ public class FreezeEffect : StatusEffect
 {
 
     public float slowAmount = 5f;               // how much slows per spell hit
-    public float moistSlowMultiplier = 1.5f;    // if target is moist how much more we slow
+    public float moistSlowMultiplier = 1.5f;    // if target is moist how much more we slow default 1.5f
     public float startSpeed;                    // what was the speed before started slowing
 
     public FreezeEffect(float duration, GameObject graphics, float slowAmount, float moistSlowMultiplier) : base(duration, graphics)
@@ -23,13 +23,21 @@ public class FreezeEffect : StatusEffect
     {
         Debug.Log("Slow");
 
-        // change this for enemy
+        // change this for enemy, currently not working yet
         var movement = target.GetComponent<PlayerMovement>();
+        // Debug.Log("Movement found: " + (movement != null));
         if (movement != null)
         {
-            if(effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize])
+            Debug.Log("Moisturize spell effect before freeze: "+effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize]);
+            if (effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize])
             {
+                /*
                 movement.accelerationMultiplier -= 1/(slowAmount * moistSlowMultiplier);
+                */
+
+                // stun for a duration
+                movement.accelerationMultiplier = -1;
+                return;
             }
             else
             {
@@ -58,6 +66,8 @@ public class FreezeEffect : StatusEffect
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Freeze] = true;
         endTime = Time.time + duration;
         Slow();
+
+        CheckForCounterEffects(allEffectsInSpell);
     }
 
     public override void ReApply(List<StatusEffect> allEffectsInSpell)
