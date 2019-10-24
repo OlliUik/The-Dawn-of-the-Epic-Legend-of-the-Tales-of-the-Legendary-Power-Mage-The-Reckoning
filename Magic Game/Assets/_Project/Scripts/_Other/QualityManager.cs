@@ -111,6 +111,7 @@ public static class QualityManager
             DATA.SHADER_GRAPHICS_TIER = 2;
             Graphics.activeTier = UnityEngine.Rendering.GraphicsTier.Tier2;
         }
+        Screen.fullScreen = DATA.FULLSCREEN;
         Debug.Log("Quality settings applied successfully.");
     }
 }
