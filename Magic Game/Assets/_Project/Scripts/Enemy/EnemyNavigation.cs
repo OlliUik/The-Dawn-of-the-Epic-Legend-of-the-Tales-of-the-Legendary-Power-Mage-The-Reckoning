@@ -43,7 +43,7 @@ public class EnemyNavigation : MonoBehaviour
 
     [SerializeField]  List<Waypoint> patrolPoint;
 
-    private Rigidbody rb;
+    [SerializeField] Rigidbody rb;
 
     [SerializeField] private float jumpSpeed;
 
@@ -66,7 +66,9 @@ public class EnemyNavigation : MonoBehaviour
     bool isTravel;
     bool isWaiting;
     bool patrolForward;
+    bool isGrounded;
 
+    private Vector3 targetVector;
 
     #endregion
 
@@ -77,19 +79,13 @@ public class EnemyNavigation : MonoBehaviour
     {
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
-        rb = gameObject.GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
 
         //get list of patrol points in a section.
         foreach (Transform child in patrolPointGroup.transform)
         {
-                patrolPoint.Add(child.GetComponent<Waypoint>());
-          
+                patrolPoint.Add(child.GetComponent<Waypoint>());   
         }
-
-  
-
-
-
 
         //Agent and patrol point checking
         if (cAgent == null)
@@ -99,7 +95,6 @@ public class EnemyNavigation : MonoBehaviour
         else
         {
        
-
             if (patrolPoint != null && patrolPoint.Count >= 2)
             {
                 navCurrentPoint = 0;
@@ -203,6 +198,18 @@ public class EnemyNavigation : MonoBehaviour
 
             }
           */
+
+     
+
+        Debug.Log(isGrounded.ToString());
+        
+        if (cAgent.isOnOffMeshLink && isGrounded )
+        {
+   
+            Jump();
+            cAgent.updatePosition = true;
+            
+        }
 
     }
    
@@ -308,38 +315,6 @@ public class EnemyNavigation : MonoBehaviour
             Debug.LogWarning(this.gameObject + " is trying to patrol but has less than 2 patrol points!");
         }
         */
-
-        /*
-        walkingSpeed = 3f;
-        //Debug.Log("Now Entering Patrol/Idle State");       
-        //check if we're close to the destination.
-        if (isTravel && cAgent.remainingDistance <= 1.0f)
-        {
-            isTravel = false;
-            //wait?
-            if (isWaiting)
-            {
-                //isWaiting = false;
-                StartCoroutine(idleTime());
-            }
-            else
-            {
-                ChangePatrolPoint();
-                SetDestination();
-                isWaiting = (Random.value > 0.5f);
-            }
-        }
-
-        //normal wait checking
-        if (isWaiting)
-        {
-            //Debug.Log("waiting");
-            ChangePatrolPoint();
-            SetDestination();
-            StartCoroutine(idleTime());
-            isWaiting = (Random.value > 0.5f);
-        }
-        */
     }
 
     //set the destination of the enemy wizard
@@ -348,7 +323,7 @@ public class EnemyNavigation : MonoBehaviour
         if (patrolPoint != null)
         {
 
-                Vector3 targetVector = patrolPoint[navCurrentPoint].transform.position;
+                targetVector = patrolPoint[navCurrentPoint].transform.position;
                 cAgent.SetDestination(targetVector);
                 isTravel = true;
         }
@@ -383,6 +358,47 @@ public class EnemyNavigation : MonoBehaviour
         yield return new WaitForSeconds(randomNum);
         cAgent.isStopped = false;
 
+    }
+
+
+    private void Jump()
+    {
+        Debug.Log("Jumping/Falling & disabled agent");
+        cAgent.isStopped = true;
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        StartCoroutine(jumpCoroutine());
+        isGrounded = false;
+    }
+    
+    IEnumerator jumpCoroutine()
+    {
+        yield return new WaitForSeconds(3f);
+        rb.AddRelativeForce(new Vector3(0f, 1000f, 1000f), ForceMode.Impulse);
+
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Ground"))
+        {
+            Debug.Log("On Ground.");
+            if (!isGrounded)
+            {
+                Debug.Log("Standing & activated agent");
+                isGrounded = true;
+                //needRotate = false;
+                cAgent.Warp(transform.position);
+                cAgent.isStopped = false;
+                Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+
+                if (patrolPoint[navCurrentPoint].transform.position != null)
+                {
+                    cAgent.SetDestination(targetVector);
+                }
+            }
+        }
     }
 
 

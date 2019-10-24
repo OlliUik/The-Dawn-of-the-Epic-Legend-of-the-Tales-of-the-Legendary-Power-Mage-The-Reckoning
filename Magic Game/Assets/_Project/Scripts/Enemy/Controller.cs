@@ -6,38 +6,24 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class Controller : MonoBehaviour
 {
-    //public Camera cam;
 
     public NavMeshAgent agent;
 
     public ThirdPersonCharacter character;
 
-    public Rigidbody rb;
+    //public Rigidbody rb;
 
     bool isGrounded;
 
+
     private void Start()
     {
-        agent.updateRotation = false;
-        rb.GetComponent<Rigidbody>();
+        //agent.updateRotation = false;
     }
 
     // Update is called once per frame
     void Update()
     {   
-        /*
-        if(Input.GetMouseButtonDown(0))
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-           if ( Physics.Raycast(ray, out hit))
-            {
-                // MOVE OUT AGENT
-                agent.SetDestination(hit.point);
-            }
-        }
-        */
 
         if (agent.remainingDistance > agent.stoppingDistance)
         {
@@ -48,7 +34,17 @@ public class Controller : MonoBehaviour
             character.Move(Vector3.zero, false, false);
         }
 
-    }
 
-   
+        //Debug.Log(isGrounded.ToString());
+        //if (agent.isOnOffMeshLink && isGrounded)
+        //{
+            //Debug.Log("is On Off Mesh Link");
+            //Jump();
+            //agent.updatePosition = true;
+
+        //}
+
+    }
 }
+
+
