@@ -49,12 +49,16 @@ namespace PowerMage
 
         #endregion
 
+        #region INTERFACE_IMPLEMENTATION
+
         public Vector3 GetLookDirection()
         {
             return lookDirection;
         }
 
-        #region UNITY_DEFAULT_METHODS
+        #endregion
+
+        #region MONOBEHAVIOUR
 
         void Awake()
         {
@@ -109,35 +113,35 @@ namespace PowerMage
             //}
         }
 
-        void Update()
-        {
-            if (inputManager.controllerId == 1)
-            {
-                horizontalAxis = "Mouse X"; //Xbox_Mouse X
-                verticalAxis = "Mouse Y"; //Xbox_Mouse Y
-                sensX = 10; //Default value?
-                sensY = 10; //Default value?
-                sensitivity = new Vector2(sensX, sensY);
-            }
+        //void Update()
+        //{
+        //    if (inputManager.controllerId == 1)
+        //    {
+        //        horizontalAxis = "Mouse X"; //Xbox_Mouse X
+        //        verticalAxis = "Mouse Y"; //Xbox_Mouse Y
+        //        sensX = 10; //Default value?
+        //        sensY = 10; //Default value?
+        //        sensitivity = new Vector2(sensX, sensY);
+        //    }
 
-            if (inputManager.controllerId == 2)
-            {
-                horizontalAxis = "PS_Mouse X";
-                verticalAxis = "PS_Mouse Y";
-                sensX = 10; //Default value?
-                sensY = 10; //Default value?
-                sensitivity = new Vector2(sensX, sensY);
-            }
+        //    if (inputManager.controllerId == 2)
+        //    {
+        //        horizontalAxis = "PS_Mouse X";
+        //        verticalAxis = "PS_Mouse Y";
+        //        sensX = 10; //Default value?
+        //        sensY = 10; //Default value?
+        //        sensitivity = new Vector2(sensX, sensY);
+        //    }
 
-            else
-            {
-                horizontalAxis = "Mouse X";
-                verticalAxis = "Mouse Y";
-                sensX = 2; //Default value?
-                sensY = 2; //Default value?
-                sensitivity = new Vector2(sensX, sensY);
-            }
-        }
+        //    else
+        //    {
+        //        horizontalAxis = "Mouse X";
+        //        verticalAxis = "Mouse Y";
+        //        sensX = 2; //Default value?
+        //        sensY = 2; //Default value?
+        //        sensitivity = new Vector2(sensX, sensY);
+        //    }
+        //}
 
         void LateUpdate()
         {

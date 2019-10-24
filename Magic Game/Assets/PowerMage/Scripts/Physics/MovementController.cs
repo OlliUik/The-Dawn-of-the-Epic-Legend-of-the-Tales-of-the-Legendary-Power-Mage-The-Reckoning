@@ -9,11 +9,13 @@ namespace PowerMage
     {
         #region VARIABLES
 
-        [Header("Input")]
-        [SerializeField] private string horizontalAxis = "Horizontal";
-        [SerializeField] private string verticalAxis = "Vertical";
-        [SerializeField] private string jumpButton;
-        [SerializeField] private string dashButton = "Fire3";
+        //Don't need these anymore.
+        
+        //[Header("Input")]
+        //[SerializeField] private string horizontalAxis = "Horizontal";
+        //[SerializeField] private string verticalAxis = "Vertical";
+        //[SerializeField] private string jumpButton;
+        //[SerializeField] private string dashButton = "Fire3";
 
         [HideInInspector] public float accelerationMultiplier = 1.0f;
         [HideInInspector] public int midAirJumps = 0;
@@ -21,6 +23,7 @@ namespace PowerMage
         [HideInInspector] public bool isRagdolled = false;
 
         [Header("Serialized")]
+        [SerializeField] private bool bAllowFlight = false;
         [SerializeField] private bool bAllowMidairDashing = true;
         [SerializeField] private bool bDashingGivesIFrames = false;
         [SerializeField] private bool bAllowInfiniteWallJumps = true;
@@ -36,6 +39,7 @@ namespace PowerMage
         [SerializeField] private float dashJumpForce = 8.0f;
         [SerializeField] private float dashDuration = 0.2f;
         [SerializeField] private float dashCooldown = 1.0f;
+        [SerializeField] private float flightAltitudeSpeed = 500.0f;
         [SerializeField] private float gravityWallSliding = -1.0f;
         [SerializeField] private float wallSlidingTime = 2.0f;
         [SerializeField] private float wallJumpForce = 25.0f;
@@ -72,148 +76,9 @@ namespace PowerMage
 
         #endregion
 
-        #region UNITY_DEFAULT_METHODS
+        #region INTERFACE_IMPLEMENTATION
 
-        void Awake()
-        {
-            cCharacter = GetComponent<CharacterController>();
-            cTPCamera = GetComponent<ThirdPersonCamera>();
-            inputManager = GetComponent<InputManager>();
-        }
-
-        void Start()
-        {
-            transform.localRotation = Quaternion.identity;
-        }
-
-        void Update()
-        {
-            if (inputManager.controllerId == 1)
-            {
-                jumpButton = "Xbox_Jump";
-                GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
-            }
-
-            if (inputManager.controllerId == 2)
-            {
-                jumpButton = "PS_Jump";
-                GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
-            }
-
-            else
-            {
-                jumpButton = "Jump";
-                GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
-            }
-
-        }
-
-        void FixedUpdate()
-        {
-            if (enableControls)
-            {
-                Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
-                bJumpingActivated = false;
-                bDashingActivated = false;
-            }
-        }
-
-        void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            currentHit = hit;
-            RaycastHit rcHit;
-            if (Physics.Raycast(
-                transform.position + Vector3.up * (cCharacter.height / 2),
-                Vector3.down,
-                out rcHit,
-                Mathf.Infinity,
-                raycastLayerMask
-                ))
-            {
-                if (AlmostEqual(hit.normal, rcHit.normal, 0.01f))
-                {
-                    slopeNormal = hit.normal;
-                }
-                else
-                {
-                    //Most likely standing on stairs
-                    slopeNormal = Vector3.up;
-                }
-            }
-            else
-            {
-                //We hit a collider but received nothing from raycast,
-                //assume that we hit a wall / ceiling / other
-                slopeNormal = Vector3.up;
-            }
-
-            if (hit.gameObject.tag == "MovingPlatform")
-            {
-                if (movingPlatform == null)
-                {
-                    movingPlatform = hit.transform;
-                }
-                else if (hit.transform != movingPlatform)
-                {
-                    //Uh oh, we're hitting multiple moving platforms at the same time!
-                    //Reset platform movement values to avoid warping.
-
-                    //NOTE: This solution is not perfect, warping still occurs during unknown edge cases.
-                    //If possible, avoid using multiple moving platforms close to each other!
-                    movingPlatform = null;
-                    movingPlatformPrevPosition = Vector3.zero;
-                    movingPlatformPrevRotation = Vector3.zero;
-                    movingPlatformVelocity = Vector3.zero;
-                }
-            }
-            else
-            {
-                movingPlatform = null;
-            }
-
-            Vector2 temp = Vector2.Perpendicular(new Vector2(hit.normal.x, hit.normal.z));
-            Vector3 temp2 = Vector3.Normalize(Vector3.Cross(hit.normal, new Vector3(temp.x, 0.0f, temp.y)));
-            //Slope normal vector
-            Debug.DrawLine(hit.point, hit.point + hit.normal * 0.2f, (Mathf.Abs(Vector3.Angle(Vector3.up, hit.normal)) < cCharacter.slopeLimit ? Color.green : Color.red), 0.5f);
-            //Vector pointing down the slope
-            Debug.DrawLine(hit.point, hit.point + temp2 * 0.2f, Color.blue, 0.5f);
-        }
-
-        #endregion
-
-        #region CUSTOM_METHODS
-
-        void GetInput(float inputX, float inputY, bool inputJump, bool inputDash)
-        {
-            movementInput = new Vector2(inputX, inputY);
-            if (inputJump && !bJumpingActivated)
-            {
-                bJumpingActivated = true;
-            }
-            if (inputDash && !bDashingActivated)
-            {
-                bDashingActivated = true;
-            }
-        }
-
-        public void Teleport(Vector3 position)
-        {
-            physicsLayer = cCharacter.gameObject.layer;
-            cCharacter.gameObject.layer = 31;
-            cCharacter.Move(position - transform.position);
-            cCharacter.gameObject.layer = physicsLayer;
-        }
-
-        public void OnDisableRagdoll()
-        {
-            if (ragdollTransform != null)
-            {
-                //Teleport(ragdollTransform.position);
-                moveVector = Vector3.zero;
-            }
-        }
-
-        public void Move(float inputX, float inputY, bool inputJump, bool inputDash)
+        public void Move(float moveX, float moveY, bool inputJump, bool inputDash)
         {
             dt = Time.fixedDeltaTime;
 
@@ -222,7 +87,7 @@ namespace PowerMage
 
             Vector3 lookDirection = cTPCamera.lookDirection;
 
-            float moveSpeed = Mathf.Abs(inputX) + Mathf.Abs(inputY);
+            float moveSpeed = Mathf.Abs(moveX) + Mathf.Abs(moveY);
             if (moveSpeed >= 1.0f)
             {
                 moveSpeed = 1.0f;
@@ -261,7 +126,7 @@ namespace PowerMage
             //Get the desired movement unit vector based on where the player is looking at
             Vector3 lookVector = new Vector3(Mathf.Sin(lookDirection.y * Mathf.Deg2Rad), 0.0f, Mathf.Cos(lookDirection.y * Mathf.Deg2Rad));
             Vector3 sideLookVector = Vector3.Cross(lookVector, Vector3.down);
-            moveDirection = Vector3.Normalize(lookVector * inputY + sideLookVector * inputX);
+            moveDirection = Vector3.Normalize(lookVector * moveY + sideLookVector * moveX);
 
             //Get a vector pointing downwards a slope
             Vector2 slopeNormalPerpendicular = Vector2.Perpendicular(new Vector2(slopeNormal.x, slopeNormal.z));
@@ -315,19 +180,33 @@ namespace PowerMage
                     }
                 }
 
-                float tempGravity = gravity;
-                if (bIsWallSliding && moveVector.y < 0.0f && wstTimer > 0.0f)
+                if (!bAllowFlight)
                 {
-                    tempGravity = gravityWallSliding;
-                    wstTimer -= dt;
-                }
+                    float tempGravity = gravity;
+                    if (bIsWallSliding && moveVector.y < 0.0f && wstTimer > 0.0f)
+                    {
+                        tempGravity = gravityWallSliding;
+                        wstTimer -= dt;
+                    }
 
-                tempVector.y = isGrounded ?
-                    tempVector.y + gravity * dt
-                    : moveVector.y + tempGravity * dt;
+                    tempVector.y = isGrounded ?
+                        tempVector.y + gravity * dt
+                        : moveVector.y + tempGravity * dt;
+                }
+                else
+                {
+                    tempVector.y = 0.0f;
+                }
                 /*----------------------------------------------------------------------------------------*/
                 //Dashing
-                if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
+                if (bAllowFlight)
+                {
+                    if (inputDash)
+                    {
+                        tempVector.y = -flightAltitudeSpeed * dt;
+                    }
+                }
+                else if (inputDash && dCooldownTimer <= 0.0f && dDurationTimer <= 0.0f)
                 {
                     if (isGrounded || bAllowMidairDashing)
                     {
@@ -352,7 +231,14 @@ namespace PowerMage
                 }
                 /*----------------------------------------------------------------------------------------*/
                 //Jumping
-                if (inputJump)
+                if (bAllowFlight)
+                {
+                    if (inputJump)
+                    {
+                        tempVector.y = flightAltitudeSpeed * dt; 
+                    }
+                }
+                else if (inputJump)
                 {
                     //Jumping (normal)
                     if (jgtTimer > 0.0f || midAirJumpsLeft > 0)
@@ -453,13 +339,156 @@ namespace PowerMage
             }
         }
 
-        public void Move(Vector3 direction)
+        public void Teleport(Vector3 position)
         {
-            if (!bStunned)
+            physicsLayer = cCharacter.gameObject.layer;
+            cCharacter.gameObject.layer = 31;
+            cCharacter.Move(position - transform.position);
+            cCharacter.gameObject.layer = physicsLayer;
+        }
+
+        #endregion
+
+        #region MONOBEHAVIOUR
+
+        void Awake()
+        {
+            cCharacter = GetComponent<CharacterController>();
+            cTPCamera = GetComponent<ThirdPersonCamera>();
+            inputManager = GetComponent<InputManager>();
+        }
+
+        void Start()
+        {
+            transform.localRotation = Quaternion.identity;
+        }
+
+        //void Update()
+        //{
+        //    if (inputManager.controllerId == 1)
+        //    {
+        //        jumpButton = "Xbox_Jump";
+        //        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        //    }
+
+        //    if (inputManager.controllerId == 2)
+        //    {
+        //        jumpButton = "PS_Jump";
+        //        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        //    }
+
+        //    else
+        //    {
+        //        jumpButton = "Jump";
+        //        GetInput(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis), Input.GetButtonDown(jumpButton), Input.GetButtonDown(dashButton));
+        //    }
+
+        //}
+
+        //void FixedUpdate()
+        //{
+        //    if (enableControls)
+        //    {
+        //        Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
+        //        bJumpingActivated = false;
+        //        bDashingActivated = false;
+        //    }
+        //}
+
+        void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            currentHit = hit;
+            RaycastHit rcHit;
+            if (Physics.Raycast(
+                transform.position + Vector3.up * (cCharacter.height / 2),
+                Vector3.down,
+                out rcHit,
+                Mathf.Infinity,
+                raycastLayerMask
+                ))
             {
-                cCharacter.Move(direction);
+                if (AlmostEqual(hit.normal, rcHit.normal, 0.01f))
+                {
+                    slopeNormal = hit.normal;
+                }
+                else
+                {
+                    //Most likely standing on stairs
+                    slopeNormal = Vector3.up;
+                }
+            }
+            else
+            {
+                //We hit a collider but received nothing from raycast,
+                //assume that we hit a wall / ceiling / other
+                slopeNormal = Vector3.up;
+            }
+
+            if (hit.gameObject.tag == "MovingPlatform")
+            {
+                if (movingPlatform == null)
+                {
+                    movingPlatform = hit.transform;
+                }
+                else if (hit.transform != movingPlatform)
+                {
+                    //Uh oh, we're hitting multiple moving platforms at the same time!
+                    //Reset platform movement values to avoid warping.
+
+                    //NOTE: This solution is not perfect, warping still occurs during unknown edge cases.
+                    //If possible, avoid using multiple moving platforms close to each other!
+                    movingPlatform = null;
+                    movingPlatformPrevPosition = Vector3.zero;
+                    movingPlatformPrevRotation = Vector3.zero;
+                    movingPlatformVelocity = Vector3.zero;
+                }
+            }
+            else
+            {
+                movingPlatform = null;
+            }
+
+            Vector2 temp = Vector2.Perpendicular(new Vector2(hit.normal.x, hit.normal.z));
+            Vector3 temp2 = Vector3.Normalize(Vector3.Cross(hit.normal, new Vector3(temp.x, 0.0f, temp.y)));
+            //Slope normal vector
+            Debug.DrawLine(hit.point, hit.point + hit.normal * 0.2f, (Mathf.Abs(Vector3.Angle(Vector3.up, hit.normal)) < cCharacter.slopeLimit ? Color.green : Color.red), 0.5f);
+            //Vector pointing down the slope
+            Debug.DrawLine(hit.point, hit.point + temp2 * 0.2f, Color.blue, 0.5f);
+        }
+
+        #endregion
+
+        #region CUSTOM_METHODS
+
+        //void GetInput(float inputX, float inputY, bool inputJump, bool inputDash)
+        //{
+        //    movementInput = new Vector2(inputX, inputY);
+        //    if (inputJump && !bJumpingActivated)
+        //    {
+        //        bJumpingActivated = true;
+        //    }
+        //    if (inputDash && !bDashingActivated)
+        //    {
+        //        bDashingActivated = true;
+        //    }
+        //}
+        
+        public void OnDisableRagdoll()
+        {
+            if (ragdollTransform != null)
+            {
+                //Teleport(ragdollTransform.position);
+                moveVector = Vector3.zero;
             }
         }
+        
+        //public void Move(Vector3 direction)
+        //{
+        //    if (!bStunned)
+        //    {
+        //        cCharacter.Move(direction);
+        //    }
+        //}
 
         void CalculateMovingPlatform()
         {
@@ -533,17 +562,17 @@ namespace PowerMage
             return equal;
         }
 
-        public void Stun(float duration)
-        {
-            bStunned = true;
-            StartCoroutine(Stunned(duration));
-        }
+        //public void Stun(float duration)
+        //{
+        //    bStunned = true;
+        //    StartCoroutine(Stunned(duration));
+        //}
 
-        IEnumerator Stunned(float duration)
-        {
-            yield return new WaitForSeconds(duration);
-            bStunned = false;
-        }
+        //IEnumerator Stunned(float duration)
+        //{
+        //    yield return new WaitForSeconds(duration);
+        //    bStunned = false;
+        //}
 
         #endregion
     }

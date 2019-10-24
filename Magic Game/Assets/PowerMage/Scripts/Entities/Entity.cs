@@ -11,6 +11,8 @@ namespace PowerMage
     [DisallowMultipleComponent]
     public abstract class Entity : MonoBehaviour
     {
+        #region VARIABLES
+
         [HideInInspector] public IResource health = null;
         [HideInInspector] public IInput input = null;
         [HideInInspector] public IVision vision = null;
@@ -20,20 +22,8 @@ namespace PowerMage
         private InputContainer container = new InputContainer();
         private Animator animator = null;
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        #endregion
+        
         #region TEAM
 
         public Teams.Team team = Teams.Team.NONE;
@@ -113,7 +103,7 @@ namespace PowerMage
 
         protected virtual void Awake()
         {
-            health = GetComponent<IResource>();
+            health = GetComponent<RegenHealth>();
             input = GetComponent<IInput>();
             character = GetComponent<IPhysicsCharacter>();
             model = GetComponent<AnimatableModel>();
@@ -136,7 +126,9 @@ namespace PowerMage
 
         protected virtual void FixedUpdate()
         {
-
+            character.Move(container.moveVector.x, container.moveVector.y, container.jump, container.dash);
+            container.jump = false;
+            container.dash = false;
         }
 
         public virtual void OnValidate()

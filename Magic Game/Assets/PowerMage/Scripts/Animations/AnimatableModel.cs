@@ -17,17 +17,6 @@ namespace PowerMage
         public GameObject instantiatedModel { get; private set; } = null;
         public Animator animator { get; private set; } = null;
 
-        #endregion
-
-        #region MONOBEHAVIOUR
-
-        protected virtual void Awake()
-        {
-            instantiatedModel = Instantiate(model, transform.position, blenderFix ? Quaternion.Euler(-90.0f, 0.0f, 0.0f) : Quaternion.identity, transform);
-            animator = instantiatedModel.GetComponent<Animator>();
-            animator.runtimeAnimatorController = controller;
-        }
-        
 #if UNITY_EDITOR
 
         private struct WireMesh
@@ -46,6 +35,21 @@ namespace PowerMage
             }
         }
 
+#endif
+
+        #endregion
+
+        #region MONOBEHAVIOUR
+
+        protected virtual void Awake()
+        {
+            instantiatedModel = Instantiate(model, transform.position, blenderFix ? Quaternion.Euler(-90.0f, 0.0f, 0.0f) : Quaternion.identity, transform);
+            animator = instantiatedModel.GetComponent<Animator>();
+            animator.runtimeAnimatorController = controller;
+        }
+        
+#if UNITY_EDITOR
+        
         private GameObject currentModel = null;
         private List<WireMesh> wires = new List<WireMesh>();
 

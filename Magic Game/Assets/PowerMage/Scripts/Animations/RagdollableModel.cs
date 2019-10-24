@@ -5,6 +5,8 @@ namespace PowerMage
 {
     public class RagdollableModel : AnimatableModel
     {
+        #region VARIABLES
+
         private bool _isKinematic = false;
         public bool isKinematic
         {
@@ -27,6 +29,10 @@ namespace PowerMage
         
         private Rigidbody[] rigidBodies = null;
 
+        #endregion
+
+        #region MONOBEHAVIOUR
+
         protected override void Awake()
         {
             base.Awake();
@@ -34,6 +40,10 @@ namespace PowerMage
             GetRigidBodies();
             isKinematic = true;
         }
+
+        #endregion
+
+        #region CUSTOM_METHODS
 
         private void GetRigidBodies()
         {
@@ -48,5 +58,7 @@ namespace PowerMage
             }
             rigidBodies = rb.ToArray();
         }
+
+        #endregion
     }
 }
