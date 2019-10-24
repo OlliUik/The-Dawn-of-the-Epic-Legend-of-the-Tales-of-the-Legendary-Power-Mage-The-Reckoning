@@ -8,13 +8,14 @@ namespace PowerMage
     {
         public GameObject model = null;
         public RuntimeAnimatorController controller = null;
+        public Color color = Color.blue;
 
-        [SerializeField] private bool blenderFix = true;
+        [SerializeField] private bool blenderFix = false;
 
         private GameObject instantiatedModel = null;
         private Animator animator = null;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             instantiatedModel = Instantiate(model, transform.position, blenderFix ? Quaternion.Euler(-90.0f, 0.0f, 0.0f) : Quaternion.identity, transform);
             animator = instantiatedModel.GetComponent<Animator>();
@@ -52,7 +53,7 @@ namespace PowerMage
                     {
                         wires.Clear();
                         GameObject go = Instantiate(model);
-                        foreach (Transform t in go.transform)
+                        foreach (Transform t in go.transform.GetAllChildren())
                         {
                             if (t.GetComponent<MeshRenderer>() != null)
                             {
@@ -72,7 +73,7 @@ namespace PowerMage
                 {
                     foreach (WireMesh m in wires)
                     {
-                        Gizmos.color = Color.blue;
+                        Gizmos.color = color;
                         Gizmos.DrawMesh(m.mesh, 0, transform.position + m.position, transform.rotation * m.rotation, transform.localScale + m.scale);
                     }
                 }
