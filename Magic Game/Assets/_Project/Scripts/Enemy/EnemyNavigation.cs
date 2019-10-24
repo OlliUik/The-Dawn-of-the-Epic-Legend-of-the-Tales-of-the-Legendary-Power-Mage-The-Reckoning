@@ -45,7 +45,9 @@ public class EnemyNavigation : MonoBehaviour
 
     [SerializeField] Rigidbody rb;
 
-    [SerializeField] private float jumpSpeed;
+    [Header("Jumpforce")]
+    [SerializeField]
+    float x, y, z;
 
 
 
@@ -201,14 +203,13 @@ public class EnemyNavigation : MonoBehaviour
 
      
 
-        Debug.Log(isGrounded.ToString());
+       // Debug.Log(isGrounded.ToString());
         
         if (cAgent.isOnOffMeshLink && isGrounded )
         {
-   
+           
             Jump();
             cAgent.updatePosition = true;
-            
         }
 
     }
@@ -255,7 +256,6 @@ public class EnemyNavigation : MonoBehaviour
             cAgent.SetDestination(cEnemyCore.spawnPosition);
         }
         */
-        //AIPatrol();
 
         walkingSpeed = 3f;
         //check if we're close to the destination.
@@ -367,15 +367,22 @@ public class EnemyNavigation : MonoBehaviour
         cAgent.isStopped = true;
         rb.isKinematic = false;
         rb.useGravity = true;
-        StartCoroutine(jumpCoroutine());
+        var direction = (targetVector - transform.position).normalized;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.TransformDirection(direction);
+        rb.MoveRotation(rotation);
+        //this.transform.rotation = Quaternion.LookRotation(targetVector.normalized, Vector3.forward);
+        //this.transform.eulerAngles = new  Vector3(0, 0, z);
+        rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
+
         isGrounded = false;
     }
+
+    
     
     IEnumerator jumpCoroutine()
     {
         yield return new WaitForSeconds(3f);
-        rb.AddRelativeForce(new Vector3(0f, 1000f, 1000f), ForceMode.Impulse);
-
     }
 
 
@@ -384,15 +391,15 @@ public class EnemyNavigation : MonoBehaviour
         if (collision.gameObject.tag.Equals("Ground"))
         {
             Debug.Log("On Ground.");
-            if (!isGrounded)
-            {
-                Debug.Log("Standing & activated agent");
-                isGrounded = true;
-                //needRotate = false;
-                cAgent.Warp(transform.position);
-                cAgent.isStopped = false;
-                Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
-
+            if (!isGrounded )
+            {   
+                  Debug.Log("Standing & activated agent");
+                  isGrounded = true;
+                  cAgent.Warp(transform.position);
+                  cAgent.SetDestination(targetVector);
+                  cAgent.isStopped = false;
+                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+                         
                 if (patrolPoint[navCurrentPoint].transform.position != null)
                 {
                     cAgent.SetDestination(targetVector);
