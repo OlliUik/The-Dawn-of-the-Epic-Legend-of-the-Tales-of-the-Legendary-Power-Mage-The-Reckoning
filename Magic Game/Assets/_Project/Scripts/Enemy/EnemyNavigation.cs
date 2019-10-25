@@ -34,14 +34,14 @@ public class EnemyNavigation : MonoBehaviour
     [Header("Patroling")]
 
     //Probality of switching node.
-    [SerializeField]  float switchProbalitiy = 0.2f;
+    [SerializeField] float switchProbalitiy = 0.2f;
 
     //Probality of waiting on a node.
     [SerializeField] float waitProbalitiy = 0.2f;
 
     [SerializeField] GameObject patrolPointGroup;
 
-    [SerializeField]  List<Waypoint> patrolPoint;
+    [SerializeField] List<Waypoint> patrolPoint;
 
     [SerializeField] Rigidbody rb;
 
@@ -86,7 +86,7 @@ public class EnemyNavigation : MonoBehaviour
         //get list of patrol points in a section.
         foreach (Transform child in patrolPointGroup.transform)
         {
-                patrolPoint.Add(child.GetComponent<Waypoint>());
+            patrolPoint.Add(child.GetComponent<Waypoint>());
         }
 
         //Agent and patrol point checking
@@ -203,11 +203,11 @@ public class EnemyNavigation : MonoBehaviour
 
 
 
-       // Debug.Log(isGrounded.ToString());
+        // Debug.Log(isGrounded.ToString());
 
-        if (cAgent.isOnOffMeshLink && isGrounded )
+        if (cAgent.isOnOffMeshLink && isGrounded)
         {
-            rb.velocity = new Vector3(0,0,0);
+            rb.velocity = new Vector3(0, 0, 0);
             Jump();
             cAgent.updatePosition = true;
         }
@@ -287,6 +287,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    //unused
     void AIPatrol()
     {
         /*
@@ -323,26 +324,26 @@ public class EnemyNavigation : MonoBehaviour
         if (patrolPoint != null)
         {
 
-                targetVector = patrolPoint[navCurrentPoint].transform.position;
-                cAgent.SetDestination(targetVector);
-                isTravel = true;
+            targetVector = patrolPoint[navCurrentPoint].transform.position;
+            cAgent.SetDestination(targetVector);
+            isTravel = true;
         }
     }
 
     //Change the destination of the enemy wizard
     private void ChangePatrolPoint()
     {
-        if(UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
+        if (UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
         {
             patrolForward = !patrolForward;
         }
-        if(patrolForward)
+        if (patrolForward)
         {
             navCurrentPoint = (navCurrentPoint + 1) % patrolPoint.Count;
         }
         else
         {
-            if(--navCurrentPoint < 0)
+            if (--navCurrentPoint < 0)
             {
                 navCurrentPoint = patrolPoint.Count - 1;
             }
@@ -353,26 +354,29 @@ public class EnemyNavigation : MonoBehaviour
     IEnumerator idleTime()
     {
         //Debug.Log("waiting");
-        float randomNum = Random.Range(min,max);
+        float randomNum = Random.Range(min, max);
         cAgent.isStopped = true;
         yield return new WaitForSeconds(randomNum);
         cAgent.isStopped = false;
 
     }
 
-
+    // Jumping will occurs when the AI see OffmeshLink as a shortcut. The offmeshlink is invisible.
+    // It is in the jumpingPoint prefab in the Mast's prototype (for now).
+    // ###NOTE### 
+    //  This jumping mechanic will teleport the enemy if its stuck. Stuck mostly happen when the enemy is too clost to the ledge/fence.
     private void Jump()
     {
         Debug.Log("Jumping/Falling & disabled agent");
-        Vector3 direction = new Vector3(0,0,0);
+        Vector3 direction = new Vector3(0, 0, 0);
         cAgent.isStopped = true;
         rb.isKinematic = false;
         rb.useGravity = true;
-        if(cEnemyCore.currentState == EnemyCore.EState.IDLE)
+        if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
         {
             direction = (targetVector - transform.position).normalized;
         }
-        else
+        else if  (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.SEARCH )
         {
             direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
         }
