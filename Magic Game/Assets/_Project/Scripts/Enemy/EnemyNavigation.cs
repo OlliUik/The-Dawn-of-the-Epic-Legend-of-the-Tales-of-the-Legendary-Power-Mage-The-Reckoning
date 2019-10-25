@@ -86,7 +86,7 @@ public class EnemyNavigation : MonoBehaviour
         //get list of patrol points in a section.
         foreach (Transform child in patrolPointGroup.transform)
         {
-                patrolPoint.Add(child.GetComponent<Waypoint>());   
+                patrolPoint.Add(child.GetComponent<Waypoint>());
         }
 
         //Agent and patrol point checking
@@ -96,7 +96,7 @@ public class EnemyNavigation : MonoBehaviour
         }
         else
         {
-       
+
             if (patrolPoint != null && patrolPoint.Count >= 2)
             {
                 navCurrentPoint = 0;
@@ -125,7 +125,7 @@ public class EnemyNavigation : MonoBehaviour
             case EnemyCore.EState.RAGDOLLED: break;
             default: if (cAgent.hasPath) cAgent.ResetPath(); break;
         }
-        
+
         if (cEnemyCore.currentState == EnemyCore.EState.IDLE
             || cEnemyCore.currentState == EnemyCore.EState.PATROL
             || cEnemyCore.currentState == EnemyCore.EState.PARANOID
@@ -158,8 +158,8 @@ public class EnemyNavigation : MonoBehaviour
         float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
         cAgent.acceleration += accel;
     }
-       
-    
+
+
     void Update()
     {
         //    if (navTimer <= 0.0f)
@@ -201,10 +201,10 @@ public class EnemyNavigation : MonoBehaviour
             }
           */
 
-     
+
 
        // Debug.Log(isGrounded.ToString());
-        
+
         if (cAgent.isOnOffMeshLink && isGrounded )
         {
             rb.velocity = new Vector3(0,0,0);
@@ -213,7 +213,7 @@ public class EnemyNavigation : MonoBehaviour
         }
 
     }
-   
+
     /*
     void OnDrawGizmosSelected()
     {
@@ -244,7 +244,7 @@ public class EnemyNavigation : MonoBehaviour
     #endregion
 
     #region AI_LOGIC
-    
+
     //Idle is now switching between patrol and idle randomly.
     void AIIdle()
     {
@@ -286,7 +286,7 @@ public class EnemyNavigation : MonoBehaviour
             isWaiting = (Random.value > 0.5f);
         }
     }
-    
+
     void AIPatrol()
     {
         /*
@@ -372,7 +372,7 @@ public class EnemyNavigation : MonoBehaviour
         {
             direction = (targetVector - transform.position).normalized;
         }
-        else 
+        else
         {
             direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
         }
@@ -386,8 +386,8 @@ public class EnemyNavigation : MonoBehaviour
         isGrounded = false;
     }
 
-    
-    
+
+
     IEnumerator jumpCoroutine()
     {
         yield return new WaitForSeconds(3f);
@@ -400,13 +400,13 @@ public class EnemyNavigation : MonoBehaviour
         {
             Debug.Log("On Ground.");
             if (!isGrounded && cAgent.isOnNavMesh )
-            {   
+            {
                   Debug.Log("Standing & activated agent");
                   isGrounded = true;
                   cAgent.isStopped = false;
                   cAgent.Warp(transform.position);
-                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());   
-                
+                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+
                 if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
                 {
                     cAgent.SetDestination(targetVector);

@@ -46,4 +46,5 @@ public class QualityHandler : MonoBehaviour
     public void REALTIME_REFLECTIONS(bool b)                    { QualityManager.DATA.REALTIME_REFLECTIONS = b; }
     public void BILLBOARDS_FACE_CAMERA_POSITION(bool b)         { QualityManager.DATA.BILLBOARDS_FACE_CAMERA_POSITION = b; }
     public void UI_RESOLUTION_DPI_SCALING(float f)              { QualityManager.DATA.UI_RESOLUTION_DPI_SCALING = f; }
+    public void FULLSCREEN(bool b)                              { QualityManager.DATA.FULLSCREEN = b; }
 }

@@ -46,8 +46,12 @@ public class MoisturizeEffect : StatusEffect
         {
             if (ignite != null)
             {
+                /*
                 // spell contains ignite --> reduce cooldown
                 endTime = Time.time + (duration * 0.5f);
+                */
+
+                // Spell contains both moisturize and ignite, nothing to cancel.
                 return;
             }
             else

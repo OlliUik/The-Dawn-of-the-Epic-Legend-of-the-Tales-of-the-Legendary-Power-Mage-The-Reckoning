@@ -154,7 +154,7 @@ public class Spell : MonoBehaviour
 
     public virtual void DealDamage(Health health, float amount)
     {
-        Debug.Log("Damage dealed: " + amount * damageMultiplier);
+        //Debug.Log("Damage dealed: " + amount * damageMultiplier);
         health.Hurt(amount * damageMultiplier, true);
     }
 
