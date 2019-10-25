@@ -19,6 +19,8 @@ public class VolumeManager : MonoBehaviour
 
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         sliderMaster.value = PlayerPrefs.GetFloat("MasterVolume", 1.0f);
         sliderMusic.value = PlayerPrefs.GetFloat("MusicVolume", 1.0f);
         sliderSfx.value = PlayerPrefs.GetFloat("SfxVolume", 1.0f);
