@@ -207,7 +207,7 @@ public class EnemyNavigation : MonoBehaviour
         
         if (cAgent.isOnOffMeshLink && isGrounded )
         {
-           
+            rb.velocity = new Vector3(0,0,0);
             Jump();
             cAgent.updatePosition = true;
         }
@@ -364,10 +364,18 @@ public class EnemyNavigation : MonoBehaviour
     private void Jump()
     {
         Debug.Log("Jumping/Falling & disabled agent");
+        Vector3 direction = new Vector3(0,0,0);
         cAgent.isStopped = true;
         rb.isKinematic = false;
         rb.useGravity = true;
-        var direction = (targetVector - transform.position).normalized;
+        if(cEnemyCore.currentState == EnemyCore.EState.IDLE)
+        {
+            direction = (targetVector - transform.position).normalized;
+        }
+        else 
+        {
+            direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
+        }
         Quaternion rotation = Quaternion.LookRotation(direction);
         transform.TransformDirection(direction);
         rb.MoveRotation(rotation);
@@ -391,16 +399,15 @@ public class EnemyNavigation : MonoBehaviour
         if (collision.gameObject.tag.Equals("Ground"))
         {
             Debug.Log("On Ground.");
-            if (!isGrounded )
+            if (!isGrounded && cAgent.isOnNavMesh )
             {   
                   Debug.Log("Standing & activated agent");
                   isGrounded = true;
-                  cAgent.Warp(transform.position);
-                  cAgent.SetDestination(targetVector);
                   cAgent.isStopped = false;
-                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
-                         
-                if (patrolPoint[navCurrentPoint].transform.position != null)
+                  cAgent.Warp(transform.position);
+                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());   
+                
+                if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
                 {
                     cAgent.SetDestination(targetVector);
                 }
