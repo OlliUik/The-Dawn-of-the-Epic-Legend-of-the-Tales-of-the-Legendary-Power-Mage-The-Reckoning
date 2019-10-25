@@ -23,10 +23,49 @@ public class Aoe : Spell
     private void Start()
     {
         spellType = SpellType.AOE;
-        GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
-        copyGraphics.transform.localScale += new Vector3(graphicUpScale, graphicUpScale, graphicUpScale);
-        copyGraphics.transform.SetParent(gameObject.transform);
         modifiers = GetComponents<SpellModifier>();
+        InitElementGraphics();
+    }
+
+    private void InitElementGraphics()
+    {
+        List<GameObject> elementPrefabs = new List<GameObject>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            Debug.Log("Current AoE modifier element check: " + modifier.name);
+            if (modifier.aoeElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(modifier.aoeElementGraphic))
+                {
+                    elementPrefabs.Add(modifier.aoeElementGraphic);
+                    Debug.Log("Current count = " + elementPrefabs.Count);
+                }
+            }
+        }
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            Debug.Log("Current AoE status effect element check: " + statusEffect.name);
+            if (statusEffect.aoeElementGraphic != null)
+            {
+                Debug.Log("Added " + statusEffect.name + " graphics");
+                if (!elementPrefabs.Contains(statusEffect.aoeElementGraphic))
+                {
+                    elementPrefabs.Add(statusEffect.aoeElementGraphic);
+                    Debug.Log("Current count = " + elementPrefabs.Count);
+                }
+            }
+        }
+        Debug.Log("All counts = " + elementPrefabs.Count);
+        foreach (GameObject elementPrefab in elementPrefabs)
+        {
+            Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(transform);
+        }
+        if (graphics != null && elementPrefabs.Count <= 0)
+        {
+            GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
+            copyGraphics.transform.localScale += new Vector3(graphicUpScale, graphicUpScale, graphicUpScale);
+            copyGraphics.transform.SetParent(gameObject.transform);
+        }
     }
 
     private void Update()

@@ -15,6 +15,7 @@ public class StatusEffectManager : MonoBehaviour
         Confuse,
         StackingDamage,
         LeechLife,
+        Stun,
     };
 
     public List<StatusEffect> affectingEffects = new List<StatusEffect>();
@@ -32,6 +33,7 @@ public class StatusEffectManager : MonoBehaviour
         AppliedEffects.Add(EffectType.Confuse, false);
         AppliedEffects.Add(EffectType.StackingDamage, false);
         AppliedEffects.Add(EffectType.LeechLife, false);
+        AppliedEffects.Add(EffectType.Stun, false);
     }
 
     // Loop through all the affecting StatusEffects and call OnTick()

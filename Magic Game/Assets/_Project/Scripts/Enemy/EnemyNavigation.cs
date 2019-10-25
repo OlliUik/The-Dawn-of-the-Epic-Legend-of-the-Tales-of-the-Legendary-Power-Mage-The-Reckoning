@@ -201,7 +201,7 @@ public class EnemyNavigation : MonoBehaviour
 
      
 
-        Debug.Log(isGrounded.ToString());
+        //Debug.Log(isGrounded.ToString());
         
         if (cAgent.isOnOffMeshLink && isGrounded )
         {

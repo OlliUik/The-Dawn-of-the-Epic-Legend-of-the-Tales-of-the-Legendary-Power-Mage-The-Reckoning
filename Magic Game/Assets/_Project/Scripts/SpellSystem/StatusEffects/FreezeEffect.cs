@@ -7,23 +7,38 @@ public class FreezeEffect : StatusEffect
 
     public float slowAmount = 5f;               // how much slows per spell hit
     public float moistSlowMultiplier = 1.5f;    // if target is moist how much more we slow default 1.5f
-    public float startSpeed;                    // what was the speed before started slowing
+    public GameObject iceStunParticle;
 
-    public FreezeEffect(float duration, GameObject graphics, float slowAmount, float moistSlowMultiplier) : base(duration, graphics)
+    /*
+     * Moved to FreezeVariables
+     * 
+    private bool isAlreadySlowed = false;
+    private bool isStun = false;
+    private EnemyVision enemyVision;
+    private GameObject copyIceStunParticle;
+
+    public float startRunSpeed;                    // what was the speed before started slowing
+    public float startWalkSpeed;                    // what was the speed before started slowing
+    public float startPanicSpeed;                    // what was the speed before started slowing
+    */
+
+    public int cardAmount = 1;
+
+    public FreezeEffect(float duration, GameObject graphics, float slowAmount, float moistSlowMultiplier, GameObject iceStunParticle) : base(duration, graphics)
     {
         name = "Freeze";
         this.duration = duration;
         this.slowAmount = slowAmount;
         this.moistSlowMultiplier = moistSlowMultiplier;
         this.graphics = graphics;
+        this.iceStunParticle = iceStunParticle;
     }
 
 
     private void Slow()
     {
-        Debug.Log("Slow");
 
-        // change this for enemy, currently not working yet
+        // This is for player's
         var movement = target.GetComponent<PlayerMovement>();
         // Debug.Log("Movement found: " + (movement != null));
         if (movement != null)
@@ -36,7 +51,7 @@ public class FreezeEffect : StatusEffect
                 */
 
                 // stun for a duration
-                movement.accelerationMultiplier = -1;
+                movement.accelerationMultiplier = 0;
                 return;
             }
             else
@@ -53,30 +68,35 @@ public class FreezeEffect : StatusEffect
                 effectManager.RemoveStatusEffect(this);
                 movement.Stun(3f);
             }
-
         }
-    }
 
+    }
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
-        Debug.Log("Apply new ");
-
+        Debug.Log("Reapply Freeze");
         base.OnApply(target, allEffectsInSpell);
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Freeze] = true;
         endTime = Time.time + duration;
         Slow();
-
-        CheckForCounterEffects(allEffectsInSpell);
+        if (target.GetComponent<EnemyCore>() != null && target.GetComponent<FreezeVariables>() == null)
+        {
+            FreezeVariables temp = target.AddComponent<FreezeVariables>();
+            temp.freeze(slowAmount, iceStunParticle, cardAmount);
+        }
     }
 
     public override void ReApply(List<StatusEffect> allEffectsInSpell)
     {
         // slow target again
         Debug.Log("Reapply");
-
-        base.ReApply(allEffectsInSpell);
         Slow();
+        if (target.GetComponent<EnemyCore>() != null && target.GetComponent<FreezeVariables>() == null)
+        {
+            FreezeVariables temp = target.AddComponent<FreezeVariables>();
+            temp.freeze(slowAmount, iceStunParticle, cardAmount);
+        }
+        base.ReApply(allEffectsInSpell);
     }
 
     public override void OnLeave()
@@ -89,11 +109,10 @@ public class FreezeEffect : StatusEffect
                 movement.accelerationMultiplier = 1f;
             }
         }
-        else if(target.CompareTag("Enemy"))
+        if(target.GetComponent<FreezeVariables>() != null)
         {
-            // reset speed
+            GameObject.Destroy(target.GetComponent<FreezeVariables>());
         }
-
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Freeze] = false;
         base.OnLeave();
     }
