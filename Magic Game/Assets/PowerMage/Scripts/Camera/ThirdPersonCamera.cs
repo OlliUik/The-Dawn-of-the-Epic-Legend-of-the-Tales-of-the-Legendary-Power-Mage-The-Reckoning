@@ -53,7 +53,12 @@ namespace PowerMage
 
         public Vector3 GetLookDirection()
         {
-            return lookDirection;
+            return cameraObject.transform.forward;
+        }
+
+        public Vector3 GetPivot()
+        {
+            return pivotPoint;
         }
 
         #endregion

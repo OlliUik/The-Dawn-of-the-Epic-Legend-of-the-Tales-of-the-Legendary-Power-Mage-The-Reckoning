@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,6 +19,8 @@ namespace PowerMage
         [HideInInspector] public IVision vision = null;
         [HideInInspector] public IPhysicsCharacter character = null;
         [HideInInspector] public AnimatableModel model = null;
+
+        public bool canRagdoll { get; protected set; } = false;
 
         private InputContainer container = new InputContainer();
         private Animator animator = null;
@@ -99,12 +102,20 @@ namespace PowerMage
 
         #endregion
         
+        IEnumerator RotateTowardsTarget()
+        {
+            model.rotateToMoveDir = false;
+            yield return new WaitForSeconds(5.0f);
+            model.rotateToMoveDir = true;
+        }
+        
         #region MONOBEHAVIOUR
 
         protected virtual void Awake()
         {
             health = GetComponent<RegenHealth>();
             input = GetComponent<IInput>();
+            vision = GetComponent<IVision>();
             character = GetComponent<IPhysicsCharacter>();
             model = GetComponent<AnimatableModel>();
             animator = model.animator;
@@ -122,6 +133,22 @@ namespace PowerMage
                 container.dash ? true : ic.dash,
                 container.attack ? true : ic.attack
                 );
+
+            if (character != null && model != null)
+            {
+                Vector3 moveDir = character.GetVelocity();
+                Vector3 lookDir = character.GetLookDirection();
+                //model.moveDirection = new Vector2(moveDir.x, moveDir.z);
+                model.lookDirection = new Vector2(lookDir.x, lookDir.z).normalized;
+                model.lookVector = vision.GetLookDirection();
+                model.lookPivot = vision.GetPivot();
+
+                if (Input.GetButton("Fire1"))
+                {
+                    StopCoroutine(RotateTowardsTarget());
+                    StartCoroutine(RotateTowardsTarget());
+                }
+            }
         }
 
         protected virtual void FixedUpdate()

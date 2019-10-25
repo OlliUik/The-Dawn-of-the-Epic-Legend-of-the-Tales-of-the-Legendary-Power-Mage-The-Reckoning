@@ -9,8 +9,10 @@ namespace PowerMage
     [AddComponentMenu("PowerMage/Player Character")]
     public class PlayerCharacter : Entity
     {
-
-
-
+        protected override void Awake()
+        {
+            base.Awake();
+            canRagdoll = true;
+        }
     }
 }

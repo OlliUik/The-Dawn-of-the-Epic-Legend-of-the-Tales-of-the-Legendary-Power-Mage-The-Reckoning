@@ -21,6 +21,7 @@ namespace PowerMage
         [HideInInspector] public int midAirJumps = 0;
         [HideInInspector] public bool enableControls = true;
         [HideInInspector] public bool isRagdolled = false;
+        [HideInInspector] Vector3 lookVector = Vector3.zero;
 
         [Header("Serialized")]
         [SerializeField] private bool bAllowFlight = false;
@@ -78,6 +79,16 @@ namespace PowerMage
 
         #region INTERFACE_IMPLEMENTATION
 
+        public Vector3 GetVelocity()
+        {
+            return moveVector;
+        }
+
+        public Vector3 GetLookDirection()
+        {
+            return lookVector;
+        }
+
         public void Move(float moveX, float moveY, bool inputJump, bool inputDash)
         {
             dt = Time.fixedDeltaTime;
@@ -124,7 +135,7 @@ namespace PowerMage
             }
 
             //Get the desired movement unit vector based on where the player is looking at
-            Vector3 lookVector = new Vector3(Mathf.Sin(lookDirection.y * Mathf.Deg2Rad), 0.0f, Mathf.Cos(lookDirection.y * Mathf.Deg2Rad));
+            lookVector = new Vector3(Mathf.Sin(lookDirection.y * Mathf.Deg2Rad), 0.0f, Mathf.Cos(lookDirection.y * Mathf.Deg2Rad));
             Vector3 sideLookVector = Vector3.Cross(lookVector, Vector3.down);
             moveDirection = Vector3.Normalize(lookVector * moveY + sideLookVector * moveX);
 
