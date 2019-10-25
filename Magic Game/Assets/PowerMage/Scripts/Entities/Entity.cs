@@ -23,7 +23,6 @@ namespace PowerMage
         public bool canRagdoll { get; protected set; } = false;
 
         private InputContainer container = new InputContainer();
-        private Animator animator = null;
         
         #endregion
         
@@ -101,14 +100,7 @@ namespace PowerMage
         protected virtual void OnRagdolled() { }
 
         #endregion
-        
-        IEnumerator RotateTowardsTarget()
-        {
-            model.rotateToMoveDir = false;
-            yield return new WaitForSeconds(5.0f);
-            model.rotateToMoveDir = true;
-        }
-        
+
         #region MONOBEHAVIOUR
 
         protected virtual void Awake()
@@ -118,7 +110,6 @@ namespace PowerMage
             vision = GetComponent<IVision>();
             character = GetComponent<IPhysicsCharacter>();
             model = GetComponent<AnimatableModel>();
-            animator = model.animator;
 
             health.Initialize(this);
         }
@@ -138,18 +129,8 @@ namespace PowerMage
             {
                 Vector2 moveDir = new Vector2(character.GetVelocity().x, character.GetVelocity().z);
                 Vector3 lookDir = character.GetLookDirection();
-                //model.moveDirection = new Vector2(moveDir.x, moveDir.z);
                 model.SetLookDirection(vision.GetLookDirection());
                 model.SetMoveVelocity(moveDir);
-                //model.lookDirection = new Vector2(lookDir.x, lookDir.z).normalized;
-                //model.lookVector = vision.GetLookDirection();
-                //model.lookPivot = vision.GetPivot();
-
-                if (Input.GetButton("Fire1"))
-                {
-                    StopCoroutine(RotateTowardsTarget());
-                    StartCoroutine(RotateTowardsTarget());
-                }
             }
         }
 

@@ -19,23 +19,10 @@ namespace PowerMage
         public GameObject instantiatedModel { get; private set; } = null;
         public Animator animator { get; private set; } = null;
         public InverseKinematicsHandler ikHandler { get; private set; } = null;
-        [HideInInspector] public Vector2 lookDirection = Vector2.zero;
-        [HideInInspector] public Vector3 lookVector = Vector3.zero;
-        [HideInInspector] public Vector3 lookPivot = Vector3.zero;
         
-        private Vector3 _lookAtTarget = Vector3.zero;
-        private Vector3 LookAtTarget
-        {
-            get { return _lookAtTarget; }
-            set
-            {
-                _lookAtTarget = value;
-                Vector3 dir = value - animator.GetBoneTransform(HumanBodyBones.Head).position;
-                lookAtDirection = dir.normalized;
-            }
-        }
         private Vector3 lookAtDirection = Vector3.zero;
         private Vector2 moveDirection = Vector2.zero;
+        private Transform headTransform = null;
         
 #if UNITY_EDITOR
 
@@ -61,14 +48,21 @@ namespace PowerMage
 
         #region INTERFACE_IMPLEMENTATION
 
+        /// <summary>
+        /// Turns an animated model's head towards a normalized direction from the model's head.
+        /// </summary>
         public void SetLookDirection(Vector3 dir)
         {
-            lookAtDirection = dir;
+            lookAtDirection = dir.normalized;
         }
 
+        /// <summary>
+        /// Turns an animated model's head towards a world position.
+        /// </summary>
         public void SetLookAt(Vector3 target)
         {
-            LookAtTarget = target;
+            Vector3 dir = target - headTransform.position;
+            lookAtDirection = dir.normalized;
         }
 
         public void SetMoveVelocity(Vector2 velocity)
@@ -85,45 +79,14 @@ namespace PowerMage
             instantiatedModel = Instantiate(model, transform.position, Quaternion.identity, transform);
             animator = instantiatedModel.GetComponent<Animator>();
             animator.runtimeAnimatorController = controller;
+            headTransform = animator.GetBoneTransform(HumanBodyBones.Head);
             ikHandler = animator.gameObject.AddComponent<InverseKinematicsHandler>();
         }
 
         protected virtual void Update()
         {
-            Debug.DrawRay(animator.GetBoneTransform(HumanBodyBones.Head).position, lookAtDirection, Color.cyan);
-            
-            float angle = 0.0f;
-
-            if (rotateToMoveDir)
-            {
-                if (moveDirection.magnitude >= Mathf.Epsilon)
-                {
-                    angle = Vector2.SignedAngle(Vector2.up, moveDirection.normalized * (Vector2.down + Vector2.right)) + 180.0f;
-                    instantiatedModel.transform.rotation = Quaternion.Lerp(instantiatedModel.transform.rotation, Quaternion.Euler(0.0f, angle, 0.0f), rotationLerp);
-                }
-            }
-            else
-            {
-                angle = Vector2.SignedAngle(Vector2.up, new Vector2(lookAtDirection.x, lookAtDirection.z) * (Vector2.down + Vector2.right)) + 180.0f;
-                instantiatedModel.transform.rotation = Quaternion.Lerp(instantiatedModel.transform.rotation, Quaternion.Euler(0.0f, angle, 0.0f), rotationLerp);
-            }
-
-            float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
-            float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
-
-            float nx = moveDirection.x;
-            float ny = moveDirection.y;
-
-            Vector2 velocityRotated = new Vector2(
-                cos * nx - sin * ny,
-                sin * nx + cos * ny
-                );
-
-            animator.SetFloat("Movement Speed", (velocityRotated.magnitude) * animationSpeedMultiplier);
-            animator.SetFloat("Movement Forward", velocityRotated.y * animationBlendingMultiplier);
-            animator.SetFloat("Movement Right", velocityRotated.x * animationBlendingMultiplier);
-
-            ikHandler.lookAtTarget = animator.GetBoneTransform(HumanBodyBones.Head).position + lookAtDirection;
+            Move(moveDirection, new Vector2(lookAtDirection.x, lookAtDirection.z).normalized);
+            Look(lookAtDirection);
         }
         
 #if UNITY_EDITOR
@@ -179,7 +142,47 @@ namespace PowerMage
 
         #region CUSTOM_METHODS
 
+        private void Move(Vector2 moveVelocity, Vector2 lookAtDir)
+        {
+            float angle = 0.0f;
 
+            if (rotateToMoveDir)
+            {
+                if (moveVelocity.magnitude >= Mathf.Epsilon)
+                {
+                    angle = Vector2.SignedAngle(Vector2.up, moveVelocity.normalized * (Vector2.down + Vector2.right)) + 180.0f;
+                    instantiatedModel.transform.rotation = Quaternion.Lerp(instantiatedModel.transform.rotation, Quaternion.Euler(0.0f, angle, 0.0f), rotationLerp);
+                }
+            }
+            else
+            {
+                angle = Vector2.SignedAngle(Vector2.up, lookAtDir * (Vector2.down + Vector2.right)) + 180.0f;
+                instantiatedModel.transform.rotation = Quaternion.Lerp(instantiatedModel.transform.rotation, Quaternion.Euler(0.0f, angle, 0.0f), rotationLerp);
+            }
+
+            float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
+            float cos = Mathf.Cos(angle * Mathf.Deg2Rad);
+
+            float nx = moveDirection.x;
+            float ny = moveDirection.y;
+
+            Vector2 velocityRotated = new Vector2(
+                cos * nx - sin * ny,
+                sin * nx + cos * ny
+                );
+
+            animator.SetFloat("Movement Speed", (velocityRotated.magnitude) * animationSpeedMultiplier);
+            animator.SetFloat("Movement Forward", velocityRotated.y * animationBlendingMultiplier);
+            animator.SetFloat("Movement Right", velocityRotated.x * animationBlendingMultiplier);
+        }
+
+        private void Look(Vector3 dir)
+        {
+            if (headTransform != null)
+            {
+                ikHandler.lookAtTarget = headTransform.position + dir;
+            }
+        }
 
         #endregion
     }
