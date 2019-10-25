@@ -41,11 +41,14 @@ public class Levitation : SpellModifier
             Debug.Log("Levitation called");
             levitatingObject = Instantiate(levitationObjectPrefab, collision.contacts[0].point, Quaternion.identity) as GameObject;
             levitatingObject.transform.SetParent(caster.transform.Find("Camera").transform);
-            
-            levitatingLineParticle = Instantiate(lineParticle, transform.position, Quaternion.identity) as GameObject;
-            
-            levitatingLineParticle.AddComponent<LevitationLineParticle>();
-            levitatingLineParticle.GetComponent<LevitationLineParticle>().caster = caster;
+
+            if (collision.gameObject.GetComponent<Rigidbody>() != null)
+            {
+                levitatingLineParticle = Instantiate(lineParticle, transform.position, Quaternion.identity) as GameObject;
+
+                levitatingLineParticle.AddComponent<LevitationLineParticle>();
+                levitatingLineParticle.GetComponent<LevitationLineParticle>().caster = caster;
+            }
 
             LevitationObject.holdingParticlePrefab = holdingParticle;
         }

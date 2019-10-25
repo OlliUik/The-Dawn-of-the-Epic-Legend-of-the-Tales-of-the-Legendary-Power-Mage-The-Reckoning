@@ -62,6 +62,7 @@ public class ScoreSystem : MonoBehaviour
         else
         {
             ScoreUI.scoreUI.addedScoreString = "";
+            ScoreUI.scoreUI.colorChange = Color.red;
             timer = 1.0f;
         }
     }

@@ -9,6 +9,7 @@ public class PortalModifier : SpellScriptableModifier
     public GameObject portalGatePrefab;
     public GameObject portalActiveParticle;
     public int increasingPortal = 1;
+    public float increasingDuration = 5;
 
     public override void AddSpellModifier(Spell spell)
     {
@@ -16,6 +17,7 @@ public class PortalModifier : SpellScriptableModifier
         if (compo != null)
         {
             compo.maximumPortals += increasingPortal;
+            compo.duration += increasingDuration;
             //PortalGateManager.Instance.maximumPortals += increasingPortal;
             Debug.Log("Maximum portal " + PortalGateManager.Instance.maximumPortals);
             return;
@@ -23,6 +25,7 @@ public class PortalModifier : SpellScriptableModifier
 
         Portal component = spell.gameObject.AddComponent<Portal>();
         component.portalGatePrefab = portalGatePrefab;
+        component.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
         PortalGateManager.Instance.portalActiveParticle = portalActiveParticle;
     }
 

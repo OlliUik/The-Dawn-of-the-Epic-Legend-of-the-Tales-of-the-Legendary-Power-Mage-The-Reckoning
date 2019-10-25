@@ -16,6 +16,10 @@ public class StatusEffect
 
     protected GameObject graphicsCopy;
 
+    public GameObject projecttileElementGraphic;
+    public GameObject beamElementGraphic;
+    public GameObject aoeElementGraphic;
+
     // StatusEffectManager uses this
     public bool IsFinished
     {
@@ -69,5 +73,12 @@ public class StatusEffect
 
     // Ignite and moisturize use this to check the existing StatusEffect and what are new effects in spell
     public virtual void CheckForCounterEffects(List<StatusEffect> allEffectsInSpell) { }
+
+    public void SetElementParticles(GameObject projecttileParticle, GameObject beamParticle, GameObject aoeParticle)
+    {
+        projecttileElementGraphic = projecttileParticle;
+        beamElementGraphic = beamParticle;
+        aoeElementGraphic = aoeParticle;
+    }
 
 }

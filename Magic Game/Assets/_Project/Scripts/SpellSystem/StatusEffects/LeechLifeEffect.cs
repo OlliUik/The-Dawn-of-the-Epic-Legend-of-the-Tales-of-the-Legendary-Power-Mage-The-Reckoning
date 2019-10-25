@@ -26,8 +26,11 @@ public class LeechLifeEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
-        //graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + (Vector3.up * 1f), Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
-        //graphicsCopy.transform.SetParent(target.transform);
+        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + (Vector3.up * 1f), Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
+        graphicsCopy.transform.SetParent(target.transform);
+        graphicsCopy.AddComponent<LookAtTargetParticleLine>();
+        graphicsCopy.GetComponent<LookAtTargetParticleLine>().targetTransform = caster.transform;
+        graphicsCopy.GetComponent<LookAtTargetParticleLine>().offset = new Vector3(0,0.75f,0);
         this.target = target;
         giving = target.GetComponent<Health>();
         resiving = caster.GetComponent<Health>();

@@ -25,6 +25,9 @@ public class MoisturizeModifier : SpellScriptableModifier
         }
 
         // Apply as new
-        spell.statusEffects.Add(new MoisturizeEffect(duration, graphics, waterPoolPrefab, size));
+        MoisturizeEffect temp = new MoisturizeEffect(duration, graphics, waterPoolPrefab, size);
+        temp.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
+        spell.statusEffects.Add(temp);
+        
     }
 }

@@ -73,8 +73,12 @@ public class IgniteEffect : StatusEffect
         {
             if (moisturize != null)
             {
+                /*
                 // spell contains moisturize --> reduce duration
                 endTime = Time.time + (duration * 0.5f);
+                */
+
+                // Spell contains both moisturize and ignite, nothing to cancel.
                 return;
             }
             else

@@ -36,6 +36,7 @@ public sealed class PortalGateManager
         portalGates = new List<GameObject>();
         telepotingObjects = new List<GameObject>();
         usingMaximumPortals = maximumPortals;
+        usingSpellDuration = spellDuration;
     }
 
     public static void ResetVariables()
@@ -51,6 +52,10 @@ public sealed class PortalGateManager
     List<GameObject> portalGates;
     public int maximumPortals = 2;
     int usingMaximumPortals;
+    private float spellDuration = 5;
+    private float usingSpellDuration;
+
+    public float SpellDuration { get => usingSpellDuration; set => spellDuration = value; }
 
     List<GameObject> telepotingObjects;
     public GameObject portalActiveParticle;
@@ -60,10 +65,20 @@ public sealed class PortalGateManager
     {
         if(CreatedPortalsAmount() >= usingMaximumPortals)
         {
-            GameObject.Destroy(portalGates[0]);
-            portalGates.RemoveAt(0);
+            DestroyOldestPortal();
         }
         portalGates.Add(portalGate);
+    }
+
+    public void DestroyOldestPortal()
+    {
+        GameObject.Destroy(portalGates[0]);
+        //portalGates.RemoveAt(0);
+    }
+
+    public void RemoveOldestPortal()
+    {
+            portalGates.RemoveAt(0);
     }
 
     public GameObject GetRandomPortal()
@@ -116,6 +131,12 @@ public sealed class PortalGateManager
     public int CreatedPortalsAmount()
     {
         return portalGates.Count;
+    }
+
+    public void UpdateFromModifier()
+    {
+        usingMaximumPortals = maximumPortals;
+        usingSpellDuration = spellDuration;
     }
 
 }

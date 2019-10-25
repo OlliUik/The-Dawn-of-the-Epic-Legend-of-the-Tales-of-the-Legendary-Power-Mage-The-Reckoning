@@ -11,6 +11,9 @@ public class Singularity : SpellModifier
     bool spawned = false;
     GameObject prefab;
 
+    public float aoeRadius = 5f;
+    public int aoeAmount = 4;
+
 
     public override void OnSpellCast(Spell spell)
     {
@@ -19,11 +22,16 @@ public class Singularity : SpellModifier
             if (!spawned)
             {
                 Aoe aoe = (Aoe)spell;
-                prefab = Instantiate(singularityPrefab);
-                prefab.transform.SetParent(gameObject.transform);
-                BlackHole script = prefab.GetComponent<BlackHole>();
-                script.variables = variables;
-                script.variables.duration = aoe.duration; // override duration to aoes duration
+                for (int i = 0; i < aoeAmount; i++)
+                {
+                    float angle = i * Mathf.PI * 2f / aoeAmount;
+                    Vector3 newPos = new Vector3(((Mathf.Cos(angle) * aoeRadius)), 0, Mathf.Sin(angle) * aoeRadius) + transform.position;
+                    prefab = Instantiate(singularityPrefab, newPos, Quaternion.identity);
+                    prefab.transform.SetParent(gameObject.transform);
+                    BlackHole script = prefab.GetComponent<BlackHole>();
+                    script.variables = variables;
+                    script.variables.duration = aoe.duration;
+                }
                 spawned = true;
             }
         }
