@@ -34,18 +34,20 @@ public class EnemyNavigation : MonoBehaviour
     [Header("Patroling")]
 
     //Probality of switching node.
-    [SerializeField]  float switchProbalitiy = 0.2f;
+    [SerializeField] float switchProbalitiy = 0.2f;
 
     //Probality of waiting on a node.
     [SerializeField] float waitProbalitiy = 0.2f;
 
     [SerializeField] GameObject patrolPointGroup;
 
-    [SerializeField]  List<Waypoint> patrolPoint;
+    [SerializeField] List<Waypoint> patrolPoint;
 
     [SerializeField] Rigidbody rb;
 
-    [SerializeField] private float jumpSpeed;
+    [Header("Jumpforce")]
+    [SerializeField]
+    float x, y, z;
 
 
 
@@ -84,7 +86,7 @@ public class EnemyNavigation : MonoBehaviour
         //get list of patrol points in a section.
         foreach (Transform child in patrolPointGroup.transform)
         {
-                patrolPoint.Add(child.GetComponent<Waypoint>());   
+            patrolPoint.Add(child.GetComponent<Waypoint>());
         }
 
         //Agent and patrol point checking
@@ -94,7 +96,7 @@ public class EnemyNavigation : MonoBehaviour
         }
         else
         {
-       
+
             if (patrolPoint != null && patrolPoint.Count >= 2)
             {
                 navCurrentPoint = 0;
@@ -123,7 +125,7 @@ public class EnemyNavigation : MonoBehaviour
             case EnemyCore.EState.RAGDOLLED: break;
             default: if (cAgent.hasPath) cAgent.ResetPath(); break;
         }
-        
+
         if (cEnemyCore.currentState == EnemyCore.EState.IDLE
             || cEnemyCore.currentState == EnemyCore.EState.PATROL
             || cEnemyCore.currentState == EnemyCore.EState.PARANOID
@@ -156,8 +158,8 @@ public class EnemyNavigation : MonoBehaviour
         float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
         cAgent.acceleration += accel;
     }
-       
-    
+
+
     void Update()
     {
         //    if (navTimer <= 0.0f)
@@ -199,20 +201,19 @@ public class EnemyNavigation : MonoBehaviour
             }
           */
 
-     
 
-        //Debug.Log(isGrounded.ToString());
-        
-        if (cAgent.isOnOffMeshLink && isGrounded )
+
+        // Debug.Log(isGrounded.ToString());
+
+        if (cAgent.isOnOffMeshLink && isGrounded)
         {
-   
+            rb.velocity = new Vector3(0, 0, 0);
             Jump();
             cAgent.updatePosition = true;
-            
         }
 
     }
-   
+
     /*
     void OnDrawGizmosSelected()
     {
@@ -243,7 +244,7 @@ public class EnemyNavigation : MonoBehaviour
     #endregion
 
     #region AI_LOGIC
-    
+
     //Idle is now switching between patrol and idle randomly.
     void AIIdle()
     {
@@ -255,7 +256,6 @@ public class EnemyNavigation : MonoBehaviour
             cAgent.SetDestination(cEnemyCore.spawnPosition);
         }
         */
-        //AIPatrol();
 
         walkingSpeed = 3f;
         //check if we're close to the destination.
@@ -286,7 +286,8 @@ public class EnemyNavigation : MonoBehaviour
             isWaiting = (Random.value > 0.5f);
         }
     }
-    
+
+    //unused
     void AIPatrol()
     {
         /*
@@ -323,26 +324,26 @@ public class EnemyNavigation : MonoBehaviour
         if (patrolPoint != null)
         {
 
-                targetVector = patrolPoint[navCurrentPoint].transform.position;
-                cAgent.SetDestination(targetVector);
-                isTravel = true;
+            targetVector = patrolPoint[navCurrentPoint].transform.position;
+            cAgent.SetDestination(targetVector);
+            isTravel = true;
         }
     }
 
     //Change the destination of the enemy wizard
     private void ChangePatrolPoint()
     {
-        if(UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
+        if (UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
         {
             patrolForward = !patrolForward;
         }
-        if(patrolForward)
+        if (patrolForward)
         {
             navCurrentPoint = (navCurrentPoint + 1) % patrolPoint.Count;
         }
         else
         {
-            if(--navCurrentPoint < 0)
+            if (--navCurrentPoint < 0)
             {
                 navCurrentPoint = patrolPoint.Count - 1;
             }
@@ -353,29 +354,47 @@ public class EnemyNavigation : MonoBehaviour
     IEnumerator idleTime()
     {
         //Debug.Log("waiting");
-        float randomNum = Random.Range(min,max);
+        float randomNum = Random.Range(min, max);
         cAgent.isStopped = true;
         yield return new WaitForSeconds(randomNum);
         cAgent.isStopped = false;
 
     }
 
-
+    // Jumping will occurs when the AI see OffmeshLink as a shortcut. The offmeshlink is invisible.
+    // It is in the jumpingPoint prefab in the Mast's prototype (for now).
+    // ###NOTE### 
+    //  This jumping mechanic will teleport the enemy if its stuck. Stuck mostly happen when the enemy is too clost to the ledge/fence.
     private void Jump()
     {
         Debug.Log("Jumping/Falling & disabled agent");
+        Vector3 direction = new Vector3(0, 0, 0);
         cAgent.isStopped = true;
         rb.isKinematic = false;
         rb.useGravity = true;
-        StartCoroutine(jumpCoroutine());
+        if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
+        {
+            direction = (targetVector - transform.position).normalized;
+        }
+        else if  (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.SEARCH )
+        {
+            direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
+        }
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.TransformDirection(direction);
+        rb.MoveRotation(rotation);
+        //this.transform.rotation = Quaternion.LookRotation(targetVector.normalized, Vector3.forward);
+        //this.transform.eulerAngles = new  Vector3(0, 0, z);
+        rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
+
         isGrounded = false;
     }
-    
+
+
+
     IEnumerator jumpCoroutine()
     {
         yield return new WaitForSeconds(3f);
-        rb.AddRelativeForce(new Vector3(0f, 1000f, 1000f), ForceMode.Impulse);
-
     }
 
 
@@ -384,16 +403,15 @@ public class EnemyNavigation : MonoBehaviour
         if (collision.gameObject.tag.Equals("Ground"))
         {
             Debug.Log("On Ground.");
-            if (!isGrounded)
+            if (!isGrounded && cAgent.isOnNavMesh )
             {
-                Debug.Log("Standing & activated agent");
-                isGrounded = true;
-                //needRotate = false;
-                cAgent.Warp(transform.position);
-                cAgent.isStopped = false;
-                Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+                  Debug.Log("Standing & activated agent");
+                  isGrounded = true;
+                  cAgent.isStopped = false;
+                  cAgent.Warp(transform.position);
+                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
 
-                if (patrolPoint[navCurrentPoint].transform.position != null)
+                if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
                 {
                     cAgent.SetDestination(targetVector);
                 }
