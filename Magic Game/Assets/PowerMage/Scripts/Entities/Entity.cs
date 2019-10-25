@@ -136,12 +136,14 @@ namespace PowerMage
 
             if (character != null && model != null)
             {
-                Vector3 moveDir = character.GetVelocity();
+                Vector2 moveDir = new Vector2(character.GetVelocity().x, character.GetVelocity().z);
                 Vector3 lookDir = character.GetLookDirection();
                 //model.moveDirection = new Vector2(moveDir.x, moveDir.z);
-                model.lookDirection = new Vector2(lookDir.x, lookDir.z).normalized;
-                model.lookVector = vision.GetLookDirection();
-                model.lookPivot = vision.GetPivot();
+                model.SetLookDirection(vision.GetLookDirection());
+                model.SetMoveVelocity(moveDir);
+                //model.lookDirection = new Vector2(lookDir.x, lookDir.z).normalized;
+                //model.lookVector = vision.GetLookDirection();
+                //model.lookPivot = vision.GetPivot();
 
                 if (Input.GetButton("Fire1"))
                 {

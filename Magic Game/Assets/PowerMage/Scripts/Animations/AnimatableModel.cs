@@ -30,11 +30,11 @@ namespace PowerMage
             set
             {
                 _lookAtTarget = value;
-                Vector3 dir = value - transform.position;
-                lookAtDirection = new Vector2(dir.x, dir.z).normalized;
+                Vector3 dir = value - animator.GetBoneTransform(HumanBodyBones.Head).position;
+                lookAtDirection = dir.normalized;
             }
         }
-        private Vector2 lookAtDirection = Vector2.zero;
+        private Vector3 lookAtDirection = Vector3.zero;
         private Vector2 moveDirection = Vector2.zero;
         
 #if UNITY_EDITOR
@@ -61,14 +61,19 @@ namespace PowerMage
 
         #region INTERFACE_IMPLEMENTATION
 
+        public void SetLookDirection(Vector3 dir)
+        {
+            lookAtDirection = dir;
+        }
+
         public void SetLookAt(Vector3 target)
         {
             LookAtTarget = target;
         }
 
-        public void SetMovement(Vector2 velocity)
+        public void SetMoveVelocity(Vector2 velocity)
         {
-            //Not implemented!
+            moveDirection = velocity;
         }
 
         #endregion
@@ -85,9 +90,8 @@ namespace PowerMage
 
         protected virtual void Update()
         {
-            Debug.DrawRay(transform.position, new Vector3(lookAtDirection.x, 0.0f, lookAtDirection.y), Color.cyan);
-
-
+            Debug.DrawRay(animator.GetBoneTransform(HumanBodyBones.Head).position, lookAtDirection, Color.cyan);
+            
             float angle = 0.0f;
 
             if (rotateToMoveDir)
@@ -100,7 +104,7 @@ namespace PowerMage
             }
             else
             {
-                angle = Vector2.SignedAngle(Vector2.up, lookDirection * (Vector2.down + Vector2.right)) + 180.0f;
+                angle = Vector2.SignedAngle(Vector2.up, new Vector2(lookAtDirection.x, lookAtDirection.z) * (Vector2.down + Vector2.right)) + 180.0f;
                 instantiatedModel.transform.rotation = Quaternion.Lerp(instantiatedModel.transform.rotation, Quaternion.Euler(0.0f, angle, 0.0f), rotationLerp);
             }
 
@@ -119,7 +123,7 @@ namespace PowerMage
             animator.SetFloat("Movement Forward", velocityRotated.y * animationBlendingMultiplier);
             animator.SetFloat("Movement Right", velocityRotated.x * animationBlendingMultiplier);
 
-            ikHandler.lookAtTarget = transform.position + lookPivot + lookVector;
+            ikHandler.lookAtTarget = animator.GetBoneTransform(HumanBodyBones.Head).position + lookAtDirection;
         }
         
 #if UNITY_EDITOR

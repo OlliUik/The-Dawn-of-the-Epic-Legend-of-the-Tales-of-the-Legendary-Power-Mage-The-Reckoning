@@ -4,7 +4,8 @@ namespace PowerMage
 {
     public interface IAnimatable
     {
+        void SetLookDirection(Vector3 dir);
         void SetLookAt(Vector3 target);
-        void SetMovement(Vector2 velocity);
+        void SetMoveVelocity(Vector2 velocity);
     }
 }
