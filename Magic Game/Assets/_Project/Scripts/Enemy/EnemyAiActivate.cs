@@ -17,7 +17,7 @@ public class EnemyAiActivate : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        builder.GetComponent<LevelGenerator>();
+        //builder.GetComponent<LevelGenerator>();
         player = GameObject.FindGameObjectWithTag("Player");
 
 
@@ -33,7 +33,7 @@ public class EnemyAiActivate : MonoBehaviour
     {
         foreach (EnemyMagicRanged child in enemies)
         {
-            if (builder.isDone)
+            //if (builder.isDone)
             {
                 if (child != null )
                 {   
