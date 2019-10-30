@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
     [SerializeField] private float ragdollDamageThreshold = 50.0f;
 
     public bool bIsDead { get; private set; } = false;
-    [HideInInspector] public float health /*{ get; private set; }*/ = 0.0f;
+     public float health /*{ get; private set; }*/ = 0.0f;
 
     private bool bIsPlayer = false;
     private float iftTimer = 0.0f;
