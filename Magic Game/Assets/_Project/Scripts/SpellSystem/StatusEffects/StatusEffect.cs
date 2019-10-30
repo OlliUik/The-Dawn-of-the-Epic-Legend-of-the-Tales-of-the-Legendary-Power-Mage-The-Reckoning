@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class StatusEffect
+public abstract class StatusEffect
 {
 
     [HideInInspector] public string name;
@@ -19,6 +19,26 @@ public class StatusEffect
     public GameObject projecttileElementGraphic;
     public GameObject beamElementGraphic;
     public GameObject aoeElementGraphic;
+
+    #region Cloning
+    public abstract StatusEffect Clone();
+    /*
+    {
+        
+        StatusEffect temp = new StatusEffect(duration, graphics);
+        temp.name = name;
+        temp.target = target;
+        temp.effectManager = effectManager;
+        temp.endTime = endTime;
+        temp.graphicsCopy = graphicsCopy;
+        temp.projecttileElementGraphic = projecttileElementGraphic;
+        temp.beamElementGraphic = beamElementGraphic;
+        temp.aoeElementGraphic = aoeElementGraphic;
+        return temp;
+        
+    }
+    */
+    #endregion
 
     // StatusEffectManager uses this
     public bool IsFinished

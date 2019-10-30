@@ -5,10 +5,15 @@ using UnityEngine;
 public class ElectricEffect : StatusEffect
 {
 
-
+    public override StatusEffect Clone()
+    {
+        ElectricEffect temp = new ElectricEffect(duration, graphics);
+        return temp;
+    }
 
     public ElectricEffect(float duration, GameObject graphics) : base(duration, graphics)
     {
+
     }
 
     public override void HitNonlivingObject(Collision collision)
