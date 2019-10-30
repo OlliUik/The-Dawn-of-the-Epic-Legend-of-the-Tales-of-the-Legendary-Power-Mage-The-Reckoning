@@ -5,7 +5,7 @@ using UnityEngine;
 public class Platform : MonoBehaviour
 {
     [SerializeField] private Animator animator = null;
-    [SerializeField] private bool isMoving = false;
+    [SerializeField] private int stateNumber = 0;
 
     private void Start()
     {
@@ -14,14 +14,17 @@ public class Platform : MonoBehaviour
 
     private void Update()
     {
-        if (isMoving)
+        switch (stateNumber)
         {
-            animator.SetBool("IsMoving", true);
-        }
-
-        else
-        {
-            animator.SetBool("IsMoving", false);
+            case 0:
+                animator.SetInteger("StateNumber", 0);
+                break;
+            case 1:
+                animator.SetInteger("StateNumber", 1);
+                break;
+            case 2:
+                animator.SetInteger("StateNumber", 2);
+                break;
         }
     }
 }
