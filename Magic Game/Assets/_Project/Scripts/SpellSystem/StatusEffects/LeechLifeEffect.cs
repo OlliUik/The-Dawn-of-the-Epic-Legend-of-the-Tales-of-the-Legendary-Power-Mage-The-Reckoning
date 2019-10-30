@@ -14,6 +14,15 @@ public class LeechLifeEffect : StatusEffect
 
     private Health giving, resiving;
 
+    public override StatusEffect Clone()
+    {
+        LeechLifeEffect temp = new LeechLifeEffect(duration, graphics, healthPerTick, timeBetweenTicks, caster);
+        temp.timer = timer;
+        temp.giving = giving;
+        temp.resiving = resiving;
+        return temp;
+    }
+
     public LeechLifeEffect(float duration, GameObject graphics, float healthPerTick, float timeBetweenTicks, GameObject caster) : base(duration, graphics)
     {
         name = "LeechLife";
@@ -79,4 +88,5 @@ public class LeechLifeEffect : StatusEffect
         effectManager.AppliedEffects[StatusEffectManager.EffectType.LeechLife] = false;
         base.OnLeave();
     }
+
 }

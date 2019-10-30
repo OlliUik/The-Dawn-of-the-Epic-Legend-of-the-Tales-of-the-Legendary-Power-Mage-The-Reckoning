@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class FreezeEffect : StatusEffect
 {
 
@@ -23,6 +24,18 @@ public class FreezeEffect : StatusEffect
     */
 
     public int cardAmount = 1;
+
+    #region Cloning
+    public override StatusEffect Clone()
+    {
+        FreezeEffect temp = new FreezeEffect(duration, graphics, slowAmount, moistSlowMultiplier, iceStunParticle);
+        temp.slowAmount = slowAmount;
+        temp.moistSlowMultiplier = moistSlowMultiplier;
+        temp.iceStunParticle = iceStunParticle;
+        temp.cardAmount = cardAmount;
+        return temp;
+    }
+    #endregion
 
     public FreezeEffect(float duration, GameObject graphics, float slowAmount, float moistSlowMultiplier, GameObject iceStunParticle) : base(duration, graphics)
     {

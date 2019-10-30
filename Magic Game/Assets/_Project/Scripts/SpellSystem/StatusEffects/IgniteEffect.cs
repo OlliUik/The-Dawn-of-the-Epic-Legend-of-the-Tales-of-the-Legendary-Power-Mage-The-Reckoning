@@ -10,6 +10,14 @@ public class IgniteEffect : StatusEffect
     private float timeToBurn;
     private Health health;
 
+    public override StatusEffect Clone()
+    {
+        IgniteEffect temp = new IgniteEffect(duration, graphics, damagePerTick, timeBetweenTicks);
+        temp.timeToBurn = timeToBurn;
+        temp.health = health;
+        return temp;
+    }
+
     public IgniteEffect(float duration, GameObject graphics, float damagePerTick, float timeBetweenTicks) : base(duration, graphics)
     {
         name = "Ignite";
