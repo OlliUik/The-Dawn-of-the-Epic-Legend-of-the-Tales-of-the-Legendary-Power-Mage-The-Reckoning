@@ -368,10 +368,13 @@ public class EnemyNavigation : MonoBehaviour
     private void Jump()
     {
         Debug.Log("Jumping/Falling & disabled agent");
+
         Vector3 direction = new Vector3(0, 0, 0);
-        cAgent.isStopped = true;
+
         rb.isKinematic = false;
         rb.useGravity = true;
+        
+
         if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
         {
             direction = (targetVector - transform.position).normalized;
@@ -380,24 +383,18 @@ public class EnemyNavigation : MonoBehaviour
         {
             direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
         }
+  
+        cAgent.isStopped = true;
+        cAgent.updatePosition = false;
+        cAgent.updateRotation = false;
         Quaternion rotation = Quaternion.LookRotation(direction);
         transform.TransformDirection(direction);
         rb.MoveRotation(rotation);
-        //this.transform.rotation = Quaternion.LookRotation(targetVector.normalized, Vector3.forward);
-        //this.transform.eulerAngles = new  Vector3(0, 0, z);
         rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
-
         isGrounded = false;
     }
 
-
-
-    IEnumerator jumpCoroutine()
-    {
-        yield return new WaitForSeconds(3f);
-    }
-
-
+    //check whether the enemy is on the ground or not.
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag.Equals("Ground"))
@@ -407,10 +404,11 @@ public class EnemyNavigation : MonoBehaviour
             {
                   Debug.Log("Standing & activated agent");
                   isGrounded = true;
+                  cAgent.updatePosition = true;
+                  cAgent.updateRotation = true;
                   cAgent.isStopped = false;
-                  cAgent.Warp(transform.position);
+                  cAgent.Warp(targetVector);
                   Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
-
                 if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
                 {
                     cAgent.SetDestination(targetVector);
@@ -419,13 +417,14 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
-
+    //enemy set the target to player.
     void AIAlerted()
     {
         cAgent.isStopped = false;
         cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
     }
 
+    //enemy will walk randomly.
     void AIParanoid()
     {
         if (paranoidTimer <= 0.0f)
@@ -445,6 +444,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    //enemy search last known location of the player.
     void AISearch()
     {
         //if (cAgent.remainingDistance < navigationErrorMargin)
@@ -498,6 +498,7 @@ public class EnemyNavigation : MonoBehaviour
         //}
     }
 
+    //enemy set attack the target.
     void AIAttack()
     {
         if (cEnemyCore.isRanged)
@@ -525,6 +526,7 @@ public class EnemyNavigation : MonoBehaviour
         //}
     }
 
+    //move alway from player before cast a spell.
     void AICasting()
     {
         if (cEnemyCore.MoveWhileCasting)
@@ -542,6 +544,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    //enemy escape from player.
     void AIEscape()
     {
         if (Vector3.Distance(transform.position, cEnemyCore.cVision.targetLocation) < 20.0f)
@@ -550,6 +553,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    //similar to  paranoid state.
     void AIPanic()
     {
         if (cAgent.remainingDistance < 2.0f)
