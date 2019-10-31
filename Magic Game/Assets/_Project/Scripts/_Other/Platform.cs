@@ -25,6 +25,9 @@ public class Platform : MonoBehaviour
             case 2:
                 animator.SetInteger("StateNumber", 2);
                 break;
+            case 3:
+                animator.SetInteger("StateNumber", 3);
+                break;
         }
     }
 }
