@@ -8,6 +8,11 @@ public class MoisturizeEffect : StatusEffect
     public GameObject waterPoolPrefab;
     public float size = 1;
 
+    public override StatusEffect Clone()
+    {
+        MoisturizeEffect temp = new MoisturizeEffect(duration, graphics, waterPoolPrefab, size);
+        return temp;
+    }
 
     public MoisturizeEffect(float duration, GameObject graphics, GameObject waterPoolPrefab, float size) : base(duration, graphics)
     {
@@ -68,4 +73,5 @@ public class MoisturizeEffect : StatusEffect
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize] = false;
         base.OnLeave();
     }
+    
 }

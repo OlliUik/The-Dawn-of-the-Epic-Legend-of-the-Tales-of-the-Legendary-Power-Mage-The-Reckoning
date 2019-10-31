@@ -83,11 +83,7 @@ public class Aoe : Spell
                     base.DealDamage(health, (damagePerSecond * Time.deltaTime));
                 }
 
-                var effectManager = objectHit.GetComponent<StatusEffectManager>();
-                if (effectManager != null)
-                {
-                    base.ApplyStatusEffects(effectManager, statusEffects);
-                }
+                addStatusEffect(statusEffects, objectHit);
 
                 // apply all modifiers here to the enemy inside radius
                 foreach (SpellModifier modifier in modifiers)
@@ -95,6 +91,24 @@ public class Aoe : Spell
                     modifier.AoeCollide(objectHit.gameObject);
                 }
             }
+        }
+    }
+
+    private void addStatusEffect(List<StatusEffect> statusEffects, Collider objectHit)
+    {
+        
+        List<StatusEffect> temp = new List<StatusEffect>();
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            temp.Add(statusEffect.Clone());
+            //Debug.Log(statusEffect.name + " cloned to AoE");
+        }
+
+        var effectManager = objectHit.GetComponent<StatusEffectManager>();
+        if (effectManager != null)
+        {
+            //Debug.Log("AoE Hit " + effectManager.gameObject.name);
+            base.ApplyStatusEffects(effectManager, temp);
         }
     }
 

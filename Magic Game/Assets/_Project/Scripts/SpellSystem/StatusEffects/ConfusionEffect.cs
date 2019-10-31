@@ -5,6 +5,11 @@ using UnityEngine;
 public class ConfusionEffect : StatusEffect
 {
 
+    public override StatusEffect Clone()
+    {
+        ConfusionEffect temp = new ConfusionEffect(duration, graphics);
+        return temp;
+    }
 
     public ConfusionEffect(float duration, GameObject graphics) : base(duration, graphics)
     {
@@ -45,4 +50,5 @@ public class ConfusionEffect : StatusEffect
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Confuse] = false;
         base.OnLeave();
     }
+
 }
