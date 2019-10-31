@@ -207,7 +207,6 @@ public class EnemyNavigation : MonoBehaviour
 
         if (cAgent.isOnOffMeshLink && isGrounded)
         {
-            rb.velocity = new Vector3(0, 0, 0);
             Jump();
             cAgent.updatePosition = true;
         }
@@ -400,15 +399,14 @@ public class EnemyNavigation : MonoBehaviour
         if (collision.gameObject.tag.Equals("Ground"))
         {
             Debug.Log("On Ground.");
-            if (!isGrounded && cAgent.isOnNavMesh )
+            if (!isGrounded )
             {
                   Debug.Log("Standing & activated agent");
                   isGrounded = true;
-                  cAgent.updatePosition = true;
-                  cAgent.updateRotation = true;
+                  cAgent.Warp(transform.position);
                   cAgent.isStopped = false;
-                  cAgent.Warp(targetVector);
-                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+
+                 Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
                 if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
                 {
                     cAgent.SetDestination(targetVector);
