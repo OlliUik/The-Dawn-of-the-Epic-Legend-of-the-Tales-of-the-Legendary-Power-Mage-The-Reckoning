@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Health))]//
 [RequireComponent(typeof(Mana))]
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(Spellbook))]
