@@ -565,7 +565,7 @@ NavMeshObstacle:
   m_Shape: 1
   m_Extents: {x: 0.016, y: 0.017, z: 0.004}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0.001, y: 0.001, z: 0.003}
   m_TimeToStationary: 0.5
@@ -725,7 +725,7 @@ NavMeshObstacle:
   m_Shape: 1
   m_Extents: {x: 0.016, y: 0.017, z: 0.004}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0.001, y: 0.001, z: 0.003}
   m_TimeToStationary: 0.5
@@ -1026,7 +1026,7 @@ NavMeshObstacle:
   m_Shape: 1
   m_Extents: {x: 0.015000001, y: 0.009000001, z: 0.010000001}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0.009000001}
   m_TimeToStationary: 0.5
@@ -2088,22 +2088,6 @@ Transform:
   m_Father: {fileID: 5706847068811499087}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5854203748143423140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5993228679958600886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d07ce676d7afda4dabb3b0f7dd5e654, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OverrideArea: 1
-  m_Area: 1
-  m_IgnoreFromBuild: 0
-  m_AffectedAgents: ffffffff
 --- !u!208 &386552559548413615
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -2120,6 +2104,22 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0.014}
   m_TimeToStationary: 0.5
+--- !u!114 &5854203748143423140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5993228679958600886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d07ce676d7afda4dabb3b0f7dd5e654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!114 &6936788988845679111
 MonoBehaviour:
   m_ObjectHideFlags: 0

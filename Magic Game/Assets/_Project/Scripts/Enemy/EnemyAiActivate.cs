@@ -7,7 +7,7 @@ public class EnemyAiActivate : MonoBehaviour
 {
 
     //public LevelGenerator builder;
-    public PropRandomizer gen;
+    public SetActiveRoom room;
     public List<EnemyMagicRanged> enemies;
 
     [SerializeField] GameObject enemiesGroup;
@@ -19,7 +19,7 @@ public class EnemyAiActivate : MonoBehaviour
     void Start()
     {
         //builder.GetComponent<LevelGenerator>();
-        gen.GetComponent<PropRandomizer>();
+        room.GetComponent<SetActiveRoom>();
         player = GameObject.FindGameObjectWithTag("Player");
 
 
@@ -36,7 +36,7 @@ public class EnemyAiActivate : MonoBehaviour
         foreach (EnemyMagicRanged child in enemies)
         {
             //if (builder.isDone)
-            if (gen.isDone)
+            if (room.isDone)
             {
                 if (child != null )
                 {   

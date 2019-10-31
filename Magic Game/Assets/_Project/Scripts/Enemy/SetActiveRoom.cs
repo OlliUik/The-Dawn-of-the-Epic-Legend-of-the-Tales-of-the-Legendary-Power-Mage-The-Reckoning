@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class RunTimeGenTest : MonoBehaviour
+public class SetActiveRoom : MonoBehaviour
 {
 
     public GameObject Room;
     public bool isDone;
-    // Start is called before the first frame update
+       
+   //Enable the room prefab
     void Start()
     {
-        //StartCoroutine(buildNavMesh());
         Room.SetActive(true);
     }
 
+    public void genNavMesh()
+    {
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+        isDone = true;
+    }
 
 }
