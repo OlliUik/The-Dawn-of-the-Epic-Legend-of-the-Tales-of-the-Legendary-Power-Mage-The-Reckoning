@@ -200,9 +200,6 @@ public class EnemyNavigation : MonoBehaviour
 
             }
           */
-
-
-
         // Debug.Log(isGrounded.ToString());
 
         if (cAgent.isOnOffMeshLink && isGrounded)
@@ -369,11 +366,9 @@ public class EnemyNavigation : MonoBehaviour
         Debug.Log("Jumping/Falling & disabled agent");
 
         Vector3 direction = new Vector3(0, 0, 0);
-
         rb.isKinematic = false;
         rb.useGravity = true;
         
-
         if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
         {
             direction = (targetVector - transform.position).normalized;
@@ -386,9 +381,9 @@ public class EnemyNavigation : MonoBehaviour
         cAgent.isStopped = true;
         cAgent.updatePosition = false;
         cAgent.updateRotation = false;
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        transform.TransformDirection(direction);
-        rb.MoveRotation(rotation);
+        //Quaternion rotation = Quaternion.LookRotation(direction);
+        //transform.TransformDirection(direction);
+        //rb.MoveRotation(rotation);
         rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
         isGrounded = false;
     }
@@ -407,6 +402,7 @@ public class EnemyNavigation : MonoBehaviour
                   cAgent.isStopped = false;
 
                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+
                 if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
                 {
                     cAgent.SetDestination(targetVector);
