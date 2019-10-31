@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(Health))]//
 [RequireComponent(typeof(Mana))]
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(Spellbook))]
@@ -36,7 +36,6 @@ public class PlayerCore : MonoBehaviour
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
     public int activeSpellIndex = 0;
-    public bool openSpellEditingOnStart = false;
 
     #endregion
 
@@ -58,9 +57,6 @@ public class PlayerCore : MonoBehaviour
 
     void Start()
     {
-        if(openSpellEditingOnStart)
-            ToggleSpellEditingUI();
-
         canvasManager.ChangeSpell(activeSpellIndex);
 
         //Quaternion spawnRotation = transform.localRotation;

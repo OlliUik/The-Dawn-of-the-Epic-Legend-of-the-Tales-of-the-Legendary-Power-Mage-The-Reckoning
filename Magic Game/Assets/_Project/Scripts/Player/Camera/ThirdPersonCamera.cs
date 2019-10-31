@@ -34,7 +34,7 @@ public class ThirdPersonCamera : MonoBehaviour
     private Vector3 cameraOffset = Vector3.zero;
     private float cameraFOVLerp = 0.0f;
     private Vector2 minMaxPitch = new Vector2(-85.0f, 85.0f);
-    private Camera cameraComponent = null;
+    public Camera cameraComponent { get; private set; } = null;
     private PostProcessLayer ppLayerComponent = null;
     private InputManager inputManager = null;
 
@@ -300,10 +300,9 @@ public class ThirdPersonCamera : MonoBehaviour
                 cameraObject.transform.position = transform.position + pivotPoint + cameraClosePosition + Vector3.Normalize(cameraRaycast) * shortestDistance;
             }
         }
-
-
+        
         Debug.DrawLine(transform.position + pivotPoint + cameraClosePosition, transform.position + pivotPoint + cameraClosePosition + cameraRaycast, Color.yellow);
-
+        
         #endregion
 
         //if (cameraPivot != null)
