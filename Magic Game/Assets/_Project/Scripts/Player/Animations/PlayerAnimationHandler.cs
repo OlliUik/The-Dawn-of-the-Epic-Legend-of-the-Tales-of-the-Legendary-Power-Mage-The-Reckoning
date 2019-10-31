@@ -7,7 +7,11 @@ public class PlayerAnimationHandler : MonoBehaviour
 {
     #region VARIABLES
 
+    public bool bRotateTowardsMoveDir = false;
+    private bool rotateTemp = false;
+
     [SerializeField] private bool IkActive = true;
+    [SerializeField] private LayerMask pointOfInterestMask = 0;
     [SerializeField] private Transform headTransform = null;
     [SerializeField] private Vector3 modelRotationOffset = Vector3.zero;
     [SerializeField] private float animationSpeedMultiplier = 5.0f;
@@ -30,6 +34,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         cCharacter = parentGO.GetComponent<CharacterController>();
         cMovement = parentGO.GetComponent<PlayerMovement>();
         cTPCamera = parentGO.GetComponent<ThirdPersonCamera>();
+        rotateTemp = bRotateTowardsMoveDir;
     }
 
     void Update()
@@ -54,15 +59,45 @@ public class PlayerAnimationHandler : MonoBehaviour
         cAnimator.SetFloat("Movement Speed", (velocityRotated.magnitude) * animationSpeedMultiplier);
         cAnimator.SetFloat("Movement Forward", velocityRotated.y * animationBlendingMultiplier);
         cAnimator.SetFloat("Movement Right", velocityRotated.x * animationBlendingMultiplier);
-        cAnimator.SetBool("Is Jumping", !cCharacter.isGrounded);
+        
+        if (!cCharacter.isGrounded)
+        {
+            if (cMovement.bIsWallSliding)
+            {
+                cAnimator.SetFloat("Movement Right", cMovement.wallRightSide ? 1.0f : 0.0f);
+                cAnimator.SetBool("Is Jumping", false);
+                cAnimator.SetBool("Is Wall Running", true);
+                bRotateTowardsMoveDir = true;
+            }
+            else
+            {
+                cAnimator.SetBool("Is Jumping", true);
+                cAnimator.SetBool("Is Wall Running", false);
+                bRotateTowardsMoveDir = rotateTemp;
+            }
+        }
+        else
+        {
+            cAnimator.SetBool("Is Jumping", false);
+            cAnimator.SetBool("Is Wall Running", false);
+            bRotateTowardsMoveDir = rotateTemp;
+        }
 
         #endregion
 
         #region ANIMATIONS_MODEL_ROTATION
 
-        Vector3 cameraRotation = cTPCamera.cameraObject.transform.localRotation.eulerAngles;
-        transform.localRotation = Quaternion.Euler(modelRotationOffset.x, modelRotationOffset.y + cameraRotation.y, modelRotationOffset.z);
-
+        if (!bRotateTowardsMoveDir)
+        {
+            Vector3 cameraRotation = cTPCamera.cameraObject.transform.localRotation.eulerAngles;
+            transform.localRotation = Quaternion.Euler(modelRotationOffset.x, modelRotationOffset.y + cameraRotation.y, modelRotationOffset.z);
+        }
+        else
+        {
+            float rotation = Vector3.SignedAngle(Vector3.forward, new Vector3(cMovement.moveVector.x, 0.0f, cMovement.moveVector.z).normalized, Vector3.up);
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(modelRotationOffset.x, modelRotationOffset.y + rotation, modelRotationOffset.z), 15.0f * Time.deltaTime);
+        }
+        
         #endregion
 
         #region ANIMATIONS_POINT_OF_INTEREST
@@ -71,11 +106,11 @@ public class PlayerAnimationHandler : MonoBehaviour
         {
             RaycastHit hit;
             if (Physics.Raycast(
-                    headTransform.position,
-                    headTransform.forward,
+                    cTPCamera.cameraComponent.transform.position,
+                    cTPCamera.cameraComponent.transform.forward,
                     out hit,
                     Mathf.Infinity,
-                    1
+                    pointOfInterestMask
                     ))
             {
                 if (hit.transform.tag == "Enemy")
@@ -91,7 +126,7 @@ public class PlayerAnimationHandler : MonoBehaviour
                     pointOfInterest.position - headTransform.position,
                     out hit,
                     Mathf.Infinity,
-                    1
+                    pointOfInterestMask
                     ))
                 {
                     if (hit.transform != pointOfInterest)
@@ -127,7 +162,8 @@ public class PlayerAnimationHandler : MonoBehaviour
             }
             else
             {
-                cAnimator.SetLookAtWeight(0.0f);
+                cAnimator.SetLookAtPosition(headTransform.position + cTPCamera.cameraComponent.transform.forward);
+                cAnimator.SetLookAtWeight(1.0f);
             }
         }
         else
