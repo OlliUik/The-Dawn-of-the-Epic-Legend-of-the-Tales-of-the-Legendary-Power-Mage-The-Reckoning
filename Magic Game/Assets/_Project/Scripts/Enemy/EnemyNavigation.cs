@@ -113,7 +113,7 @@ public class EnemyNavigation : MonoBehaviour
     {
         switch (cEnemyCore.currentState)
         {
-            case EnemyCore.EState.IDLE: AIIdle(); break;
+            case EnemyCore.EState.IDLE: AIidlePatrol(); break;
             case EnemyCore.EState.PATROL: AIPatrol(); break;
             case EnemyCore.EState.ALERTED: AIAlerted(); break;
             case EnemyCore.EState.PARANOID: AIParanoid(); break;
@@ -246,10 +246,8 @@ public class EnemyNavigation : MonoBehaviour
     #region AI_LOGIC
 
     //Idle is now switching between patrol and idle randomly.
-    void AIIdle()
+    void AIidlePatrol()
     {
-        //Debug.Log("Now Entering Idle/Patrol state");
-
         /*
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
         {
@@ -360,6 +358,8 @@ public class EnemyNavigation : MonoBehaviour
         cAgent.isStopped = false;
 
     }
+
+
 
     // Jumping will occurs when the AI see OffmeshLink as a shortcut. The offmeshlink is invisible.
     // It is in the jumpingPoint prefab in the Mast's prototype (for now).
