@@ -102,6 +102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalAxis: Mouse X
   verticalAxis: Mouse Y
+  sensX: 0
+  sensY: 0
   cameraFOV: 0
   isRagdolled: 0
   cameraObject: {fileID: 6348975070603861141}
@@ -136,6 +138,7 @@ MonoBehaviour:
   midAirJumps: 0
   enableControls: 1
   isRagdolled: 0
+  wallRightSide: 0
   bAllowMidairDashing: 1
   bDashingGivesIFrames: 0
   bAllowInfiniteWallJumps: 1
@@ -151,9 +154,11 @@ MonoBehaviour:
   dashJumpForce: 8
   dashDuration: 0.2
   dashCooldown: 1
-  gravityWallSliding: -1
-  wallSlidingTime: 2
-  wallJumpForce: 25
+  gravityWallSliding: 0
+  wallSlidingSpeed: 15
+  wallSlidingMinMagnitude: 6
+  wallSlidingTime: Infinity
+  wallJumpForce: 16
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -280,6 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b593ce5c46a77149ab5808aadd63000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bRotateTowardsMoveDir: 0
   IkActive: 1
   headTransform: {fileID: 6348975069766138273}
   modelRotationOffset: {x: 0, y: 0, z: 0}
@@ -435,11 +441,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 366472666550424924}
     m_Modifications:
-    - target: {fileID: 4221963236896100385, guid: c46f548efbcb26d43aebbd8c88bbb19c,
-        type: 3}
-      propertyPath: m_Name
-      value: MusicSource
-      objectReference: {fileID: 0}
     - target: {fileID: 4221963236896100387, guid: c46f548efbcb26d43aebbd8c88bbb19c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -494,6 +495,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221963236896100385, guid: c46f548efbcb26d43aebbd8c88bbb19c,
+        type: 3}
+      propertyPath: m_Name
+      value: MusicSource
       objectReference: {fileID: 0}
     - target: {fileID: 4221963236896100386, guid: c46f548efbcb26d43aebbd8c88bbb19c,
         type: 3}
