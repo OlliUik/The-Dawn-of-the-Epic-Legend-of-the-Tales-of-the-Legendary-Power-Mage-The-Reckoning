@@ -17,7 +17,7 @@ public class ThirdPersonCamera : MonoBehaviour
     [Header("Public")]
     public GameObject cameraObject = null;
     public bool invertY = false;
-    public Vector2 sensitivity = new Vector2(5.0f, 5.0f);
+    public Vector2 sensitivity = new Vector2(5.5f, 5.5f);
     public bool slowdownEnabled = false;
     public Vector2 slowdownMaxTurn = new Vector2(25.0f, 25.0f);
 
