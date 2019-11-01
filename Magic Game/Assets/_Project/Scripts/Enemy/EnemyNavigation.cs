@@ -381,9 +381,9 @@ public class EnemyNavigation : MonoBehaviour
         cAgent.isStopped = true;
         cAgent.updatePosition = false;
         cAgent.updateRotation = false;
-        //Quaternion rotation = Quaternion.LookRotation(direction);
-        //transform.TransformDirection(direction);
-        //rb.MoveRotation(rotation);
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.TransformDirection(direction);
+        rb.MoveRotation(rotation);
         rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
         isGrounded = false;
     }
