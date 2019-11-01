@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityStandardAssets.Characters.ThirdPerson;
+
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyNavigation : MonoBehaviour
 {
     #region VARIABLES
+
+    public ThirdPersonCharacter character { get; private set; } = null;
 
     [Header("Movement Speed")]
     public float walkingSpeed = 5.0f;
@@ -81,7 +85,8 @@ public class EnemyNavigation : MonoBehaviour
     {
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
+        character = GetComponent<ThirdPersonCharacter>();
+        rb = GetComponent<Rigidbody>();                     
 
         //get list of patrol points in a section.
         foreach (Transform child in patrolPointGroup.transform)
@@ -202,6 +207,15 @@ public class EnemyNavigation : MonoBehaviour
           */
         // Debug.Log(isGrounded.ToString());
 
+        if (cAgent.remainingDistance > cAgent.stoppingDistance)
+        {
+            character.Move(cAgent.desiredVelocity, false, false);
+        }
+        else
+        {
+            character.Move(Vector3.zero, false, false);
+        }
+
         if (cAgent.isOnOffMeshLink && isGrounded)
         {
             Jump();
@@ -312,104 +326,6 @@ public class EnemyNavigation : MonoBehaviour
         */
     }
 
-    //set the destination of the enemy wizard
-    private void SetDestination()
-    {
-        if (patrolPoint != null)
-        {
-
-            targetVector = patrolPoint[navCurrentPoint].transform.position;
-            cAgent.SetDestination(targetVector);
-            isTravel = true;
-        }
-    }
-
-    //Change the destination of the enemy wizard
-    private void ChangePatrolPoint()
-    {
-        if (UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
-        {
-            patrolForward = !patrolForward;
-        }
-        if (patrolForward)
-        {
-            navCurrentPoint = (navCurrentPoint + 1) % patrolPoint.Count;
-        }
-        else
-        {
-            if (--navCurrentPoint < 0)
-            {
-                navCurrentPoint = patrolPoint.Count - 1;
-            }
-        }
-    }
-
-    //stop and chilling in da castle.
-    IEnumerator idleTime()
-    {
-        //Debug.Log("waiting");
-        float randomNum = Random.Range(min, max);
-        cAgent.isStopped = true;
-        yield return new WaitForSeconds(randomNum);
-        cAgent.isStopped = false;
-
-    }
-
-
-
-    // Jumping will occurs when the AI see OffmeshLink as a shortcut. The offmeshlink is invisible.
-    // It is in the jumpingPoint prefab in the Mast's prototype (for now).
-    // ###NOTE### 
-    //  This jumping mechanic will teleport the enemy if its stuck. Stuck mostly happen when the enemy is too clost to the ledge/fence.
-    private void Jump()
-    {
-        Debug.Log("Jumping/Falling & disabled agent");
-
-        Vector3 direction = new Vector3(0, 0, 0);
-        rb.isKinematic = false;
-        rb.useGravity = true;
-        
-        if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
-        {
-            direction = (targetVector - transform.position).normalized;
-        }
-        else if  (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.SEARCH )
-        {
-            direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
-        }
-  
-        cAgent.isStopped = true;
-        cAgent.updatePosition = false;
-        cAgent.updateRotation = false;
-        //Quaternion rotation = Quaternion.LookRotation(direction);
-        //transform.TransformDirection(direction);
-        //rb.MoveRotation(rotation);
-        rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
-        isGrounded = false;
-    }
-
-    //check whether the enemy is on the ground or not.
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag.Equals("Ground"))
-        {
-            Debug.Log("On Ground.");
-            if (!isGrounded )
-            {
-                  Debug.Log("Standing & activated agent");
-                  isGrounded = true;
-                  cAgent.Warp(transform.position);
-                  cAgent.isStopped = false;
-
-                 Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
-
-                if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
-                {
-                    cAgent.SetDestination(targetVector);
-                }
-            }
-        }
-    }
 
     //enemy set the target to player.
     void AIAlerted()
@@ -561,5 +477,106 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region HELPER_METHOD 
+    //set the destination of the enemy wizard
+    private void SetDestination()
+    {
+        if (patrolPoint != null)
+        {
+
+            targetVector = patrolPoint[navCurrentPoint].transform.position;
+            cAgent.SetDestination(targetVector);
+            isTravel = true;
+        }
+    }
+
+    //Change the destination of the enemy wizard
+    private void ChangePatrolPoint()
+    {
+        if (UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
+        {
+            patrolForward = !patrolForward;
+        }
+        if (patrolForward)
+        {
+            navCurrentPoint = (navCurrentPoint + 1) % patrolPoint.Count;
+        }
+        else
+        {
+            if (--navCurrentPoint < 0)
+            {
+                navCurrentPoint = patrolPoint.Count - 1;
+            }
+        }
+    }
+
+    //stop and chilling in da castle.
+    IEnumerator idleTime()
+    {
+        //Debug.Log("waiting");
+        float randomNum = Random.Range(min, max);
+        cAgent.isStopped = true;
+        yield return new WaitForSeconds(randomNum);
+        cAgent.isStopped = false;
+
+    }
+
+
+
+    // Jumping will occurs when the AI see OffmeshLink as a shortcut. The offmeshlink is invisible.
+    // It is in the jumpingPoint prefab in the Mast's prototype (for now).
+    // ###NOTE### 
+    //  This jumping mechanic will teleport the enemy if its stuck. Stuck mostly happen when the enemy is too clost to the ledge/fence.
+    private void Jump()
+    {
+        Debug.Log("Jumping/Falling & disabled agent");
+
+        Vector3 direction = new Vector3(0, 0, 0);
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
+        {
+            direction = (targetVector - transform.position).normalized;
+        }
+        else if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.SEARCH)
+        {
+            direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
+        }
+
+        cAgent.isStopped = true;
+        cAgent.updatePosition = false;
+        cAgent.updateRotation = false;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.TransformDirection(direction);
+        rb.MoveRotation(rotation);
+        rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
+        isGrounded = false;
+    }
+
+    //check whether the enemy is on the ground or not.
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Ground"))
+        {
+            Debug.Log("On Ground.");
+            if (!isGrounded)
+            {
+                Debug.Log("Standing & activated agent");
+                isGrounded = true;
+                cAgent.Warp(transform.position);
+                cAgent.isStopped = false;
+
+                Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+
+                if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
+                {
+                    cAgent.SetDestination(targetVector);
+                }
+            }
+        }
+    }
     #endregion
 }
