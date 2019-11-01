@@ -21,7 +21,7 @@ public class FreezeVariables : MonoBehaviour
 
     private EnemyCore enemyCore;
 
-    public void freeze(float slowAmount, GameObject iceStunParticle, int cardAmount)
+    public void freeze(float slowAmount, GameObject iceStunParticle, int cardAmount, bool hasMoisture)
     {
 
         enemyNav = GetComponent<EnemyNavigation>();
@@ -41,7 +41,7 @@ public class FreezeVariables : MonoBehaviour
         }
 
         //If card >= 3 enemy will be stuned
-        if (cardAmount >= 3)
+        if (cardAmount >= 3 || hasMoisture)
         {
             if (enemyCore != null)
             {
