@@ -27,22 +27,23 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool bDashingGivesIFrames = false;
     [SerializeField] private bool bAllowInfiniteWallJumps = true;
     [SerializeField] private float acceleration = 100.0f;
-    [SerializeField] private float airAcceleration = 20.0f;
+    [SerializeField] private float airAcceleration = 15.0f;
     [SerializeField] private float friction = 5.5f;
     [SerializeField] private float airFriction = 1.5f;
     [SerializeField] private float gravity = -30.0f;
     [SerializeField] private float smoothStepDown = 0.5f;
-    [SerializeField] private float jumpForce = 15.0f;
+    [SerializeField] private float jumpForce = 16.0f;
     [SerializeField] private float jumpGraceTime = 0.2f;
     [SerializeField] private float dashSpeed = 20.0f;
     [SerializeField] private float dashJumpForce = 8.0f;
     [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] private float dashCooldown = 1.0f;
+    [SerializeField] private float dashCooldown = 0.5f;
     [SerializeField] private float gravityWallSliding = -1.0f;
     [SerializeField] private float wallSlidingSpeed = 10.0f;
     [SerializeField] private float wallSlidingMinMagnitude = 5.0f;
     [SerializeField] private float wallSlidingTime = 2.0f;
     [SerializeField] private float wallJumpForce = 25.0f;
+    [SerializeField] private float wallStickingStrength = 0.08f;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     [SerializeField] private Transform ragdollTransform = null;
     [SerializeField] private bool bStunned;
@@ -144,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
                             Mathf.Clamp(moveVector.y + (moveVector.y > 0.0f ? gravity : gravityWallSliding) * Time.fixedDeltaTime, gravityWallSliding, Mathf.Infinity),
                             (wallRightSide ? -1.0f : 1.0f) * slopeSideVector.z * wallSlidingSpeed
                             );
-                    cCharacter.Move(moveVector * Time.fixedDeltaTime + -wallNormal * cCharacter.skinWidth);
+                    cCharacter.Move(moveVector * Time.fixedDeltaTime + -wallNormal * wallStickingStrength);
 
                     if ((cCharacter.collisionFlags & CollisionFlags.Sides) == 0 || (cCharacter.collisionFlags & CollisionFlags.Below) > 0)
                     {
