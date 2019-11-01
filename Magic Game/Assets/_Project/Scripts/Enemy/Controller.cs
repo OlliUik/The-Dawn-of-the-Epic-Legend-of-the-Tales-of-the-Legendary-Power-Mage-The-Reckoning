@@ -11,16 +11,7 @@ public class Controller : MonoBehaviour
 
     public ThirdPersonCharacter character;
 
-    //public Rigidbody rb;
-
-    bool isGrounded;
-
-
-    private void Start()
-    {
-        //agent.updateRotation = false;
-    }
-
+    
     // Update is called once per frame
     void Update()
     {   
