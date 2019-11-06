@@ -7,17 +7,28 @@ public class Spawner : MonoBehaviour
     [SerializeField] private List<GameObject> enemies;
     [SerializeField] private float frequency;
     private float defaultFrequency = 1f;
-    
+    protected float debugDrawRadius = 1.0F;
+
+
     void Start()
     {
         if (frequency < defaultFrequency)
         {
             Debug.LogWarning("Your inputted frequency value is too low. Now using default value which is 1.");
         }
-        StartCoroutine(SpawnEnememy());
+        StartCoroutine(SpawnEnemy());
     }
 
-    IEnumerator SpawnEnememy()
+    public virtual void OnDrawGizmos()
+    {
+
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, debugDrawRadius);
+
+    }
+
+    IEnumerator SpawnEnemy()
     {
         while(true)
         {
@@ -29,6 +40,7 @@ public class Spawner : MonoBehaviour
                 if (range > 0)
                 {
                     Instantiate(enemy, GetComponent<Transform>());
+                    enemy.SetActive(true);
                 }
             } else
             {
