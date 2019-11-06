@@ -364,6 +364,11 @@ public class Beam : Spell
         Gizmos.DrawWireSphere(startPos, baseRadius * 0.5f);
     }
 
+    public override void ModifyRange(float amount)
+    {
+        Range += amount;
+    }
+
     #endregion
 
 }
