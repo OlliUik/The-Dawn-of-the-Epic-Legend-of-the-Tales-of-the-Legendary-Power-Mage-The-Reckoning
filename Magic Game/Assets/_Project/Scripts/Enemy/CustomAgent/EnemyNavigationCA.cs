@@ -52,7 +52,7 @@ public class EnemyNavigationCA : MonoBehaviour
 
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
-    public NavMeshAgent cAgent { get; private set; } = null;
+    public CustomAgent cAgent { get; private set; } = null;
 
 
     private float navTimer = 0.0f;
@@ -80,7 +80,7 @@ public class EnemyNavigationCA : MonoBehaviour
     void Start()
     {
         cEnemyCore = GetComponent<EnemyCore>();
-        cAgent = GetComponent<NavMeshAgent>();
+        cAgent = GetComponent<CustomAgent>();
         rb = GetComponent<Rigidbody>();
 
         //get list of patrol points in a section.
@@ -189,8 +189,9 @@ public class EnemyNavigationCA : MonoBehaviour
         //    {
         //        waitTimer -= Time.deltaTime;
         //    }
+        
         /*
-        if(cAgent.remainingDistance > cAgent.stoppingDistance)
+        if(cAgent.GetRemainingDistance() > cAgent.stoppingDistance)
             {
                 cAgent.SetDestination(cAgent.desiredVelocity);
             }
@@ -199,18 +200,21 @@ public class EnemyNavigationCA : MonoBehaviour
                 cAgent.SetDestination(Vector3.zero);
 
             }
-          */
+            */
+          
 
 
 
         // Debug.Log(isGrounded.ToString());
 
+        /*
         if (cAgent.isOnOffMeshLink && isGrounded)
         {
             rb.velocity = new Vector3(0, 0, 0);
             Jump();
             cAgent.updatePosition = true;
         }
+        */
 
     }
 
@@ -257,7 +261,7 @@ public class EnemyNavigationCA : MonoBehaviour
 
         walkingSpeed = 3f;
         //check if we're close to the destination.
-        if (isTravel && cAgent.remainingDistance <= 1.0f)
+        if (isTravel && cAgent.GetRemainingDistance() <= 1.0f)
         {
             isTravel = false;
             //wait?
@@ -397,7 +401,7 @@ public class EnemyNavigationCA : MonoBehaviour
         yield return new WaitForSeconds(3f);
     }
 
-
+    /*
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag.Equals("Ground"))
@@ -418,6 +422,7 @@ public class EnemyNavigationCA : MonoBehaviour
             }
         }
     }
+    */
 
 
     void AIAlerted()
@@ -552,7 +557,7 @@ public class EnemyNavigationCA : MonoBehaviour
 
     void AIPanic()
     {
-        if (cAgent.remainingDistance < 2.0f)
+        if (cAgent.GetRemainingDistance() < 2.0f)
         {
             Vector3 randomPosition = Vector3.zero;
             randomPosition.x = Random.Range(-5.0f, 5.0f);

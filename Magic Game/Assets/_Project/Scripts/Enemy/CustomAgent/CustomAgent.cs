@@ -21,7 +21,11 @@ public class CustomAgent : MonoBehaviour
     private List<Vector3> corners;
     private Vector3 nextPos;
     private Vector3 direction;
+    public Vector3 velocity { get; set; }
+
     public float stoppingDistance { get; set; } = 0f;
+    public float speed { get; set; } = 8f;
+    public float acceleration { get; set; }
 
     #endregion
 
@@ -60,25 +64,14 @@ public class CustomAgent : MonoBehaviour
 
     public float GetRemainingDistance()
     {
-        return agent.remainingDistance;
-    }
-
-    public void SetSpeed(float speed)
-    {
-        agent.speed = speed;
-    }
-
-    public void SetAcceleration(float acceleration)
-    {
-        agent.acceleration = acceleration;
+        return agent.remainingDistance - stoppingDistance;
     }
 
     public void SetDestination(Vector3 target)
     {
         if (!jumping)
         {
-            hasPath = false;
-            moving = false;
+            ResetPath();
             agent.CalculatePath(target, path);
             agent.path = path;
 
@@ -88,7 +81,6 @@ public class CustomAgent : MonoBehaviour
             }
             else
             {
-                corners.Clear();
                 corners.AddRange(path.corners);
             }
            
@@ -101,8 +93,8 @@ public class CustomAgent : MonoBehaviour
     {
         hasPath = false;
         moving = false;
-        corners.Clear();
-        path = null;
+        path.ClearCorners();
+        if (corners != null) corners.Clear();
     }
 
     void MoveAlongPath()
@@ -130,7 +122,7 @@ public class CustomAgent : MonoBehaviour
             else
             {
                 direction = (nextPos - transform.position).normalized;
-                rb.MovePosition(transform.position + (direction * agent.speed * Time.deltaTime));
+                rb.MovePosition(transform.position + (direction * speed * Time.deltaTime));
             }
         }
         else if (jumping)
