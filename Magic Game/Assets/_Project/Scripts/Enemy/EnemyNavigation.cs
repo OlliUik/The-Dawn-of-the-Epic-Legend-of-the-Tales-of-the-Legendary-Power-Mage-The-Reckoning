@@ -47,7 +47,7 @@ public class EnemyNavigation : MonoBehaviour
 
     [SerializeField] List<Waypoint> patrolPoint;
 
-    [SerializeField] Rigidbody rb;
+    [SerializeField] Rigidbody rb;  
 
     [Header("Jumpforce")]
     [SerializeField]
@@ -88,11 +88,17 @@ public class EnemyNavigation : MonoBehaviour
         character = GetComponent<ThirdPersonCharacter>();
         rb = GetComponent<Rigidbody>();                     
 
+        
+        
         //get list of patrol points in a section.
-        foreach (Transform child in patrolPointGroup.transform)
+        if(patrolPointGroup != null)
         {
-            patrolPoint.Add(child.GetComponent<Waypoint>());
+            foreach (Transform child in patrolPointGroup.transform)
+            {
+                patrolPoint.Add(child.GetComponent<Waypoint>());
+            }
         }
+       
 
         //Agent and patrol point checking
         if (cAgent == null)
@@ -485,11 +491,11 @@ public class EnemyNavigation : MonoBehaviour
     {
         if (patrolPoint != null)
         {
-
             targetVector = patrolPoint[navCurrentPoint].transform.position;
             cAgent.SetDestination(targetVector);
             isTravel = true;
         }
+
     }
 
     //Change the destination of the enemy wizard
