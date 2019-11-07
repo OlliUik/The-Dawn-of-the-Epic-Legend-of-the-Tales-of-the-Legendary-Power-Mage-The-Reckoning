@@ -44,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float wallSlidingTime = 2.0f;
     [SerializeField] private float wallJumpForce = 25.0f;
     [SerializeField] private float wallStickingStrength = 0.08f;
+    [SerializeField] private bool wallSlidingAllowOnlySpecificWalls = false;
+    [SerializeField] private string[] wallSlidingAllowedTags = null;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     [SerializeField] private Transform ragdollTransform = null;
     [SerializeField] private bool bStunned;
@@ -124,6 +126,8 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
+                CalculateCooldowns();
+
                 if (wstTimer > 0.0f)
                 {
                     float wallSlide = Vector3.Dot(Vector3.Project(moveVector, slopeSideVector), slopeSideVector);
@@ -298,7 +302,21 @@ public class PlayerMovement : MonoBehaviour
                 float wallSlide = Vector3.Dot(Vector3.Project(moveVector, slopeSideVector), slopeSideVector);
                 if (Mathf.Abs(wallSlide) > wallSlidingMinMagnitude)
                 {
-                    bIsWallSliding = true;
+                    if (wallSlidingAllowOnlySpecificWalls)
+                    {
+                        foreach (string s in wallSlidingAllowedTags)
+                        {
+                            if (currentHit.gameObject.tag == s)
+                            {
+                                bIsWallSliding = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        bIsWallSliding = true;
+                    }
                 }
             }
             else
