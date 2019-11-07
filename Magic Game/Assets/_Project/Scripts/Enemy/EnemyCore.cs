@@ -85,7 +85,7 @@ public class EnemyCore : MonoBehaviour
     [SerializeField] protected bool moveWhileCasting = false;
     [SerializeField] protected float standStillAfterCasting = 4.0f;
     [SerializeField] protected int attackAnimation = 0; //Check the animator controller to find out the desired number!
-    [SerializeField] protected Animator animator = null;
+    [SerializeField] public Animator animator = null;
 
     [Header("Core -> Ragdoll")]
     [SerializeField] protected Rigidbody ragdoll = null;
