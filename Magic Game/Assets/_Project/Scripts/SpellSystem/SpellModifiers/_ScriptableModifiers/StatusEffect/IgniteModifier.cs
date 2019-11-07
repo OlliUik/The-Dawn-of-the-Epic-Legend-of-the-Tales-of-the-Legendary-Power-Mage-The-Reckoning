@@ -25,6 +25,7 @@ public class IgniteModifier : SpellScriptableModifier
 
         IgniteEffect temp = new IgniteEffect(duration, graphics, damagePerTick, timeBetweenTicks);
         temp.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
+        temp.SetProjectileExplosion(projectileExploionGraphics);
 
         spell.statusEffects.Add(temp);
     }

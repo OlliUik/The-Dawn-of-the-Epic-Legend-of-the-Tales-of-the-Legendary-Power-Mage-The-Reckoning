@@ -17,8 +17,10 @@ public abstract class StatusEffect
     protected GameObject graphicsCopy;
 
     public GameObject projecttileElementGraphic;
-    public GameObject beamElementGraphic;
+    public Beam.ElementType beamElementGraphic;
     public GameObject aoeElementGraphic;
+
+    public GameObject projectileExplosionGraphic;
 
     #region Cloning
     public abstract StatusEffect Clone();
@@ -61,7 +63,7 @@ public abstract class StatusEffect
         endTime = Time.time + duration;
         this.target = target;
         effectManager = target.GetComponent<StatusEffectManager>();
-        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + Vector3.up * 2, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
+        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + Vector3.up , Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
         graphicsCopy.transform.SetParent(target.transform);
     }
 
@@ -94,11 +96,16 @@ public abstract class StatusEffect
     // Ignite and moisturize use this to check the existing StatusEffect and what are new effects in spell
     public virtual void CheckForCounterEffects(List<StatusEffect> allEffectsInSpell) { }
 
-    public void SetElementParticles(GameObject projecttileParticle, GameObject beamParticle, GameObject aoeParticle)
+    public void SetElementParticles(GameObject projecttileParticle, Beam.ElementType beamParticle, GameObject aoeParticle)
     {
         projecttileElementGraphic = projecttileParticle;
         beamElementGraphic = beamParticle;
         aoeElementGraphic = aoeParticle;
+    }
+
+    public void SetProjectileExplosion(GameObject projectileParticle)
+    {
+        projectileExplosionGraphic = projectileParticle;
     }
 
 }

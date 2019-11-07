@@ -25,6 +25,8 @@ public class Projectile : Spell
 
     private bool inited = false;
 
+    private List<GameObject> elementExplosionPrefabs;
+
     #endregion
 
     #region Unitys_Methods
@@ -105,13 +107,21 @@ public class Projectile : Spell
     private void Init()
     {
         List<GameObject> elementPrefabs = new List<GameObject>();
+        elementExplosionPrefabs = new List<GameObject>();
         foreach (SpellModifier modifier in modifiers)
         {
-            if (modifier.projecttileElementGraphic != null)
+            if (modifier.projectileElementGraphic != null)
             {
-                if (!elementPrefabs.Contains(modifier.projecttileElementGraphic))
+                if (!elementPrefabs.Contains(modifier.projectileElementGraphic))
                 {
-                    elementPrefabs.Add(modifier.projecttileElementGraphic);
+                    elementPrefabs.Add(modifier.projectileElementGraphic);
+                }
+            }
+            if (modifier.projectileExplosionGraphic != null)
+            {
+                if (!elementExplosionPrefabs.Contains(modifier.projectileExplosionGraphic))
+                {
+                    elementExplosionPrefabs.Add(modifier.projectileExplosionGraphic);
                 }
             }
         }
@@ -122,6 +132,13 @@ public class Projectile : Spell
                 if (!elementPrefabs.Contains(statusEffect.projecttileElementGraphic))
                 {
                     elementPrefabs.Add(statusEffect.projecttileElementGraphic);
+                }
+            }
+            if (statusEffect.projectileExplosionGraphic != null)
+            {
+                if (!elementExplosionPrefabs.Contains(statusEffect.projectileExplosionGraphic))
+                {
+                    elementExplosionPrefabs.Add(statusEffect.projectileExplosionGraphic);
                 }
             }
         }
@@ -137,13 +154,21 @@ public class Projectile : Spell
         lastPos = transform.position;
         modifiers = GetComponents<SpellModifier>();
         inited = true;
+        Debug.Log("Element explosion count: " + elementExplosionPrefabs.Count);
     }
 
     private void DestroyProjectile()
     {
-        if(explosionParticle != null)
+        if (explosionParticle != null && elementExplosionPrefabs.Count == 0)
         {
             Instantiate(explosionParticle, transform.position, transform.rotation);
+        }
+        else
+        {
+            foreach (GameObject elementExplosionPrefab in elementExplosionPrefabs)
+            {
+                Instantiate(elementExplosionPrefab, transform.position, transform.rotation);
+            }
         }
         Destroy(gameObject);
     }
