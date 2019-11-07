@@ -5,9 +5,11 @@ using UnityEngine;
 public abstract class SpellModifier : MonoBehaviour
 {
 
-    public GameObject projecttileElementGraphic;
-    public GameObject beamElementGraphic;
+    public GameObject projectileElementGraphic;
+    public Beam.ElementType beamElementGraphic;
     public GameObject aoeElementGraphic;
+
+    public GameObject projectileExplosionGraphic;
 
     // base cast modfiers 
     public virtual void OnSpellCast(Spell spell) { }
@@ -21,11 +23,16 @@ public abstract class SpellModifier : MonoBehaviour
 
     public virtual void AoeCollide(GameObject hitObject) { }
 
-    public void SetElementParticles(GameObject projecttileParticle, GameObject beamParticle, GameObject aoeParticle)
+    public void SetElementParticles(GameObject projectileParticle, Beam.ElementType beamParticle, GameObject aoeParticle)
     {
-        projecttileElementGraphic = projecttileParticle;
+        projectileElementGraphic = projectileParticle;
         beamElementGraphic = beamParticle;
         aoeElementGraphic = aoeParticle;
+    }
+
+    public void SetProjectileExplosion(GameObject projectileParticle)
+    {
+        projectileExplosionGraphic = projectileParticle;
     }
 
 }

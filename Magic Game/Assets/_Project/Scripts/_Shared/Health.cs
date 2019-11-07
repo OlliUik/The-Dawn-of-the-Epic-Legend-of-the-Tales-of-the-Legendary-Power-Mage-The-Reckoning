@@ -88,6 +88,20 @@ public class Health : MonoBehaviour
             }
         }
     }
+    
+    private float GetCurseMultiplier()
+    {
+        float temp = 1;
+        if (GetComponent<CurseVariables>() != null)
+        {
+            CurseVariables[] curseVariables = GetComponents<CurseVariables>();
+            foreach (CurseVariables curseVariable in curseVariables)
+            {
+                temp += curseVariable.DamageIncreasedPercentage;
+            }
+        }
+        return temp;
+    }
 
     public void Heal(float amount)
     {

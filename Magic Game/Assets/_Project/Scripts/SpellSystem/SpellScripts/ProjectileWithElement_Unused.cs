@@ -148,11 +148,11 @@ public class ProjectileWithElement : Spell
         List<GameObject> elementPrefabs = new List<GameObject>();
         foreach (SpellModifier modifier in modifiers)
         {
-            if(modifier.projecttileElementGraphic != null)
+            if(modifier.projectileElementGraphic != null)
             {
-                if (!elementPrefabs.Contains(modifier.projecttileElementGraphic))
+                if (!elementPrefabs.Contains(modifier.projectileElementGraphic))
                 {
-                    elementPrefabs.Add(modifier.projecttileElementGraphic);
+                    elementPrefabs.Add(modifier.projectileElementGraphic);
                 }
             }
         }
