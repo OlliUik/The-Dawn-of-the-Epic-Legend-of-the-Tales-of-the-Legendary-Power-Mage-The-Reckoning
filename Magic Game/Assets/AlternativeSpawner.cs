@@ -12,7 +12,7 @@ public class AlternativeSpawner : MonoBehaviour
     public class Wave
     {
         public string name;
-        public Transform enemy;
+        public Transform [] enemy;
         public int count;
         public float rate;
     }
@@ -101,11 +101,12 @@ public class AlternativeSpawner : MonoBehaviour
         yield break;
     }
 
-    void SpawnEnemy(Transform _enemy)
+    void SpawnEnemy(Transform [] _enemy)
     {
-        Debug.Log("Spawning Enemy:" +  _enemy.name);
+        int randomRange = Random.Range(0, _enemy.Length);
+        Debug.Log("Spawning Enemy:" +  _enemy[randomRange].name);
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        Transform enemyWizard = Instantiate(_enemy, spawnPoint.position, spawnPoint.rotation);
+        Transform enemyWizard = Instantiate(_enemy[randomRange], spawnPoint.position, spawnPoint.rotation);
         enemyWizard.gameObject.SetActive(true);
     }
 
