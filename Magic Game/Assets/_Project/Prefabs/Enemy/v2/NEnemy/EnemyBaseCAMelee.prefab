@@ -153,21 +153,26 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5330408103654127206, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2820462688170350534}
+    - target: {fileID: 5330408103654127206, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: ragdoll
+      value: 
+      objectReference: {fileID: 8195615340777665960}
     - target: {fileID: 2499003188480277894, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: headTransform
       value: 
       objectReference: {fileID: 7888436800984652038}
-    - target: {fileID: 3554490570326817835, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+    - target: {fileID: 2966901103426731136, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
-      propertyPath: animator
+      propertyPath: cEnemyCore
       value: 
-      objectReference: {fileID: 2820462688170350534}
-    - target: {fileID: 3554490570326817835, guid: 2f55a76a8dc3e484188f9ba459f57db4,
-        type: 3}
-      propertyPath: ragdoll
-      value: 
-      objectReference: {fileID: 8096876693848400852}
+      objectReference: {fileID: 6392787254609749625}
     - target: {fileID: 1795504309547927349, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: excludeFromKinematicToggle.Array.data[0]
@@ -198,6 +203,11 @@ PrefabInstance:
       propertyPath: excludeFromKinematicToggle.Array.data[5]
       value: 
       objectReference: {fileID: 3552874352230755521}
+    - target: {fileID: 1328359400457543574, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 2994933374976214067}
     - target: {fileID: 2609645717429344002, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: m_Bones.Array.data[0]
@@ -453,6 +463,11 @@ PrefabInstance:
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 8195615340777665960}
+    - target: {fileID: 5048915152910028574, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 2994933374976214067}
     - target: {fileID: 4562231763496132134, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: m_ConnectedBody
@@ -463,17 +478,7 @@ PrefabInstance:
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 5660068277798894423}
-    - target: {fileID: 5048915152910028574, guid: 2f55a76a8dc3e484188f9ba459f57db4,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 2994933374976214067}
     - target: {fileID: 1397833543474142126, guid: 2f55a76a8dc3e484188f9ba459f57db4,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 2994933374976214067}
-    - target: {fileID: 1328359400457543574, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: m_ConnectedBody
       value: 
@@ -488,17 +493,27 @@ PrefabInstance:
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 6704585179361097213}
-    - target: {fileID: 2966901103426731136, guid: 2f55a76a8dc3e484188f9ba459f57db4,
-        type: 3}
-      propertyPath: cEnemyCore
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5330408103654127206, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+    - target: {fileID: 3554490570326817835, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: animator
       value: 
       objectReference: {fileID: 2820462688170350534}
-    - target: {fileID: 5330408103654127206, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+    - target: {fileID: 3554490570326817835, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: ragdoll
+      value: 
+      objectReference: {fileID: 8096876693848400852}
+    - target: {fileID: 402426337863893273, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: headTransform
+      value: 
+      objectReference: {fileID: 7888436800984652038}
+    - target: {fileID: 3848332153936467472, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2820462688170350534}
+    - target: {fileID: 3848332153936467472, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: ragdoll
       value: 
@@ -511,6 +526,18 @@ Rigidbody:
     type: 3}
   m_PrefabInstance: {fileID: 7917252928743698537}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6392787254609749625 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3848332153936467472, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+    type: 3}
+  m_PrefabInstance: {fileID: 7917252928743698537}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5842179153187000025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72de8cad13c542c458b03e36d8f070bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &2820462688170350534 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5403176371198584751, guid: 2f55a76a8dc3e484188f9ba459f57db4,
