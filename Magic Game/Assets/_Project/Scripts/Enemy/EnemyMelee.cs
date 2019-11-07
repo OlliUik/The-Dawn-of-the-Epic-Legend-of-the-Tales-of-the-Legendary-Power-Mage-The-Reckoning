@@ -55,11 +55,13 @@ public class EnemyMelee : EnemyCore
     IEnumerator startAttack()
     {
         animator.SetBool("isAttack", true);
+        //int randomAttack = Random.Range(0,3);
+        //animator.SetInteger("attack!", randomAttack);
         animator.SetTrigger("Melee|AttackSmash");
         yield return new WaitForSeconds(0.7f);
         hammer.GetComponent<MeshCollider>().enabled = true;
     }
-
+    
 
 
 }
