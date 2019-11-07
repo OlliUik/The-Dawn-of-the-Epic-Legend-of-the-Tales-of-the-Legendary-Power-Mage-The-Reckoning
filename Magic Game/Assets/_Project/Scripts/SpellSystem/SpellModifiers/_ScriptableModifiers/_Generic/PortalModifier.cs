@@ -25,7 +25,7 @@ public class PortalModifier : SpellScriptableModifier
 
         Portal component = spell.gameObject.AddComponent<Portal>();
         component.portalGatePrefab = portalGatePrefab;
-        component.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
+        component.SetElementParticles(projectileGraphics, Beam.ElementType.Default, aoeGraphics);
         PortalGateManager.Instance.portalActiveParticle = portalActiveParticle;
     }
 
