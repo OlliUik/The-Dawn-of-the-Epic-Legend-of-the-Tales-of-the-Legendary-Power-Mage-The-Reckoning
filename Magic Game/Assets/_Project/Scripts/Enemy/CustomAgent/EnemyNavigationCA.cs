@@ -58,7 +58,7 @@ public class EnemyNavigationCA : MonoBehaviour
     private float navTimer = 0.0f;
     private float navErrorTimer = 0.0f;
     private float paranoidTimer = 0.0f;
-    private EnemyCore cEnemyCore = null;
+    private EnemyCoreCA cEnemyCore = null;
 
     [SerializeField]
     float min, max;
@@ -79,7 +79,7 @@ public class EnemyNavigationCA : MonoBehaviour
 
     void Start()
     {
-        cEnemyCore = GetComponent<EnemyCore>();
+        cEnemyCore = GetComponent<EnemyCoreCA>();
         cAgent = GetComponent<CustomAgent>();
         rb = GetComponent<Rigidbody>();
 
@@ -113,28 +113,28 @@ public class EnemyNavigationCA : MonoBehaviour
     {
         switch (cEnemyCore.currentState)
         {
-            case EnemyCore.EState.IDLE: AIidlePatrol(); break;
-            case EnemyCore.EState.PATROL: AIPatrol(); break;
-            case EnemyCore.EState.ALERTED: AIAlerted(); break;
-            case EnemyCore.EState.PARANOID: AIParanoid(); break;
-            case EnemyCore.EState.SEARCH: AISearch(); break;
-            case EnemyCore.EState.ATTACK: AIAttack(); break;
-            case EnemyCore.EState.CASTING: AICasting(); break;
-            case EnemyCore.EState.ESCAPE: AIEscape(); break;
-            case EnemyCore.EState.PANIC: AIPanic(); break;
-            case EnemyCore.EState.RAGDOLLED: break;
+            case EnemyCoreCA.EState.IDLE: AIidlePatrol(); break;
+            case EnemyCoreCA.EState.PATROL: AIPatrol(); break;
+            case EnemyCoreCA.EState.ALERTED: AIAlerted(); break;
+            case EnemyCoreCA.EState.PARANOID: AIParanoid(); break;
+            case EnemyCoreCA.EState.SEARCH: AISearch(); break;
+            case EnemyCoreCA.EState.ATTACK: AIAttack(); break;
+            case EnemyCoreCA.EState.CASTING: AICasting(); break;
+            case EnemyCoreCA.EState.ESCAPE: AIEscape(); break;
+            case EnemyCoreCA.EState.PANIC: AIPanic(); break;
+            case EnemyCoreCA.EState.RAGDOLLED: break;
             default: if (cAgent.hasPath) cAgent.ResetPath(); break;
         }
 
-        if (cEnemyCore.currentState == EnemyCore.EState.IDLE
-            || cEnemyCore.currentState == EnemyCore.EState.PATROL
-            || cEnemyCore.currentState == EnemyCore.EState.PARANOID
-            || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+        if (cEnemyCore.currentState == EnemyCoreCA.EState.IDLE
+            || cEnemyCore.currentState == EnemyCoreCA.EState.PATROL
+            || cEnemyCore.currentState == EnemyCoreCA.EState.PARANOID
+            || cEnemyCore.currentState == EnemyCoreCA.EState.CASTING)
         {
             cAgent.speed = walkingSpeed;
             cAgent.acceleration = walkingAcceleration;
         }
-        else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
+        else if (cEnemyCore.currentState == EnemyCoreCA.EState.PANIC)
         {
             cAgent.speed = panicSpeed;
             cAgent.acceleration = panicAcceleration;
@@ -145,7 +145,7 @@ public class EnemyNavigationCA : MonoBehaviour
             cAgent.acceleration = runningAcceleration;
         }
 
-        if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+        if (cEnemyCore.currentState == EnemyCoreCA.EState.ATTACK || cEnemyCore.currentState == EnemyCoreCA.EState.CASTING)
         {
             cAgent.stoppingDistance = 1.0f;
         }
@@ -376,11 +376,11 @@ public class EnemyNavigationCA : MonoBehaviour
         cAgent.isStopped = true;
         rb.isKinematic = false;
         rb.useGravity = true;
-        if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
+        if (cEnemyCore.currentState == EnemyCoreCA.EState.IDLE)
         {
             direction = (targetVector - transform.position).normalized;
         }
-        else if  (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.SEARCH )
+        else if  (cEnemyCore.currentState == EnemyCoreCA.EState.ATTACK || cEnemyCore.currentState == EnemyCoreCA.EState.SEARCH )
         {
             direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
         }
@@ -507,7 +507,7 @@ public class EnemyNavigationCA : MonoBehaviour
     {
         if (cEnemyCore.isRanged)
         {
-            float escapeDistance = (cEnemyCore as EnemyRanged).rangedEscapeDistance;
+            float escapeDistance = (cEnemyCore as EnemyRangedCA).rangedEscapeDistance;
             if ((transform.position - cEnemyCore.cVision.targetLocation).sqrMagnitude > escapeDistance * escapeDistance)
             {
                 return;

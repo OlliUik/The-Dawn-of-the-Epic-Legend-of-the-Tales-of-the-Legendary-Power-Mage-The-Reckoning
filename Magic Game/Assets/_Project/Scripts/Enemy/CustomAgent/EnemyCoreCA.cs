@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(HealthCA))]
 [RequireComponent(typeof(EnemyVisionCA))]
 //[RequireComponent(typeof(EnemyNavigation))]
 public class EnemyCoreCA : MonoBehaviour
@@ -54,9 +54,9 @@ public class EnemyCoreCA : MonoBehaviour
         PATROL
     };
 
-    public EnemyVision cVision { get; protected set; } = null;
+    public EnemyVisionCA cVision { get; protected set; } = null;
     public EnemyNavigationCA cNavigation { get; protected set; } = null;
-    public Health cHealth { get; protected set; } = null;
+    public HealthCA cHealth { get; protected set; } = null;
 
     public StatusEffects status { get; protected set; } = new StatusEffects(false, false, false, false);
     public EState currentState { get; protected set; } = EState.DISABLED;
@@ -126,9 +126,9 @@ public class EnemyCoreCA : MonoBehaviour
 
     protected virtual void Start()
     {
-        cVision = GetComponent<EnemyVision>();
+        cVision = GetComponent<EnemyVisionCA>();
         cNavigation = GetComponent<EnemyNavigationCA>();
-        cHealth = GetComponent<Health>();
+        cHealth = GetComponent<HealthCA>();
 
         spawnPosition = transform.position;
         spawnRotation = transform.rotation.eulerAngles;

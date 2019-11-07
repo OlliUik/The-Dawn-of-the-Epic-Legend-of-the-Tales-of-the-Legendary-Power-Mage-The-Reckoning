@@ -1474,14 +1474,14 @@ GameObject:
   m_Component:
   - component: {fileID: 9027524255367242580}
   - component: {fileID: 8717954919458152016}
-  - component: {fileID: 8034268915251898103}
   - component: {fileID: 2126360807314379709}
   - component: {fileID: 8974245601768671083}
   - component: {fileID: 6720217981809348148}
   - component: {fileID: 5425310709061580087}
   - component: {fileID: 8430181453873267888}
   - component: {fileID: 2499003188480277894}
-  - component: {fileID: 3554490570326817835}
+  - component: {fileID: 6435472499891343633}
+  - component: {fileID: 5330408103654127206}
   m_Layer: 10
   m_Name: EnemyBaseCA
   m_TagString: Enemy
@@ -1516,22 +1516,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5e6ab01364ad57469f9cf8fde547cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8034268915251898103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4380926478554447536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c214fd0b49662c649a19f679d1acf77a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 50
-  iFrameTime: 0
-  ragdollDamageThreshold: 25
-  health: 0
 --- !u!54 &2126360807314379709
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1638,7 +1622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f0247aa3c26d64687f1388606bf84d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  headTransform: {fileID: 0}
+  headTransform: {fileID: 46972161448962415}
   targetLocation: {x: 0, y: 0, z: 0}
   alwaysSeeTarget: 0
   neverLoseVisionToTarget: 0
@@ -1649,7 +1633,23 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 3073
---- !u!114 &3554490570326817835
+--- !u!114 &6435472499891343633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4380926478554447536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79c8dbcde054c8449ffc20bd882104a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  iFrameTime: 0.5
+  ragdollDamageThreshold: 50
+  health: 0
+--- !u!114 &5330408103654127206
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1864,7 +1864,7 @@ GameObject:
   - component: {fileID: 6739530319975472340}
   - component: {fileID: 5403176371198584751}
   - component: {fileID: 2994188811111689541}
-  - component: {fileID: 697538035819157408}
+  - component: {fileID: 2966901103426731136}
   - component: {fileID: 1795504309547927349}
   m_Layer: 30
   m_Name: EnemyWizard
@@ -1924,7 +1924,7 @@ MonoBehaviour:
   animationWeightThreshold: 0.3
   audioPrefab: {fileID: 243950367109901844, guid: ea33fe8c59a02d544a1a3af02f3a356e,
     type: 3}
---- !u!114 &697538035819157408
+--- !u!114 &2966901103426731136
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1933,13 +1933,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4790528902273959004}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 675928308210a064f8f7a2d1e1115710, type: 3}
+  m_Script: {fileID: 11500000, guid: a7e00fc7525ae374298a2d1b5a52bc09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bIkActive: 1
   cEnemyCore: {fileID: 0}
-  animationSpeedMultiplier: 0.15
-  animationBlendingMultiplier: 0.15
+  animationSpeedMultiplier: 0.1
+  animationBlendingMultiplier: 0.0625
   rotationOffset: 0
 --- !u!114 &1795504309547927349
 MonoBehaviour:
