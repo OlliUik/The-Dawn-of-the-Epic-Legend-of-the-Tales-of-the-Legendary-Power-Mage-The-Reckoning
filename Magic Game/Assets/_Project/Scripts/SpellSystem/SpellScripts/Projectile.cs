@@ -190,6 +190,12 @@ public class Projectile : Spell
         baseSpeed += amount;
     }
 
+    public override void ModifyRange(float amount)
+    {
+        miniAoeRadius += amount;
+        Debug.Log("Projectile modified size: " + miniAoeRadius);
+    }
+
     #endregion
 
 }

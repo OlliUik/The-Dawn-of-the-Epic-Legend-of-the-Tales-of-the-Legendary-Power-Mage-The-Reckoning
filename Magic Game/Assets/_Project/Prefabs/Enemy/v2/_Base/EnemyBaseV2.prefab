@@ -1556,9 +1556,18 @@ MonoBehaviour:
   runningAcceleration: 8
   panicSpeed: 15
   panicAcceleration: 8
+  minDistanceFromAttackTarget: 2
   paranoidMoveInterval: 1
-  waitAtPatrolPoint: 0
-  patrolPoints: []
+  switchProbalitiy: 0.2
+  waitProbalitiy: 0.2
+  patrolPointGroup: {fileID: 0}
+  patrolPoint: []
+  rb: {fileID: 0}
+  x: 0
+  y: 0
+  z: 0
+  min: 0
+  max: 0
 --- !u!114 &8034268915251898103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1639,6 +1648,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  score: 0
+  roundedScore: 0
   logicInterval: 0.5
   defaultState: 0
   searchPlayerAfterAttack: 1
@@ -1653,6 +1664,8 @@ MonoBehaviour:
   attackAnimation: 0
   animator: {fileID: 5403176371198584751}
   ragdoll: {fileID: 2045504140758156737}
+  spawnAsGoodGuy: 0
+  spawnAsConfused: 0
 --- !u!1 &4551390915380190343
 GameObject:
   m_ObjectHideFlags: 0
@@ -1914,6 +1927,7 @@ MonoBehaviour:
   cEnemyCore: {fileID: 7235508525435473448}
   animationSpeedMultiplier: 0.15
   animationBlendingMultiplier: 0.15
+  rotationOffset: 0
 --- !u!114 &1795504309547927349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1934,6 +1948,7 @@ MonoBehaviour:
   - {fileID: 1588241521411818441}
   - {fileID: 3884743023334492789}
   - {fileID: 6670363147859074216}
+  hiddenWhenNotKinematic: []
 --- !u!1 &4910289754750992403
 GameObject:
   m_ObjectHideFlags: 0
