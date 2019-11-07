@@ -681,7 +681,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh48272
+  m_Name: pb_Mesh10778
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -7328,7 +7328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1585880199, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1585880201, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7561,6 +7561,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugDrawRadius: 1
+--- !u!1 &620650098 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1806718285934355672, guid: 48da961470028c14d8940233bb3bc7f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1606831447}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &707961349 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 877070348152121057, guid: cfe151136333a6e41b2e94cc04e0b56c,
@@ -9131,7 +9137,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh48186
+  m_Name: pb_Mesh10704
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10573,6 +10579,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyMeleeBaseV2
       objectReference: {fileID: 0}
+    - target: {fileID: 4414289223671027596, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8991063612626504296, guid: 48da961470028c14d8940233bb3bc7f6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10638,7 +10649,38 @@ PrefabInstance:
       propertyPath: patrolPointGroup
       value: 
       objectReference: {fileID: 105451209}
-    m_RemovedComponents: []
+    - target: {fileID: 4949444733432252149, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: walkingSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001132660440709082, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: hammer
+      value: 
+      objectReference: {fileID: 620650098}
+    - target: {fileID: 1806718285934355672, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: m_TagString
+      value: TriggerKill
+      objectReference: {fileID: 0}
+    - target: {fileID: 3502305890268207258, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1826109013895734119, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1826109013895734119, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7342883251990325012, guid: 48da961470028c14d8940233bb3bc7f6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 48da961470028c14d8940233bb3bc7f6, type: 3}
 --- !u!1001 &1632042664
 PrefabInstance:
@@ -10651,6 +10693,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyMagicRangedBaseV2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536402949058872632, guid: 8047cde8622ee7847bc826b8ba835bae,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6113212386497288412, guid: 8047cde8622ee7847bc826b8ba835bae,
         type: 3}
@@ -10712,7 +10759,8 @@ PrefabInstance:
       propertyPath: patrolPointGroup
       value: 
       objectReference: {fileID: 105451209}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5618235687807956384, guid: 8047cde8622ee7847bc826b8ba835bae, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8047cde8622ee7847bc826b8ba835bae, type: 3}
 --- !u!1 &1737206197
 GameObject:
@@ -11251,7 +11299,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh48172
+  m_Name: pb_Mesh10690
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2

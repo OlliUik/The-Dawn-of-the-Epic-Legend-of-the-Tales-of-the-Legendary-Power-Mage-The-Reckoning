@@ -7,6 +7,7 @@ public class EnemyMelee : EnemyCore
     [Header("Melee -> Attacking")]
     [SerializeField] public float meleeAttackDistance = 10f;
     [SerializeField] public float meleeDamage = 25.0f;
+    [SerializeField] public GameObject hammer;
 
     protected override void AIAttack()
     {
@@ -28,13 +29,13 @@ public class EnemyMelee : EnemyCore
                 cNavigation.cAgent.velocity = new Vector3(0.0f, cNavigation.cAgent.velocity.y, 0.0f);
             }
 
-            // cVision.targetGO.GetComponent<Health>().Hurt(meleeDamage, false);
             StartCoroutine(startAttack());
 
             currentState = EState.CASTING;
         }
         else
         {
+            hammer.GetComponent<MeshCollider>().enabled = false;
             animator.SetBool("isAttack", false);
             animator.SetBool("isWalking", true);
             animator.SetTrigger("Melee|MoveFwd");
@@ -50,13 +51,15 @@ public class EnemyMelee : EnemyCore
         }
     }
 
+    
     IEnumerator startAttack()
     {
         animator.SetBool("isAttack", true);
         animator.SetTrigger("Melee|AttackSmash");
         yield return new WaitForSeconds(0.7f);
-       // cVision.targetGO.GetComponent<Health>().Hurt(meleeDamage, false);
+        hammer.GetComponent<MeshCollider>().enabled = true;
     }
 
- 
+
+
 }
