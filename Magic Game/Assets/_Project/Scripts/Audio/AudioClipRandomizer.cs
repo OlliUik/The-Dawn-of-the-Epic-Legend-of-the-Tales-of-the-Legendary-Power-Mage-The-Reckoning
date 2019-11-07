@@ -6,12 +6,22 @@ using UnityEngine;
 public class AudioClipRandomizer : MonoBehaviour
 {
     [SerializeField] private SoundList soundList = null;
+    [SerializeField] private bool randomizeOnStart = false;
 
-    private AudioSource source = null;
-
+    private AudioSource source;
+    
     void Awake()
     {
         source = GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+        if (randomizeOnStart)
+        {
+            Randomize();
+            source.Play();
+        }
     }
 
     public void Randomize()

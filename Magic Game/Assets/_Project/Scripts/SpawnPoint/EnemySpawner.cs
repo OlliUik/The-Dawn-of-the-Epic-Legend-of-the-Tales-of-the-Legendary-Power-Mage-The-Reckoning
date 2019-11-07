@@ -16,10 +16,10 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogWarning("Your inputted frequency value is too low. Now using default value which is 1.");
         }
 
-        StartCoroutine(SpawnEnememy());
+        StartCoroutine(SpawnEnemy());
     }
 
-    IEnumerator SpawnEnememy()
+    IEnumerator SpawnEnemy()
     {
         while (true)
         {
