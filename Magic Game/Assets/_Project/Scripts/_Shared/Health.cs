@@ -59,10 +59,7 @@ public class Health : MonoBehaviour
         {
             float oldMaxHealth = maxHealth;
             maxHealth = originalMaxHealth + healthAddedByCrystal * GlobalVariables.crystalsCollected;
-            if (health == oldMaxHealth)
-            {
-                health = maxHealth;
-            }
+            health = maxHealth;
             if (bIsPlayer)
             {
                 GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);

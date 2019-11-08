@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
@@ -23,6 +24,7 @@ public class HUDManager : MonoBehaviour
     
     public bool bIsPaused { get; private set; } = false;
 
+    private bool godModeActive = false;
     private float hurtFlashReduceAmount = 0.5f;
     private float hurtFlashMaxAlpha = 0.2f;
     private PlayerCore cPlayerCore = null;
@@ -80,6 +82,19 @@ public class HUDManager : MonoBehaviour
 
     public void SetHealth(float amount, float max)
     {
+        if (amount == Mathf.Infinity || max == Mathf.Infinity)
+        {
+            if (!godModeActive)
+            {
+                StartCoroutine(GodMode());
+                healthBar.rectTransform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                healthTextCurrent.text = "INFINITE";
+                healthTextMax.text = "POWER";
+                godModeActive = true;
+            }
+            return;
+        }
+
         healthBar.rectTransform.localScale = new Vector3(amount / max, 1.0f, 1.0f);
         healthTextCurrent.text = amount.ToString("0");
         healthTextMax.text = max.ToString("0");
@@ -146,6 +161,15 @@ public class HUDManager : MonoBehaviour
         goHPAndManaBars.SetActive(false);
         goGameOver.SetActive(true);
         crosshair.SetActive(false);
+    }
+
+    IEnumerator GodMode()
+    {
+        while (true)
+        {
+            healthBar.color = Color.Lerp(Color.red, Color.yellow, Mathf.PingPong(Time.timeSinceLevelLoad, 1.0f));
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     #endregion
