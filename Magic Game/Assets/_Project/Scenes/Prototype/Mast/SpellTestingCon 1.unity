@@ -681,7 +681,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh10778
+  m_Name: pb_Mesh24906
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -9137,7 +9137,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh10704
+  m_Name: pb_Mesh24830
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10584,6 +10584,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1806718285934355672, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: m_TagString
+      value: TriggerKill
+      objectReference: {fileID: 0}
     - target: {fileID: 8991063612626504296, guid: 48da961470028c14d8940233bb3bc7f6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10654,15 +10659,30 @@ PrefabInstance:
       propertyPath: walkingSpeed
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4949444733432252149, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: min
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4949444733432252149, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: max
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6001132660440709082, guid: 48da961470028c14d8940233bb3bc7f6,
         type: 3}
       propertyPath: hammer
       value: 
       objectReference: {fileID: 620650098}
-    - target: {fileID: 1806718285934355672, guid: 48da961470028c14d8940233bb3bc7f6,
+    - target: {fileID: 6001132660440709082, guid: 48da961470028c14d8940233bb3bc7f6,
         type: 3}
-      propertyPath: m_TagString
-      value: TriggerKill
+      propertyPath: moveWhileCasting
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001132660440709082, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: meleeAttackDistance
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3502305890268207258, guid: 48da961470028c14d8940233bb3bc7f6,
         type: 3}
@@ -11299,7 +11319,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh10690
+  m_Name: pb_Mesh24816
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
