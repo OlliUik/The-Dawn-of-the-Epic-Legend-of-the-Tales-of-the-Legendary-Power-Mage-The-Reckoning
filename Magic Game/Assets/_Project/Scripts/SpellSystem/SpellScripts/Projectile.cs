@@ -63,6 +63,10 @@ public class Projectile : Spell
                 hitLiving = true;
                 base.DealDamage(health, baseDamage);
             }
+            else if (go.gameObject.GetComponent<BreakableObject>() != null)
+            {
+                Destroy(go.gameObject);
+            }
 
             // APPLY STATUSEFFECTS
             var effectManager = collision.gameObject.GetComponent<StatusEffectManager>();

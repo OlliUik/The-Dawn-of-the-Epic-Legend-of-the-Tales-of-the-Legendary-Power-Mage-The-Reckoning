@@ -26,6 +26,9 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
+        //Reset the amount of crystals collected when a new level is loaded
+        GlobalVariables.crystalsCollected = 0;
+
         loadSafetyTimeTemp = loadSafetyTime;
 
         if (Time.timeScale != 1.0f)

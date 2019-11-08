@@ -22,9 +22,22 @@ public class Crystal : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
-            scoreSystem.crystalFound = true;
-            other.GetComponent<PlayerCore>().GetHUD().spellEditingController.crystalsLeft++;
-            other.gameObject.GetComponent<PlayerCore>().ToggleSpellEditingUI();
+            PlayerCore core = other.GetComponent<PlayerCore>();
+            GlobalVariables.crystalsCollected++;
+
+            if (scoreSystem != null)
+            {
+                scoreSystem.crystalFound = true;
+            }
+
+            if (core != null)
+            {
+                core.GetHUD().spellEditingController.crystalsLeft++;
+                Debug.Log("Got a crystal!");
+                //core.ToggleSpellEditingUI();
+                core.cHealth.UpdateMaxHealth();
+            }
+            
             Destroy(gameObject);
         }
     }
