@@ -51,12 +51,22 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject == caster)
+        {
+            return;
+        }
+
         bool hitLiving = false;
 
         // DEAL DAMAGE
         Collider[] hitObjects = Physics.OverlapSphere(transform.position, miniAoeRadius);
         foreach (Collider go in hitObjects)
         {
+            if (go.gameObject == caster)
+            {
+                continue;
+            }
+
             var health = go.gameObject.GetComponent<Health>();
             if (health != null)
             {
