@@ -7,15 +7,15 @@ public class LevelGenerator : MonoBehaviour
 {
     #region VARIABLES
 
+    public bool isDone;
+    public Segment firstSegment = null;
+    public Segment lastSegment = null;
     public List<Segment> segmentPrefabs = new List<Segment>();
-    public Vector2 segmentCount = new Vector2();
 
-    private Segment firstSegment = null;
+    private Segment firstSegmentClone = null;
     private List<Segment> placedSegments = new List<Segment>();
     private List<Doorway> availableDoorways = new List<Doorway>();
     private LayerMask layerMask = 0;
-
-    public bool isDone;
 
     #endregion
 
@@ -38,12 +38,21 @@ public class LevelGenerator : MonoBehaviour
         PlaceFirstSegment();
         yield return interval;
 
-        int iterations = Random.Range((int)segmentCount.x, (int)segmentCount.y);
+        int iterations = 6;
 
         for (int i = 0; i < iterations; i++)
         {
-            //Place random segment from list of prefabs
-            PlaceSegment();
+            if (i < iterations - 1)
+            {
+                //Place random segment from list of prefabs
+                PlaceSegment();
+            }
+
+            else
+            {
+                PlaceLastSegment();
+            }
+
             yield return interval;
         }
 
@@ -54,14 +63,16 @@ public class LevelGenerator : MonoBehaviour
 
     private void PlaceFirstSegment()
     {
-        firstSegment = Instantiate(segmentPrefabs[Random.Range(0, segmentPrefabs.Count)]) as Segment;
-        firstSegment.transform.parent = transform;
+        Segment currentSegment = Instantiate(firstSegment) as Segment;
+        currentSegment.transform.parent = transform;
 
         //Get doorways from current segment and add randomly to the list of available doorways
-        AddDoorwaysToList(firstSegment, ref availableDoorways);
+        AddDoorwaysToList(currentSegment, ref availableDoorways);
 
-        firstSegment.transform.position = Vector3.zero;
-        firstSegment.transform.rotation = Quaternion.identity;
+        currentSegment.transform.position = Vector3.zero;
+        currentSegment.transform.rotation = Quaternion.identity;
+
+        firstSegmentClone = currentSegment;
     }
 
     private void AddDoorwaysToList(Segment segment, ref List<Doorway> list)
@@ -185,15 +196,76 @@ public class LevelGenerator : MonoBehaviour
         return false;
     }
 
+    private void PlaceLastSegment()
+    {
+        Segment currentSegment = Instantiate(lastSegment) as Segment;
+        currentSegment.transform.parent = transform;
+
+        //Create doorway lists to loop over
+        List<Doorway> allAvailableDoorways = new List<Doorway>(availableDoorways);
+        List<Doorway> currentSegmentDoorways = new List<Doorway>();
+        AddDoorwaysToList(currentSegment, ref currentSegmentDoorways);
+
+        //Get doorways from current segment and add randomly to the list of available doorways
+        AddDoorwaysToList(currentSegment, ref availableDoorways);
+
+        bool segmentPlaced = false;
+
+        //Try all available doorways
+        foreach (Doorway availableDoorway in allAvailableDoorways)
+        {
+            //Try all available doorways in current segment
+            foreach (Doorway currentDoorway in currentSegmentDoorways)
+            {
+                //Position segment
+                PositionSegmentAtDoorway(ref currentSegment, currentDoorway, availableDoorway);
+
+                //Check segment overlaps
+                if (CheckSegmentOverlap())
+                {
+                    continue;
+                }
+
+                segmentPlaced = true;
+
+                //Add segment to the list of placed segments
+                placedSegments.Add(currentSegment);
+
+                //Remove occupied doorways
+                currentDoorway.gameObject.SetActive(false);
+                availableDoorways.Remove(currentDoorway);
+
+                availableDoorway.gameObject.SetActive(false);
+                availableDoorways.Remove(availableDoorway);
+
+                //Exit loop if segment has been placed
+                break;
+            }
+
+            //Exit loop if segment has been placed
+            if (segmentPlaced)
+            {
+                break;
+            }
+        }
+
+        //Segment couldn't be placed. Restart generator and try again (think some better way to do this?)
+        if (!segmentPlaced)
+        {
+            Debug.Log("Restarting generator");
+            Destroy(currentSegment.gameObject);
+            ResetLevelGenerator();
+        }
+    }
+
     private void ResetLevelGenerator()
     {
         Debug.LogError("Reset level generator");
         StopCoroutine("GenerateLevel");
 
-        //Delete all segments (think other way for not resetting everything?)
-        if (firstSegment)
+        if (firstSegmentClone)
         {
-            Destroy(firstSegment.gameObject);
+            Destroy(firstSegmentClone.gameObject);
         }
 
         foreach (Segment segment in placedSegments)

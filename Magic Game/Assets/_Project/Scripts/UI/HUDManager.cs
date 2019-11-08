@@ -10,6 +10,8 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject goGameOver = null;
     [SerializeField] private GameObject goHPAndManaBars = null;
     [SerializeField] private Image healthBar = null;
+    [SerializeField] private Text healthTextCurrent = null;
+    [SerializeField] private Text healthTextMax = null;
     [SerializeField] private Image manaBar = null;
     [SerializeField] private Image hurtFlash = null;
     [SerializeField] private Image fadeIn = null;
@@ -79,6 +81,8 @@ public class HUDManager : MonoBehaviour
     public void SetHealth(float amount, float max)
     {
         healthBar.rectTransform.localScale = new Vector3(amount / max, 1.0f, 1.0f);
+        healthTextCurrent.text = amount.ToString("0");
+        healthTextMax.text = max.ToString("0");
     }
 
     public void SetMana(float amount, float max)

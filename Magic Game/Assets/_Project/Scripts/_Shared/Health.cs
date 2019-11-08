@@ -10,12 +10,15 @@ public class Health : MonoBehaviour
     [Header("Serialized")]
     [SerializeField] private float iFrameTime = 0.5f;
     [SerializeField] private float ragdollDamageThreshold = 50.0f;
+    [SerializeField] private bool scaleWithCrystalsCollected = true;
+    [SerializeField] private float healthAddedByCrystal = 20.0f;
 
     public bool bIsDead { get; private set; } = false;
-     public float health /*{ get; private set; }*/ = 0.0f;
+    public float health /*{ get; private set; }*/ = 0.0f;
 
     private bool bIsPlayer = false;
     private float iftTimer = 0.0f;
+    private float originalMaxHealth = 100.0f;
 
     private StatusEffectManager effectManager;
 
@@ -25,10 +28,17 @@ public class Health : MonoBehaviour
 
     void Start()
     {
+        originalMaxHealth = maxHealth;
+        if (scaleWithCrystalsCollected)
+        {
+            maxHealth = maxHealth + healthAddedByCrystal * GlobalVariables.crystalsCollected;
+        }
         health = maxHealth;
+
         if (GetComponent<PlayerCore>() != null)
         {
             bIsPlayer = true;
+            GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
         }
 
         effectManager = GetComponent<StatusEffectManager>();
@@ -42,7 +52,24 @@ public class Health : MonoBehaviour
     #endregion
 
     #region CUSTOM_METHODS
-    
+
+    public void UpdateMaxHealth()
+    {
+        if (scaleWithCrystalsCollected)
+        {
+            float oldMaxHealth = maxHealth;
+            maxHealth = originalMaxHealth + healthAddedByCrystal * GlobalVariables.crystalsCollected;
+            if (health == oldMaxHealth)
+            {
+                health = maxHealth;
+            }
+            if (bIsPlayer)
+            {
+                GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
+            }
+        }
+    }
+
     public void Hurt(float amount, bool ignoreIFrames)
     {
         if (!bIsDead)
@@ -135,6 +162,7 @@ public class Health : MonoBehaviour
 
             if (bIsPlayer)
             {
+                GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
                 GetComponent<PlayerCore>().OnDeath();
             }
             else
