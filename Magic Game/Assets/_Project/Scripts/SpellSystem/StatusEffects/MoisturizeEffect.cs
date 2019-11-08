@@ -8,6 +8,9 @@ public class MoisturizeEffect : StatusEffect
     public GameObject waterPoolPrefab;
     public float size = 1;
 
+    private float timeBetweenTicks = 1.0f;
+    private float timeFromLastRagdoll = 0f;
+
     public override StatusEffect Clone()
     {
         MoisturizeEffect temp = new MoisturizeEffect(duration, graphics, waterPoolPrefab, size);
@@ -73,5 +76,28 @@ public class MoisturizeEffect : StatusEffect
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize] = false;
         base.OnLeave();
     }
-    
+
+    public override void OnTick()
+    {
+        if (timeFromLastRagdoll > timeBetweenTicks)
+        {
+            RagdollRandom();
+        }
+        else
+        {
+            timeFromLastRagdoll += Time.deltaTime;
+        }
+    }
+
+    public void RagdollRandom()
+    {
+        timeFromLastRagdoll = 0;
+        System.Random r = new System.Random();
+        int ragdollChance = r.Next(0,100);
+        if (ragdollChance > 100 - size*10 )
+        {
+            target.GetComponent<EnemyCore>().EnableRagdoll(true);
+        }
+    }
+
 }
