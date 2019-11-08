@@ -681,7 +681,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh24906
+  m_Name: pb_Mesh1948974
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -7328,7 +7328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1585880199, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1585880201, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7383,6 +7383,14 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
+      propertyPath: waves.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
+      propertyPath: waves.Array.data[1].enemy.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: spawnPoints.Array.data[0]
       value: 
       objectReference: {fileID: 612026073}
@@ -7400,7 +7408,7 @@ PrefabInstance:
       objectReference: {fileID: 1283217153}
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: waves.Array.data[0].count
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: waves.Array.data[0].name
@@ -7410,6 +7418,26 @@ PrefabInstance:
       propertyPath: waves.Array.data[0].enemy.Array.data[1]
       value: 
       objectReference: {fileID: 1529721262}
+    - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
+      propertyPath: waves.Array.data[1].name
+      value: Normal Minions
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
+      propertyPath: waves.Array.data[1].enemy.Array.data[0]
+      value: 
+      objectReference: {fileID: 968192612}
+    - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
+      propertyPath: waves.Array.data[1].enemy.Array.data[1]
+      value: 
+      objectReference: {fileID: 1529721262}
+    - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
+      propertyPath: waves.Array.data[1].count
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
+      propertyPath: waves.Array.data[1].rate
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
 --- !u!1001 &322953099
@@ -7665,7 +7693,8 @@ PrefabInstance:
         type: 3}
       propertyPath: spells.Array.data[0].cards.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: 9a5d6531e2713004caa3b432b48c053e,
+        type: 2}
     - target: {fileID: 5303135430551391158, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -9130,7 +9159,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh24830
+  m_Name: pb_Mesh1948900
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -10628,8 +10657,13 @@ PrefabInstance:
       objectReference: {fileID: 105451209}
     - target: {fileID: 6001132660440709082, guid: 48da961470028c14d8940233bb3bc7f6,
         type: 3}
+      propertyPath: moveWhileCasting
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001132660440709082, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
       propertyPath: meleeAttackDistance
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48da961470028c14d8940233bb3bc7f6, type: 3}
@@ -11250,7 +11284,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh24816
+  m_Name: pb_Mesh1948886
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2

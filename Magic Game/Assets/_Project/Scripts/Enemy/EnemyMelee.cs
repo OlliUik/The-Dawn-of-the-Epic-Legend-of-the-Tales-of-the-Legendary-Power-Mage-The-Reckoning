@@ -14,7 +14,6 @@ public class EnemyMelee : EnemyCore
 
     protected override void AIAttack()
     {
-        randomAttack = Random.Range(0, 4);
         if (cVision.bCanSeeTarget)
         {
             if ((transform.position - cVision.targetLocation).sqrMagnitude > meleeAttackDistance * meleeAttackDistance)
@@ -68,14 +67,17 @@ public class EnemyMelee : EnemyCore
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
         animator.SetBool("isAttack", true);
+        randomAttack = Random.Range(0, 4);
         animator.SetInteger("meleeIndex", randomAttack);
         yield return new WaitForSeconds(0.8f);
         foreach (BoxCollider col in hammer.GetComponents<BoxCollider>())
         {
             col.enabled = true;
         }
+        yield return new WaitForSeconds(0.3f);
     }
 
+    
     /*
     IEnumerator startAttackAlternative()
     {
@@ -83,12 +85,12 @@ public class EnemyMelee : EnemyCore
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
         animator.SetBool("isAttack", true);
-        int randomAttack = Random.Range(0,1);
-        animator.SetInteger("meleeIndex", randomAttack);
+        animator.SetInteger("meleeIndex", 4);
         yield return new WaitForSeconds(0.9f);
         hammer.GetComponent<MeshCollider>().enabled = true;
     }
     */
+    
 
     protected override void Update()
     {
