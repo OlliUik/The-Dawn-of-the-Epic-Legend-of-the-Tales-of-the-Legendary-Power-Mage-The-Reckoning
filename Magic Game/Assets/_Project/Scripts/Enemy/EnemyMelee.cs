@@ -8,6 +8,7 @@ public class EnemyMelee : EnemyCore
     [SerializeField] public float meleeAttackDistance = 10f;
     [SerializeField] public float meleeDamage = 25.0f;
     [SerializeField] public GameObject hammer;
+    private int randomAttack;
 
 
 
@@ -19,10 +20,9 @@ public class EnemyMelee : EnemyCore
             {
                 return;
             }
+          
 
             castStandStillTimer = standStillAfterCasting;
-            // animator.SetTrigger("Cast Spell");
-            // animator.SetInteger("Spell Type", attackAnimation);
 
 
             if (!moveWhileCasting && cNavigation.cAgent.hasPath)
@@ -31,22 +31,20 @@ public class EnemyMelee : EnemyCore
                 cNavigation.cAgent.velocity = new Vector3(0.0f, cNavigation.cAgent.velocity.y, 0.0f);
             }
 
-            if((transform.position - cVision.targetLocation).sqrMagnitude >= 8f)
-            {
-
-            }
-
             StartCoroutine(startAttack());
-            //animator.SetBool("isIdle", false);
-            //animator.SetBool("isWalking", false);
-            //animator.SetBool("isAttack", true);
-            hammer.GetComponent<MeshCollider>().enabled = false;
+            foreach (BoxCollider col in hammer.GetComponents<BoxCollider>())
+            {
+                col.enabled = false;
+            }
 
             currentState = EState.CASTING;
         }
         else
         {
-            hammer.GetComponent<MeshCollider>().enabled = false;
+            foreach(BoxCollider col in hammer.GetComponents<BoxCollider>())
+            {
+                col.enabled = false;
+            }
             animator.SetBool("isAttack", false);
             animator.SetBool("isWalking", true);
             animator.SetBool("isIdle", false);
@@ -65,33 +63,39 @@ public class EnemyMelee : EnemyCore
     
     IEnumerator startAttack()
     {
-        hammer.GetComponent<MeshCollider>().enabled = false;
+        hammer.GetComponent<BoxCollider>().enabled = false;
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
         animator.SetBool("isAttack", true);
-        //int randomAttack = Random.Range(0,3);
-        //animator.SetInteger("attack!", randomAttack);
-        yield return new WaitForSeconds(0.9f);
-        hammer.GetComponent<MeshCollider>().enabled = true;
+        randomAttack = Random.Range(0, 4);
+        animator.SetInteger("meleeIndex", randomAttack);
+        yield return new WaitForSeconds(0.8f);
+        foreach (BoxCollider col in hammer.GetComponents<BoxCollider>())
+        {
+            col.enabled = true;
+        }
+        yield return new WaitForSeconds(0.3f);
     }
 
-    IEnumerator startAttackAlternate()
+    
+    /*
+    IEnumerator startAttackAlternative()
     {
         hammer.GetComponent<MeshCollider>().enabled = false;
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
         animator.SetBool("isAttack", true);
-        //int randomAttack = Random.Range(0,3);
-        //animator.SetInteger("attack!", randomAttack);
+        animator.SetInteger("meleeIndex", 4);
         yield return new WaitForSeconds(0.9f);
         hammer.GetComponent<MeshCollider>().enabled = true;
     }
-
+    */
+    
 
     protected override void Update()
     {
         base.Update();
-
+        randomAttack = Random.Range(0, 4);
         if (cNavigation.cAgent.isStopped)
         {
             animator.SetBool("isIdle", true);
@@ -102,7 +106,6 @@ public class EnemyMelee : EnemyCore
         {
             animator.SetBool("isIdle", false);
             animator.SetBool("isWalking", true);
-            //animator.SetBool("isAttack", false);
         }
     }
 }
