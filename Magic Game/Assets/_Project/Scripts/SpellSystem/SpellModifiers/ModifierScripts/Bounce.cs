@@ -20,13 +20,14 @@ public class Bounce : SpellModifier
     {
         var bounce = GetComponent<Bounce>();
         if (bounce == null || bounceCount <= 0) return;
-
+        
         Vector3 reflectionDir = Vector3.Reflect(direction, collision.contacts[0].normal);
         Quaternion rot = Quaternion.LookRotation(reflectionDir, Vector3.up);
         Projectile copy = Instantiate(gameObject, transform.position, rot).GetComponent<Projectile>();
         copy.name = "Bounce copy";
         copy.direction = reflectionDir;
         copy.GetComponent<Bounce>().bounceCount--;
+        bounceCount = 0; //Remove bounces from the original projectile to avoid infinite loops.
         copy.isMaster = false;
         copy.statusEffects = gameObject.GetComponent<Spell>().statusEffects;
 
