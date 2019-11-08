@@ -5,15 +5,19 @@ using UnityEngine;
 public class EnemyFlyingNavigationFollower : MonoBehaviour
 {
     [SerializeField] private float desiredHeight = 10.0f;
-    [SerializeField] private float maxFloatingRange = 1.2f;
+    [SerializeField] private float maxFloatingRange = 1.5f;
     [SerializeField] private EnemyCore cEnemyCore = null;
-    private bool atDesiredHieght = false;
 
+    private bool atDesiredHieght = false;
+    private bool floatToDesiredHeight = false;
+
+    private float minFloatingRange = 0.5f;
+    private float fRange = 0.0f;
     private float currentHeight = 0.0f;
 
     void Start()
     {
-        currentHeight = transform.position.y;
+        currentHeight = cEnemyCore.cNavigation.transform.position.y;
     }
 
     void Update()
@@ -29,24 +33,34 @@ public class EnemyFlyingNavigationFollower : MonoBehaviour
 
     void TakeOff()
     {
-        Vector3 currentPosition = cEnemyCore.cNavigation.transform.position;
-        currentHeight = Mathf.Lerp(currentHeight, cEnemyCore.cNavigation.transform.position.y + desiredHeight, Time.deltaTime);
-        currentPosition.y = currentHeight;
-
-        transform.position = currentPosition;
-        if(currentHeight.Equals(desiredHeight))
-        {
-            atDesiredHieght = true;
-        }
+        atDesiredHieght = MoveYPos(desiredHeight);
     }
 
     void Floating()
     {
-        Vector3 currentPosition = cEnemyCore.cNavigation.transform.position;
-        float bRange = Random.Range(-maxFloatingRange, maxFloatingRange);
-        currentHeight = Mathf.Lerp(currentHeight, cEnemyCore.cNavigation.transform.position.y + bRange, Time.deltaTime);
-        currentPosition.y = currentHeight;
+        if(!floatToDesiredHeight)
+        {
+            fRange = Random.Range(minFloatingRange, maxFloatingRange);
+            float yPos = desiredHeight + fRange;
+            floatToDesiredHeight = MoveYPos(yPos);
+        } else
+        {
+            floatToDesiredHeight = !MoveYPos(desiredHeight);
+        } 
+    }
 
+    bool MoveYPos(float yPos)
+    {
+        Vector3 currentPosition = cEnemyCore.cNavigation.transform.position;
+        currentHeight = Mathf.Lerp(currentHeight, yPos, Time.deltaTime);
+        currentPosition.y = currentHeight;
         transform.position = currentPosition;
+
+        if (Mathf.Abs(yPos - currentHeight) < 0.08)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
