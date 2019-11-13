@@ -22,6 +22,10 @@ public abstract class StatusEffect
 
     public GameObject projectileExplosionGraphic;
 
+    public float extraManaCost = 0f;
+
+    public Mana playerMana;
+
     #region Cloning
     public abstract StatusEffect Clone();
     /*
@@ -53,6 +57,10 @@ public abstract class StatusEffect
     {
         this.duration = duration;
         this.graphics = graphics;
+        if (GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            playerMana = GameObject.FindGameObjectWithTag("Player").GetComponent<Mana>();
+        }
     }
 
     // This will be called from each entitys own StatusEffectManager when the effect is about to be applied
@@ -106,6 +114,11 @@ public abstract class StatusEffect
     public void SetProjectileExplosion(GameObject projectileParticle)
     {
         projectileExplosionGraphic = projectileParticle;
+    }
+
+    public bool isEffectable()
+    {
+        return (extraManaCost < playerMana.mana);
     }
 
 }
