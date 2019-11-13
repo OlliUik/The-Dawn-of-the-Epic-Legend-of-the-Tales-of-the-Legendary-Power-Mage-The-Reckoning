@@ -24,6 +24,8 @@ public class Spellbook : MonoBehaviour
     public Health health { get; private set; }
     public Mana mana { get; private set; }
 
+    public bool enableCasting = true;
+
     #endregion
 
     private void Awake()
@@ -163,6 +165,11 @@ public class Spellbook : MonoBehaviour
 
         // check if player is already casting something
         if(isCasting)
+        {
+            return false;
+        }
+
+        if (!enableCasting)
         {
             return false;
         }
