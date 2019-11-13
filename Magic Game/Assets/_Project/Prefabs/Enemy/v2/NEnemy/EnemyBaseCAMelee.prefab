@@ -84,6 +84,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2820462688170350534}
+    - target: {fileID: 0}
+      propertyPath: ragdoll
+      value: 
+      objectReference: {fileID: 8195615340777665960}
     - target: {fileID: 4380926478554447536, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: m_Name
@@ -149,16 +157,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3848332153936467472, guid: 2f55a76a8dc3e484188f9ba459f57db4,
-        type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 2820462688170350534}
-    - target: {fileID: 3848332153936467472, guid: 2f55a76a8dc3e484188f9ba459f57db4,
-        type: 3}
-      propertyPath: ragdoll
-      value: 
-      objectReference: {fileID: 8195615340777665960}
     - target: {fileID: 402426337863893273, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: headTransform
@@ -168,7 +166,7 @@ PrefabInstance:
         type: 3}
       propertyPath: cEnemyCore
       value: 
-      objectReference: {fileID: 6392787254609749625}
+      objectReference: {fileID: 6200683850415614443}
     - target: {fileID: 1795504309547927349, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: excludeFromKinematicToggle.Array.data[0]
@@ -522,18 +520,6 @@ Rigidbody:
     type: 3}
   m_PrefabInstance: {fileID: 7917252928743698537}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6392787254609749625 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3848332153936467472, guid: 2f55a76a8dc3e484188f9ba459f57db4,
-    type: 3}
-  m_PrefabInstance: {fileID: 7917252928743698537}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5842179153187000025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72de8cad13c542c458b03e36d8f070bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &2820462688170350534 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5403176371198584751, guid: 2f55a76a8dc3e484188f9ba459f57db4,
