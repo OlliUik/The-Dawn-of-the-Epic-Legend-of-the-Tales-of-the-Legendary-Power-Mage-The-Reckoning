@@ -104,6 +104,8 @@ public class EnemyCore : MonoBehaviour
     protected float castStandStillTimer = 0.0f;
     protected float ragdollSleepTimer = 0.0f;
 
+    public GameObject deathAudioPrefab; //audio
+
     #endregion
 
     #region UNITY_DEFAULT_METHODS
@@ -298,6 +300,7 @@ public class EnemyCore : MonoBehaviour
 
         ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCombo.scoreCombo.combo++;
+        Instantiate(deathAudioPrefab, new Vector3(0, 0, 0), Quaternion.identity); //audio
 
         currentState = EState.DISABLED;
         GlobalVariables.teamBadBoys.Remove(this.gameObject);
