@@ -49,6 +49,7 @@ MonoBehaviour:
   ragdoll: {fileID: 756741351151843083}
   spawnAsGoodGuy: 0
   spawnAsConfused: 0
+  deathAudioPrefab: {fileID: 0}
   rangedEscapeDistance: 10
   castInBursts: 0
   castingTime: 0.8
@@ -526,6 +527,12 @@ PrefabInstance:
       objectReference: {fileID: 2164253118355008173}
     - target: {fileID: 7235508525435473448, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
+      propertyPath: deathAudioPrefab
+      value: 
+      objectReference: {fileID: 4319804096100018453, guid: 3a704379558d3a74f82a579679c941cb,
+        type: 3}
+    - target: {fileID: 7235508525435473448, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
       propertyPath: animator
       value: 
       objectReference: {fileID: 6636224862420030821}
@@ -534,16 +541,6 @@ PrefabInstance:
       propertyPath: ragdoll
       value: 
       objectReference: {fileID: 756741351151843083}
-    - target: {fileID: 8034268915251898103, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: maxHealth
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 8034268915251898103, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: maxHealth
-      value: 100
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5d19f36566d2a14a8dd56e2cae10848, type: 3}
 --- !u!95 &6636224862420030821 stripped
