@@ -16237,46 +16237,10 @@ PrefabInstance:
       propertyPath: spellControls
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7066670760798350497, guid: 14f3d020090e13745a23f198dcab5c97,
-        type: 3}
-      propertyPath: spells.Array.data[1].spell
-      value: 
-      objectReference: {fileID: 2971589555194763752, guid: d151ec80c3a14ee4ea6ee43f636f109b,
-        type: 3}
-    - target: {fileID: 7955851043706749429, guid: 14f3d020090e13745a23f198dcab5c97,
-        type: 3}
-      propertyPath: slowdownMaxTurn.x
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7955851043706749429, guid: 14f3d020090e13745a23f198dcab5c97,
-        type: 3}
-      propertyPath: slowdownMaxTurn.y
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5368165616332325514, guid: 14f3d020090e13745a23f198dcab5c97,
-        type: 3}
-      propertyPath: spellEditingUI
-      value: 
-      objectReference: {fileID: 1986870459}
     - target: {fileID: 5303135430551391158, guid: 14f3d020090e13745a23f198dcab5c97,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2307447049640960598, guid: 14f3d020090e13745a23f198dcab5c97,
-        type: 3}
-      propertyPath: hiddenWhenNotKinematic.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2307447049640960598, guid: 14f3d020090e13745a23f198dcab5c97,
-        type: 3}
-      propertyPath: hiddenWhenNotKinematic.Array.data[0]
-      value: 
-      objectReference: {fileID: 2143348734}
-    - target: {fileID: 1336649305733341367, guid: 14f3d020090e13745a23f198dcab5c97,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 34.900024
       objectReference: {fileID: 0}
     - target: {fileID: 1567079935, guid: 14f3d020090e13745a23f198dcab5c97, type: 3}
       propertyPath: m_ConnectedAnchor.x
@@ -16398,6 +16362,42 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: 8.731149e-11
       objectReference: {fileID: 0}
+    - target: {fileID: 1336649305733341367, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 34.900024
+      objectReference: {fileID: 0}
+    - target: {fileID: 7066670760798350497, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: spells.Array.data[1].spell
+      value: 
+      objectReference: {fileID: 2971589555194763752, guid: d151ec80c3a14ee4ea6ee43f636f109b,
+        type: 3}
+    - target: {fileID: 7955851043706749429, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: slowdownMaxTurn.x
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7955851043706749429, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: slowdownMaxTurn.y
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368165616332325514, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: spellEditingUI
+      value: 
+      objectReference: {fileID: 1986870459}
+    - target: {fileID: 2307447049640960598, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: hiddenWhenNotKinematic.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307447049640960598, guid: 14f3d020090e13745a23f198dcab5c97,
+        type: 3}
+      propertyPath: hiddenWhenNotKinematic.Array.data[0]
+      value: 
+      objectReference: {fileID: 2143348734}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14f3d020090e13745a23f198dcab5c97, type: 3}
 --- !u!1 &1733640603
@@ -18953,20 +18953,65 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 654208389696866793, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: sightRadius
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3480033681297835083, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5876511472973635388, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: desiredHeight
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1209854589653725122, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: patrolPointGroup
+      value: 
+      objectReference: {fileID: 1799200365}
+    - target: {fileID: 1209854589653725122, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 1399925626}
+    - target: {fileID: 1209854589653725122, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: walkingSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1209854589653725122, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: runningSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1209854589653725122, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: panicSpeed
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7224139897468758187, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: spells.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8178765632074145976, guid: 9024eff8e72ec194a91f462c7a941b1e,
         type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 0.000021991917
+      value: 0.000021991904
       objectReference: {fileID: 0}
     - target: {fileID: 8178765632074145976, guid: 9024eff8e72ec194a91f462c7a941b1e,
         type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: 0.0042875125
+      value: 0.004330775
       objectReference: {fileID: 0}
     - target: {fileID: 8178765632074145976, guid: 9024eff8e72ec194a91f462c7a941b1e,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: 0.00041270404
+      value: 0.00028879463
       objectReference: {fileID: 0}
     - target: {fileID: 5445966041704817495, guid: 9024eff8e72ec194a91f462c7a941b1e,
         type: 3}
@@ -19012,6 +19057,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ConnectedAnchor.z
       value: 0.00009646974
+      objectReference: {fileID: 0}
+    - target: {fileID: 3635840134473459831, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.0000000046565876
+      objectReference: {fileID: 0}
+    - target: {fileID: 3635840134473459831, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.0041798567
+      objectReference: {fileID: 0}
+    - target: {fileID: 3635840134473459831, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: -0.000000005122274
+      objectReference: {fileID: 0}
+    - target: {fileID: 3038260738436128480, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: -0.000000007857976
+      objectReference: {fileID: 0}
+    - target: {fileID: 3038260738436128480, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.0041798614
+      objectReference: {fileID: 0}
+    - target: {fileID: 3038260738436128480, guid: 9024eff8e72ec194a91f462c7a941b1e,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0.000000003608874
       objectReference: {fileID: 0}
     - target: {fileID: 1157927768390804003, guid: 9024eff8e72ec194a91f462c7a941b1e,
         type: 3}
@@ -19072,61 +19147,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ConnectedAnchor.z
       value: -0.000000003885362
-      objectReference: {fileID: 0}
-    - target: {fileID: 3635840134473459831, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: 0.0000000046565876
-      objectReference: {fileID: 0}
-    - target: {fileID: 3635840134473459831, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.y
-      value: 0.0041798567
-      objectReference: {fileID: 0}
-    - target: {fileID: 3635840134473459831, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.z
-      value: -0.000000005122274
-      objectReference: {fileID: 0}
-    - target: {fileID: 3038260738436128480, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: -0.000000007857976
-      objectReference: {fileID: 0}
-    - target: {fileID: 3038260738436128480, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.y
-      value: 0.0041798614
-      objectReference: {fileID: 0}
-    - target: {fileID: 3038260738436128480, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: m_ConnectedAnchor.z
-      value: 0.000000003608874
-      objectReference: {fileID: 0}
-    - target: {fileID: 5876511472973635388, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: desiredHeight
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1209854589653725122, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: patrolPointGroup
-      value: 
-      objectReference: {fileID: 1799200365}
-    - target: {fileID: 1209854589653725122, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: rb
-      value: 
-      objectReference: {fileID: 1399925626}
-    - target: {fileID: 654208389696866793, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: sightRadius
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 7224139897468758187, guid: 9024eff8e72ec194a91f462c7a941b1e,
-        type: 3}
-      propertyPath: spells.Array.size
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9024eff8e72ec194a91f462c7a941b1e, type: 3}
