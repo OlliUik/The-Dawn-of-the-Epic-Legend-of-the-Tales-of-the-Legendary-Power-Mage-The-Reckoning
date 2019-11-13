@@ -23,6 +23,8 @@ public class EnemyNavigation : MonoBehaviour
     //[SerializeField] private bool moveWhileCasting = false;
     //[SerializeField] private float navigationInterval = 1.0f;
     //[SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
+    //If true enemy will do the navigation loop.
+    public bool isEnable = true;
     public float minDistanceFromAttackTarget = 2.0f;
     [SerializeField] private float paranoidMoveInterval = 1.0f;
     //[SerializeField] private float waitAtPatrolPoint = 0.0f;
@@ -87,8 +89,6 @@ public class EnemyNavigation : MonoBehaviour
         cAgent = GetComponent<NavMeshAgent>();
         character = GetComponent<ThirdPersonCharacter>();
         rb = GetComponent<Rigidbody>();                     
-
-        
         
         //get list of patrol points in a section.
         if(patrolPointGroup != null)
@@ -122,52 +122,55 @@ public class EnemyNavigation : MonoBehaviour
 
     public void NavigationLoop()
     {
-        switch (cEnemyCore.currentState)
+        if (isEnable)
         {
-            case EnemyCore.EState.IDLE: AIidlePatrol(); break;
-            case EnemyCore.EState.PATROL: AIPatrol(); break;
-            case EnemyCore.EState.ALERTED: AIAlerted(); break;
-            case EnemyCore.EState.PARANOID: AIParanoid(); break;
-            case EnemyCore.EState.SEARCH: AISearch(); break;
-            case EnemyCore.EState.ATTACK: AIAttack(); break;
-            case EnemyCore.EState.CASTING: AICasting(); break;
-            case EnemyCore.EState.ESCAPE: AIEscape(); break;
-            case EnemyCore.EState.PANIC: AIPanic(); break;
-            case EnemyCore.EState.RAGDOLLED: break;
-            default: if (cAgent.hasPath) cAgent.ResetPath(); break;
-        }
+            switch (cEnemyCore.currentState)
+            {
+                case EnemyCore.EState.IDLE: AIidlePatrol(); break;
+                case EnemyCore.EState.PATROL: AIPatrol(); break;
+                case EnemyCore.EState.ALERTED: AIAlerted(); break;
+                case EnemyCore.EState.PARANOID: AIParanoid(); break;
+                case EnemyCore.EState.SEARCH: AISearch(); break;
+                case EnemyCore.EState.ATTACK: AIAttack(); break;
+                case EnemyCore.EState.CASTING: AICasting(); break;
+                case EnemyCore.EState.ESCAPE: AIEscape(); break;
+                case EnemyCore.EState.PANIC: AIPanic(); break;
+                case EnemyCore.EState.RAGDOLLED: break;
+                default: if (cAgent.hasPath) cAgent.ResetPath(); break;
+            }
 
-        if (cEnemyCore.currentState == EnemyCore.EState.IDLE
-            || cEnemyCore.currentState == EnemyCore.EState.PATROL
-            || cEnemyCore.currentState == EnemyCore.EState.PARANOID
-            || cEnemyCore.currentState == EnemyCore.EState.CASTING)
-        {
-            cAgent.speed = walkingSpeed;
-            cAgent.acceleration = walkingAcceleration;
-        }
-        else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
-        {
-            cAgent.speed = panicSpeed;
-            cAgent.acceleration = panicAcceleration;
-        }
-        else
-        {
-            cAgent.speed = runningSpeed;
-            cAgent.acceleration = runningAcceleration;
-        }
+            if (cEnemyCore.currentState == EnemyCore.EState.IDLE
+                || cEnemyCore.currentState == EnemyCore.EState.PATROL
+                || cEnemyCore.currentState == EnemyCore.EState.PARANOID
+                || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+            {
+                cAgent.speed = walkingSpeed;
+                cAgent.acceleration = walkingAcceleration;
+            }
+            else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
+            {
+                cAgent.speed = panicSpeed;
+                cAgent.acceleration = panicAcceleration;
+            }
+            else
+            {
+                cAgent.speed = runningSpeed;
+                cAgent.acceleration = runningAcceleration;
+            }
 
-        if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
-        {
-            cAgent.stoppingDistance = 1.0f;
-        }
-        else
-        {
-            cAgent.stoppingDistance = 0.0f;
-        }
+            if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+            {
+                cAgent.stoppingDistance = 1.0f;
+            }
+            else
+            {
+                cAgent.stoppingDistance = 0.0f;
+            }
 
-        //When walking away from player, give more acceleration
-        float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
-        cAgent.acceleration += accel;
+            //When walking away from player, give more acceleration
+            float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
+            cAgent.acceleration += accel;
+        }
     }
 
 
@@ -213,19 +216,22 @@ public class EnemyNavigation : MonoBehaviour
           */
         // Debug.Log(isGrounded.ToString());
 
-        if (cAgent.remainingDistance > cAgent.stoppingDistance)
+        if (isEnable)
         {
-            character.Move(cAgent.desiredVelocity, false, false);
-        }
-        else
-        {
-            character.Move(Vector3.zero, false, false);
-        }
+            if (cAgent.remainingDistance > cAgent.stoppingDistance)
+            {
+                character.Move(cAgent.desiredVelocity, false, false);
+            }
+            else
+            {
+                character.Move(Vector3.zero, false, false);
+            }
 
-        if (cAgent.isOnOffMeshLink && isGrounded)
-        {
-            Jump();
-            cAgent.updatePosition = true;
+            if (cAgent.isOnOffMeshLink && isGrounded)
+            {
+                Jump();
+                cAgent.updatePosition = true;
+            }
         }
 
     }
