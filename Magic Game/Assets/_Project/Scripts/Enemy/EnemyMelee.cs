@@ -7,7 +7,6 @@ public class EnemyMelee : EnemyCore
     [Header("Melee -> Attacking")]
     [SerializeField] public float meleeAttackDistance = 10f;
     [SerializeField] public float rangeAttackDistance = 20f;
-    [SerializeField] public float meleeDamage = 25.0f;
     [SerializeField] public GameObject hammer;
     private int randomAttack;
     private int oldAttack;
