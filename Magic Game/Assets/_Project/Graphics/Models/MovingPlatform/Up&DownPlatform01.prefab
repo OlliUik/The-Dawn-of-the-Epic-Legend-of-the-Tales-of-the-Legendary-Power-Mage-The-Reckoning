@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 984090253003512618}
   - component: {fileID: 7030051481188200812}
   - component: {fileID: 2671987287395057993}
-  - component: {fileID: 137519318712904189}
+  - component: {fileID: 5783664633183967944}
   m_Layer: 0
   m_Name: Up&DownPlatform01
   m_TagString: MovingPlatform
@@ -80,25 +80,22 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &137519318712904189
-Animator:
-  serializedVersion: 3
+--- !u!114 &5783664633183967944
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137519318712904186}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 70a429d905b98ab4da0c3f8920bb9b8e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe8651648f3262449ae9e6d6ac75f9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movingObject: {fileID: 0}
+  target: {x: 0, y: 0, z: 0}
+  speedDiv: 0
+  waitingTime: 0
 --- !u!1 &9213295603437956271
 GameObject:
   m_ObjectHideFlags: 0
