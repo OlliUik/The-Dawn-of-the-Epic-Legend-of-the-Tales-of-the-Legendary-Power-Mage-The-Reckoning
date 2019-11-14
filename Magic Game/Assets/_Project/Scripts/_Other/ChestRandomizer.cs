@@ -4,19 +4,48 @@ using UnityEngine;
 
 public class ChestRandomizer : MonoBehaviour
 {
+    #region VARIABLES
+
+    public GameObject normalChest = null;
     public GameObject crystalChest = null;
     public List<GameObject> chests = new List<GameObject>();
-
+    
     [SerializeField] private int crystalChestCount = 0;
     [SerializeField] private List<GameObject> crystalChests = new List<GameObject>();
     private List<GameObject> tempList = new List<GameObject>();
+    private int crystalCount = 0;
+
+    #endregion
+
+    #region UNITY_FUNCTIONS
 
     private void Start()
     {
+        crystalCount = GlobalVariables.crystalsCollected;
+
+        Chest[] tempArray = FindObjectsOfType<Chest>();
+
+        foreach (Chest chest in tempArray)
+        {
+            chests.Add(chest.gameObject);
+        }
+
         Shuffle(chests);
         Pick(crystalChestCount);
         Change();
     }
+
+    private void Update()
+    {
+        if (crystalCount == (crystalCount + 3))
+        {
+            ChangeBack();
+        }
+    }
+
+    #endregion
+
+    #region CUSTOM_FUNCTIONS
 
     private List<GameObject> Shuffle (List<GameObject> list)
     {
@@ -60,6 +89,20 @@ public class ChestRandomizer : MonoBehaviour
             }
         }
 
-        tempList = null;
+        tempList.Clear();
     }
+
+    private void ChangeBack()
+    {
+        foreach (GameObject chest in crystalChests)
+        {
+            GameObject current = Instantiate(normalChest, chest.transform.position, chest.transform.rotation, gameObject.transform);
+            chests.Add(current);
+            Destroy(chest);
+        }
+
+        crystalChests.Clear();
+    }
+
+    #endregion
 }

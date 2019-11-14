@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 62861966}
   m_Layer: 0
   m_Name: spawnPoints (1)
-  m_TagString: Untagged
+  m_TagString: spawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7328,7 +7328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1585880199, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1585880201, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7376,11 +7376,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: spawnPoints.Array.size
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: waves.Array.data[0].enemy.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: waves.Array.size
@@ -7397,7 +7397,7 @@ PrefabInstance:
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: waves.Array.data[0].enemy.Array.data[0]
       value: 
-      objectReference: {fileID: 968192612}
+      objectReference: {fileID: 1529721262}
     - target: {fileID: 1585880202, guid: 9633cd01e578dea45a18d439e01effcf, type: 3}
       propertyPath: spawnPoints.Array.data[1]
       value: 
@@ -7557,7 +7557,7 @@ GameObject:
   - component: {fileID: 612026074}
   m_Layer: 0
   m_Name: spawnPoints
-  m_TagString: Untagged
+  m_TagString: spawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9121,7 +9121,7 @@ GameObject:
   - component: {fileID: 1283217154}
   m_Layer: 0
   m_Name: spawnPoints (2)
-  m_TagString: Untagged
+  m_TagString: spawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10595,6 +10595,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyMeleeBaseV2
       objectReference: {fileID: 0}
+    - target: {fileID: 4414289223671027596, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8991063612626504296, guid: 48da961470028c14d8940233bb3bc7f6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10924,6 +10929,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257977767103936955, guid: 48da961470028c14d8940233bb3bc7f6,
+        type: 3}
+      propertyPath: excludeFromKinematicToggle.Array.data[0]
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48da961470028c14d8940233bb3bc7f6, type: 3}
