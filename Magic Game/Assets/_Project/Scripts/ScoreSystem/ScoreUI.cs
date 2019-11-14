@@ -15,7 +15,7 @@ public class ScoreUI : MonoBehaviour
 
     public Color colorChange = new Color();
 
-    private string scoreString = "Score: {value}";
+    private string scoreString = "{value}";
     private string multiplierString = "Multiplier: {value}x";
     private string comboString = "Killstreak/combo: {value}";
     private string comboTimerString = "{value}";
