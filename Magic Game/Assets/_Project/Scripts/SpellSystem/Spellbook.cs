@@ -77,6 +77,10 @@ public class Spellbook : MonoBehaviour
         {
             StartCoroutine(StartCastingSpell(spellIndex));
         }
+        else
+        {
+            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+        }
     }
 
     // works but not centered --> // spells can get this by calling spellbook.GetDirection()
@@ -215,8 +219,12 @@ public class Spellbook : MonoBehaviour
         {
             mana.UseMana(spells[spellIndex].spell.ManaCost);
         }
+        else
+        { 
+            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+        }
 
-        if(spells[spellIndex].cards.Count > 0)
+        if (spells[spellIndex].cards.Count > 0)
         {
             foreach (Card card in spells[spellIndex].cards)
             {
