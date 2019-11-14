@@ -333,6 +333,7 @@ public class PlayerCore : MonoBehaviour
     {
         if (other.tag == "TriggerKill")
         {
+            Instantiate(physicalDamageAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio->prefabs
             if (other.GetComponent<TriggerHurt>().killInstantly)
             {
                 cHealth.Kill();
@@ -409,7 +410,7 @@ public class PlayerCore : MonoBehaviour
         ragdollObject.GetComponent<RagdollModifier>().SetKinematic(!b, b);
         ragdollObject.GetComponent<Animator>().enabled = !b;
         ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
-        
+
         ragdollObject.transform.parent = b ? null : transform;
 
         //ragdollPosition.GetComponent<Rigidbody>().AddForce(cCharacter.velocity, ForceMode.VelocityChange);
@@ -435,7 +436,7 @@ public class PlayerCore : MonoBehaviour
     {
         bIsDead = true;
         GlobalVariables.teamGoodGuys.Remove(this.gameObject);
-
+        GameObject.Find("MusicSource").SetActive(false);
         GlobalVariables.bAnyPlayersAlive = false;
         foreach (GameObject item in GlobalVariables.teamGoodGuys)
         {

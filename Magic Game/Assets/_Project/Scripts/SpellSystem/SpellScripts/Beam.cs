@@ -47,6 +47,7 @@ public class Beam : Spell
     [SerializeField] private GameObject FireElementParticlePrefab;
     [SerializeField] private GameObject WaterElementParticlePrefab;
     [SerializeField] private GameObject IceElementParticlePrefab;
+    [SerializeField] private GameObject ElectricElementParticlePrefab;
 
     #endregion
 
@@ -56,7 +57,8 @@ public class Beam : Spell
         Default,
         Fire,
         Water,
-        Ice
+        Ice,
+        Electric
     }
 
     private void Start()
@@ -147,6 +149,13 @@ public class Beam : Spell
                         {
                             graphics.Add(WaterElementParticlePrefab);
                             WaterElementParticlePrefab.SetActive(true);
+                        }
+                        break;
+                    case ElementType.Electric:
+                        if (ElectricElementParticlePrefab != null)
+                        {
+                            graphics.Add(ElectricElementParticlePrefab);
+                            ElectricElementParticlePrefab.SetActive(true);
                         }
                         break;
                 }

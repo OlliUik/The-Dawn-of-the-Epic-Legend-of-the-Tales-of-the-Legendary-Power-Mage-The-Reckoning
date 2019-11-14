@@ -25,6 +25,15 @@ public class ThunderVariables : MonoBehaviour
         sphereChecker = gameObject.AddComponent<SphereCollider>();
         spellbook = GetComponent<Spellbook>();
         if (spellbook != null) originalSpellbookEnableCasting = spellbook.enableCasting;
+        if (GetComponent<StatusEffectManager>() != null)
+        {
+            bool isMoist = false;
+            GetComponent<StatusEffectManager>().AppliedEffects.TryGetValue(StatusEffectManager.EffectType.Moisturize, out isMoist);
+            if (isMoist)
+            {
+                // TODO: Deal extra damage here (hopefully)
+            }
+        }
     }
 
     public void Init(float duration, float extraManaCost, Mana playerMana, GameObject electricParticlePrefab)
