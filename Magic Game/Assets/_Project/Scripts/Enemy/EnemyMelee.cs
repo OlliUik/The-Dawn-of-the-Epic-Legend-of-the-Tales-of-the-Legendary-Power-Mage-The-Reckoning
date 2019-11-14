@@ -7,7 +7,6 @@ public class EnemyMelee : EnemyCore
     [Header("Melee -> Attacking")]
     [SerializeField] public float meleeAttackDistance = 10f;
     [SerializeField] public float rangeAttackDistance = 20f;
-    [SerializeField] public float meleeDamage = 25.0f;
     [SerializeField] public GameObject hammer;
     private int randomAttack;
     private int oldAttack;
@@ -17,7 +16,6 @@ public class EnemyMelee : EnemyCore
     {   
 
         Debug.Log("Entering Attack state");
-        foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
         if (cVision.bCanSeeTarget)
         {   
 
@@ -41,7 +39,8 @@ public class EnemyMelee : EnemyCore
 
             StartCoroutine(startAttack());
 
-            currentState = EState.CASTING;
+            //currentState = EState.CASTING;
+            currentState = EState.ATTACK;
         }
         else
         {
@@ -84,8 +83,8 @@ public class EnemyMelee : EnemyCore
             animator.SetInteger("meleeIndex", randomAttack);
             yield return new WaitForSeconds(0.2f);
             foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
-            // yield return new WaitForSeconds(1.5f);
-            //foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
+            yield return new WaitForSeconds(1.1f);
+            foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
             isAnimationAttacking = false;
         }
         

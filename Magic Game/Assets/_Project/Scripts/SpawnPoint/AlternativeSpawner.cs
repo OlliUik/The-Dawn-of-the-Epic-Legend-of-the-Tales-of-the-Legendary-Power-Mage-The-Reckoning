@@ -17,7 +17,8 @@ public class AlternativeSpawner : MonoBehaviour
         public float rate;
     }
 
-    public Transform[] spawnPoints;
+    //public Transform[] spawnPoints;
+    public List<GameObject> spawnPoints = new List<GameObject>();
 
     public Wave[] waves;
     private int nextWave = 0;
@@ -31,8 +32,12 @@ public class AlternativeSpawner : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {   
-        if(spawnPoints.Length == 0)
+    {
+
+
+        spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
+
+        if (spawnPoints.Count == 0)
         {
             Debug.LogError("No spawn point referenced.");
         }
@@ -105,8 +110,8 @@ public class AlternativeSpawner : MonoBehaviour
     {
         int randomRange = Random.Range(0, _enemy.Length);
         Debug.Log("Spawning Enemy:" +  _enemy[randomRange].name);
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        Transform enemyWizard = Instantiate(_enemy[randomRange], spawnPoint.position, spawnPoint.rotation);
+        GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
+        Transform enemyWizard = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
         enemyWizard.gameObject.SetActive(true);
     }
 
