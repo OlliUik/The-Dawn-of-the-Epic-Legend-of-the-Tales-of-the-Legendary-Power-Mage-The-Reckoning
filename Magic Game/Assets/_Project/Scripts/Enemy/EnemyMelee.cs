@@ -13,11 +13,11 @@ public class EnemyMelee : EnemyCore
     private bool isAnimationAttacking;
 
     protected override void AIAttack()
-    {   
+    {
 
         Debug.Log("Entering Attack state");
         if (cVision.bCanSeeTarget)
-        {   
+        {
 
             if ((transform.position - cVision.targetLocation).sqrMagnitude > meleeAttackDistance * meleeAttackDistance)
             {
@@ -69,7 +69,7 @@ public class EnemyMelee : EnemyCore
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
         animator.SetBool("isAttack", true);
-        
+
         if (!isAnimationAttacking)
         {
 
@@ -87,7 +87,7 @@ public class EnemyMelee : EnemyCore
             foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
             isAnimationAttacking = false;
         }
-        
+
 
     }
 
@@ -121,5 +121,11 @@ public class EnemyMelee : EnemyCore
             animator.SetBool("isIdle", false);
             animator.SetBool("isWalking", true);
         }
+    }
+
+    public override void OnDeath()
+    {
+        base.OnDeath();
+        foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
     }
 }

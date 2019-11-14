@@ -1557,11 +1557,12 @@ MonoBehaviour:
   runningAcceleration: 8
   panicSpeed: 15
   panicAcceleration: 8
+  isEnable: 1
   minDistanceFromAttackTarget: 2
   paranoidMoveInterval: 1
   switchProbalitiy: 0.2
   waitProbalitiy: 0.2
-  patrolPointGroup: {fileID: 0}
+  patrolGroup: []
   patrolPoint: []
   rb: {fileID: 0}
   x: 0
@@ -1651,8 +1652,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
-  roundedScore: 0
+  score: 1000
+  roundedScore: 1000
   logicInterval: 0.5
   defaultState: 0
   searchPlayerAfterAttack: 1

@@ -30,12 +30,18 @@ public class AlternativeSpawner : MonoBehaviour
 
     private SpawnState state = SpawnState.COUNTING;
 
+    public SetActiveRoom room;
+    [SerializeField] private float distance = 0.0f;
+    private GameObject player = null;
+
+
     // Start is called before the first frame update
     void Start()
     {
 
 
         spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
+        player = GameObject.FindGameObjectWithTag("Player");
 
         if (spawnPoints.Count == 0)
         {
@@ -74,6 +80,7 @@ public class AlternativeSpawner : MonoBehaviour
         {
             waveCountdown -= Time.deltaTime;
         }
+
     }
 
     bool EnemyIsAlive()
@@ -112,7 +119,7 @@ public class AlternativeSpawner : MonoBehaviour
         Debug.Log("Spawning Enemy:" +  _enemy[randomRange].name);
         GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
         Transform enemyWizard = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
-        enemyWizard.gameObject.SetActive(true);
+        enemyWizard.gameObject.SetActive(true);    
     }
 
     void WaveCompleted()
@@ -129,8 +136,7 @@ public class AlternativeSpawner : MonoBehaviour
         }
         else
         {
-
-        }
-        nextWave++;
+            nextWave++;
+        }      
     }
 }
