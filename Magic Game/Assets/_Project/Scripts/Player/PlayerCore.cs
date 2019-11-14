@@ -36,7 +36,7 @@ public class PlayerCore : MonoBehaviour
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
     public int activeSpellIndex = 0;
-
+    public GameObject physicalDamageAudio; //audio
     #endregion
 
     #region UNITY_DEFAULT_METHODS
@@ -332,6 +332,7 @@ public class PlayerCore : MonoBehaviour
     {
         if (other.tag == "TriggerKill")
         {
+            Instantiate(physicalDamageAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio->prefabs
             if (other.GetComponent<TriggerHurt>().killInstantly)
             {
                 cHealth.Kill();

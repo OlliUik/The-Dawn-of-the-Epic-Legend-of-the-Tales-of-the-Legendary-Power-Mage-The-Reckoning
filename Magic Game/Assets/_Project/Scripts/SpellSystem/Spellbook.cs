@@ -163,6 +163,7 @@ public class Spellbook : MonoBehaviour
         if(cooldowns[spellIndex] > Time.time)
         {
             print("Spell is on cooldown");
+            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
             return false;
         }
 
