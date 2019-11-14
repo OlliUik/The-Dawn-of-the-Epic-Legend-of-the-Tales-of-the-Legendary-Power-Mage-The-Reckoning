@@ -83,7 +83,7 @@ public class EnemyMelee : EnemyCore
             animator.SetInteger("meleeIndex", randomAttack);
             yield return new WaitForSeconds(0.2f);
             foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.1f);
             foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
             isAnimationAttacking = false;
         }
