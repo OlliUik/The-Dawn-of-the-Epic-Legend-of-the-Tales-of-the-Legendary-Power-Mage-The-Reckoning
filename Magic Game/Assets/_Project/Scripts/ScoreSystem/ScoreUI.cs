@@ -17,7 +17,7 @@ public class ScoreUI : MonoBehaviour
 
     private string scoreString = "{value}";
     private string multiplierString = "Multiplier: {value}x";
-    private string comboString = "Killstreak/combo: {value}";
+    private string comboString = "Killstreak: {value}";
     private string comboTimerString = "{value}";
     private float notificationTimer = 2.0f;
 
