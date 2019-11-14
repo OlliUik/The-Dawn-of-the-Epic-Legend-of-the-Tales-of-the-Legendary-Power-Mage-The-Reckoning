@@ -437,7 +437,7 @@ public class PlayerCore : MonoBehaviour
     {
         bIsDead = true;
         GlobalVariables.teamGoodGuys.Remove(this.gameObject);
-
+        GameObject.Find("MusicSource").SetActive(false);
         GlobalVariables.bAnyPlayersAlive = false;
         foreach (GameObject item in GlobalVariables.teamGoodGuys)
         {
