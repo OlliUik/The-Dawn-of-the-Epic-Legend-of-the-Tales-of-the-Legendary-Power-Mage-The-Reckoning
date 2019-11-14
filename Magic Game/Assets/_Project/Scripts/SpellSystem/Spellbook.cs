@@ -26,6 +26,8 @@ public class Spellbook : MonoBehaviour
 
     public bool enableCasting = true;
 
+    public GameObject failureAudio; //audio
+
     #endregion
 
     private void Awake()
@@ -151,6 +153,7 @@ public class Spellbook : MonoBehaviour
                 if(!requirement.isMet(this))
                 {
                     print(requirement.name + " was not met");
+                    Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
                     return false;
                 }
             }
