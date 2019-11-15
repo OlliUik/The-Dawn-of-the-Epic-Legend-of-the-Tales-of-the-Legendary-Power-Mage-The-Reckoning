@@ -917,9 +917,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c214fd0b49662c649a19f679d1acf77a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 50
   iFrameTime: 0.5
-  ragdollDamageThreshold: 50
+  ragdollDamageThreshold: 25
   scaleWithCrystalsCollected: 1
   healthAddedByCrystal: 20
   health: 0
@@ -1013,7 +1013,7 @@ MonoBehaviour:
   paranoidMoveInterval: 1
   switchProbalitiy: 0.2
   waitProbalitiy: 0.2
-  patrolPointGroup: {fileID: 0}
+  patrolGroup: []
   patrolPoint: []
   rb: {fileID: 0}
   x: 0
@@ -1042,6 +1042,9 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 3073
+  enableCasting: 1
+  failureAudio: {fileID: 30026687828445062, guid: 4081ca236b1be5b4aa136b2dd520e0fa,
+    type: 3}
 --- !u!114 &3865517416800239520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,7 +1075,8 @@ MonoBehaviour:
   ragdoll: {fileID: 3216686710498619988}
   spawnAsGoodGuy: 0
   spawnAsConfused: 0
-  deathAudioPrefab: {fileID: 0}
+  deathAudioPrefab: {fileID: 4319804096100018453, guid: 3a704379558d3a74f82a579679c941cb,
+    type: 3}
   rangedEscapeDistance: 10
   castInBursts: 0
   castingTime: 2
