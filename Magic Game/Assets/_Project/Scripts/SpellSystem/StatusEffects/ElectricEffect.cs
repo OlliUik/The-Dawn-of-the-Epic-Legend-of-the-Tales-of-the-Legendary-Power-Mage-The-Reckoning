@@ -5,15 +5,18 @@ using UnityEngine;
 public class ElectricEffect : StatusEffect
 {
 
+    public float extraMoistureDamage = 0f;
+
     public override StatusEffect Clone()
     {
-        ElectricEffect temp = new ElectricEffect(duration, graphics, extraManaCost);
+        ElectricEffect temp = new ElectricEffect(duration, graphics, extraManaCost, extraMoistureDamage);
         return temp;
     }
 
-    public ElectricEffect(float duration, GameObject graphics, float extraManaCost) : base(duration, graphics)
+    public ElectricEffect(float duration, GameObject graphics, float extraManaCost, float extraMoistureDamage) : base(duration, graphics)
     {
         this.extraManaCost = extraManaCost;
+        this.extraMoistureDamage = extraMoistureDamage;
     }
 
     public override void HitNonlivingObject(Collision collision)
@@ -40,7 +43,7 @@ public class ElectricEffect : StatusEffect
         else
         {
             GameObject.Destroy(graphicsCopy);
-            target.AddComponent<ThunderVariables>().Init(duration, extraManaCost, playerMana, graphics);
+            target.AddComponent<ThunderVariables>().Init(duration, extraManaCost, playerMana, graphics, extraMoistureDamage);
         }
     }
 
@@ -54,7 +57,7 @@ public class ElectricEffect : StatusEffect
         else
         {
             GameObject.Destroy(graphicsCopy);
-            target.AddComponent<ThunderVariables>().Init(duration, extraManaCost, playerMana, graphics);
+            target.AddComponent<ThunderVariables>().Init(duration, extraManaCost, playerMana, graphics, extraMoistureDamage);
         }
     }
 

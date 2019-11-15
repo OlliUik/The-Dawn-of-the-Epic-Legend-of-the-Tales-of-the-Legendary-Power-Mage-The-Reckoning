@@ -69,6 +69,10 @@ public class MoisturizeEffect : StatusEffect
                 effectManager.RemoveStatusEffect(effectManager.affectingEffects.Find(x => x.GetType() == typeof(MoisturizeEffect)));
             }
         }
+        if (target.GetComponent<ThunderVariables>() != null)
+        {
+            target.GetComponent<ThunderVariables>().HurtFromMoisture();
+        }
     }
 
     public override void OnLeave()
