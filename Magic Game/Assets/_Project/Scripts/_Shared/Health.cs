@@ -10,7 +10,8 @@ public class Health : MonoBehaviour
     [Header("Serialized")]
     [SerializeField] private float iFrameTime = 0.5f;
     [SerializeField] private float ragdollDamageThreshold = 50.0f;
-    [SerializeField] private bool scaleWithCrystalsCollected = true;
+    [SerializeField] public bool scaleWithCrystalsCollected ;
+    [SerializeField] public bool ourStepDadisKilled;
     [SerializeField] private float healthAddedByCrystal = 20.0f;
 
     public bool bIsDead { get; private set; } = false;
@@ -29,6 +30,7 @@ public class Health : MonoBehaviour
     void Start()
     {
         originalMaxHealth = maxHealth;
+
         if (scaleWithCrystalsCollected)
         {
             maxHealth = maxHealth + healthAddedByCrystal * GlobalVariables.crystalsCollected;
@@ -64,6 +66,7 @@ public class Health : MonoBehaviour
             {
                 GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
             }
+            scaleWithCrystalsCollected = false;
         }
     }
 
