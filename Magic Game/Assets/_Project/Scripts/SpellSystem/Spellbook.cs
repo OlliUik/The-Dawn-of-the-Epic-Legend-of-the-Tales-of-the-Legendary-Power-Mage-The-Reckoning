@@ -79,7 +79,7 @@ public class Spellbook : MonoBehaviour
         }
         else
         {
-            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+            if(failureAudio != null) Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
         }
     }
 
@@ -157,7 +157,7 @@ public class Spellbook : MonoBehaviour
                 if(!requirement.isMet(this))
                 {
                     print(requirement.name + " was not met");
-                    Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+                    if (failureAudio != null) Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
                     return false;
                 }
             }
@@ -167,7 +167,7 @@ public class Spellbook : MonoBehaviour
         if(cooldowns[spellIndex] > Time.time)
         {
             print("Spell is on cooldown");
-            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+            if (failureAudio != null) Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
             return false;
         }
 
@@ -220,8 +220,8 @@ public class Spellbook : MonoBehaviour
             mana.UseMana(spells[spellIndex].spell.ManaCost);
         }
         else
-        { 
-            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+        {
+            if (failureAudio != null) Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
         }
 
         if (spells[spellIndex].cards.Count > 0)
