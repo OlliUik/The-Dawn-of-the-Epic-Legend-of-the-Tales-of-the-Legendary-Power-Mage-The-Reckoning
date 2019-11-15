@@ -95,7 +95,7 @@ public class EnemyNavigation : MonoBehaviour
 
 
         //get list of patrol points in a section.
-        if (patrolGroup != null)
+        if (patrolGroup != null && isEnable)
         {
 
             //foreach (Transform child in patrolPointGroup.transform)
@@ -117,7 +117,7 @@ public class EnemyNavigation : MonoBehaviour
                 }
             }
 
-            foreach (Transform child in closestPatrolGroup  .transform)
+            foreach (Transform child in closestPatrolGroup.transform)
              {
                  patrolPoint.Add(child.GetComponent<Waypoint>());
              }

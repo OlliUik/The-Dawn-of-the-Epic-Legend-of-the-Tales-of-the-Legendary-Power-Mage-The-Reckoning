@@ -32,9 +32,7 @@ public class ScoreUI : MonoBehaviour
     public bool cooleddown;
     public bool flooded;
     public bool thunderstruck;
-    public bool suckeddry; //
-
-    public bool airborne;
+    public bool suckeddry;
     public bool smackeddown;
     public bool blownaway;
     public bool doubletrouble;

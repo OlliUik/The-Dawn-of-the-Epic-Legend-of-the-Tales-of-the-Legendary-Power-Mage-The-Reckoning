@@ -177,10 +177,12 @@ public class EnemyCore : MonoBehaviour
             if (other.GetComponent<TriggerHurt>().killInstantly)
             {
                 cHealth.Kill();
+                GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown = true;
             }
             else
             {
                 cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
+                GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown = true;
             }
         }
     }
@@ -287,16 +289,51 @@ public class EnemyCore : MonoBehaviour
     {
         roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
 
+        //Score UI Notifications
+
         if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted)
         { 
-        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Roasted!";
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Roasted!";
         }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().cooleddown)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Cooled Down!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().flooded)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Flooded!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().thunderstruck)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Thunderstruck!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().suckeddry)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Sucked Dry!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().blownaway)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Blown away!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Smacked down!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().doubletrouble)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Double Trouble!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().tripletrouble)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Triple Trouble!";
+        }
+
+        //Score Multipliers
 
         if (hasStatusEffect)
         {
             ScoreCalculator.scoreCalc.CountScore(score);
         }
-
         else
         {
             ScoreSystem.scoreSystem.addedScore = roundedScore;

@@ -11,69 +11,39 @@ public class MovingStaircase : MonoBehaviour
     private float moveTime = 0.0f;
     private float originalWait = 0.0f;
     private bool isPositiveRot = true;
-    private Vector3 origin = Vector3.zero;
+    private float originY = 0.0f;
     private Vector3 current = Vector3.zero;
 
     private void Start()
     {
-        origin = transform.eulerAngles;
-        current = origin;
+        originY = transform.localEulerAngles.y;
         originalWait = waitingTime;
+        Debug.Log(originY);
     }
 
     private void Update()
     {
-        if (targetY >= 0)
+        if (isPositiveRot)
         {
-            if (isPositiveRot)
+            moveTime += Time.deltaTime / speedDiv;
+            current = new Vector3(0, Mathf.SmoothStep(originY, targetY, moveTime), 0);
+            transform.localEulerAngles = current;
+
+            if (current.y == targetY)
             {
-                moveTime += Time.deltaTime / speedDiv;
-                current = new Vector3(0, Mathf.SmoothStep(origin.y, targetY, moveTime), 0);
-                transform.eulerAngles = current;
-
-                if (current.y == targetY)
-                {
-                    waitingTime -= Time.deltaTime;
-                }
-            }
-
-            if (!isPositiveRot)
-            {
-                moveTime += Time.deltaTime / speedDiv;
-                current = new Vector3(0, Mathf.SmoothStep(targetY, origin.y, moveTime), 0);
-                transform.eulerAngles = current;
-
-                if (current.y == origin.y)
-                {
-                    waitingTime -= Time.deltaTime;
-                }
+                waitingTime -= Time.deltaTime;
             }
         }
 
-        if (targetY < 0)
+        if (!isPositiveRot)
         {
-            if (isPositiveRot)
+            moveTime += Time.deltaTime / speedDiv;
+            current = new Vector3(0, Mathf.SmoothStep(targetY, originY, moveTime), 0);
+            transform.localEulerAngles = current;
+
+            if (current.y == originY)
             {
-                moveTime += Time.deltaTime / speedDiv;
-                current = new Vector3(0, Mathf.SmoothStep(origin.y, targetY, moveTime), 0);
-                transform.eulerAngles = current;
-
-                if (current.y == targetY)
-                {
-                    waitingTime -= Time.deltaTime;
-                }
-            }
-
-            if (!isPositiveRot)
-            {
-                moveTime += Time.deltaTime / speedDiv;
-                current = new Vector3(0, Mathf.SmoothStep(targetY, origin.y, moveTime), 0);
-                transform.eulerAngles = current;
-
-                if (current.y == origin.y)
-                {
-                    waitingTime -= Time.deltaTime;
-                }
+                waitingTime -= Time.deltaTime;
             }
         }
 
