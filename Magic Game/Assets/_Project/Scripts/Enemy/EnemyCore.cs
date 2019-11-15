@@ -289,6 +289,8 @@ public class EnemyCore : MonoBehaviour
     {
         roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
 
+        //Score UI Notifications
+
         if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted)
         { 
             GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Roasted!";
@@ -325,6 +327,8 @@ public class EnemyCore : MonoBehaviour
         {
             GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Triple Trouble!";
         }
+
+        //Score Multipliers
 
         if (hasStatusEffect)
         {
