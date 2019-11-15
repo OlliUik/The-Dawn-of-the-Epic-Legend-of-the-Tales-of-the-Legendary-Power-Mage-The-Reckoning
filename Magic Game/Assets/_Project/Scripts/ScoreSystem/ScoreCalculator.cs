@@ -59,6 +59,7 @@ public class ScoreCalculator : MonoBehaviour
     private float AddMultiplier()
     {
         //We need way to check what effects were on enemy upon dying
+
         return effectMultiplier;
     }
 
