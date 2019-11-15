@@ -28,6 +28,18 @@ public class ScoreUI : MonoBehaviour
     [SerializeField] private Text comboTimerText = null;
     [SerializeField] private Text notificationText = null;
 
+    public bool roasted;
+    public bool cooleddown;
+    public bool flooded;
+    public bool thunderstruck;
+    public bool suckeddry; //
+
+    public bool airborne;
+    public bool smackeddown;
+    public bool blownaway;
+    public bool doubletrouble;
+    public bool tripletrouble;
+
     #endregion
 
     #region UNITY_FUNCTIONS

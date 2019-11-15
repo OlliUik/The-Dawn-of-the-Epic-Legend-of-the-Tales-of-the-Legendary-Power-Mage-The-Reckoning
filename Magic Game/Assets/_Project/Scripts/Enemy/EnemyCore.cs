@@ -287,6 +287,11 @@ public class EnemyCore : MonoBehaviour
     {
         roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
 
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted)
+        { 
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Roasted!";
+        }
+
         if (hasStatusEffect)
         {
             ScoreCalculator.scoreCalc.CountScore(score);
