@@ -15,8 +15,6 @@ public class CustomAgent : MonoBehaviour
     public bool hasPath { get; private set; } = false;
     public bool isStopped { get; set; } = false;
     private bool moving = false;
-    private bool jumping = false;
-    private bool hasJumped = false;
 
     private List<Vector3> corners;
     private Vector3 nextPos;
@@ -69,24 +67,21 @@ public class CustomAgent : MonoBehaviour
 
     public void SetDestination(Vector3 target)
     {
-        if (!jumping)
-        {
-            ResetPath();
-            agent.CalculatePath(target, path);
-            agent.path = path;
+        ResetPath();
+        agent.CalculatePath(target, path);
+        agent.path = path;
 
-            if (corners == null)
-            {
-                corners = new List<Vector3>(path.corners);
-            }
-            else
-            {
-                corners.AddRange(path.corners);
-            }
-           
-            hasPath = true;
-            isStopped = false;
+        if (corners == null)
+        {
+            corners = new List<Vector3>(path.corners);
         }
+        else
+        {
+            corners.AddRange(path.corners);
+        }
+
+        hasPath = true;
+        isStopped = false;
     }
 
     public void ResetPath()
@@ -124,77 +119,16 @@ public class CustomAgent : MonoBehaviour
                 direction = (nextPos - transform.position).normalized;
                 rb.MovePosition(transform.position + (direction * speed * Time.deltaTime));
             }
-        }
-        else if (jumping)
+        } else
         {
-            if (VEqual(transform.position, nextPos))
-            {
-                jumping = false;
-                agent.CompleteOffMeshLink();
-                corners.Remove(corners[0]);
-            }
-            else if (!hasJumped)
-            {
-                Vector3 force = CalculateForce(transform.position, nextPos);
-                Debug.Log(force);
-                rb.AddForce(force, ForceMode.Impulse);
-                hasJumped = true;
-            }
-            else return;
-        }
-        else
-        {
-            if (agent.isOnOffMeshLink && !hasJumped)
-            {
-                nextPos = new Vector3(corners[0].x, corners[0].y + transform.localScale.y, corners[0].z);
-                jumping = true;
-                Debug.Log("Jump");
-            }
-            else
-            {
-                nextPos = new Vector3(corners[0].x, corners[0].y + transform.localScale.y, corners[0].z);
-                moving = true;
-                hasJumped = false;
-            }
+            nextPos = new Vector3(corners[0].x, corners[0].y + transform.localScale.y, corners[0].z);
+            moving = true;
         }
     }
 
     bool VEqual(Vector3 a, Vector3 b)
     {
         return Vector3.SqrMagnitude(a - b) < 0.01;
-    }
-
-    // Calculate force needed for jump. (Not perfectly functional)
-    Vector3 CalculateForce(Vector3 start, Vector3 end)
-    {
-        float gravity = Physics.gravity.magnitude;
-        float defangle = 45f;
-        Vector3 direction = end - start;
-        float angle = Mathf.Abs(Mathf.Atan2(end.y - start.y, end.x - start.x) * Mathf.Rad2Deg);
-
-        if (direction.y < 0)
-        {
-            angle = 0;
-        }
-        else if (angle <= defangle)
-        {
-            angle = defangle;
-        }
-        else
-        {
-            angle = angle + 45;
-        }
-
-        float height = direction.y;
-        direction.y = 0;
-        float distance = direction.magnitude;
-        float rad = defangle * Mathf.Deg2Rad;
-        direction.y = distance * Mathf.Tan(rad);
-        distance += height / Mathf.Tan(rad);
-
-        float velocity = Mathf.Sqrt(distance * gravity / Mathf.Sin(2 * rad));
-
-        return direction.normalized * velocity;
     }
 
     void OnDrawGizmos()
