@@ -856,6 +856,7 @@ GameObject:
   - component: {fileID: 5876511472973635388}
   - component: {fileID: 1209854589653725122}
   - component: {fileID: 7224139897468758187}
+  - component: {fileID: 9108499002023142958}
   - component: {fileID: 3865517416800239520}
   - component: {fileID: 3118758267161575863}
   - component: {fileID: 3178111033988224664}
@@ -921,7 +922,9 @@ MonoBehaviour:
   iFrameTime: 0.5
   ragdollDamageThreshold: 25
   scaleWithCrystalsCollected: 1
+  ourStepDadKilled: 0
   healthAddedByCrystal: 20
+  lizardKingdeath: 40
   health: 0
 --- !u!54 &6643205432062538115
 Rigidbody:
@@ -1045,6 +1048,22 @@ MonoBehaviour:
   enableCasting: 1
   failureAudio: {fileID: 30026687828445062, guid: 4081ca236b1be5b4aa136b2dd520e0fa,
     type: 3}
+--- !u!114 &9108499002023142958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937637958106094442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb07368dd6326341accaa1937c53695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: 0
+  beam: 0
+  aura: 0
+  amount: 0
 --- !u!114 &3865517416800239520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1057,8 +1076,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec67ca4ba8adbe44ab205aa98decb586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
-  roundedScore: 0
+  score: 800
+  roundedScore: 800
   logicInterval: 0.5
   defaultState: 1
   searchPlayerAfterAttack: 1
@@ -1426,15 +1445,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3872695814457305351}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &3872695814447848551 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 9500000, guid: d28e73e105a8eaa498adee1c8943a8e3,
-    type: 3}
-  m_PrefabInstance: {fileID: 3872695814457305351}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3872695814457339883 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100076, guid: d28e73e105a8eaa498adee1c8943a8e3,
+    type: 3}
+  m_PrefabInstance: {fileID: 3872695814457305351}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3872695814447848551 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9500000, guid: d28e73e105a8eaa498adee1c8943a8e3,
     type: 3}
   m_PrefabInstance: {fileID: 3872695814457305351}
   m_PrefabAsset: {fileID: 0}
@@ -1498,15 +1517,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3872695814457305351}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3872695814457339829 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100018, guid: d28e73e105a8eaa498adee1c8943a8e3,
-    type: 3}
-  m_PrefabInstance: {fileID: 3872695814457305351}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3872695814456914837 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400018, guid: d28e73e105a8eaa498adee1c8943a8e3,
+    type: 3}
+  m_PrefabInstance: {fileID: 3872695814457305351}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3872695814457339829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100018, guid: d28e73e105a8eaa498adee1c8943a8e3,
     type: 3}
   m_PrefabInstance: {fileID: 3872695814457305351}
   m_PrefabAsset: {fileID: 0}
