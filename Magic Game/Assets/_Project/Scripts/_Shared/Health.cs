@@ -10,8 +10,10 @@ public class Health : MonoBehaviour
     [Header("Serialized")]
     [SerializeField] private float iFrameTime = 0.5f;
     [SerializeField] private float ragdollDamageThreshold = 50.0f;
-    [SerializeField] private bool scaleWithCrystalsCollected = true;
+    [SerializeField] public bool scaleWithCrystalsCollected ;
+    [SerializeField] public bool ourStepDadKilled = false;
     [SerializeField] private float healthAddedByCrystal = 20.0f;
+    [SerializeField] private float lizardKingdeath = 40.0f;
 
     public bool bIsDead { get; private set; } = false;
     public float health /*{ get; private set; }*/ = 0.0f;
@@ -29,10 +31,19 @@ public class Health : MonoBehaviour
     void Start()
     {
         originalMaxHealth = maxHealth;
+
         if (scaleWithCrystalsCollected)
         {
             maxHealth = maxHealth + healthAddedByCrystal * GlobalVariables.crystalsCollected;
         }
+
+        if (ourStepDadKilled)
+        {
+            maxHealth = maxHealth + lizardKingdeath * GlobalVariables.angryBaddiesPoint;
+        }
+
+
+
         health = maxHealth;
 
         if (GetComponent<PlayerCore>() != null)
@@ -55,6 +66,23 @@ public class Health : MonoBehaviour
 
     public void UpdateMaxHealth()
     {
+        if (ourStepDadKilled)
+        {
+            Debug.Log(ourStepDadKilled.ToString());
+            float oldMaxHealth = maxHealth;
+            Debug.Log(oldMaxHealth.ToString());
+            maxHealth = originalMaxHealth + lizardKingdeath * GlobalVariables.angryBaddiesPoint;
+            Debug.Log(maxHealth.ToString());
+            health = maxHealth;
+            Debug.Log(health.ToString());
+            if (bIsPlayer)
+            {
+                Debug.Log(bIsPlayer.ToString());
+                GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
+            }
+            ourStepDadKilled = false;
+        }
+
         if (scaleWithCrystalsCollected)
         {
             float oldMaxHealth = maxHealth;
@@ -64,7 +92,10 @@ public class Health : MonoBehaviour
             {
                 GetComponent<PlayerCore>().GetHUD().SetHealth(health, maxHealth);
             }
+            scaleWithCrystalsCollected = false;
         }
+
+        
     }
 
     public void Hurt(float amount, bool ignoreIFrames)

@@ -430,17 +430,20 @@ public class Beam : Spell
         GameObject closest = null;
       
         for (int i = 0; i < objectsHit.Length; i++)
+        
         {
             if(closest != null)
             {
                 if((objectsHit[i].gameObject.transform.position - spellbook.transform.position).magnitude < (closest.transform.position - spellbook.transform.position).magnitude)
                 {
                     closest = objectsHit[i].gameObject;
+                    objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
                 }
             }
             else
             {
                 closest = objectsHit[i].gameObject;
+                objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
             }
         }
         return closest;

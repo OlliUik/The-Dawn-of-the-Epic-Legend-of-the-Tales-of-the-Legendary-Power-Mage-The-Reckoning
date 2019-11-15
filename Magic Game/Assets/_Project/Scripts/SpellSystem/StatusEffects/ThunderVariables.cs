@@ -9,7 +9,9 @@ public class ThunderVariables : MonoBehaviour
     SphereCollider sphereChecker;
 
     public float extraManaCost = 0f;
+    public float extraMoistureDamage = 0f;
     public Mana playerMana;
+    public Health playerHealth;
     public GameObject electricParticlePrefab;
 
     Spellbook spellbook;
@@ -22,7 +24,6 @@ public class ThunderVariables : MonoBehaviour
 
     private void Start()
     {
-        sphereChecker = gameObject.AddComponent<SphereCollider>();
         spellbook = GetComponent<Spellbook>();
         if (spellbook != null) originalSpellbookEnableCasting = spellbook.enableCasting;
         if (GetComponent<StatusEffectManager>() != null)
@@ -32,15 +33,22 @@ public class ThunderVariables : MonoBehaviour
             if (isMoist)
             {
                 // TODO: Deal extra damage here (hopefully)
+                if(playerHealth != null) playerHealth.Hurt(extraMoistureDamage, true);
             }
         }
     }
 
-    public void Init(float duration, float extraManaCost, Mana playerMana, GameObject electricParticlePrefab)
+    public void HurtFromMoisture()
+    {
+        if (playerHealth != null) playerHealth.Hurt(extraMoistureDamage, true);
+    }
+
+    public void Init(float duration, float extraManaCost, Mana playerMana, GameObject electricParticlePrefab, float extraMoistureDamage)
     {
         this.duration = duration;
         this.extraManaCost = extraManaCost;
         this.playerMana = playerMana;
+        this.extraMoistureDamage = extraMoistureDamage;
         if(electricParticlePrefab != null)
         {
             this.electricParticlePrefab = Instantiate(electricParticlePrefab, transform.position + Vector3.up, Quaternion.FromToRotation(-electricParticlePrefab.transform.up, Vector3.up));
@@ -74,8 +82,10 @@ public class ThunderVariables : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Electric triggered something: " + other.name);
         if(other.GetComponent<EnemyCore>() != null)
         {
+            Debug.Log("Player Mana: "+playerMana.mana+" Required Mana: " + extraManaCost);
             // Must not affected if other already have thunder
             if (other.GetComponent<ThunderVariables>() == null)
             {
@@ -83,7 +93,7 @@ public class ThunderVariables : MonoBehaviour
                 {
                     playerMana.UseMana(extraManaCost);
                     other.gameObject.AddComponent<ThunderVariables>();
-                    other.GetComponent<ThunderVariables>().Init(duration, extraManaCost, playerMana, electricParticlePrefab);
+                    other.GetComponent<ThunderVariables>().Init(duration, extraManaCost, playerMana, electricParticlePrefab, extraMoistureDamage);
                 }
             }
             else

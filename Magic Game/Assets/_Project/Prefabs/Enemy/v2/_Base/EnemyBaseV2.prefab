@@ -1482,6 +1482,7 @@ GameObject:
   - component: {fileID: 5425310709061580087}
   - component: {fileID: 7235508525435473448}
   - component: {fileID: 5566800658933780519}
+  - component: {fileID: 6327450875498496120}
   m_Layer: 10
   m_Name: EnemyBaseV2
   m_TagString: Enemy
@@ -1586,6 +1587,7 @@ MonoBehaviour:
   iFrameTime: 0
   ragdollDamageThreshold: 25
   scaleWithCrystalsCollected: 1
+  ourStepDadisKilled: 0
   healthAddedByCrystal: 20
   health: 0
 --- !u!54 &2126360807314379709
@@ -1684,6 +1686,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300d5648be4716345bf598929c4c2992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6327450875498496120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4380926478554447536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb07368dd6326341accaa1937c53695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: 0
+  beam: 0
+  aura: 0
+  amount: 0
 --- !u!1 &4551390915380190343
 GameObject:
   m_ObjectHideFlags: 0

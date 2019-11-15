@@ -96,6 +96,7 @@ public class FreezeEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().cooleddown = true;
         Debug.Log("Reapply Freeze");
         base.OnApply(target, allEffectsInSpell);
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Freeze] = true;
@@ -125,6 +126,7 @@ public class FreezeEffect : StatusEffect
 
     public override void OnLeave()
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().cooleddown = false;
         if (target.CompareTag("Player"))
         {
             var movement = target.GetComponent<PlayerMovement>();

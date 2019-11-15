@@ -14,6 +14,7 @@ public class ChestRandomizer : MonoBehaviour
     [SerializeField] private List<GameObject> crystalChests = new List<GameObject>();
     private List<GameObject> tempList = new List<GameObject>();
     private int crystalCount = 0;
+    private int crystalsFromLevel = 0;
 
     #endregion
 
@@ -37,7 +38,9 @@ public class ChestRandomizer : MonoBehaviour
 
     private void Update()
     {
-        if (crystalCount == (crystalCount + 3))
+        crystalsFromLevel = GlobalVariables.crystalsCollected;
+
+        if (crystalsFromLevel >= (crystalCount + 3))
         {
             ChangeBack();
         }

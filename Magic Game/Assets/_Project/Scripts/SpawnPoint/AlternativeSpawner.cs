@@ -3,42 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AlternativeSpawner : MonoBehaviour
-
 {
-
     public enum SpawnState { SPAWNING, WAITING, COUNTING}
 
     [System.Serializable]
     public class Wave
     {
         public string name;
-        public Transform [] enemy;
+        public GameObject [] enemy;
         public int count;
         public float rate;
+
+
+        public void setCount(int newCount)
+        {
+            this.count = newCount;
+        }
     }
 
-    //public Transform[] spawnPoints;
     public List<GameObject> spawnPoints = new List<GameObject>();
-
     public Wave[] waves;
     private int nextWave = 0;
-
     public float timeBetweenWaves = 5f;
     public float waveCountdown;
+
+    public float crystalMultiplier = 0.3f;
+
+    public float WaveCountDown
+    {
+        get { return waveCountdown; }
+    }
 
     private float searchCountdown = 1f; 
 
     private SpawnState state = SpawnState.COUNTING;
-
     public SetActiveRoom room;
-    [SerializeField] private float distance = 0.0f;
+    [SerializeField] private float increaseHealth = 1.0f;
+    public float increasedStat = 1.0f;
+    //[SerializeField] private float distance = 0.0f;
     private GameObject player = null;
 
 
     // Start is called before the first frame update
     void Start()
     {
-
 
         spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
         player = GameObject.FindGameObjectWithTag("Player");
@@ -59,11 +67,12 @@ public class AlternativeSpawner : MonoBehaviour
             if(!EnemyIsAlive())
             {
                 //Begin a new round
-                Debug.Log("Wave Complete");
-                
+                Debug.Log("Wave Completed!");
+                WaveCompleted();
             }
             else
             {
+                Debug.Log("Not dead yet.");
                 return;
             }
     
@@ -72,14 +81,22 @@ public class AlternativeSpawner : MonoBehaviour
         if(waveCountdown <= 0 )
         {
             if(state != SpawnState.SPAWNING)
-            {
-                StartCoroutine(SpawnWave(waves[nextWave]));
+            {   if(nextWave != 0)
+                {
+                    increasedStat += increaseHealth;
+                    StartCoroutine(SpawnWave(waves[nextWave]));
+                }
+                else
+                {
+                    StartCoroutine(SpawnWave(waves[nextWave]));
+                }
             }
         }
         else
         {
             waveCountdown -= Time.deltaTime;
         }
+
 
     }
 
@@ -89,7 +106,7 @@ public class AlternativeSpawner : MonoBehaviour
         if(searchCountdown <= 0f)
         {
             searchCountdown = 1f;
-            if (GameObject.FindGameObjectsWithTag("Enemy") == null)
+            if (GameObject.FindGameObjectWithTag("Enemy") == null)
             {
                 return false;
             }
@@ -103,28 +120,34 @@ public class AlternativeSpawner : MonoBehaviour
         state = SpawnState.SPAWNING;
 
         for (int i = 0; i < _wave.count; i++)
-        {
+        {   
             SpawnEnemy(_wave.enemy);
             yield return new WaitForSeconds(1f / _wave.rate);
-
         }
 
         state = SpawnState.WAITING;
         yield break;
     }
 
-    void SpawnEnemy(Transform [] _enemy)
+    void SpawnEnemy(GameObject [] _enemy)
     {
         int randomRange = Random.Range(0, _enemy.Length);
         Debug.Log("Spawning Enemy:" +  _enemy[randomRange].name);
         GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
-        Transform enemyWizard = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
-        enemyWizard.gameObject.SetActive(true);    
+        GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
+        Health tempHealth = baddies.GetComponent<Health>();
+        if(tempHealth != null )
+        {
+            Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
+            Debug.Log("Increased Stat: " + increasedStat);
+            tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected*crystalMultiplier) + (GlobalVariables.angryBaddiesPoint*crystalMultiplier));
+            tempHealth.health = tempHealth.maxHealth;
+        }
     }
 
     void WaveCompleted()
     {
-        Debug.Log("Wave Complete");
+        Debug.Log("Wave Completed");
 
         state = SpawnState.COUNTING;
         waveCountdown = timeBetweenWaves;

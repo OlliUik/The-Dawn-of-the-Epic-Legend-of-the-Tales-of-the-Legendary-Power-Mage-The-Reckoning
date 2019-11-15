@@ -45,6 +45,7 @@ public class IgniteEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted = true;
 
         base.OnApply(target, allEffectsInSpell);
 
@@ -103,6 +104,7 @@ public class IgniteEffect : StatusEffect
     {
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Ignite] = false;
         base.OnLeave();
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted = false;
     }
 
 }
