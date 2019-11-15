@@ -50,6 +50,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3475487213844458779
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7253775754052087767}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 14.060775, y: 13.6560545, z: 16.789116}
+  m_Center: {x: -3.2178133, y: -0.48192164, z: -3.6982071}
 --- !u!1001 &1886253612978109944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -127,18 +140,25 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.10000017
       objectReference: {fileID: 0}
-    - target: {fileID: 4526357169963406154, guid: fdd1d5bb9bdb5f44aa1cac4f4fd19298,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 4300000, guid: b62809e174d52d14d8dc0ac580efdf06, type: 2}
     - target: {fileID: 592097437840784710, guid: fdd1d5bb9bdb5f44aa1cac4f4fd19298,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9c4aeffe7c9163740b3c97170edc6314, type: 2}
-    m_RemovedComponents: []
+    - target: {fileID: 4526357169963406154, guid: fdd1d5bb9bdb5f44aa1cac4f4fd19298,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: b62809e174d52d14d8dc0ac580efdf06, type: 2}
+    m_RemovedComponents:
+    - {fileID: 4526357169963406154, guid: fdd1d5bb9bdb5f44aa1cac4f4fd19298, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fdd1d5bb9bdb5f44aa1cac4f4fd19298, type: 3}
+--- !u!1 &7253775754052087767 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9117475011572453935, guid: fdd1d5bb9bdb5f44aa1cac4f4fd19298,
+    type: 3}
+  m_PrefabInstance: {fileID: 1886253612978109944}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7788632711532320296 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8519571919379655632, guid: fdd1d5bb9bdb5f44aa1cac4f4fd19298,
@@ -152,6 +172,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5650505364670182097}
     m_Modifications:
+    - target: {fileID: 2972038191781129451, guid: addca29040ef7df4685f0c47a75c4a52,
+        type: 3}
+      propertyPath: m_Name
+      value: TorchLight01
+      objectReference: {fileID: 0}
     - target: {fileID: 2972038191781129452, guid: addca29040ef7df4685f0c47a75c4a52,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -206,11 +231,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -270.712
-      objectReference: {fileID: 0}
-    - target: {fileID: 2972038191781129451, guid: addca29040ef7df4685f0c47a75c4a52,
-        type: 3}
-      propertyPath: m_Name
-      value: TorchLight01
       objectReference: {fileID: 0}
     - target: {fileID: 7786636465188231225, guid: addca29040ef7df4685f0c47a75c4a52,
         type: 3}
