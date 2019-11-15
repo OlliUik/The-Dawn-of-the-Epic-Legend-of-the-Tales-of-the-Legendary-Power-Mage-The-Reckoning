@@ -30,23 +30,23 @@ public class SpellTypeAmount : MonoBehaviour
         if (projectile == true && beam == true && aura == false)
         {
             amount = 2;
-            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Double Trouble!";
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().doubletrouble = true;
         }
         if (projectile == false && beam == true && aura == true)
         {
             amount = 2;
-            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Double Trouble!";
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().doubletrouble = true;
         }
         if (projectile == true && beam == false && aura == true)
         {
             amount = 2;
-            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Double Trouble!";
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().doubletrouble = true;
         }
 
         if (projectile == true && beam == true && aura == true)
         {
             amount = 3;
-            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Triple Trouble!";
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().tripletrouble = true;
         }
     }
 
