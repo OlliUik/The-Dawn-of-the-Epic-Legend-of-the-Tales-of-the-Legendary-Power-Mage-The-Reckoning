@@ -45,11 +45,12 @@ public class EnemyNavigation : MonoBehaviour
     //Probality of waiting on a node.
     [SerializeField] float waitProbalitiy = 0.2f;
 
-    [SerializeField] GameObject patrolPointGroup;
+    //List of groups of patrol point. You can turn delete SerializeField . I just use them for testing.
+    [SerializeField]  List<GameObject> patrolGroup;
+    //List of patrol points. You can turn delete SerializeField . I just use them for testing.
+    [SerializeField]  List<Waypoint> patrolPoint;
 
-    [SerializeField] List<Waypoint> patrolPoint;
-
-    [SerializeField] Rigidbody rb;  
+    [SerializeField] private Rigidbody rb;  
 
     [Header("Jumpforce")]
     [SerializeField]
@@ -88,17 +89,43 @@ public class EnemyNavigation : MonoBehaviour
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
         character = GetComponent<ThirdPersonCharacter>();
-        rb = GetComponent<Rigidbody>();                     
-        
+        rb = GetComponent<Rigidbody>();
+
+        patrolGroup.AddRange(GameObject.FindGameObjectsWithTag("patrolPointGrouped"));
+
+
         //get list of patrol points in a section.
-        if(patrolPointGroup != null)
+        if (patrolGroup != null)
         {
-            foreach (Transform child in patrolPointGroup.transform)
+
+            //foreach (Transform child in patrolPointGroup.transform)
+            // {
+            //     patrolPoint.Add(child.GetComponent<Waypoint>());
+            // }
+
+            GameObject closestPatrolGroup = null;
+            float distance = Mathf.Infinity;
+            Vector3 position = transform.position;
+            foreach (GameObject targetGroup in patrolGroup)
             {
-                patrolPoint.Add(child.GetComponent<Waypoint>());
+                Vector3 diff = targetGroup.transform.position - position;
+                float curDistance = diff.sqrMagnitude;
+                if(curDistance < distance)
+                {
+                    closestPatrolGroup = targetGroup;
+                    distance = curDistance;
+                }
             }
+
+            foreach (Transform child in closestPatrolGroup  .transform)
+             {
+                 patrolPoint.Add(child.GetComponent<Waypoint>());
+             }
+
+
+
         }
-       
+
 
         //Agent and patrol point checking
         if (cAgent == null)

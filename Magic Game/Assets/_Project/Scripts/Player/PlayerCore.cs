@@ -36,7 +36,7 @@ public class PlayerCore : MonoBehaviour
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
     public int activeSpellIndex = 0;
-    public GameObject myPrefab; //audio
+
 
     #endregion
 
@@ -333,15 +333,14 @@ public class PlayerCore : MonoBehaviour
     {
         if (other.tag == "TriggerKill")
         {
+            //Instantiate(physicalDamageAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio->prefabs
             if (other.GetComponent<TriggerHurt>().killInstantly)
             {
-                Instantiate(myPrefab, new Vector3(0, 0, 0), Quaternion.identity); //audio
                 cHealth.Kill();
             }
             else
             {
                 cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
-                Instantiate(myPrefab, new Vector3(0, 0, 0), Quaternion.identity); //audio
             }
         }
     }
@@ -411,7 +410,7 @@ public class PlayerCore : MonoBehaviour
         ragdollObject.GetComponent<RagdollModifier>().SetKinematic(!b, b);
         ragdollObject.GetComponent<Animator>().enabled = !b;
         ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
-        
+
         ragdollObject.transform.parent = b ? null : transform;
 
         //ragdollPosition.GetComponent<Rigidbody>().AddForce(cCharacter.velocity, ForceMode.VelocityChange);

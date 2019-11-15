@@ -18,9 +18,10 @@ public class WhirlwindModifier : SpellScriptableModifier
             compo.variables.strength += variables.strength;
             return;
         }
-
+        
         Whirlwind component = spell.gameObject.AddComponent<Whirlwind>();
         component.tornadoPrefab = tornadoPrefab;
         component.variables = variables;
+        component.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
     }
 }

@@ -71,27 +71,27 @@ public class ScoreCombo : MonoBehaviour
     ///<summary>Checks combo and rewards player accordingly.</summary>
     private float GiveScore()
     {
-        if (combo >= 2 && combo <= 9)
+        if (combo >= 2 && combo <= 7)
         {
             ScoreUI.scoreUI.notificationString = "Killstreak!";
             comboScore = 777;
         }
 
-        else if (combo >= 10 && combo <= 19)
+        else if (combo >= 8 && combo <= 14)
         {
-            ScoreUI.scoreUI.notificationString = "Nice killstreak!";
+            ScoreUI.scoreUI.notificationString = "Power trip!";
             comboScore = 5000;
         }
 
-        else if (combo >= 20 && combo <= 29)
+        else if (combo >= 15 && combo <= 19)
         {
-            ScoreUI.scoreUI.notificationString = "Great killstreak!";
+            ScoreUI.scoreUI.notificationString = "Mass extermination!";
             comboScore = 7000;
         }
 
-        else if (combo >= 30)
+        else if (combo >= 20)
         {
-            ScoreUI.scoreUI.notificationString = "Awesome killstreak!";
+            ScoreUI.scoreUI.notificationString = "Total domination!";
             comboScore = 10000;
         }
 

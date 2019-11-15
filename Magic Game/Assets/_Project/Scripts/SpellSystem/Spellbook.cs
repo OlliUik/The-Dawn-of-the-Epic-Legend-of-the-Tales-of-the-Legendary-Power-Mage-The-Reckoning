@@ -26,6 +26,8 @@ public class Spellbook : MonoBehaviour
 
     public bool enableCasting = true;
 
+    public GameObject failureAudio; //audio
+
     #endregion
 
     private void Awake()
@@ -74,6 +76,10 @@ public class Spellbook : MonoBehaviour
         if (CanCast(spellIndex))
         {
             StartCoroutine(StartCastingSpell(spellIndex));
+        }
+        else
+        {
+            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
         }
     }
 
@@ -151,6 +157,7 @@ public class Spellbook : MonoBehaviour
                 if(!requirement.isMet(this))
                 {
                     print(requirement.name + " was not met");
+                    Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
                     return false;
                 }
             }
@@ -160,6 +167,7 @@ public class Spellbook : MonoBehaviour
         if(cooldowns[spellIndex] > Time.time)
         {
             print("Spell is on cooldown");
+            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
             return false;
         }
 
@@ -211,8 +219,12 @@ public class Spellbook : MonoBehaviour
         {
             mana.UseMana(spells[spellIndex].spell.ManaCost);
         }
+        else
+        { 
+            Instantiate(failureAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+        }
 
-        if(spells[spellIndex].cards.Count > 0)
+        if (spells[spellIndex].cards.Count > 0)
         {
             foreach (Card card in spells[spellIndex].cards)
             {
