@@ -13,6 +13,7 @@ public class BossSegmentDoor : MonoBehaviour
     private void Start()
     {
         crystalCount = GlobalVariables.crystalsCollected;
+        openDoor.SetActive(false);
     }
 
     private void Update()
