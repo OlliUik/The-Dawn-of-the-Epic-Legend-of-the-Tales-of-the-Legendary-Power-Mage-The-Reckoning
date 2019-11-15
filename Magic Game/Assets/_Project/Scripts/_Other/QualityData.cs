@@ -8,6 +8,11 @@ public class QualityData
     [Header("Keybinds & sensitivity")]
     public Vector2 SENSITIVITY = Vector2.one;
 
+    //Tutorial
+    [Header("Tutorial")]
+    [Tooltip("Should the game show a tutorial before playing?")]
+    public bool SHOW_TUTORIAL = true;
+
     //Vsync
     [Header("Graphics quality")]
     [Tooltip("When full sync is enabled, the game is rendered at the refresh rate of the monitor.\n\nWhen half sync is enabled, the game is rendered at half of the refresh rate (60Hz = 30FPS).\n\n0 = Don't sync, 1 = Full sync, 2 = Half sync.")]

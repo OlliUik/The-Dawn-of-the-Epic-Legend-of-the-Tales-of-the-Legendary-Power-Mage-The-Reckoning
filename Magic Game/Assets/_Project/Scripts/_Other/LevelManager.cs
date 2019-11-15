@@ -45,9 +45,12 @@ public class LevelManager : MonoBehaviour
             ErrorScene("DEAD-BEEF");
         }
     }
-    
+
     IEnumerator LoadLevelAsync(string levelName)
     {
+        //Wait a bit before loading the next scene to allow the loading screen to load itself properly.
+        yield return new WaitForSecondsRealtime(0.5f);
+
         GlobalVariables.teamBadBoys.Clear();
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelName);
         while (!asyncLoad.isDone)

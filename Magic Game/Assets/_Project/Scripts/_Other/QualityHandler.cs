@@ -16,6 +16,9 @@ public class QualityHandler : MonoBehaviour
     //Keybinds and sensitivity
     public void SENSITIVITY(Vector2 v)                          { QualityManager.DATA.SENSITIVITY = v; }
 
+    //Tutorial
+    public void SHOW_TUTORIAL(bool b)                           { QualityManager.DATA.SHOW_TUTORIAL = b; }
+
     //Vsync
     public void VSYNC_COUNT(int i)                              { QualityManager.DATA.VSYNC_COUNT = i; }
 
