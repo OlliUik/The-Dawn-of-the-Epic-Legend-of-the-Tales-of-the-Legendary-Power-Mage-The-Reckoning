@@ -28,7 +28,7 @@ public class MoisturizeEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
-
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().flooded = true;
         base.OnApply(target, allEffectsInSpell);
 
         endTime = Time.time + duration;
@@ -77,6 +77,7 @@ public class MoisturizeEffect : StatusEffect
 
     public override void OnLeave()
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().flooded = false;
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize] = false;
         base.OnLeave();
     }

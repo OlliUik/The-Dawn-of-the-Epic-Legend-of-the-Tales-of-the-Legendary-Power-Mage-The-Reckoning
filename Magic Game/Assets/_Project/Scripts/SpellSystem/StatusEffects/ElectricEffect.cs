@@ -34,6 +34,7 @@ public class ElectricEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().thunderstruck = true;
         base.OnApply(target, allEffectsInSpell);
         CheckForCounterEffects(allEffectsInSpell);
         if (target.GetComponent<ThunderVariables>() != null)
@@ -89,7 +90,8 @@ public class ElectricEffect : StatusEffect
 
     public override void OnLeave()
     {
-        if(target.GetComponent<ThunderVariables>() != null)
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().thunderstruck = false;
+        if (target.GetComponent<ThunderVariables>() != null)
         {
             GameObject.Destroy(target.GetComponent<ThunderVariables>());
         }
