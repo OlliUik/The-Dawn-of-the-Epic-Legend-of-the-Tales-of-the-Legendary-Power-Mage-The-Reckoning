@@ -46,7 +46,6 @@ public class AlternativeSpawner : MonoBehaviour
     void Start()
     {
 
-
         spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
         player = GameObject.FindGameObjectWithTag("Player");
 

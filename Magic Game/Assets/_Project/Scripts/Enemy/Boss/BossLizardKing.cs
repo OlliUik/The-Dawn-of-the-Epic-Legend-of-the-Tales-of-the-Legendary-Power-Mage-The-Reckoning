@@ -68,14 +68,16 @@ public class BossLizardKing : EnemyMagicRanged
 
     public override void OnDeath()
     {
+        Debug.Log("boss is dead");
         currentState = EState.DISABLED;
-        GlobalVariables.teamBadBoys.Remove(this.gameObject);
-
-        //Detach the enemy model and ragdoll it
-        //animator.enabled = false;
-        //animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false);
-        //animator.transform.parent = null;
-
+        EnemyCore[] tempEnemies = GameObject.FindObjectsOfType<EnemyCore>();
+        GlobalVariables.angryBaddiesPoint += 1;
+        foreach (EnemyCore child in tempEnemies)
+        {
+            child.GetComponent<Health>().ourStepDadKilled = true;
+            child.GetComponent<Health>().UpdateMaxHealth();
+        }
+        GlobalVariables.teamBadBoys.Remove(this.gameObject);    
         Destroy(this.gameObject);
     }
 
