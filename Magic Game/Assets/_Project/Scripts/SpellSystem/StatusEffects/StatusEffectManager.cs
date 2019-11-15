@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class StatusEffectManager : MonoBehaviour
 {
-
     #region Variables
 
     public enum EffectType
@@ -90,7 +89,5 @@ public class StatusEffectManager : MonoBehaviour
             }
         }
     }
-
     #endregion
-
 }

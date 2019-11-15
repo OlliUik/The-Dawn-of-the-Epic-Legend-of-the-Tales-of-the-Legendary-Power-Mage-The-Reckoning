@@ -9,6 +9,7 @@ public class ElectricModifier : SpellScriptableModifier
     [SerializeField] private float duration = 10f;
     [SerializeField] private GameObject graphics;
     [SerializeField] private float extraManaCost;
+    [SerializeField] private float extraMoistureDamage;
 
     public override void AddSpellModifier(Spell spell)
     {
@@ -21,7 +22,7 @@ public class ElectricModifier : SpellScriptableModifier
             return;
         }
 
-        ElectricEffect temp = new ElectricEffect(duration, graphics, extraManaCost);
+        ElectricEffect temp = new ElectricEffect(duration, graphics, extraManaCost, extraMoistureDamage);
         temp.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
         temp.SetProjectileExplosion(projectileExploionGraphics);
 

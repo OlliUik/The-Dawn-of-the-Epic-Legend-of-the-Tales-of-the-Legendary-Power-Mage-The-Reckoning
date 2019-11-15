@@ -35,6 +35,7 @@ public class LeechLifeEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().suckeddry = true;
         graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + (Vector3.up * 1f), Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
         graphicsCopy.transform.SetParent(target.transform);
         graphicsCopy.AddComponent<LookAtTargetParticleLine>();
@@ -85,6 +86,7 @@ public class LeechLifeEffect : StatusEffect
 
     public override void OnLeave()
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().suckeddry = false;
         effectManager.AppliedEffects[StatusEffectManager.EffectType.LeechLife] = false;
         base.OnLeave();
     }

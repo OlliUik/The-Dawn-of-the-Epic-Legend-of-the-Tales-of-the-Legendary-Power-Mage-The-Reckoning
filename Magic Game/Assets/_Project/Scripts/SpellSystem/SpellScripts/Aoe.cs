@@ -74,6 +74,7 @@ public class Aoe : Spell
         var auraArea = Physics.OverlapSphere(transform.position, radius);
         foreach (var objectHit in auraArea)
         {
+            
             // check if objectHit is enemy
             if (objectHit.transform.tag != caster.tag)
             {
@@ -81,6 +82,7 @@ public class Aoe : Spell
                 if (health != null)
                 {
                     base.DealDamage(health, (damagePerSecond * Time.deltaTime));
+                    objectHit.GetComponent<SpellTypeAmount>().aura = true; //ScoreUI
                 }
 
                 addStatusEffect(statusEffects, objectHit);
