@@ -27,6 +27,8 @@ public class AlternativeSpawner : MonoBehaviour
     public float timeBetweenWaves = 5f;
     public float waveCountdown;
 
+    public float crystalMultiplier = 0.3f;
+
     public float WaveCountDown
     {
         get { return waveCountdown; }
@@ -136,7 +138,9 @@ public class AlternativeSpawner : MonoBehaviour
         Health tempHealth = baddies.GetComponent<Health>();
         if(tempHealth != null )
         {
-            tempHealth.maxHealth *= increasedStat;
+            Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
+            Debug.Log("Increased Stat: " + increasedStat);
+            tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected*crystalMultiplier) + (GlobalVariables.angryBaddiesPoint*crystalMultiplier));
             tempHealth.health = tempHealth.maxHealth;
         }
     }
