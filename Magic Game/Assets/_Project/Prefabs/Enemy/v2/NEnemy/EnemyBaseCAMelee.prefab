@@ -40,6 +40,7 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 3073
+  enableCasting: 1
 --- !u!114 &6200683850415614443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +158,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6720217981809348148, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 8096876693848400852}
     - target: {fileID: 402426337863893273, guid: 2f55a76a8dc3e484188f9ba459f57db4,
         type: 3}
       propertyPath: headTransform
@@ -512,7 +518,18 @@ PrefabInstance:
       propertyPath: ragdoll
       value: 
       objectReference: {fileID: 8096876693848400852}
-    m_RemovedComponents: []
+    - target: {fileID: 1563466421216093377, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 2820462688170350534}
+    - target: {fileID: 1563466421216093377, guid: 2f55a76a8dc3e484188f9ba459f57db4,
+        type: 3}
+      propertyPath: ragdoll
+      value: 
+      objectReference: {fileID: 8195615340777665960}
+    m_RemovedComponents:
+    - {fileID: 1563466421216093377, guid: 2f55a76a8dc3e484188f9ba459f57db4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2f55a76a8dc3e484188f9ba459f57db4, type: 3}
 --- !u!54 &8096876693848400852 stripped
 Rigidbody:
