@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AlternativeSpawner : MonoBehaviour
-
 {
-
     public enum SpawnState { SPAWNING, WAITING, COUNTING}
 
     [System.Serializable]
@@ -15,16 +13,24 @@ public class AlternativeSpawner : MonoBehaviour
         public Transform [] enemy;
         public int count;
         public float rate;
+
+
+        public void setCount(int newCount)
+        {
+            this.count = newCount;
+        }
     }
 
-    //public Transform[] spawnPoints;
     public List<GameObject> spawnPoints = new List<GameObject>();
-
     public Wave[] waves;
     private int nextWave = 0;
-
     public float timeBetweenWaves = 5f;
     public float waveCountdown;
+
+    public float WaveCountDown
+    {
+        get { return waveCountdown; }
+    }
 
     private float searchCountdown = 1f; 
 
@@ -59,11 +65,12 @@ public class AlternativeSpawner : MonoBehaviour
             if(!EnemyIsAlive())
             {
                 //Begin a new round
-                Debug.Log("Wave Complete");
-                
+                Debug.Log("Wave Completed!");
+                WaveCompleted();
             }
             else
             {
+                Debug.Log("Not dead yet.");
                 return;
             }
     
@@ -89,7 +96,7 @@ public class AlternativeSpawner : MonoBehaviour
         if(searchCountdown <= 0f)
         {
             searchCountdown = 1f;
-            if (GameObject.FindGameObjectsWithTag("Enemy") == null)
+            if (GameObject.FindGameObjectWithTag("Enemy") == null)
             {
                 return false;
             }
@@ -124,7 +131,7 @@ public class AlternativeSpawner : MonoBehaviour
 
     void WaveCompleted()
     {
-        Debug.Log("Wave Complete");
+        Debug.Log("Wave Completed");
 
         state = SpawnState.COUNTING;
         waveCountdown = timeBetweenWaves;
