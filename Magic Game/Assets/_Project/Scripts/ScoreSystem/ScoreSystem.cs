@@ -41,9 +41,9 @@ public class ScoreSystem : MonoBehaviour
         if (crystalFound)
         {
             multiplier += 0.1f;         //Enemy level multiplier
-            crystalFound = false;
         }
-    }
+       crystalFound = false;
+     }
 
     ///<summary>Handles notifications of score player has just gotten.</summary>
     private void ScoreUpdate()
