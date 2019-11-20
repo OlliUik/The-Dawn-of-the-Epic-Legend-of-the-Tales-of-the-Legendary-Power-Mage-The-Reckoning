@@ -19,23 +19,11 @@ public class EnemyNavigation : MonoBehaviour
     public float runningAcceleration = 8.0f;
     public float panicSpeed = 12.0f;
     public float panicAcceleration = 8.0f;
+
     [Header("Navigation")]
-    //[SerializeField] private bool moveWhileCasting = false;
-    //[SerializeField] private float navigationInterval = 1.0f;
-    //[SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
-    //If true enemy will do the navigation loop.
     public bool isEnable = true;
     public float minDistanceFromAttackTarget = 2.0f;
     [SerializeField] private float paranoidMoveInterval = 1.0f;
-    //[SerializeField] private float waitAtPatrolPoint = 0.0f;
-    //[SerializeField] private Vector3[] patrolPoints = null;
-
-    //Dictates whether the agentwaits on each node.
-    //[SerializeField]  bool patrolWait;
-
-    //Total time that the patrol wait on each node.
-    //[SerializeField] float totalWaitTime;
-    //[SerializeField] float waitTimer;
 
     [Header("Patroling")]
 
@@ -449,7 +437,8 @@ public class EnemyNavigation : MonoBehaviour
 
     //enemy set attack the target.
     void AIAttack()
-    {
+    {   
+      
         if (cEnemyCore.isRanged)
         {
             float escapeDistance = (cEnemyCore as EnemyRanged).rangedEscapeDistance;

@@ -11,16 +11,20 @@ public class EnemyMelee : EnemyCore
     private int randomAttack;
     private int oldAttack;
     private bool isAnimationAttacking;
+    private bool isEnabled = false;
+
+ 
 
     protected override void AIAttack()
     {
-
+        cNavigation.cAgent.isStopped = false;
         Debug.Log("Entering Attack state");
         if (cVision.bCanSeeTarget)
         {
-
+                
             if ((transform.position - cVision.targetLocation).sqrMagnitude > meleeAttackDistance * meleeAttackDistance)
             {
+                Debug.Log("too far");
                 animator.SetBool("isAttack", false);
                 return;
             }
@@ -38,8 +42,6 @@ public class EnemyMelee : EnemyCore
 
 
             StartCoroutine(startAttack());
-
-            //currentState = EState.CASTING;
             currentState = EState.ATTACK;
         }
         else
@@ -56,16 +58,16 @@ public class EnemyMelee : EnemyCore
         Debug.Log("Entering casting state");
         if (castStandStillTimer <= 0.0f)
         {
-            StartCoroutine(startAttack());
-            foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
-            currentState = EState.ATTACK;
+           StartCoroutine(startAttack());
+           //foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
+           currentState = EState.ATTACK;
         }
     }
 
 
     IEnumerator startAttack()
     {
-
+        Debug.Log("Attacking");
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
         animator.SetBool("isAttack", true);
@@ -75,17 +77,56 @@ public class EnemyMelee : EnemyCore
 
             isAnimationAttacking = true;
             randomAttack = Random.Range(0, 4);
-            while (randomAttack == oldAttack)
-            {
+            //randomAttack = 3;
+           while (randomAttack == oldAttack)
+           {
                 randomAttack = Random.Range(0, 4);
-            }
+           }
             oldAttack = randomAttack;
-            animator.SetInteger("meleeIndex", randomAttack);
-            yield return new WaitForSeconds(0.2f);
-            foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
-            yield return new WaitForSeconds(1.1f);
-            foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
-            isAnimationAttacking = false;
+
+            if(randomAttack == 0)
+            {   
+
+                animator.SetInteger("meleeIndex", randomAttack);
+                yield return new WaitForSeconds(1f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
+                yield return new WaitForSeconds(0.5f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
+                isAnimationAttacking = false;
+            }
+
+            else if (randomAttack == 1)
+            {
+                animator.SetInteger("meleeIndex", randomAttack);
+                yield return new WaitForSeconds(0.2f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
+                yield return new WaitForSeconds(0.8f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
+                isAnimationAttacking = false;
+            }
+
+            else if (randomAttack == 2 )
+            {   
+
+                animator.SetInteger("meleeIndex", randomAttack);
+                yield return new WaitForSeconds(0.3f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
+                yield return new WaitForSeconds(0.8f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
+                isAnimationAttacking = false;
+            }
+
+            else if (randomAttack == 3)
+            {
+                animator.SetInteger("meleeIndex", randomAttack);
+                yield return new WaitForSeconds(0.05f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
+                yield return new WaitForSeconds(0.55f);
+                foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
+                isAnimationAttacking = false;
+            }
+
+
         }
 
 
