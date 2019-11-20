@@ -5,8 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class EndTrigger : MonoBehaviour
 {
+    private GenerationLoop loop = null;
+
     private void Start()
     {
+        loop = FindObjectOfType<GenerationLoop>();
         GetComponent<BoxCollider>().isTrigger = true;
     }
 
@@ -14,7 +17,7 @@ public class EndTrigger : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            GenerationLoop.loop.isGenerating = true;
+            loop.isGenerating = true;
             Destroy(gameObject);
         }
     }

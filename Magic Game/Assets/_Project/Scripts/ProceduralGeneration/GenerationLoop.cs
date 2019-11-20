@@ -4,22 +4,18 @@ using UnityEngine;
 
 public class GenerationLoop : MonoBehaviour
 {
-    public static GenerationLoop loop;
-
     public GameObject generator = null;
     public bool isGenerating = false;
 
-    private GameObject currentGenerator = null;
     [SerializeField] private GameObject player = null;
-    [SerializeField] private Vector3 startPos = Vector3.zero;
-    [SerializeField] private Quaternion startRot = Quaternion.identity;
+    private GameObject currentGenerator = null;
+    private Vector3 startPos = Vector3.zero;
+    private Vector3 startRot = Vector3.zero;
 
     private void Start()
     {
-        loop = this;
-
         startPos = player.transform.position;
-        startRot = player.transform.rotation;
+        startRot = player.GetComponent<ThirdPersonCamera>().lookDirection;
 
         if (generator != null)
         {
@@ -37,8 +33,7 @@ public class GenerationLoop : MonoBehaviour
 
         if (currentGenerator == null)
         {
-            player.transform.position = startPos;
-            player.transform.rotation = startRot;
+            player.GetComponent<PlayerMovement>().Teleport(startPos, startRot);
             currentGenerator = Instantiate(generator, transform);
         }
     }

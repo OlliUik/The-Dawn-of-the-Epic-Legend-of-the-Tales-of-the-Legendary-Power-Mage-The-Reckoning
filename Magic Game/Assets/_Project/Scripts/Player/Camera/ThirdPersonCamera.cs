@@ -20,9 +20,10 @@ public class ThirdPersonCamera : MonoBehaviour
     public bool slowdownEnabled = false;
     public Vector2 slowdownMaxTurn = new Vector2(25.0f, 25.0f);
 
-    public bool isEnabled { get; private set; } = true;
-    public Vector3 lookDirection { get; private set; } = Vector3.zero;
+    [HideInInspector] public Vector3 lookDirection = Vector3.zero;
 
+    public bool isEnabled { get; private set; } = true;
+    
     [Header("Serialized")]
     [SerializeField] private float cameraFOVLerpSpeed = 10.0f;
     [SerializeField] private Vector3 pivotPoint = Vector3.zero;
