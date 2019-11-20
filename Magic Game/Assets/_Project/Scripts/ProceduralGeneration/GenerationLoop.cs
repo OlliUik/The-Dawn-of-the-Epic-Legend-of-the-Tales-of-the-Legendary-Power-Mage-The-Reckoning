@@ -12,12 +12,14 @@ public class GenerationLoop : MonoBehaviour
     private GameObject currentGenerator = null;
     [SerializeField] private GameObject player = null;
     [SerializeField] private Vector3 startPos = Vector3.zero;
+    [SerializeField] private Vector3 startRot = Vector3.zero;
 
     private void Start()
     {
         loop = this;
 
         startPos = player.transform.position;
+        startRot = player.GetComponent<ThirdPersonCamera>().lookDirection;
 
         if (generator != null)
         {
@@ -35,7 +37,7 @@ public class GenerationLoop : MonoBehaviour
 
         if (currentGenerator == null)
         {
-            player.GetComponent<PlayerMovement>().Teleport(startPos);
+            player.GetComponent<PlayerMovement>().Teleport(startPos, startRot);
             currentGenerator = Instantiate(generator, transform);
         }
     }
