@@ -267,6 +267,12 @@ public class PlayerMovement : MonoBehaviour
         cCharacter.gameObject.layer = physicsLayer;
     }
 
+    public void Teleport(Vector3 position, Vector3 eulerRotation)
+    {
+        Teleport(position);
+        cTPCamera.lookDirection = eulerRotation;
+    }
+
     public void OnDisableRagdoll()
     {
         if (ragdollTransform != null)
