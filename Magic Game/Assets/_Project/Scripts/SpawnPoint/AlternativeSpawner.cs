@@ -38,9 +38,8 @@ public class AlternativeSpawner : MonoBehaviour
 
     private SpawnState state = SpawnState.COUNTING;
     public SetActiveRoom room;
-    [SerializeField] private float increaseHealth = 1.0f;
+    [SerializeField] private float increaseHealth = 0.2f;
     public float increasedStat = 1.0f;
-    //[SerializeField] private float distance = 0.0f;
     private GameObject player = null;
 
 
@@ -72,7 +71,7 @@ public class AlternativeSpawner : MonoBehaviour
             }
             else
             {
-                Debug.Log("Not dead yet.");
+                //Debug.Log("Not dead yet.");
                 return;
             }
     
