@@ -102,6 +102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalAxis: Mouse X
   verticalAxis: Mouse Y
+  sensX: 0
+  sensY: 0
   cameraFOV: 0
   isRagdolled: 0
   cameraObject: {fileID: 6348975070603861141}
@@ -136,6 +138,7 @@ MonoBehaviour:
   midAirJumps: 0
   enableControls: 1
   isRagdolled: 0
+  wallRightSide: 0
   bAllowMidairDashing: 1
   bDashingGivesIFrames: 0
   bAllowInfiniteWallJumps: 1
@@ -151,9 +154,12 @@ MonoBehaviour:
   dashJumpForce: 8
   dashDuration: 0.2
   dashCooldown: 1
-  gravityWallSliding: -1
-  wallSlidingTime: 2
-  wallJumpForce: 25
+  gravityWallSliding: 0
+  wallSlidingSpeed: 15
+  wallSlidingMinMagnitude: 6
+  wallSlidingTime: Infinity
+  wallJumpForce: 16
+  wallStickingStrength: 0.33
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -280,7 +286,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b593ce5c46a77149ab5808aadd63000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bRotateTowardsMoveDir: 0
   IkActive: 1
+  pointOfInterestMask:
+    serializedVersion: 2
+    m_Bits: 0
   headTransform: {fileID: 6348975069766138273}
   modelRotationOffset: {x: 0, y: 0, z: 0}
   animationSpeedMultiplier: 5

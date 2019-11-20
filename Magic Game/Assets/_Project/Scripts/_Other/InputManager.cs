@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public string controllerType;
-    public int controllerId;            //1 = Xbox, 2 = PlayStation
+    public string controllerType = null;
+    public int controllerId = 0;            //1 = Xbox, 2 = PlayStation
 
-    void Update()
+    private void Update()
     {
         GetControllerType();
 
@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    void GetControllerType()
+    private void GetControllerType()
     {
         string[] controllers = Input.GetJoystickNames();
 

@@ -37,6 +37,10 @@ public class Tornado : MonoBehaviour
         {
             if(rb != null)
             {
+                if ( rb.gameObject.GetComponent<EnemyCore>() != null)
+                {
+                    rb.gameObject.GetComponent<EnemyCore>().EnableRagdoll(true);
+                }
                 var difference = transform.position - rb.transform.position;
 
                 if(difference.magnitude > variables.size * 0.25)

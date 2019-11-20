@@ -11,4 +11,7 @@ public static class GlobalVariables
     public static string aaMethod = "fxaa";
     public static string loadLevel = "MainMenu";
     public static string errorCode = "0000-0000";
+    public static Vector2 sensitivity = QualityManager.DATA.SENSITIVITY;
+    public static int crystalsCollected = 0;
+    public static int angryBaddiesPoint = 0;
 }

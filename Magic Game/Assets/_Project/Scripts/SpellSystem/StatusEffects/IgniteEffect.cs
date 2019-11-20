@@ -10,6 +10,14 @@ public class IgniteEffect : StatusEffect
     private float timeToBurn;
     private Health health;
 
+    public override StatusEffect Clone()
+    {
+        IgniteEffect temp = new IgniteEffect(duration, graphics, damagePerTick, timeBetweenTicks);
+        temp.timeToBurn = timeToBurn;
+        temp.health = health;
+        return temp;
+    }
+
     public IgniteEffect(float duration, GameObject graphics, float damagePerTick, float timeBetweenTicks) : base(duration, graphics)
     {
         name = "Ignite";
@@ -19,9 +27,9 @@ public class IgniteEffect : StatusEffect
         this.timeBetweenTicks = timeBetweenTicks;
     }
 
-
     private void Burn()
     {
+
         // deal damage to target
         timeToBurn = 0f;
 
@@ -37,6 +45,8 @@ public class IgniteEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted = true;
+        GameObject.Find("Score System 1").GetComponent<ScoreSystem>().ignited = true;
 
         base.OnApply(target, allEffectsInSpell);
 
@@ -73,8 +83,12 @@ public class IgniteEffect : StatusEffect
         {
             if (moisturize != null)
             {
+                /*
                 // spell contains moisturize --> reduce duration
                 endTime = Time.time + (duration * 0.5f);
+                */
+
+                // Spell contains both moisturize and ignite, nothing to cancel.
                 return;
             }
             else
@@ -91,6 +105,8 @@ public class IgniteEffect : StatusEffect
     {
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Ignite] = false;
         base.OnLeave();
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted = false;
+        GameObject.Find("Score System 1").GetComponent<ScoreSystem>().ignited = false;
     }
 
 }

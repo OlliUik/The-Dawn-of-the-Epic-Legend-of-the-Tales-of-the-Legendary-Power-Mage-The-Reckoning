@@ -4,21 +4,13 @@ using UnityEngine;
 
 public class CrystalSpawner : MonoBehaviour
 {
-    //Prefab of crystals goes here
-    [SerializeField]
-    private GameObject crystalPrefab;
+    [SerializeField] private GameObject crystalPrefab = null;
+    [SerializeField] private Vector3[] spawns = null;
+    [SerializeField, Range(0, 1)] private float spawnPercent = 0f;
 
-    //Vector3's where crystal can spawn
-    [SerializeField]
-    private Vector3[] spawns;
-
-    [SerializeField, Range(0, 1)]
-    private float spawnPercent;
+    private List<int> randomOrder = new List<int>();
     
-    //List of random number order of spawn location count
-    List<int> randomOrder = new List<int>();
-    
-    void Start()
+    private void Start()
     {
         for (int n = 0; n < spawns.Length; n++)
         {
@@ -26,12 +18,12 @@ public class CrystalSpawner : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         SpawnCrystals();
     }
 
-    void SpawnCrystals()
+    private void SpawnCrystals()
     {
         for (int r = 0; r < randomOrder.Count; r++)
         {
@@ -40,13 +32,9 @@ public class CrystalSpawner : MonoBehaviour
 
             if (Random.value < spawnPercent)
             {
-                //Position of crystal randomly picked from list of spawn locations
-                Vector3 spawnPosition = spawns[randomOrder[index]];
+                Vector3 spawnPosition = spawns[randomOrder[index]]; //Position of crystal randomly picked from list of spawn locations
+                Vector3 newPosition = gameObject.transform.TransformPoint(spawnPosition); //Add spawner's position to Vector3
 
-                //Add spawner's position to Vector3
-                Vector3 newPosition = gameObject.transform.TransformPoint(spawnPosition);
-
-                //Spawn crystal
                 GameObject newCrystal = Instantiate(crystalPrefab, newPosition, Quaternion.identity, gameObject.transform) as GameObject;
             }
 
@@ -54,16 +42,14 @@ public class CrystalSpawner : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
 
         foreach (Vector3 spawn in spawns)
         {
             Gizmos.matrix = transform.localToWorldMatrix;
-
             Vector3 newGizmoPosition = Vector3.zero + spawn;
-
             Gizmos.DrawWireCube(newGizmoPosition, Vector3.one);
         }
     }

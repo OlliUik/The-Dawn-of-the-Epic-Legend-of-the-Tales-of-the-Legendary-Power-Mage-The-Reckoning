@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class ArrowScript : MonoBehaviour
 {
-    [SerializeField]
-    private ArrowSpawner spawner;
+    [SerializeField] private ArrowSpawner spawner = null;
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {

@@ -5,6 +5,11 @@ using UnityEngine;
 public class ConfusionEffect : StatusEffect
 {
 
+    public override StatusEffect Clone()
+    {
+        ConfusionEffect temp = new ConfusionEffect(duration, graphics);
+        return temp;
+    }
 
     public ConfusionEffect(float duration, GameObject graphics) : base(duration, graphics)
     {
@@ -21,6 +26,11 @@ public class ConfusionEffect : StatusEffect
         endTime = Time.time + duration;
 
         // make player/enemy confused
+        var enemyCore = target.GetComponent<EnemyCore>();
+        if (enemyCore != null)
+        {
+            //Set enemy to confusion stage
+        }
     }
 
     public override void ReApply(List<StatusEffect> allEffectsInSpell)
@@ -40,4 +50,5 @@ public class ConfusionEffect : StatusEffect
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Confuse] = false;
         base.OnLeave();
     }
+
 }

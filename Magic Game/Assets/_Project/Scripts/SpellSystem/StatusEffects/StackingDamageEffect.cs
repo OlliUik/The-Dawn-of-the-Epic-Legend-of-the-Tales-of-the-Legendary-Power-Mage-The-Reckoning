@@ -8,6 +8,14 @@ public class StackingDamageEffect : StatusEffect
     public int increaseRate     = 1;
     public float extraDamage    = 2.5f;
 
+    public override StatusEffect Clone()
+    {
+        StackingDamageEffect temp = new StackingDamageEffect(duration, graphics, extraDamage);
+        temp.increaseRate = increaseRate;
+        temp.extraDamage = extraDamage;
+        return temp;
+    }
+
     // health script calls this when target has StackingDamage on it
     public float ModifyDamage(float amount)
     {
@@ -15,7 +23,6 @@ public class StackingDamageEffect : StatusEffect
         increaseRate++;
         return amount;
     }
-
 
     public StackingDamageEffect(float duration, GameObject graphics, float extraDamage) : base(duration, graphics)
     {

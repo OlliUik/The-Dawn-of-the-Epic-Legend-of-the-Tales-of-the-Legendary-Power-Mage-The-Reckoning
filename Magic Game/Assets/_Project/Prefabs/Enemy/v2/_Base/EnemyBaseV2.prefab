@@ -1481,6 +1481,8 @@ GameObject:
   - component: {fileID: 8974245601768671083}
   - component: {fileID: 5425310709061580087}
   - component: {fileID: 7235508525435473448}
+  - component: {fileID: 5566800658933780519}
+  - component: {fileID: 6327450875498496120}
   m_Layer: 10
   m_Name: EnemyBaseV2
   m_TagString: Enemy
@@ -1556,9 +1558,19 @@ MonoBehaviour:
   runningAcceleration: 8
   panicSpeed: 15
   panicAcceleration: 8
+  isEnable: 1
+  minDistanceFromAttackTarget: 2
   paranoidMoveInterval: 1
-  waitAtPatrolPoint: 0
-  patrolPoints: []
+  switchProbalitiy: 0.2
+  waitProbalitiy: 0.2
+  patrolGroup: []
+  patrolPoint: []
+  rb: {fileID: 0}
+  x: 0
+  y: 0
+  z: 0
+  min: 0
+  max: 0
 --- !u!114 &8034268915251898103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1574,6 +1586,9 @@ MonoBehaviour:
   maxHealth: 50
   iFrameTime: 0
   ragdollDamageThreshold: 25
+  scaleWithCrystalsCollected: 1
+  ourStepDadisKilled: 0
+  healthAddedByCrystal: 20
   health: 0
 --- !u!54 &2126360807314379709
 Rigidbody:
@@ -1639,6 +1654,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd07cb19c9a08242bad225f069a3a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  score: 1000
+  roundedScore: 1000
   logicInterval: 0.5
   defaultState: 0
   searchPlayerAfterAttack: 1
@@ -1653,6 +1670,38 @@ MonoBehaviour:
   attackAnimation: 0
   animator: {fileID: 5403176371198584751}
   ragdoll: {fileID: 2045504140758156737}
+  spawnAsGoodGuy: 0
+  spawnAsConfused: 0
+  deathAudioPrefab: {fileID: 4319804096100018453, guid: 3a704379558d3a74f82a579679c941cb,
+    type: 3}
+--- !u!114 &5566800658933780519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4380926478554447536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 300d5648be4716345bf598929c4c2992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6327450875498496120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4380926478554447536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb07368dd6326341accaa1937c53695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: 0
+  beam: 0
+  aura: 0
+  amount: 0
 --- !u!1 &4551390915380190343
 GameObject:
   m_ObjectHideFlags: 0
@@ -1914,6 +1963,7 @@ MonoBehaviour:
   cEnemyCore: {fileID: 7235508525435473448}
   animationSpeedMultiplier: 0.15
   animationBlendingMultiplier: 0.15
+  rotationOffset: 0
 --- !u!114 &1795504309547927349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1934,6 +1984,7 @@ MonoBehaviour:
   - {fileID: 1588241521411818441}
   - {fileID: 3884743023334492789}
   - {fileID: 6670363147859074216}
+  hiddenWhenNotKinematic: []
 --- !u!1 &4910289754750992403
 GameObject:
   m_ObjectHideFlags: 0

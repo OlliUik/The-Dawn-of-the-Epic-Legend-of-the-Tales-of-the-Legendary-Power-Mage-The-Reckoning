@@ -8,12 +8,13 @@ public class Aoe : Spell
     #region Variables
 
     [Header("AoE varialbes")]
-    [SerializeField] public float damagePerSecond   = 1.0f;
-    [SerializeField] public float radius            = 7.0f;
-    [SerializeField] public float duration          = 10.0f;
-    public GameObject graphics                      = null;
+    [SerializeField] public float damagePerSecond = 1.0f;
+    [SerializeField] public float radius = 7.0f;
+    [SerializeField] public float duration = 10.0f;
+    public GameObject graphics = null;
+    public float graphicUpScale = 0f;
 
-    private SpellModifier[] modifiers               = null;
+    private SpellModifier[] modifiers = null;
 
     #endregion
 
@@ -22,9 +23,49 @@ public class Aoe : Spell
     private void Start()
     {
         spellType = SpellType.AOE;
-        GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
-        copyGraphics.transform.SetParent(gameObject.transform);
         modifiers = GetComponents<SpellModifier>();
+        InitElementGraphics();
+    }
+
+    private void InitElementGraphics()
+    {
+        List<GameObject> elementPrefabs = new List<GameObject>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            Debug.Log("Current AoE modifier element check: " + modifier.name);
+            if (modifier.aoeElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(modifier.aoeElementGraphic))
+                {
+                    elementPrefabs.Add(modifier.aoeElementGraphic);
+                    Debug.Log("Current count = " + elementPrefabs.Count);
+                }
+            }
+        }
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            Debug.Log("Current AoE status effect element check: " + statusEffect.name);
+            if (statusEffect.aoeElementGraphic != null)
+            {
+                Debug.Log("Added " + statusEffect.name + " graphics");
+                if (!elementPrefabs.Contains(statusEffect.aoeElementGraphic))
+                {
+                    elementPrefabs.Add(statusEffect.aoeElementGraphic);
+                    Debug.Log("Current count = " + elementPrefabs.Count);
+                }
+            }
+        }
+        Debug.Log("All counts = " + elementPrefabs.Count);
+        foreach (GameObject elementPrefab in elementPrefabs)
+        {
+            Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(transform);
+        }
+        if (graphics != null && elementPrefabs.Count <= 0)
+        {
+            GameObject copyGraphics = Instantiate(graphics, transform.position, Quaternion.FromToRotation(Vector3.forward, Vector3.up));
+            copyGraphics.transform.localScale += new Vector3(graphicUpScale, graphicUpScale, graphicUpScale);
+            copyGraphics.transform.SetParent(gameObject.transform);
+        }
     }
 
     private void Update()
@@ -33,20 +74,18 @@ public class Aoe : Spell
         var auraArea = Physics.OverlapSphere(transform.position, radius);
         foreach (var objectHit in auraArea)
         {
+            
             // check if objectHit is enemy
             if (objectHit.transform.tag != caster.tag)
             {
                 var health = objectHit.GetComponent<Health>();
-                if(health != null)
+                if (health != null)
                 {
                     base.DealDamage(health, (damagePerSecond * Time.deltaTime));
+                    objectHit.GetComponent<SpellTypeAmount>().aura = true; //ScoreUI
                 }
 
-                var effectManager = objectHit.GetComponent<StatusEffectManager>();
-                if (effectManager != null)
-                {
-                    base.ApplyStatusEffects(effectManager, statusEffects);
-                }
+                addStatusEffect(statusEffects, objectHit);
 
                 // apply all modifiers here to the enemy inside radius
                 foreach (SpellModifier modifier in modifiers)
@@ -54,6 +93,24 @@ public class Aoe : Spell
                     modifier.AoeCollide(objectHit.gameObject);
                 }
             }
+        }
+    }
+
+    private void addStatusEffect(List<StatusEffect> statusEffects, Collider objectHit)
+    {
+        
+        List<StatusEffect> temp = new List<StatusEffect>();
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            temp.Add(statusEffect.Clone());
+            //Debug.Log(statusEffect.name + " cloned to AoE");
+        }
+
+        var effectManager = objectHit.GetComponent<StatusEffectManager>();
+        if (effectManager != null)
+        {
+            //Debug.Log("AoE Hit " + effectManager.gameObject.name);
+            base.ApplyStatusEffects(effectManager, temp);
         }
     }
 

@@ -23,6 +23,10 @@ public class IgniteModifier : SpellScriptableModifier
             return;
         }
 
-        spell.statusEffects.Add(new IgniteEffect(duration, graphics, damagePerTick, timeBetweenTicks));
+        IgniteEffect temp = new IgniteEffect(duration, graphics, damagePerTick, timeBetweenTicks);
+        temp.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
+        temp.SetProjectileExplosion(projectileExploionGraphics);
+
+        spell.statusEffects.Add(temp);
     }
 }

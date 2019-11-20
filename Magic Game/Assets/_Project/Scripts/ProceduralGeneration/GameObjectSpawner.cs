@@ -1,25 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameObjectSpawner : MonoBehaviour
 {
-    //List of objects to spawn
-    [SerializeField]
-    private List<GameObject> objects = new List<GameObject>();
+    #region VARIABLES
 
-    //List of spawned objects
+    [SerializeField] private List<GameObject> objects = new List<GameObject>();
+
+    [SerializeField, Range(0, 1)] private float spawnPercent = 0.0f;
+    [SerializeField] private bool isDestroyingRandom = false;
+
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
-    //Percent for spawning
-    [SerializeField, Range(0, 1)]
-    private float spawnPercent;
+    #endregion
 
-    //Destroy one random game object
-    [SerializeField]
-    private bool isDestroyingRandom;
+    #region UNITY_FUNCTIONS
 
-    void Start()
+    private void Start()
     {
         foreach (GameObject obj in objects)
         {
@@ -27,6 +26,7 @@ public class GameObjectSpawner : MonoBehaviour
             {
                 obj.SetActive(true);
                 spawnedObjects.Add(obj);
+
             }
 
             else
@@ -40,4 +40,6 @@ public class GameObjectSpawner : MonoBehaviour
             Destroy(spawnedObjects[Random.Range(0, spawnedObjects.Count)]);
         }
     }
+
+    #endregion
 }

@@ -25,6 +25,8 @@ public class Projectile : Spell
 
     private bool inited = false;
 
+    private List<GameObject> elementExplosionPrefabs;
+
     #endregion
 
     #region Unitys_Methods
@@ -49,17 +51,32 @@ public class Projectile : Spell
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject == caster)
+        {
+            return;
+        }
+
         bool hitLiving = false;
 
         // DEAL DAMAGE
         Collider[] hitObjects = Physics.OverlapSphere(transform.position, miniAoeRadius);
         foreach (Collider go in hitObjects)
         {
+            if (go.gameObject == caster)
+            {
+                continue;
+            }
+
             var health = go.gameObject.GetComponent<Health>();
             if (health != null)
             {
                 hitLiving = true;
+                collision.gameObject.GetComponent<SpellTypeAmount>().projectile = true; //ScoreUI
                 base.DealDamage(health, baseDamage);
+            }
+            else if (go.gameObject.GetComponent<BreakableObject>() != null)
+            {
+                Destroy(go.gameObject);
             }
 
             // APPLY STATUSEFFECTS
@@ -104,20 +121,69 @@ public class Projectile : Spell
 
     private void Init()
     {
-        if(graphics != null)
+        List<GameObject> elementPrefabs = new List<GameObject>();
+        elementExplosionPrefabs = new List<GameObject>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            if (modifier.projectileElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(modifier.projectileElementGraphic))
+                {
+                    elementPrefabs.Add(modifier.projectileElementGraphic);
+                }
+            }
+            if (modifier.projectileExplosionGraphic != null)
+            {
+                if (!elementExplosionPrefabs.Contains(modifier.projectileExplosionGraphic))
+                {
+                    elementExplosionPrefabs.Add(modifier.projectileExplosionGraphic);
+                }
+            }
+        }
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            if (statusEffect.projecttileElementGraphic != null)
+            {
+                if (!elementPrefabs.Contains(statusEffect.projecttileElementGraphic))
+                {
+                    elementPrefabs.Add(statusEffect.projecttileElementGraphic);
+                }
+            }
+            if (statusEffect.projectileExplosionGraphic != null)
+            {
+                if (!elementExplosionPrefabs.Contains(statusEffect.projectileExplosionGraphic))
+                {
+                    elementExplosionPrefabs.Add(statusEffect.projectileExplosionGraphic);
+                }
+            }
+        }
+        foreach (GameObject elementPrefab in elementPrefabs)
+        {
+            Instantiate(elementPrefab, transform.position, transform.rotation).transform.SetParent(transform);
+        }
+        if (graphics != null && elementPrefabs.Count == 0)
         {
             GameObject graphicsCopy = Instantiate(graphics, transform.position, transform.rotation);
             graphicsCopy.transform.SetParent(transform);
         }
         lastPos = transform.position;
         modifiers = GetComponents<SpellModifier>();
+        inited = true;
+        Debug.Log("Element explosion count: " + elementExplosionPrefabs.Count);
     }
 
     private void DestroyProjectile()
     {
-        if(explosionParticle != null)
+        if (explosionParticle != null && elementExplosionPrefabs.Count == 0)
         {
             Instantiate(explosionParticle, transform.position, transform.rotation);
+        }
+        else
+        {
+            foreach (GameObject elementExplosionPrefab in elementExplosionPrefabs)
+            {
+                Instantiate(elementExplosionPrefab, transform.position, transform.rotation);
+            }
         }
         Destroy(gameObject);
     }
@@ -162,6 +228,12 @@ public class Projectile : Spell
     public void ModifySpeed(float amount)
     {
         baseSpeed += amount;
+    }
+
+    public override void ModifyRange(float amount)
+    {
+        miniAoeRadius += amount;
+        Debug.Log("Projectile modified size: " + miniAoeRadius);
     }
 
     #endregion

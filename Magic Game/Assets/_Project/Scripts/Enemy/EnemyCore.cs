@@ -65,6 +65,11 @@ public class EnemyCore : MonoBehaviour
     public Vector3 spawnPosition { get; protected set; } = Vector3.zero;
     public Vector3 spawnRotation { get; protected set; } = Vector3.zero;
 
+    [Header("Score")]
+    public int score = 0;
+    public int roundedScore;
+    private bool hasStatusEffect = false;
+
     [Header("Core -> State Machine")]
     [SerializeField] protected float logicInterval = 0.5f;
     [SerializeField] protected EDefaultState defaultState = EDefaultState.IDLE;
@@ -80,7 +85,7 @@ public class EnemyCore : MonoBehaviour
     [SerializeField] protected bool moveWhileCasting = false;
     [SerializeField] protected float standStillAfterCasting = 4.0f;
     [SerializeField] protected int attackAnimation = 0; //Check the animator controller to find out the desired number!
-    [SerializeField] protected Animator animator = null;
+    [SerializeField] public Animator animator = null;
 
     [Header("Core -> Ragdoll")]
     [SerializeField] protected Rigidbody ragdoll = null;
@@ -98,6 +103,8 @@ public class EnemyCore : MonoBehaviour
     protected float paranoidTimer = 0.0f;
     protected float castStandStillTimer = 0.0f;
     protected float ragdollSleepTimer = 0.0f;
+
+    public GameObject deathAudioPrefab; //audio
 
     #endregion
 
@@ -170,10 +177,12 @@ public class EnemyCore : MonoBehaviour
             if (other.GetComponent<TriggerHurt>().killInstantly)
             {
                 cHealth.Kill();
+                GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown = true;
             }
             else
             {
                 cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
+                GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown = true;
             }
         }
     }
@@ -278,6 +287,63 @@ public class EnemyCore : MonoBehaviour
 
     public virtual void OnDeath()
     {
+        roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
+
+        //Score UI Notifications
+
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted)
+        { 
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Roasted!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().cooleddown)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Cooled Down!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().flooded)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Flooded!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().thunderstruck)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Thunderstruck!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().suckeddry)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Sucked Dry!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().blownaway)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Blown away!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Smacked down!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().doubletrouble)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Double Trouble!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().tripletrouble)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Triple Trouble!";
+        }
+
+        //Score Multipliers
+
+        if (hasStatusEffect)
+        {
+            ScoreCalculator.scoreCalc.CountScore(score);
+        }
+        else
+        {
+            ScoreSystem.scoreSystem.addedScore = roundedScore;
+            ScoreSystem.scoreSystem.score += roundedScore;
+        }
+
+        ScoreCombo.scoreCombo.isEnemyKilled = true;
+        ScoreCombo.scoreCombo.combo++;
+        Instantiate(deathAudioPrefab, new Vector3(0, 0, 0), Quaternion.identity); //audio
+
         currentState = EState.DISABLED;
         GlobalVariables.teamBadBoys.Remove(this.gameObject);
 

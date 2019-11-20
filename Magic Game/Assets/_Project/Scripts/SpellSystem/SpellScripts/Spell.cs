@@ -13,6 +13,7 @@ public class Spell : MonoBehaviour
     [SerializeField] protected float castTime   = 5.0f;
     [SerializeField] protected float manaCost   = 5.0f;
     [SerializeField] protected float range      = 250.0f;
+    [SerializeField] protected float damageMultiplier = 1.0f;
     public List<StatusEffect> statusEffects     = new List<StatusEffect>();
 
     public float Cooldown
@@ -133,6 +134,15 @@ public class Spell : MonoBehaviour
 
     public virtual void ModifyRange(float increaseAmount) { range += increaseAmount; }
 
+    public virtual void ModifyDamageMultiplier(float increaseAmount) {
+        damageMultiplier = damageMultiplier * ( 1 + increaseAmount );
+    }
+
+    public virtual void ModifyManaCostMultiplier(float decreaseAmount)
+    {
+        manaCost = manaCost * (1 - decreaseAmount);
+    }
+
     public virtual void ModifyCooldown(float cooldownDercrease)
     {
         cooldown -= cooldownDercrease;
@@ -144,15 +154,16 @@ public class Spell : MonoBehaviour
 
     public virtual void DealDamage(Health health, float amount)
     {
-        health.Hurt(amount, true);
+        //Debug.Log("Damage dealed: " + amount * damageMultiplier);
+        health.Hurt(amount * damageMultiplier, true);
     }
 
     public virtual void ApplyStatusEffects(StatusEffectManager manager, List<StatusEffect> effects)
     {
         // call ApplyStatusEffect in the hitObjects StatusEffectManager and do null checks there
-        foreach (StatusEffect effect in statusEffects)
+        foreach (StatusEffect effect in effects)
         {
-            manager.ApplyStatusEffect(effect, statusEffects);
+            manager.ApplyStatusEffect(effect, effects);
         }
     }
 

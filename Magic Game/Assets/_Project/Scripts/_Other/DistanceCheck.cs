@@ -1,35 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class DistanceCheck : MonoBehaviour
 {
-    [SerializeField]
-    private float distance;
+    [SerializeField] private float distance = 0.0f;
+    [SerializeField] private GameObject[] childrenToHide = null;
+    [SerializeField] private NavMeshSurface surface;
+    [SerializeField] private GameObject disableBlock;
+    [SerializeField] private LevelGenerator gen;
 
-    [SerializeField]
-    private GameObject[] childrenToHide;
+    private GameObject player = null;
 
-    private GameObject player;
-
-    void Start()
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    void Update()
-    {
+    private void Update()
+    {   
+        
         foreach (GameObject child in childrenToHide)
-        {
-            if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+        {   
+            if(gen.isDone)
             {
-                child.SetActive(true);
-            }
+                if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                {
+                    child.SetActive(true);
+                    disableBlock.SetActive(false);
+                }
 
-            else
-            {
-                child.SetActive(false);
+                else
+                {
+                    child.SetActive(false);
+                    disableBlock.SetActive(true);
+                }
             }
+          
         }
+        
     }
 }

@@ -12,19 +12,20 @@ public class CustomOcclusionCulling : MonoBehaviour
     public int farPlaneBuffer = 10;
     public int rateOfReceding = 16;
 
-    #region Ray Grids
+    #region RAY_GRIDS
+
     private float[] rayGridY = new float[] { 1.00f, 0.60f, 0.59f, 0.58f, 0.57f, 0.56f, 0.55f, 0.54f, 0.53f, 0.52f, 0.51f, 0.50f, 0.49f, 0.48f, 0.47f, 0.46f, 0.45f, 0.44f, 0.43f, 0.42f, 0.41f, 0.40f, 0.00f };
     private float[] rayGridX = new float[] { 0.00f, 0.01f, 0.06f, 0.11f, 0.16f, 0.21f, 0.26f, 0.31f, 0.36f, 0.41f, 0.43f, 0.45f, 0.47f, 0.48f, 0.49f, 0.50f, 0.51f, 0.52f, 0.53f, 0.55f, 0.57f, 0.59f, 0.64f, 0.69f, 0.74f, 0.79f, 0.84f, 0.89f, 0.94f, 0.99f, 1.00f };
+    
     #endregion
 
-    void Start()
+    private void Start()
     {
         Camera.main.farClipPlane = defaultFarPlane;
-
         StartCoroutine(AdjustFarPlane());
     }
 
-    IEnumerator AdjustFarPlane()
+    private IEnumerator AdjustFarPlane()
     {
         while (true)
         {
@@ -69,7 +70,7 @@ public class CustomOcclusionCulling : MonoBehaviour
         }
     }
 
-    int CastOcclusionRay(float graphX, float graphY)
+    private int CastOcclusionRay(float graphX, float graphY)
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(graphX, graphY, 0));
 
