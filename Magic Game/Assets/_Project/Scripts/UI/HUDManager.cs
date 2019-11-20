@@ -17,9 +17,11 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Image hurtFlash = null;
     [SerializeField] private Image fadeIn = null;
     [SerializeField] private SpellIconSwitcher switcher = null;
+    [SerializeField] private CrystalCollectionDisplay display = null;
 
     [SerializeField] private GameObject spellEditingUI = null;
-    public SpellEditorController spellEditingController { get; private set; } 
+    public SpellEditorController spellEditingController { get; private set; } = null;
+    public CrystalCollectionDisplay crystalDisplay { get; private set; } = null;
     public bool bIsEditingSpells { get; private set; } = false;
     
     public bool bIsPaused { get; private set; } = false;
@@ -35,9 +37,14 @@ public class HUDManager : MonoBehaviour
 
     private void Awake()
     {
-        if(spellEditingUI != null)
+        if (spellEditingUI != null)
         {
             spellEditingController = spellEditingUI.GetComponent<SpellEditorController>();
+        }
+
+        if (display != null)
+        {
+            crystalDisplay = display;
         }
     }
 
