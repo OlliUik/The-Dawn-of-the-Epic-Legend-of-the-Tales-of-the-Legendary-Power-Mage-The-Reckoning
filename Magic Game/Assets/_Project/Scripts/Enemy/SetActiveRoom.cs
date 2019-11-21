@@ -12,7 +12,8 @@ public class SetActiveRoom : MonoBehaviour
    //Enable the room prefab
     void Start()
     {
-        Room.SetActive(true);
+        //Room.SetActive(true);
+        genNavMesh();
     }
 
     public void genNavMesh()
