@@ -23,6 +23,8 @@ public class MeshCombiner : MonoBehaviour
     }
 
     [SerializeField][Range(0, 65534)] private int maxVertexCount = 65534;
+    [SerializeField] private MeshByMaterial[] meshByMaterials = null;
+    [SerializeField] private GameObject[] newObjects = null;
     
     private void Start()
     {
@@ -33,7 +35,7 @@ public class MeshCombiner : MonoBehaviour
 
         //Get all the materials and initialize arrays
 
-        MeshByMaterial[] meshByMaterials = new MeshByMaterial[10];
+        meshByMaterials = new MeshByMaterial[50];
 
         for (int i = 0; i < meshFilters.Length; i++)
         {
@@ -119,7 +121,7 @@ public class MeshCombiner : MonoBehaviour
         
         GameObject parent = new GameObject("Combined Meshes - " + gameObject.name);
         parent.transform.parent = null;
-        GameObject[] newObjects = new GameObject[meshCount];
+        newObjects = new GameObject[meshCount];
 
         int spawnCount = 0;
 
@@ -158,6 +160,8 @@ public class MeshCombiner : MonoBehaviour
                     }
                 }
 
+                Debug.Log(this + " Iteration count: " + iterationCount + " Mesh count: " + meshCount);
+
                 //Combine the meshes
 
                 int vertexCount = 0;
@@ -190,8 +194,8 @@ public class MeshCombiner : MonoBehaviour
                     {
                         combineCopy[i] = combine[i];
                     }
-                    
-                    GameObject finished = new GameObject("Final Mesh - " + mbm.material.name);
+
+                    GameObject finished = new GameObject("Final Mesh | " + currentIteration + " | " + mbm.material.name);
                     finished.transform.parent = parent.transform;
 
                     MeshFilter finishedFilter = finished.AddComponent<MeshFilter>();
@@ -201,21 +205,24 @@ public class MeshCombiner : MonoBehaviour
                     finishedFilter.mesh.CombineMeshes(combineCopy, true, true, false);
                     finishedFilter.mesh.name = Random.Range(0, 9001).ToString();
                     finishedRenderer.material = mbm.material;
-
+                    
                     if (currentIteration >= iterationCount)
                     {
                         iterate = false;
                     }
                 }
+
+                //Destroy the object holding temporary child objects
+                Destroy(materialObject);
             }
         }
 
         //Disable the old & temporary objects
 
-        foreach (GameObject obj in newObjects)
-        {
-            obj.SetActive(false);
-        }
+        //foreach (GameObject obj in newObjects)
+        //{
+        //    obj.SetActive(false);
+        //}
 
         foreach (MeshRenderer rend in meshRenderers)
         {
