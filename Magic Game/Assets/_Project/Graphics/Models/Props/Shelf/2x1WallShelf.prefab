@@ -49,6 +49,22 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!208 &532434213581462
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3162624703338548338}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.011000001, y: 0.006, z: 0.015000001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.001, y: 0.003, z: 0.015000001}
+  m_TimeToStationary: 0.5
 --- !u!114 &3591916624470917449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,13 +81,13 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
---- !u!208 &532434213581462
+--- !u!208 &270660856718802034
 NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3162624703338548338}
+  m_GameObject: {fileID: 8446151142654732215}
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
@@ -110,22 +126,6 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
---- !u!208 &270660856718802034
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8446151142654732215}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.011000001, y: 0.006, z: 0.015000001}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0.001, y: 0.003, z: 0.015000001}
-  m_TimeToStationary: 0.5
 --- !u!1001 &3162624703338580690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,10 +133,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6163698766053917351}
     m_Modifications:
-    - target: {fileID: 100000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
-      propertyPath: m_Name
-      value: Shelf02 (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.7531
@@ -183,7 +179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
       propertyPath: m_LocalScale.x
-      value: -91.77016
+      value: 91.77016
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
       propertyPath: m_LocalScale.y
@@ -192,6 +188,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
       propertyPath: m_LocalScale.z
       value: 99.69132
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
+      propertyPath: m_Name
+      value: Shelf02 (1)
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
@@ -215,10 +215,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6163698766053917351}
     m_Modifications:
-    - target: {fileID: 100000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
-      propertyPath: m_Name
-      value: Shelf02
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.91769993
@@ -270,6 +266,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
       propertyPath: m_LocalScale.z
       value: 99.69132
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
+      propertyPath: m_Name
+      value: Shelf02
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6400000, guid: 495c394794e5d1342a525205c0279c70, type: 3}
