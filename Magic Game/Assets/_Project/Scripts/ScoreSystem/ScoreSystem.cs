@@ -16,17 +16,6 @@ public class ScoreSystem : MonoBehaviour
     
     private float timer = 1.0f;
 
-    public bool ignited;
-    public bool airborne;
-    public bool ragdolled;
-    public bool electrocuted;
-    public bool frozen;
-    public bool lifeleeched;
-    public bool killedbyenvironment;
-    public bool portaled;
-    public bool doubletroubled;
-    public bool tripletroubled;
-
     #endregion
 
     #region UNITY_FUNCTIONS

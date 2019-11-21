@@ -71,7 +71,7 @@ public class Projectile : Spell
             if (health != null)
             {
                 hitLiving = true;
-                collision.gameObject.GetComponent<SpellTypeAmount>().projectile = true; //ScoreUI
+                if(collision.gameObject.GetComponent<SpellTypeAmount>() != null) collision.gameObject.GetComponent<SpellTypeAmount>().projectile = true; //ScoreUI
                 base.DealDamage(health, baseDamage);
             }
             else if (go.gameObject.GetComponent<BreakableObject>() != null)
