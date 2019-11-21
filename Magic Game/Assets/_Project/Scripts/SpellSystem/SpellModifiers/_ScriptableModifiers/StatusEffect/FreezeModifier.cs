@@ -29,6 +29,7 @@ public class FreezeModifier : SpellScriptableModifier
 
         FreezeEffect temp = new FreezeEffect(duration, graphics, slowAmount, moistSlowMultiplier, stunIceGraphics);
         temp.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
+        temp.projectileExplosionGraphic = projectileExploionGraphics;
         spell.statusEffects.Add(temp);
     }
 }
