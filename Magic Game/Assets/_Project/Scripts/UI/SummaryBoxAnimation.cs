@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SummaryBoxAnimation : MonoBehaviour
+public class SummaryBoxAnimation : MonoBehaviour, AnimationElement
 {
     [SerializeField] private GameObject[] fadedGroup;
 
@@ -16,7 +16,7 @@ public class SummaryBoxAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(DelayFadeIn());
+        StartCoroutine(Animator());
     }
 
     void FadeOutAllCanvas()
@@ -33,15 +33,21 @@ public class SummaryBoxAnimation : MonoBehaviour
         float nAlpha = Mathf.Lerp(cAlpha, 1f, Time.deltaTime);
 
         cg.alpha = nAlpha;
-
     }
 
-    IEnumerator DelayFadeIn()
+    public IEnumerator Animator()
     {
         foreach (GameObject g in fadedGroup)
         {
             yield return new WaitForSeconds(0.8f);
             FadeInCanvas(g.GetComponent<CanvasGroup>());
-        }  
+
+            AnimationElement ae = g.GetComponentInChildren<AnimationElement>();
+
+            if (ae != null)
+            {
+                yield return StartCoroutine(ae.Animator());
+            }
+        }
     }
 }
