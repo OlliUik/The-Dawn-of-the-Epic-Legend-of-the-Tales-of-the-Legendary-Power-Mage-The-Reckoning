@@ -19,6 +19,7 @@ public class EnemyMelee : EnemyCore
     {
         cNavigation.cAgent.isStopped = false;
         Debug.Log("Entering Attack state");
+        foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
         if (cVision.bCanSeeTarget)
         {
                 
@@ -32,6 +33,7 @@ public class EnemyMelee : EnemyCore
 
             if (!moveWhileCasting && cNavigation.cAgent.hasPath)
             {
+                Debug.Log("has path but not move while casting");
                 cNavigation.cAgent.ResetPath();
                 cNavigation.cAgent.velocity = new Vector3(0.0f, cNavigation.cAgent.velocity.y, 0.0f);
             }
@@ -40,7 +42,9 @@ public class EnemyMelee : EnemyCore
                 castStandStillTimer = standStillAfterCasting;
             }
 
-
+            animator.SetBool("isIdle", false);
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isAttack", true);
             StartCoroutine(startAttack());
             currentState = EState.ATTACK;
         }
@@ -68,19 +72,17 @@ public class EnemyMelee : EnemyCore
     IEnumerator startAttack()
     {
         Debug.Log("Attacking");
-        animator.SetBool("isIdle", false);
-        animator.SetBool("isWalking", false);
-        animator.SetBool("isAttack", true);
+
 
         if (!isAnimationAttacking)
         {
 
-            isAnimationAttacking = true;
-            randomAttack = Random.Range(0, 4);
-            //randomAttack = 3;
+           isAnimationAttacking = true;
+           randomAttack = Random.Range(0, 4);
+           //randomAttack = 1;
            while (randomAttack == oldAttack)
            {
-                randomAttack = Random.Range(0, 4);
+               randomAttack = Random.Range(0, 4);
            }
             oldAttack = randomAttack;
 
@@ -98,9 +100,9 @@ public class EnemyMelee : EnemyCore
             else if (randomAttack == 1)
             {
                 animator.SetInteger("meleeIndex", randomAttack);
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.01f);
                 foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
-                yield return new WaitForSeconds(0.8f);
+                yield return new WaitForSeconds(1f);
                 foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
                 isAnimationAttacking = false;
             }
@@ -119,9 +121,9 @@ public class EnemyMelee : EnemyCore
             else if (randomAttack == 3)
             {
                 animator.SetInteger("meleeIndex", randomAttack);
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(0.01f);
                 foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
-                yield return new WaitForSeconds(0.55f);
+                yield return new WaitForSeconds(1.2f);
                 foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
                 isAnimationAttacking = false;
             }
@@ -150,6 +152,7 @@ public class EnemyMelee : EnemyCore
     protected override void Update()
     {
         base.Update();
+    
         randomAttack = Random.Range(0, 3);
         if (cNavigation.cAgent.isStopped)
         {
@@ -167,6 +170,9 @@ public class EnemyMelee : EnemyCore
     public override void OnDeath()
     {
         base.OnDeath();
+        animator.SetBool("isIdle", false);
+        animator.SetBool("isWalking", false);
+        animator.SetBool("isAttack", false);
         foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
     }
 }
