@@ -82,7 +82,7 @@ public class Aoe : Spell
                 if (health != null)
                 {
                     base.DealDamage(health, (damagePerSecond * Time.deltaTime));
-                    objectHit.GetComponent<SpellTypeAmount>().aura = true; //ScoreUI
+                    if(objectHit.GetComponent<SpellTypeAmount>() != null) objectHit.GetComponent<SpellTypeAmount>().aura = true; //ScoreUI
                 }
 
                 addStatusEffect(statusEffects, objectHit);

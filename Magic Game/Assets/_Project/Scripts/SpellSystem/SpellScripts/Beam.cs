@@ -437,13 +437,13 @@ public class Beam : Spell
                 if((objectsHit[i].gameObject.transform.position - spellbook.transform.position).magnitude < (closest.transform.position - spellbook.transform.position).magnitude)
                 {
                     closest = objectsHit[i].gameObject;
-                    objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
+                    if(objectsHit[i].GetComponent<SpellTypeAmount>() != null) objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
                 }
             }
             else
             {
                 closest = objectsHit[i].gameObject;
-                objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
+                if (objectsHit[i].GetComponent<SpellTypeAmount>() != null) objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
             }
         }
         return closest;
