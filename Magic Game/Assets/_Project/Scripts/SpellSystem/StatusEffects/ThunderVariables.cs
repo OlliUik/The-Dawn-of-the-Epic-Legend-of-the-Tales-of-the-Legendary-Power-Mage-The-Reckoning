@@ -15,10 +15,12 @@ public class ThunderVariables : MonoBehaviour
     public GameObject electricParticlePrefab;
 
     Spellbook spellbook;
+    EnemyMelee enemyMelee;
 
     bool isSetUp = false;
 
     bool originalSpellbookEnableCasting = true;
+    bool originalMeleeEnableAttacking = true;
 
     SphereCollider triggerChecker;
 
@@ -26,13 +28,15 @@ public class ThunderVariables : MonoBehaviour
     {
         spellbook = GetComponent<Spellbook>();
         if (spellbook != null) originalSpellbookEnableCasting = spellbook.enableCasting;
+        enemyMelee = GetComponent<EnemyMelee>();
+        if (enemyMelee != null) originalMeleeEnableAttacking = enemyMelee.enableAttack;
         if (GetComponent<StatusEffectManager>() != null)
         {
             bool isMoist = false;
             GetComponent<StatusEffectManager>().AppliedEffects.TryGetValue(StatusEffectManager.EffectType.Moisturize, out isMoist);
             if (isMoist)
             {
-                // TODO: Deal extra damage here (hopefully)
+                // Deal extra damage here (hopefully)
                 if(playerHealth != null) playerHealth.Hurt(extraMoistureDamage, true);
             }
         }
@@ -65,6 +69,7 @@ public class ThunderVariables : MonoBehaviour
         if (isSetUp)
         {
             if (spellbook != null) spellbook.enableCasting = false;
+            if (enemyMelee != null) enemyMelee.enableAttack = false;
             duration -= Time.deltaTime;
             if (duration <= 0f)
             {
@@ -76,6 +81,7 @@ public class ThunderVariables : MonoBehaviour
     private void OnDestroy()
     {
         if (spellbook != null) spellbook.enableCasting = originalSpellbookEnableCasting;
+        if (enemyMelee != null) enemyMelee.enableAttack = originalMeleeEnableAttacking;
         if (electricParticlePrefab != null) Destroy(electricParticlePrefab);
         if (triggerChecker != null) Destroy(triggerChecker);
     }

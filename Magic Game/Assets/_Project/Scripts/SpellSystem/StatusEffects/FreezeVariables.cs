@@ -22,6 +22,7 @@ public class FreezeVariables : MonoBehaviour
     private EnemyCore enemyCore;
 
     private bool originalCanCast = true;
+    private bool originalMeleeCanCast = true;
 
     public void freeze(float slowAmount, GameObject iceStunParticle, int cardAmount, bool hasMoisture)
     {
@@ -47,6 +48,11 @@ public class FreezeVariables : MonoBehaviour
         {
             if (enemyCore != null)
             {
+                if (enemyCore is EnemyMelee)
+                {
+                    originalMeleeCanCast = ((EnemyMelee)enemyCore).enableAttack;
+                    ((EnemyMelee)enemyCore).enableAttack = false;
+                }
                 enemyCore.enabled = false;
             }
             isStun = true;
@@ -102,6 +108,10 @@ public class FreezeVariables : MonoBehaviour
         if (enemyCore != null)
         {
             enemyCore.enabled = true;
+            if (enemyCore is EnemyMelee)
+            {
+                ((EnemyMelee)enemyCore).enableAttack = originalMeleeCanCast;
+            }
         }
     }
 
