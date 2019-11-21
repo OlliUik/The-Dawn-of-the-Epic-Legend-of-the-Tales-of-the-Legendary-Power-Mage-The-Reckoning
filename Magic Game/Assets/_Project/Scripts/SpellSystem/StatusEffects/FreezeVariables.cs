@@ -21,6 +21,8 @@ public class FreezeVariables : MonoBehaviour
 
     private EnemyCore enemyCore;
 
+    private bool originalCanCast = true;
+
     public void freeze(float slowAmount, GameObject iceStunParticle, int cardAmount, bool hasMoisture)
     {
 
@@ -66,6 +68,8 @@ public class FreezeVariables : MonoBehaviour
             }
             if (spellbook != null)
             {
+                originalCanCast = spellbook.enableCasting;
+                spellbook.enableCasting = false;
                 spellbook.enabled = false;
             }
         }
@@ -93,6 +97,7 @@ public class FreezeVariables : MonoBehaviour
         if (spellbook != null)
         {
             spellbook.enabled = true;
+            spellbook.enableCasting = originalCanCast;
         }
         if (enemyCore != null)
         {
