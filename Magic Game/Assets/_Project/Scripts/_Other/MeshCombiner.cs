@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-//using System.Collections.Generic;
+using System.Collections.Generic;
 
 public class MeshCombiner : MonoBehaviour
 {
@@ -22,10 +22,10 @@ public class MeshCombiner : MonoBehaviour
         }
     }
 
+    [Tooltip("Increase this value, if you have more materials being used.")]
+    [SerializeField] private int materialTempCount = 50;
     [SerializeField][Range(0, 65534)] private int maxVertexCount = 65534;
-    [SerializeField] private MeshByMaterial[] meshByMaterials = null;
-    [SerializeField] private GameObject[] newObjects = null;
-    
+
     private void Start()
     {
         //Get all the meshes
@@ -35,7 +35,7 @@ public class MeshCombiner : MonoBehaviour
 
         //Get all the materials and initialize arrays
 
-        meshByMaterials = new MeshByMaterial[50];
+        MeshByMaterial[] meshByMaterials = new MeshByMaterial[materialTempCount];
 
         for (int i = 0; i < meshFilters.Length; i++)
         {
@@ -69,7 +69,7 @@ public class MeshCombiner : MonoBehaviour
                 }
             }
         }
-
+        
         //Create and assign all meshes with same material into lists
         
         for (int x = 0; x < meshFilters.Length; x++)
@@ -99,6 +99,47 @@ public class MeshCombiner : MonoBehaviour
             }
         }
 
+        //Copy the previous array's contents to a trimmed (smaller) array
+
+        int materialCount = 0;
+
+        foreach (MeshByMaterial mbm in meshByMaterials)
+        {
+            if (mbm.material != null)
+            {
+                materialCount++;
+            }
+        }
+
+        MeshByMaterial[] meshByMaterialsCopy = new MeshByMaterial[materialCount];
+
+        for (int i = 0; i < meshByMaterialsCopy.Length; i++)
+        {
+            meshByMaterialsCopy[i].material = meshByMaterials[i].material;
+            int mCount = 0;
+
+            foreach (Mesh m in meshByMaterials[i].meshList)
+            {
+                if (m != null)
+                {
+                    mCount++;
+                }
+            }
+
+            meshByMaterialsCopy[i].meshList = new Mesh[mCount];
+            meshByMaterialsCopy[i].position = new Vector3[mCount];
+            meshByMaterialsCopy[i].rotation = new Quaternion[mCount];
+            meshByMaterialsCopy[i].scale = new Vector3[mCount];
+
+            for (int j = 0; j < mCount; j++)
+            {
+                meshByMaterialsCopy[i].meshList[j] = meshByMaterials[i].meshList[j];
+                meshByMaterialsCopy[i].position[j] = meshByMaterials[i].position[j];
+                meshByMaterialsCopy[i].rotation[j] = meshByMaterials[i].rotation[j];
+                meshByMaterialsCopy[i].scale[j] = meshByMaterials[i].scale[j];
+            }
+        }
+        
         //Count the amount of meshes
 
         int meshCount = 0;
@@ -116,113 +157,125 @@ public class MeshCombiner : MonoBehaviour
                 }
             }
         }
-
+        
         //Create gameobjects for the meshes
         
         GameObject parent = new GameObject("Combined Meshes - " + gameObject.name);
         parent.transform.parent = null;
-        newObjects = new GameObject[meshCount];
+        GameObject[] newObjects = new GameObject[meshCount];
+        GameObject[] materialObjects = new GameObject[meshByMaterialsCopy.Length];
 
         int spawnCount = 0;
 
-        foreach (MeshByMaterial mbm in meshByMaterials)
+        for (int x = 0; x < meshByMaterialsCopy.Length; x++)
         {
-            if (spawnCount >= meshCount)
-            {
-                break;
-            }
+            MeshByMaterial mbm = meshByMaterialsCopy[x];
             
-            if (mbm.material != null)
+            GameObject[] reservedObjects = new GameObject[mbm.meshList.Length];
+            for (int j = 0; j < reservedObjects.Length; j++)
             {
-                int iterationCount = 0;
+                reservedObjects[j] = newObjects[j + spawnCount];
+            }
+            spawnCount += reservedObjects.Length;
 
-                GameObject materialObject = new GameObject(mbm.material.name);
-                materialObject.transform.parent = parent.transform;
+            materialObjects[x] = new GameObject(mbm.material.name);
+            materialObjects[x].transform.parent = parent.transform;
 
-                foreach (Mesh mesh in mbm.meshList)
+            for (int y = 0; y < reservedObjects.Length; y++)
+            {
+                if (mbm.meshList[y] != null)
                 {
-                    if (mesh != null)
-                    {
-                        newObjects[spawnCount] = new GameObject(mesh.name);
-                        newObjects[spawnCount].transform.position = mbm.position[iterationCount];
-                        newObjects[spawnCount].transform.rotation = mbm.rotation[iterationCount];
-                        newObjects[spawnCount].transform.localScale = mbm.scale[iterationCount];
-                        newObjects[spawnCount].transform.parent = materialObject.transform;
+                    reservedObjects[y] = new GameObject(mbm.meshList[y].name);
+                    reservedObjects[y].transform.position = mbm.position[y];
+                    reservedObjects[y].transform.rotation = mbm.rotation[y];
+                    reservedObjects[y].transform.localScale = mbm.scale[y];
+                    reservedObjects[y].transform.parent = materialObjects[x].transform;
 
-                        MeshFilter filter = newObjects[spawnCount].AddComponent<MeshFilter>();
-                        MeshRenderer renderer = newObjects[spawnCount].AddComponent<MeshRenderer>();
+                    MeshFilter filter = reservedObjects[y].AddComponent<MeshFilter>();
+                    MeshRenderer renderer = reservedObjects[y].AddComponent<MeshRenderer>();
 
-                        filter.mesh = mesh;
-                        renderer.material = mbm.material;
-                        
-                        spawnCount++;
-                        iterationCount++;
-                    }
+                    filter.mesh = mbm.meshList[y];
+                    renderer.material = mbm.material;
                 }
+            }
 
-                Debug.Log(this + " Iteration count: " + iterationCount + " Mesh count: " + meshCount);
-
-                //Combine the meshes
-
-                int vertexCount = 0;
-                int currentIteration = 0;
-                int iterated = 0;
-                bool iterate = true;
-
-                while (iterate)
+            for (int y = 0; x < newObjects.Length; y++)
+            {
+                if (newObjects[y] == null)
                 {
-                    iterated = 0;
-                    CombineInstance[] combine = new CombineInstance[iterationCount - currentIteration];
-
-                    for (int i = 0; i < combine.Length; i++)
+                    for (int z = 0; z < reservedObjects.Length; z++)
                     {
-                        vertexCount += newObjects[spawnCount + currentIteration].GetComponent<MeshFilter>().mesh.vertexCount;
-                        if (vertexCount >= maxVertexCount)
-                        {
-                            vertexCount = 0;
-                            break;
-                        }
-                        combine[i].mesh = newObjects[spawnCount + currentIteration].GetComponent<MeshFilter>().mesh;
-                        combine[i].transform = newObjects[spawnCount + currentIteration].transform.localToWorldMatrix;
-                        currentIteration++;
-                        iterated++;
+                        newObjects[y + z] = reservedObjects[z];
                     }
-
-                    CombineInstance[] combineCopy = new CombineInstance[iterated];
-
-                    for (int i = 0; i < iterated; i++)
-                    {
-                        combineCopy[i] = combine[i];
-                    }
-
-                    GameObject finished = new GameObject("Final Mesh | " + currentIteration + " | " + mbm.material.name);
-                    finished.transform.parent = parent.transform;
-
-                    MeshFilter finishedFilter = finished.AddComponent<MeshFilter>();
-                    MeshRenderer finishedRenderer = finished.AddComponent<MeshRenderer>();
-
-                    finishedFilter.mesh = new Mesh();
-                    finishedFilter.mesh.CombineMeshes(combineCopy, true, true, false);
-                    finishedFilter.mesh.name = Random.Range(0, 9001).ToString();
-                    finishedRenderer.material = mbm.material;
-                    
-                    if (currentIteration >= iterationCount)
-                    {
-                        iterate = false;
-                    }
+                    break;
                 }
-
-                //Destroy the object holding temporary child objects
-                Destroy(materialObject);
             }
         }
 
-        //Disable the old & temporary objects
+        //Combine meshes
 
-        //foreach (GameObject obj in newObjects)
-        //{
-        //    obj.SetActive(false);
-        //}
+        spawnCount = 0;
+
+        for (int x = 0; x < meshByMaterialsCopy.Length; x++)
+        {
+            int iteration = 0;
+            int vertexCount = 0;
+
+            List<List<GameObject>> objects = new List<List<GameObject>>();
+
+            for (int y = 0; y < meshByMaterialsCopy[x].meshList.Length; y++)
+            {
+                vertexCount += meshByMaterialsCopy[x].meshList[y].vertexCount;
+                if (vertexCount >= maxVertexCount)
+                {
+                    vertexCount = 0;
+                    iteration++;
+                }
+                if (objects.Count < iteration + 1)
+                {
+                    objects.Add(new List<GameObject>());
+                }
+                objects[iteration].Add(newObjects[spawnCount]);
+                spawnCount++;
+            }
+
+            //foreach (List<GameObject> list in objects)
+            //{
+            //    Debug.Log("Material: " + meshByMaterialsCopy[x].material + " List length: " + list.Count);
+            //}
+
+            for (int y = 0; y < objects.Count; y++)
+            {
+                CombineInstance[] combine = new CombineInstance[objects[y].Count];
+
+                int z = 0;
+                foreach (GameObject go in objects[y])
+                {
+                    MeshFilter filter = go.GetComponent<MeshFilter>();
+                    combine[z].mesh = filter.mesh;
+                    combine[z].transform = go.transform.localToWorldMatrix;
+                    z++;
+                }
+
+                GameObject finished = new GameObject("Final Mesh | " + z + " | " + meshByMaterialsCopy[x].material.name);
+                finished.transform.parent = parent.transform;
+
+                MeshFilter finishedFilter = finished.AddComponent<MeshFilter>();
+                MeshRenderer finishedRenderer = finished.AddComponent<MeshRenderer>();
+
+                finishedFilter.mesh = new Mesh();
+                finishedFilter.mesh.CombineMeshes(combine, true, true, false);
+                finishedFilter.mesh.name = Random.Range(0, 9001).ToString();
+                finishedRenderer.material = meshByMaterialsCopy[x].material;
+            }
+        }
+
+        //Disable old objects & destroy temporary objects
+
+        foreach (GameObject obj in materialObjects)
+        {
+            Destroy(obj);
+        }
 
         foreach (MeshRenderer rend in meshRenderers)
         {
