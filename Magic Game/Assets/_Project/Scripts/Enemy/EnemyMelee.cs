@@ -176,10 +176,20 @@ public class EnemyMelee : EnemyCore
 
     public override void OnDeath()
     {
-        base.OnDeath();
+        OnDeathScore();
+
+        currentState = EState.DISABLED;
+        GlobalVariables.teamBadBoys.Remove(this.gameObject);
+
+        //Detach the enemy model and ragdoll it
+        //animator.enabled = false;
+        //animator.transform.parent = null;
+
+        Destroy(this.gameObject);
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
         animator.SetBool("isAttack", false);
         foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
+        GlobalVariables.teamBadBoys.Remove(this.gameObject);
     }
 }
