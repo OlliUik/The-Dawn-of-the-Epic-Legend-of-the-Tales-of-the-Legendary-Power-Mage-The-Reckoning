@@ -9,12 +9,16 @@ public class ChestRandomizer : MonoBehaviour
     public GameObject normalChest = null;
     public GameObject crystalChest = null;
     public List<GameObject> chests = new List<GameObject>();
-    
-    [SerializeField] private int crystalChestCount = 0;
+    public bool isSearching = false;
+
+    [SerializeField] private int crystalChestCount = 6;
     [SerializeField] private List<GameObject> crystalChests = new List<GameObject>();
+    private LevelGenerator generator = null;
+    private GenerationLoop loop = null;
     private List<GameObject> tempList = new List<GameObject>();
     private int crystalCount = 0;
     private int crystalsFromLevel = 0;
+    [SerializeField] private float timer = 1f;
 
     #endregion
 
@@ -23,21 +27,46 @@ public class ChestRandomizer : MonoBehaviour
     private void Start()
     {
         crystalCount = GlobalVariables.crystalsCollected;
-
-        Chest[] tempArray = FindObjectsOfType<Chest>();
-
-        foreach (Chest chest in tempArray)
-        {
-            chests.Add(chest.gameObject);
-        }
-
-        Shuffle(chests);
-        Pick(crystalChestCount);
-        Change();
+        loop = GetComponent<GenerationLoop>();
+        generator = FindObjectOfType<LevelGenerator>();
     }
 
     private void Update()
     {
+        if (generator == null)
+        {
+            generator = FindObjectOfType<LevelGenerator>();
+        }
+
+        if (loop.isGenerating)
+        {
+            crystalChests.Clear();
+            chests.Clear();
+        }
+
+        if (isSearching)
+        {
+            timer -= Time.deltaTime;
+
+            if (timer < 0)
+            {
+                Shuffle(chests);
+
+                if (chests.Count >= crystalChestCount)
+                {
+                    Pick(crystalChestCount);
+                }
+
+                Change();
+                isSearching = false;
+            }
+        }
+
+        else
+        {
+            timer = 1f;
+        }
+
         crystalsFromLevel = GlobalVariables.crystalsCollected;
 
         if (crystalsFromLevel >= (crystalCount + 3))

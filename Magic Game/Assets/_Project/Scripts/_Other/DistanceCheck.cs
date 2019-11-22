@@ -28,10 +28,13 @@ public class DistanceCheck : MonoBehaviour
         }
         foreach (Transform child in transform)
         {
-            childrenToHide.Add(child.gameObject);
+            if (child.gameObject.name != "Chests")
+            {
+                childrenToHide.Add(child.gameObject);
+            }
         }
 
-        gen = generator.GetComponent<LevelGenerator>();
+        gen = FindObjectOfType<LevelGenerator>();
     }
 
     public virtual void OnDrawGizmos()

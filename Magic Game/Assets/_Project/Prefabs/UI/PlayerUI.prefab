@@ -1538,6 +1538,7 @@ GameObject:
   - component: {fileID: 955611017436264746}
   - component: {fileID: 5637478318024089876}
   - component: {fileID: 5077375889626431948}
+  - component: {fileID: 8642562042405168416}
   m_Layer: 0
   m_Name: Rank
   m_TagString: Untagged
@@ -1587,6 +1588,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2947080177374240707}
   m_CullTransparentMesh: 0
+--- !u!114 &8642562042405168416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2947080177374240707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70375e0936f14394e9dc15026d38d221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rankText: {fileID: 4168475445657564194}
 --- !u!1 &3342830112295836590
 GameObject:
   m_ObjectHideFlags: 0
@@ -3335,7 +3349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8231336487212793556
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4389,10 +4403,10 @@ RectTransform:
   m_Father: {fileID: 955611017436264746}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.78029853, y: 0.5}
-  m_AnchorMax: {x: 0.78029853, y: 0.5}
-  m_AnchoredPosition: {x: 3.9700012, y: -0.05001068}
-  m_SizeDelta: {x: 392.05, y: 177.9}
+  m_AnchorMin: {x: 0.743398, y: 0.5}
+  m_AnchorMax: {x: 0.743398, y: 0.5}
+  m_AnchoredPosition: {x: -22, y: -0.05001068}
+  m_SizeDelta: {x: 510, y: 177.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6467429655281264533
 CanvasRenderer:
@@ -4424,11 +4438,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 21e8c9902e02c004e80170174b45ce88, type: 3}
-    m_FontSize: 55
+    m_FontSize: 50
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 5
-    m_MaxSize: 65
+    m_BestFit: 1
+    m_MinSize: 20
+    m_MaxSize: 55
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
