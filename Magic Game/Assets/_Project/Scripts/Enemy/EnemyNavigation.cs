@@ -105,13 +105,13 @@ public class EnemyNavigation : MonoBehaviour
                 }
             }
 
-            foreach (Transform child in closestPatrolGroup.transform)
-             {
-                 patrolPoint.Add(child.GetComponent<Waypoint>());
-             }
-
-
-
+            if(closestPatrolGroup != null)
+            {
+                foreach (Transform child in closestPatrolGroup.transform)
+                {
+                    patrolPoint.Add(child.GetComponent<Waypoint>());
+                }
+            }
         }
 
 

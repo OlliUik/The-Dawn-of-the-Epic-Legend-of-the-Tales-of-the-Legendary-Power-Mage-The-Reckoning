@@ -9,12 +9,12 @@ public class PropRandomizer : MonoBehaviour
     [SerializeField] private Vector3[] spawns = null;
     [SerializeField, Range(0, 1)] private float spawnPercent = 0.0f;
     [SerializeField, Range(-180, 180)] private List<float> propAngle = new List<float>();
-    public SetActiveRoom surface;
+   // public SetActiveRoom surface;
 
     private void Start()
     {   
         SpawnProps();
-        surface.genNavMesh();
+        //surface.genNavMesh();
     }
 
     private void SpawnProps()

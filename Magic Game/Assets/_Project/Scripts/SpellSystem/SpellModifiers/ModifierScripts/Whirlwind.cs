@@ -7,10 +7,13 @@ public class Whirlwind : SpellModifier
 
     public GameObject tornadoPrefab;
     public WhirlwindVariables variables;
+    public float extraMana;
 
+    private Mana playerMana;
 
     public override void OnSpellCast(Spell spell)
     {
+        playerMana = spell.caster.GetComponent<Mana>();
         if(spell.spellType == SpellType.AOE)
         {
             GameObject tornado = Instantiate(tornadoPrefab, spell.caster.transform.position, spell.caster.transform.rotation);
@@ -48,8 +51,26 @@ public class Whirlwind : SpellModifier
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
+        if (playerMana != null)
+        {
+            if (playerMana.mana >= extraMana)
+            {
+                playerMana.UseMana(extraMana);
+                createTornado(collision, direction);
+            }
+        }
+        // If mana does not exist, summon tornado right away
+        else
+        {
+            createTornado(collision, direction);
+        }
+    }
+
+    public void createTornado(Collision collision, Vector3 direction)
+    {
         GameObject tornado = Instantiate(tornadoPrefab, collision.contacts[0].point, Quaternion.identity);
         Tornado script = tornado.GetComponentInChildren<Tornado>();
         script.variables = variables;
     }
+
 }
