@@ -6,12 +6,12 @@ using UnityEngine;
 public class BossTrigger : MonoBehaviour
 {
     [SerializeField] private EnemyCore boss = null;
-    //[SerializeField] private GameObject particles = null;
+    [SerializeField] private GameObject particles = null;
 
     private void Start()
     {
         boss.gameObject.SetActive(false);
-        //particles.gameObject.SetActive(false);
+        particles.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -21,7 +21,7 @@ public class BossTrigger : MonoBehaviour
             if (boss != null)
             {
                 boss.gameObject.SetActive(true);
-                //particles.gameObject.SetActive(true);
+                particles.gameObject.SetActive(true);
                 Destroy(gameObject);
             }
 
