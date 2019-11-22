@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 464295558186141372}
   - component: {fileID: 464295558186141371}
   - component: {fileID: 7325429786666537555}
+  - component: {fileID: 7992322455206758721}
   m_Layer: 0
   m_Name: Electrified1_Loop
   m_TagString: Untagged
@@ -4714,9 +4715,9 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 1fc78372213610b48b2cfb7c8a4be7e3, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -4798,6 +4799,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7992322455206758721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464295558186141370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47bda0289c8268429a63e5957f35c10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundList: {fileID: 11400000, guid: a1249d455a9705946813bd1549f800a1, type: 2}
+  randomizeOnStart: 1
 --- !u!1 &464295558789220999
 GameObject:
   m_ObjectHideFlags: 0
