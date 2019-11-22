@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlternativeSpawner : MonoBehaviour
+public class SpawnManager : MonoBehaviour
 {
     public enum SpawnState { SPAWNING, WAITING, COUNTING}
 
@@ -37,10 +37,14 @@ public class AlternativeSpawner : MonoBehaviour
     private float searchCountdown = 1f; 
 
     private SpawnState state = SpawnState.COUNTING;
-    public SetActiveRoom room;
+    public GameObject genbuilder;
     [SerializeField] private float increaseHealth = 0.2f;
     public float increasedStat = 1.0f;
+    [SerializeField] private float distance = 0.0f;
+    public List<GameObject> enemies;
     private GameObject player = null;
+    private LevelGenerator gen;
+
 
 
     // Start is called before the first frame update
@@ -48,7 +52,20 @@ public class AlternativeSpawner : MonoBehaviour
     {
 
         spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
+
         player = GameObject.FindGameObjectWithTag("Player");
+
+
+        genbuilder = GameObject.FindGameObjectWithTag("levelbuilder");
+        if (genbuilder != null)
+        {
+            gen = genbuilder.GetComponent<LevelGenerator>();
+        }
+        else
+        {
+            Debug.Log("No level generator");
+        }
+
 
         if (spawnPoints.Count == 0)
         {
@@ -59,11 +76,14 @@ public class AlternativeSpawner : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
-        if(state == SpawnState.WAITING)
+    {
+
+
+
+        if (state == SpawnState.WAITING)
         {
             //check if enemies are still alive
-            if(!EnemyIsAlive())
+            if (!EnemyIsAlive())
             {
                 //Begin a new round
                 Debug.Log("Wave Completed!");
@@ -74,13 +94,13 @@ public class AlternativeSpawner : MonoBehaviour
                 //Debug.Log("Not dead yet.");
                 return;
             }
-    
+
         }
 
-        if(waveCountdown <= 0 )
+        if (waveCountdown <= 0)
         {
-            if(state != SpawnState.SPAWNING)
-            {   if(nextWave != 0)
+            if (state != SpawnState.SPAWNING)
+            { if (nextWave != 0)
                 {
                     increasedStat += increaseHealth;
                     StartCoroutine(SpawnWave(waves[nextWave]));
@@ -97,12 +117,60 @@ public class AlternativeSpawner : MonoBehaviour
         }
 
 
+        foreach (GameObject child in enemies)
+        {
+            /*
+            if (gen != null)
+            {
+              if(gen.isDone)
+                {
+                    if (child != null)
+                    {
+                        //spawn when player is close to enemies
+                        if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                        {
+                            child.gameObject.SetActive(true);
+                        }
+
+                        else
+                        {
+                            child.gameObject.SetActive(false);
+
+                        }
+                    }
+                }
+
+            }
+            */
+            //if(child != null)
+            /*
+            if (Resources.FindObjectsOfTypeAll<EnemyCore>() != null)
+            {
+                if (child != null)
+                {
+                    //spawn when player is close to enemies
+                    if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                    {
+                        child.gameObject.SetActive(true);
+                    }
+
+                    else
+                    {
+                        child.gameObject.SetActive(false);
+
+                    }
+                } 
+              
+            }
+            */
+        }
+
     }
 
     bool EnemyIsAlive()
     {
         searchCountdown -= Time.deltaTime;
-        if(searchCountdown <= 0f)
+        if (searchCountdown <= 0f)
         {
             searchCountdown = 1f;
             if (GameObject.FindGameObjectWithTag("Enemy") == null)
@@ -142,6 +210,7 @@ public class AlternativeSpawner : MonoBehaviour
             tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected*crystalMultiplier) + (GlobalVariables.angryBaddiesPoint*crystalMultiplier));
             tempHealth.health = tempHealth.maxHealth;
         }
+        enemies.Add(baddies);
     }
 
     void WaveCompleted()
