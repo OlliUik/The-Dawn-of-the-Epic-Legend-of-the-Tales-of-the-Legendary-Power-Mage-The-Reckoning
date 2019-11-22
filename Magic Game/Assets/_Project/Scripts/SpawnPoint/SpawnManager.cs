@@ -180,10 +180,11 @@ public class SpawnManager : MonoBehaviour
         {
             //Debug.Log(child.gameObject.name + " should be enabled");
             child.enabled = true;
+            child.gameObject.GetComponent<NavMeshAgent>().enabled = true;
             child.gameObject.GetComponent<EnemyNavigation>().enabled = true;
             child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = true;
             child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = true;
-            child.gameObject.GetComponent<NavMeshAgent>().enabled = true;
+            child.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 
         }
 
@@ -192,9 +193,9 @@ public class SpawnManager : MonoBehaviour
             //Debug.Log(child.gameObject.name + " should be disabled");
             child.gameObject.GetComponent<NavMeshAgent>().enabled = false;
             child.gameObject.GetComponent<EnemyNavigation>().enabled = false;
+            child.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
             child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = false;
             child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = false;
-
             child.enabled = false;
         }
     }

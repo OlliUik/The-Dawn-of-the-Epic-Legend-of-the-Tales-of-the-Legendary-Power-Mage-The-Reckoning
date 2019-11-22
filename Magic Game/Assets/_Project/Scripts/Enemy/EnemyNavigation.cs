@@ -556,10 +556,20 @@ public class EnemyNavigation : MonoBehaviour
     IEnumerator idleTime()
     {
         //Debug.Log("waiting");
-        float randomNum = Random.Range(min, max);
-        cAgent.isStopped = true;
-        yield return new WaitForSeconds(randomNum);
-        cAgent.isStopped = false;
+     
+            float randomNum = Random.Range(min, max);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.isStopped = true;
+        }
+            yield return new WaitForSeconds(randomNum);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.isStopped = false;
+
+        }
+
+
 
     }
 
