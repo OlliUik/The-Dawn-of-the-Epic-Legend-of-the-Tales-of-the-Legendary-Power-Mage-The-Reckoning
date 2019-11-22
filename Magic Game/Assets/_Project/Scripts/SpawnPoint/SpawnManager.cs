@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SpawnManager : MonoBehaviour
 {
-    public enum SpawnState { SPAWNING, WAITING, COUNTING}
+    public enum SpawnState { SPAWNING, WAITING, COUNTING }
 
     [System.Serializable]
     public class Wave
     {
         public string name;
-        public GameObject [] enemy;
+        public GameObject[] enemy;
         public int count;
         public float rate;
 
@@ -24,7 +25,7 @@ public class SpawnManager : MonoBehaviour
     public List<GameObject> spawnPoints = new List<GameObject>();
     public Wave[] waves;
     private int nextWave = 0;
-    public float timeBetweenWaves = 5f;
+    [SerializeField] private float timeBetweenWaves = 5f;
     public float waveCountdown;
 
     public float crystalMultiplier = 0.3f;
@@ -34,24 +35,21 @@ public class SpawnManager : MonoBehaviour
         get { return waveCountdown; }
     }
 
-    private float searchCountdown = 1f; 
+    private float searchCountdown = 1f;
 
-    private SpawnState state = SpawnState.COUNTING;
+    public SpawnState state = SpawnState.COUNTING;
     public GameObject genbuilder;
     [SerializeField] private float increaseHealth = 0.2f;
     public float increasedStat = 1.0f;
     [SerializeField] private float distance = 0.0f;
-    public List<GameObject> enemies;
+    public List<EnemyCore> enemies;
     private GameObject player = null;
-    private LevelGenerator gen;
-
-
+    public LevelGenerator gen;
+    private bool gotSpawnPoint = false;
 
     // Start is called before the first frame update
     void Start()
     {
-
-        spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
 
         player = GameObject.FindGameObjectWithTag("Player");
 
@@ -67,10 +65,7 @@ public class SpawnManager : MonoBehaviour
         }
 
 
-        if (spawnPoints.Count == 0)
-        {
-            Debug.LogError("No spawn point referenced.");
-        }
+        
         waveCountdown = timeBetweenWaves;
     }
 
@@ -78,93 +73,130 @@ public class SpawnManager : MonoBehaviour
     void Update()
     {
 
-
-
-        if (state == SpawnState.WAITING)
+        if (gen == null)
         {
-            //check if enemies are still alive
-            if (!EnemyIsAlive())
+            genbuilder = GameObject.FindGameObjectWithTag("levelbuilder");
+            if (genbuilder != null)
             {
-                //Begin a new round
-                Debug.Log("Wave Completed!");
-                WaveCompleted();
+                gen = genbuilder.GetComponent<LevelGenerator>();
             }
             else
             {
-                //Debug.Log("Not dead yet.");
-                return;
-            }
-
-        }
-
-        if (waveCountdown <= 0)
-        {
-            if (state != SpawnState.SPAWNING)
-            { if (nextWave != 0)
-                {
-                    increasedStat += increaseHealth;
-                    StartCoroutine(SpawnWave(waves[nextWave]));
-                }
-                else
-                {
-                    StartCoroutine(SpawnWave(waves[nextWave]));
-                }
+                Debug.Log("No level generator");
             }
         }
         else
         {
-            waveCountdown -= Time.deltaTime;
-        }
-
-
-        foreach (GameObject child in enemies)
-        {
-            /*
-            if (gen != null)
+            if (!gotSpawnPoint && gen.isDone)
             {
-              if(gen.isDone)
-                {
-                    if (child != null)
-                    {
-                        //spawn when player is close to enemies
-                        if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
-                        {
-                            child.gameObject.SetActive(true);
-                        }
+                spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
+                gotSpawnPoint = true;
 
+                if (spawnPoints.Count == 0)
+                {
+                    Debug.LogError("No spawn point referenced.");
+                }
+            }
+            else if (gotSpawnPoint)
+            {
+                if (state == SpawnState.WAITING)
+                {
+                    //check if enemies are still alive
+                    if (!EnemyIsAlive())
+                    {
+                        //Begin a new round
+                        Debug.Log("Wave Completed!");
+                        WaveCompleted();
+                    }
+                    else
+                    {
+                        //Debug.Log("Not dead yet.");
+                        foreach (EnemyCore child in enemies)
+                        {
+
+                            if (gen != null)
+                            {
+                                if (gen.isDone)
+                                {
+                                    if (child != null)
+                                    {
+                                        //spawn when player is close to enemies
+                                        checkPlayerDistance(child);
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("No enemy");
+                                    }
+                                }
+
+                            }
+                            else if (child != null)
+                            {
+                                checkPlayerDistance(child);
+                            }
+                            else
+                            {
+                                Debug.Log("No enemy");
+                            }
+                            
+                        }
+                        return;
+                    }
+
+                }
+
+                if (waveCountdown <= 0)
+                {
+                    if (state != SpawnState.SPAWNING)
+                    {
+                        if (nextWave != 0)
+                        {
+                            increasedStat += increaseHealth;
+                            StartCoroutine(SpawnWave(waves[nextWave]));
+                        }
                         else
                         {
-                            child.gameObject.SetActive(false);
-
+                            StartCoroutine(SpawnWave(waves[nextWave]));
                         }
                     }
                 }
-
-            }
-            */
-            //if(child != null)
-            /*
-            if (Resources.FindObjectsOfTypeAll<EnemyCore>() != null)
-            {
-                if (child != null)
+                else
                 {
-                    //spawn when player is close to enemies
-                    if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
-                    {
-                        child.gameObject.SetActive(true);
-                    }
-
-                    else
-                    {
-                        child.gameObject.SetActive(false);
-
-                    }
-                } 
-              
+                    waveCountdown -= Time.deltaTime;
+                }
+                
             }
-            */
+        
         }
 
+
+
+    }
+
+    void checkPlayerDistance(EnemyCore child)
+    {
+        //Debug.Log(Vector3.Distance(player.transform.position, child.transform.position));
+        if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+        {
+            //Debug.Log(child.gameObject.name + " should be enabled");
+            child.enabled = true;
+            child.gameObject.GetComponent<EnemyNavigation>().enabled = true;
+            child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = true;
+            child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = true;
+            child.gameObject.GetComponent<NavMeshAgent>().enabled = true;
+
+        }
+
+        else
+        {   
+            //Debug.Log(child.gameObject.name + " should be disabled");
+            child.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            child.gameObject.GetComponent<EnemyNavigation>().enabled = false;
+            child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = false;
+            child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = false;
+
+            child.enabled = false;
+        }
     }
 
     bool EnemyIsAlive()
@@ -177,17 +209,17 @@ public class SpawnManager : MonoBehaviour
             {
                 return false;
             }
-        }       
+        }
         return true;
     }
 
     IEnumerator SpawnWave(Wave _wave)
     {
-        Debug.Log("Spawning Wave: "+ _wave.name);
+        Debug.Log("Spawning Wave: " + _wave.name);
         state = SpawnState.SPAWNING;
 
         for (int i = 0; i < _wave.count; i++)
-        {   
+        {
             SpawnEnemy(_wave.enemy);
             yield return new WaitForSeconds(1f / _wave.rate);
         }
@@ -196,21 +228,21 @@ public class SpawnManager : MonoBehaviour
         yield break;
     }
 
-    void SpawnEnemy(GameObject [] _enemy)
+    void SpawnEnemy(GameObject[] _enemy)
     {
         int randomRange = Random.Range(0, _enemy.Length);
-        Debug.Log("Spawning Enemy:" +  _enemy[randomRange].name);
+        Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
         GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
         GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
         Health tempHealth = baddies.GetComponent<Health>();
-        if(tempHealth != null )
+        if (tempHealth != null)
         {
             Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
             Debug.Log("Increased Stat: " + increasedStat);
-            tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected*crystalMultiplier) + (GlobalVariables.angryBaddiesPoint*crystalMultiplier));
+            tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected * crystalMultiplier) + (GlobalVariables.angryBaddiesPoint * crystalMultiplier));
             tempHealth.health = tempHealth.maxHealth;
         }
-        enemies.Add(baddies);
+        enemies.Add(baddies.GetComponent<EnemyCore>());
     }
 
     void WaveCompleted()
@@ -220,7 +252,7 @@ public class SpawnManager : MonoBehaviour
         state = SpawnState.COUNTING;
         waveCountdown = timeBetweenWaves;
 
-        if(nextWave + 1 > waves.Length - 1)
+        if (nextWave + 1 > waves.Length - 1)
         {
             nextWave = 0;
             Debug.Log("All Waves complete! Looping");
@@ -228,6 +260,6 @@ public class SpawnManager : MonoBehaviour
         else
         {
             nextWave++;
-        }      
+        }
     }
 }

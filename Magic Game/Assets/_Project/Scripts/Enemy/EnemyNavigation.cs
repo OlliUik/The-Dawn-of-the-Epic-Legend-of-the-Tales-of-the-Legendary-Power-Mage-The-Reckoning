@@ -138,7 +138,7 @@ public class EnemyNavigation : MonoBehaviour
     public void NavigationLoop()
     {
         if (isEnable)
-        {
+        {   
             switch (cEnemyCore.currentState)
             {
                 case EnemyCore.EState.IDLE: AIidlePatrol(); break;
@@ -232,21 +232,25 @@ public class EnemyNavigation : MonoBehaviour
         // Debug.Log(isGrounded.ToString());
 
         if (isEnable)
-        {
-            if (cAgent.remainingDistance > cAgent.stoppingDistance)
+        {   
+            if(cAgent.isOnNavMesh)
             {
-                character.Move(cAgent.desiredVelocity, false, false);
-            }
-            else
-            {
-                character.Move(Vector3.zero, false, false);
-            }
+                if (cAgent.remainingDistance > cAgent.stoppingDistance)
+                {
+                    character.Move(cAgent.desiredVelocity, false, false);
+                }
+                else
+                {
+                    character.Move(Vector3.zero, false, false);
+                }
 
-            if (cAgent.isOnOffMeshLink && isGrounded)
-            {
-                Jump();
-                cAgent.updatePosition = true;
+                if (cAgent.isOnOffMeshLink && isGrounded)
+                {
+                    Jump();
+                    cAgent.updatePosition = true;
+                }
             }
+          
         }
 
     }
@@ -294,32 +298,36 @@ public class EnemyNavigation : MonoBehaviour
 
         walkingSpeed = 3f;
         //check if we're close to the destination.
-        if (isTravel && cAgent.remainingDistance <= 1.0f)
+        if(cAgent.isOnNavMesh)
         {
-            isTravel = false;
-            //wait?
+            if (isTravel && cAgent.remainingDistance <= 1.0f)
+            {
+                isTravel = false;
+                //wait?
+                if (isWaiting)
+                {
+                    //isWaiting = false;
+                    StartCoroutine(idleTime());
+                }
+                else
+                {
+                    ChangePatrolPoint();
+                    SetDestination();
+                    isWaiting = (Random.value > 0.5f);
+                }
+            }
+
+            //normal wait checking
             if (isWaiting)
             {
-                //isWaiting = false;
-                StartCoroutine(idleTime());
-            }
-            else
-            {
+                //Debug.Log("waiting");
                 ChangePatrolPoint();
                 SetDestination();
+                StartCoroutine(idleTime());
                 isWaiting = (Random.value > 0.5f);
             }
         }
-
-        //normal wait checking
-        if (isWaiting)
-        {
-            //Debug.Log("waiting");
-            ChangePatrolPoint();
-            SetDestination();
-            StartCoroutine(idleTime());
-            isWaiting = (Random.value > 0.5f);
-        }
+      
     }
 
     //unused
@@ -510,13 +518,17 @@ public class EnemyNavigation : MonoBehaviour
     #region HELPER_METHOD 
     //set the destination of the enemy wizard
     private void SetDestination()
-    {
-        if (patrolPoint != null)
+    {   
+        if(cAgent.isOnNavMesh)
         {
-            targetVector = patrolPoint[navCurrentPoint].transform.position;
-            cAgent.SetDestination(targetVector);
-            isTravel = true;
+            if (patrolPoint != null)
+            {
+                targetVector = patrolPoint[navCurrentPoint].transform.position;
+                cAgent.SetDestination(targetVector);
+                isTravel = true;
+            }
         }
+       
 
     }
 

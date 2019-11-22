@@ -6,7 +6,6 @@ public class EnemyAiActivate : MonoBehaviour
 
 {
 
-    //public LevelGenerator builder;
     public GameObject room;
     //public GameObject enemiesGroup;
     public List<GameObject> enemies;
@@ -18,11 +17,16 @@ public class EnemyAiActivate : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //builder.GetComponent<LevelGenerator>();
         room = GameObject.FindGameObjectWithTag("levelbuilder");
-        gen =  room.GetComponent<LevelGenerator>();
+        if(room != null)
+        {
+            gen = room.GetComponent<LevelGenerator>();
+        }
+        else
+        {
+            Debug.Log("No spawning");
+        }
         player = GameObject.FindGameObjectWithTag("Player");
-
         enemies.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         
     }
@@ -41,7 +45,7 @@ public class EnemyAiActivate : MonoBehaviour
         foreach (GameObject child in enemies)
         {
             //if (builder.isDone)
-            if (gen.isDone)
+            if (gen.isDone && room != null)
             {
                 if (child != null )
                 {   
@@ -58,6 +62,20 @@ public class EnemyAiActivate : MonoBehaviour
                     }
                 }
             }
+            else if (child != null && room == null)             
+             {
+                    //spawn when player is close to enemies
+                    if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
+                    {
+                        child.gameObject.SetActive(true);
+                    }
+
+                    else
+                    {
+                        child.gameObject.SetActive(false);
+
+                    }
+             }
         }
         
     }
