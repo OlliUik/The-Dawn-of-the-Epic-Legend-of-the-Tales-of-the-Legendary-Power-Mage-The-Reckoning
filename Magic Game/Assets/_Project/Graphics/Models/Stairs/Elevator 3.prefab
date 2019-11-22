@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472348751637924394}
-  - component: {fileID: 3231004847952318889}
+  - component: {fileID: 6698680608594237450}
   m_Layer: 0
   m_Name: Elevator 3
   m_TagString: Untagged
@@ -35,7 +35,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3231004847952318889
+--- !u!114 &6698680608594237450
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,13 +44,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4174268004704835466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fe8651648f3262449ae9e6d6ac75f9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 70ee1209c71bdc84c81441ba1ae42a8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movingObject: {fileID: 0}
-  target: {x: 0, y: 0, z: 0}
-  speedDiv: 0
-  waitingTime: 0
+  movingObject: {fileID: 472348751637924394}
+  target: {fileID: 0}
+  speedDiv: 20
+  waitingTime: 5
 --- !u!1001 &3034863944620527030
 PrefabInstance:
   m_ObjectHideFlags: 0

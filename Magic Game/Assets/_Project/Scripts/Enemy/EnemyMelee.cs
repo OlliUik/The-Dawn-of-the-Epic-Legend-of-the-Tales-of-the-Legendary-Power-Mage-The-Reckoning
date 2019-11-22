@@ -161,16 +161,19 @@ public class EnemyMelee : EnemyCore
         base.Update();
 
         // randomAttack = Random.Range(0, 3);
-        if (cNavigation.cAgent.isStopped)
+        if(cNavigation.cAgent.isOnNavMesh)
         {
-            animator.SetBool("isIdle", true);
-            animator.SetBool("isWalking", false);
-            animator.SetBool("isAttack", false);
-        }
-        else if (!cNavigation.cAgent.isStopped)
-        {
-            animator.SetBool("isIdle", false);
-            animator.SetBool("isWalking", true);
+            if (cNavigation.cAgent.isStopped)
+            {
+                animator.SetBool("isIdle", true);
+                animator.SetBool("isWalking", false);
+                animator.SetBool("isAttack", false);
+            }
+            else if (!cNavigation.cAgent.isStopped)
+            {
+                animator.SetBool("isIdle", false);
+                animator.SetBool("isWalking", true);
+            }
         }
     }
 
