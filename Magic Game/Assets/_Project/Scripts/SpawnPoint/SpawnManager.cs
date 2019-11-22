@@ -22,7 +22,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public List<GameObject> spawnPoints = new List<GameObject>();
+    private List<GameObject> spawnPoints = new List<GameObject>();
     public Wave[] waves;
     private int nextWave = 0;
     [SerializeField] private float timeBetweenWaves = 5f;
@@ -42,7 +42,10 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float increaseHealth = 0.2f;
     public float increasedStat = 1.0f;
     [SerializeField] private float distance = 0.0f;
+    [SerializeField] private float spawnDistanceLimit = 100.0f;
+
     public List<EnemyCore> enemies;
+    public List<GameObject> closeSpawn;
     private GameObject player = null;
     public LevelGenerator gen;
     private bool gotSpawnPoint = false;
@@ -88,8 +91,16 @@ public class SpawnManager : MonoBehaviour
         else
         {
             if (!gotSpawnPoint && gen.isDone)
-            {
+            {   
+                
                 spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
+                foreach(GameObject child in spawnPoints)
+                {
+                    if((Vector3.Distance(transform.transform.position, child.transform.position) < spawnDistanceLimit))
+                    {
+                        closeSpawn.Add(child.gameObject);
+                    }
+                }
                 gotSpawnPoint = true;
 
                 if (spawnPoints.Count == 0)
@@ -175,6 +186,7 @@ public class SpawnManager : MonoBehaviour
 
     }
 
+
     void checkPlayerDistance(EnemyCore child)
     {
         //Debug.Log(Vector3.Distance(player.transform.position, child.transform.position));
@@ -186,7 +198,7 @@ public class SpawnManager : MonoBehaviour
             child.gameObject.GetComponent<EnemyNavigation>().enabled = true;
             child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = true;
             child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = true;
-            child.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
+            foreach (SkinnedMeshRenderer render in child.GetComponentsInChildren<SkinnedMeshRenderer>()) { render.enabled = true; }
 
         }
 
@@ -195,7 +207,7 @@ public class SpawnManager : MonoBehaviour
             //Debug.Log(child.gameObject.name + " should be disabled");
             child.gameObject.GetComponent<NavMeshAgent>().enabled = false;
             child.gameObject.GetComponent<EnemyNavigation>().enabled = false;
-            child.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+            foreach (SkinnedMeshRenderer render in child.GetComponentsInChildren<SkinnedMeshRenderer>()) { render.enabled = false; }
             child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = false;
             child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = false;
             child.enabled = false;
@@ -236,7 +248,7 @@ public class SpawnManager : MonoBehaviour
     {
         int randomRange = Random.Range(0, _enemy.Length);
         Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
-        GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
+        GameObject spawnPoint = closeSpawn[Random.Range(0, closeSpawn.Count)];
         GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
         Health tempHealth = baddies.GetComponent<Health>();
         if (tempHealth != null)
@@ -265,5 +277,15 @@ public class SpawnManager : MonoBehaviour
         {
             nextWave++;
         }
+    }
+
+
+    public virtual void OnDrawGizmos()
+    {
+
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, spawnDistanceLimit);
+
     }
 }

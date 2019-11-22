@@ -118,14 +118,6 @@ public class EnemyMelee : EnemyCore
 
                 else if (randomAttack == 2)
                 {
-                    /*
-                    animator.SetInteger("meleeIndex", randomAttack);
-                    yield return new WaitForSeconds(0.3f);
-                    foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
-                    yield return new WaitForSeconds(0.8f);
-                    foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = false; }
-                    isAnimationAttacking = false;
-                    */
                     animator.SetInteger("meleeIndex", randomAttack);
                     yield return new WaitForSeconds(0.01f);
                     foreach (BoxCollider col in hammer.GetComponents<BoxCollider>()) { col.enabled = true; }
