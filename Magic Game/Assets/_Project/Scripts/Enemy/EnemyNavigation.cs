@@ -365,13 +365,16 @@ public class EnemyNavigation : MonoBehaviour
     //enemy set the target to player.
     void AIAlerted()
     {
-        cAgent.isStopped = false;
-        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.isStopped = false;
+            cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        }
     }
 
     //enemy will walk randomly.
     void AIParanoid()
-    {
+    {   
         if (paranoidTimer <= 0.0f)
         {
             paranoidTimer = paranoidMoveInterval;
@@ -381,7 +384,10 @@ public class EnemyNavigation : MonoBehaviour
             randomPosition.y = 0.0f;
             randomPosition.z = Random.Range(-1.0f, 1.0f);
 
-            cAgent.SetDestination(transform.position + randomPosition);
+            if(cAgent.isOnNavMesh)
+            {
+                cAgent.SetDestination(transform.position + randomPosition);
+            }
         }
         else
         {
@@ -409,8 +415,10 @@ public class EnemyNavigation : MonoBehaviour
         //        //cEnemyCore.currentState = EnemyCore.EState.PARANOID;
         //    }
         //}
-
-        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        }
 
         if (navErrorTimer < 3.0f && cAgent.velocity.sqrMagnitude < 1.0f)
         {

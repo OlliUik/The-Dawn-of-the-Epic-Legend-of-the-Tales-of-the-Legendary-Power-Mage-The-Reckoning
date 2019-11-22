@@ -125,6 +125,7 @@ public class SpawnManager : MonoBehaviour
                                     }
                                     else
                                     {
+                                        enemies.Remove(child);
                                         Debug.Log("No enemy");
                                     }
                                 }
@@ -136,6 +137,7 @@ public class SpawnManager : MonoBehaviour
                             }
                             else
                             {
+                                enemies.Remove(child);
                                 Debug.Log("No enemy");
                             }
                             
@@ -206,7 +208,8 @@ public class SpawnManager : MonoBehaviour
         if (searchCountdown <= 0f)
         {
             searchCountdown = 1f;
-            if (GameObject.FindGameObjectWithTag("Enemy") == null)
+            //if (GameObject.FindGameObjectWithTag("Enemy") == null)
+            if(enemies.Count == 0)
             {
                 return false;
             }

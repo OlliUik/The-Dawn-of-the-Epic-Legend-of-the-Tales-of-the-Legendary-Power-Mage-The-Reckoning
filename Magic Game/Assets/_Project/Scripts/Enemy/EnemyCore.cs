@@ -104,6 +104,7 @@ public class EnemyCore : MonoBehaviour
     protected float castStandStillTimer = 0.0f;
     protected float ragdollSleepTimer = 0.0f;
 
+    public bool isDead;
     public GameObject deathAudioPrefab; //audio
 
     #endregion
@@ -356,7 +357,7 @@ public class EnemyCore : MonoBehaviour
         animator.enabled = false;
         animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false, true);
         animator.transform.parent = null;
-
+        isDead = true;
         Destroy(this.gameObject);
     }
 
