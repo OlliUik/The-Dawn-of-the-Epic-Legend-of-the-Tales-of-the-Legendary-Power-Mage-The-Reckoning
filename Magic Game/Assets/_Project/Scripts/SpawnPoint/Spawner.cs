@@ -11,8 +11,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float distance = 0.0f;
     private GameObject player = null;
 
-
-
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");

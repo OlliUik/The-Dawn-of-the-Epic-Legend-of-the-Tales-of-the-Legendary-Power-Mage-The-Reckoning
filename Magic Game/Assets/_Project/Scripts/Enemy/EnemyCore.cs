@@ -285,14 +285,14 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    public virtual void OnDeath()
+    public void OnDeathScore()
     {
         roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
 
         //Score UI Notifications
 
         if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted)
-        { 
+        {
             GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Roasted!";
         }
         if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().cooleddown)
@@ -343,6 +343,11 @@ public class EnemyCore : MonoBehaviour
         ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCombo.scoreCombo.combo++;
         Instantiate(deathAudioPrefab, new Vector3(0, 0, 0), Quaternion.identity); //audio
+    }
+
+    public virtual void OnDeath()
+    {
+        OnDeathScore();
 
         currentState = EState.DISABLED;
         GlobalVariables.teamBadBoys.Remove(this.gameObject);
