@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SpellIconSwitcher : MonoBehaviour
 {
-    [SerializeField] private Image[] slots;
+    [SerializeField] private Image[] slots = null;
 
     // Start is called before the first frame update
     //void Start()

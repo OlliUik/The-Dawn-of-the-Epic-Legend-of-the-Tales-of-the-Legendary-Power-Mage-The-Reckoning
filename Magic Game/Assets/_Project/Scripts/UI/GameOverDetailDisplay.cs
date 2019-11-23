@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameOverDetailDisplay : MonoBehaviour    
 {
-    [SerializeField] private Text totalScore;
+    [SerializeField] private Text totalScore = null;
 
     // Start is called before the first frame update
     void Start()

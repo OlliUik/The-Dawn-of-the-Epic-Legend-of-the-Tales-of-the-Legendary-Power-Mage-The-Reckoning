@@ -43,11 +43,11 @@ public class Beam : Spell
     private bool colliding                          = false;
     private bool collEndCalled                      = false;
 
-    [SerializeField] private GameObject DefaultParticlePrefab;
-    [SerializeField] private GameObject FireElementParticlePrefab;
-    [SerializeField] private GameObject WaterElementParticlePrefab;
-    [SerializeField] private GameObject IceElementParticlePrefab;
-    [SerializeField] private GameObject ElectricElementParticlePrefab;
+    [SerializeField] private GameObject DefaultParticlePrefab = null;
+    [SerializeField] private GameObject FireElementParticlePrefab = null;
+    [SerializeField] private GameObject WaterElementParticlePrefab = null;
+    [SerializeField] private GameObject IceElementParticlePrefab = null;
+    [SerializeField] private GameObject ElectricElementParticlePrefab = null;
 
     #endregion
 

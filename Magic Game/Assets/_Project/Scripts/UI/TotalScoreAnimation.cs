@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class TotalScoreAnimation : MonoBehaviour, AnimationElement
 {
-    [SerializeField] private Text scoreText;
+    [SerializeField] private Text scoreText = null;
     [SerializeField] private float maxTime = 3;
-    private float score;
-    private float counter;
-    private int dc;
+    private float score = 0.0f;
+    private float counter = 0.0f;
+    private int dc = 0;
 
     // Start is called before the first frame update
     void Start()

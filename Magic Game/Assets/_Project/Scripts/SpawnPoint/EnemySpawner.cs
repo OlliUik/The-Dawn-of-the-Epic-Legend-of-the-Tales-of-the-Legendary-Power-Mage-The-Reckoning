@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> enemies;
-    [SerializeField] private float frequency;
-    private float defaultFrequency = 1f;
+    [SerializeField] private List<GameObject> enemies = null;
+    [SerializeField] private float frequency = 1.0f;
+    private float defaultFrequency = 1.0f;
 
     void Start()
     {

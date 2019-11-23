@@ -6,7 +6,7 @@ using UnityEngine;
 public class TeleportSelfModifier : SpellScriptableModifier
 {
 
-    [SerializeField] private GameObject teleportParticles;
+    [SerializeField] private GameObject teleportParticles = null;
 
     public override void AddSpellModifier(Spell spell)
     {

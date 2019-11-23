@@ -7,9 +7,9 @@ public class ElectricModifier : SpellScriptableModifier
 {
 
     [SerializeField] private float duration = 10f;
-    [SerializeField] private GameObject graphics;
-    [SerializeField] private float extraManaCost;
-    [SerializeField] private float extraMoistureDamage;
+    [SerializeField] private GameObject graphics = null;
+    [SerializeField] private float extraManaCost = 0.0f;
+    [SerializeField] private float extraMoistureDamage = 0.0f;
 
     public override void AddSpellModifier(Spell spell)
     {

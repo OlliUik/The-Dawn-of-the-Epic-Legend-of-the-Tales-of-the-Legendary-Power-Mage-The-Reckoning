@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour  
 {
-    [SerializeField] private List<GameObject> enemies;
-    [SerializeField] private float frequency;
-    private float defaultFrequency = 1f;
-    protected float debugDrawRadius = 1.0F;
+    [SerializeField] private List<GameObject> enemies = null;
+    [SerializeField] private float frequency = 1.0f;
+    private float defaultFrequency = 1.0f;
+    protected float debugDrawRadius = 1.0f;
     [SerializeField] private float distance = 0.0f;
     private GameObject player = null;
 

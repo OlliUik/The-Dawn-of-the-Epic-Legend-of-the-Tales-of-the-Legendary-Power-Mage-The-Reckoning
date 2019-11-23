@@ -27,11 +27,11 @@ public class BossLizardKing : EnemyMagicRanged
     }
 
     [Header("Boss -> Behaviour")]
-    [SerializeField] private BossAttackPattern defaultPattern;
-    [SerializeField] private PatternPreference[] patternPreferences;
+    [SerializeField] private BossAttackPattern defaultPattern = null;
+    [SerializeField] private PatternPreference[] patternPreferences = null;
     //[SerializeField] private BossAttackPattern[] patterns;
 
-    private BossAttackPattern currentPattern;
+    private BossAttackPattern currentPattern = null;
     private float patternTimer = 0.0f;
     private Vector2 currentPatternRange = Vector2.one;
 

@@ -7,7 +7,7 @@ public class TriggerActivateEnemyAI : MonoBehaviour
 {
     [SerializeField] private bool disableAfterTrigger = true;
     [SerializeField] private EnemyCore enemy = null;
-    [SerializeField] private EnemyCore.EState stateAfterTrigger = EnemyCore.EState.ATTACK;
+    //[SerializeField] private EnemyCore.EState stateAfterTrigger = EnemyCore.EState.ATTACK;
 
     void OnTriggerEnter(Collider other)
     {

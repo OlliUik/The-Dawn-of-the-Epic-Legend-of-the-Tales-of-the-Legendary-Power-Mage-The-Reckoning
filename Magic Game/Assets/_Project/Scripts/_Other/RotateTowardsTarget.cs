@@ -6,7 +6,7 @@ public class RotateTowardsTarget : MonoBehaviour
 {
     public Transform targetTransform;
 
-    [SerializeField] private Transform headTransform;
+    [SerializeField] private Transform headTransform = null;
     [SerializeField] private Vector3 offset = new Vector3(-90.0f, 90.0f, 90.0f);
     [SerializeField] private float rotationSpeed = 10.0f;
     [SerializeField] private Vector2[] rotationLimit = new Vector2[3];

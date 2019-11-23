@@ -32,18 +32,18 @@ public class EnemyNavigation : MonoBehaviour
 
     //Probality of waiting on a node.
     [SerializeField] float waitProbalitiy = 0.2f;
-
+    
     //List of groups of patrol point. You can turn delete SerializeField . I just use them for testing.
-    [SerializeField]  List<GameObject> patrolGroup;
+    [SerializeField]  List<GameObject> patrolGroup = null;
     //List of patrol points. You can turn delete SerializeField . I just use them for testing.
-    [SerializeField]  List<Waypoint> patrolPoint;
+    [SerializeField]  List<Waypoint> patrolPoint = null;
 
     [SerializeField] private Rigidbody rb;  
 
     [Header("Jumpforce")]
-    [SerializeField]
-    float x, y, z;
-
+    [SerializeField] private float x = 0.0f;
+    [SerializeField] private float y = 0.0f;
+    [SerializeField] private float z = 0.0f;
 
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
@@ -55,8 +55,8 @@ public class EnemyNavigation : MonoBehaviour
     private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
 
-    [SerializeField]
-    float min, max;
+    [SerializeField] private float min = 0.0f;
+    [SerializeField] private float max = 0.0f;
 
     //patrol's variables
     int navCurrentPoint;

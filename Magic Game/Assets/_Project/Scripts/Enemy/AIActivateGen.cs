@@ -6,11 +6,11 @@ public class AIActivateGen : MonoBehaviour
 
 {
 
-    public LevelGenerator builder;
+    public LevelGenerator builder = null;
     //public SetActiveRoom room;
-    public List<EnemyMagicRanged> enemies;
+    public List<EnemyMagicRanged> enemies = null;
 
-    [SerializeField] GameObject enemiesGroup;
+    [SerializeField] GameObject enemiesGroup = null;
     [SerializeField] private float distance = 0.0f;
 
 

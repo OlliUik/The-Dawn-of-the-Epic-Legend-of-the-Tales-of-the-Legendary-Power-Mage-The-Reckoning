@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class RankDetailDisplay : MonoBehaviour
 {
-    [SerializeField] private Text rankText;
-    private ScoreSystem scoreSystem;
+    [SerializeField] private Text rankText = null;
+    private ScoreSystem scoreSystem = null;
 
     // Start is called before the first frame update
     void Start()

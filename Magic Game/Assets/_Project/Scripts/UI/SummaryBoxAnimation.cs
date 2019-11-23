@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SummaryBoxAnimation : MonoBehaviour, AnimationElement
 {
-    [SerializeField] private GameObject[] fadedGroup;
+    [SerializeField] private GameObject[] fadedGroup = null;
 
     // Start is called before the first frame update
     void Start()
