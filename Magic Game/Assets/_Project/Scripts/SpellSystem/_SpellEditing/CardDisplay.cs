@@ -27,6 +27,11 @@ public class CardDisplay : MonoBehaviour
         nameText.text =  "" + card.cardName;
         descriptionText.text =  "" + card.cardDescription;
 
+        if (card.cardArtwork != null)
+        {
+            artworkImage.sprite = card.cardArtwork;
+        }
+
         // move spell to the correct position
         GetComponent<CardAnimation>().AnimateCard(startPosition, endPosition);
     }
@@ -49,6 +54,11 @@ public class CardDisplay : MonoBehaviour
         Vector3 endScale = Vector3.one;
 
         transform.localScale = Vector3.Lerp(startScale, endScale, Time.unscaledDeltaTime); // only runs this lerp once
+    }
+
+    public void HighlightCard()
+    {
+        editorController.HighlightCard(gameObject);
     }
 
     public void ChooseCard()
@@ -99,10 +109,9 @@ public class CardDisplay : MonoBehaviour
         {
             print("Spell needs to be selected first");
         }
-
     }
 
-    private bool ValidateCard()
+    public bool ValidateCard()
     {
         if(card.compatibleSpellTypes.Contains(SpellType.GENERIC))
         {

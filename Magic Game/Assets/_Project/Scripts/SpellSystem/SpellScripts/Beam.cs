@@ -213,7 +213,7 @@ public class Beam : Spell
         UpdateBeam(startPos, direction);
 
         // stop casting here
-        if((Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0)) || (isMaster && spellbook.mana.mana <= 0f))
+        if((Input.GetMouseButtonUp(1) || !Input.GetMouseButton(1)) || (isMaster && spellbook.mana.mana <= 0f))
         {
             CastingEnd();
         

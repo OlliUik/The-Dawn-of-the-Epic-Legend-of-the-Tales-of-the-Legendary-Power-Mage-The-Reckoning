@@ -168,12 +168,12 @@ public class PlayerCore : MonoBehaviour
                                 //Determine spell index
                                 if (Input.GetAxis("Xbox_Fire1") > 0.5f)
                                 {
-                                    activeSpellIndex = 1;
+                                    activeSpellIndex = 0;
                                 }
 
                                 if (Input.GetAxis("Xbox_Fire2") > 0.5f)
                                 {
-                                    activeSpellIndex = 0;
+                                    activeSpellIndex = 1;
                                 }
 
                                 if (Input.GetButtonDown("Xbox_Fire3"))
@@ -205,12 +205,12 @@ public class PlayerCore : MonoBehaviour
                                 //Determine spell index
                                 if (Input.GetAxis("PS_Fire1") > 0)
                                 {
-                                    activeSpellIndex = 1;
+                                    activeSpellIndex = 0;
                                 }
 
                                 if (Input.GetAxis("PS_Fire2") > 0)
                                 {
-                                    activeSpellIndex = 0;
+                                    activeSpellIndex = 1;
                                 }
 
                                 if (Input.GetButtonDown("PS_Fire3"))
@@ -242,12 +242,12 @@ public class PlayerCore : MonoBehaviour
                                 //Determine spell index
                                 if (Input.GetButtonDown("Fire1"))
                                 {
-                                    activeSpellIndex = 1;
+                                    activeSpellIndex = 0;
                                 }
 
                                 if (Input.GetButtonDown("Fire2"))
                                 {
-                                    activeSpellIndex = 0;
+                                    activeSpellIndex = 1;
                                 }
 
                                 if (Input.GetButtonDown("Fire3"))

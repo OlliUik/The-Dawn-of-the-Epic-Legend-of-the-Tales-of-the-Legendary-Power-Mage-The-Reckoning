@@ -20,10 +20,14 @@ public class SpellEditorController : MonoBehaviour
     public List<Card> allCards                      = new List<Card>();
     public GameObject cardPrefab                    = null;
     public Transform spawnPosition                  = null;
+    public Transform selectedPosition               = null;
     public Transform[] availableCardPositions       = new Transform[3];
-    public GameObject[] currentCards               = new GameObject[3];
+    public GameObject[] currentCards                = new GameObject[3];
+    public GameObject[] hideWhenCardSelected        = null;
+    public GameObject[] showWhenCardSelected        = null;
 
-
+    private GameObject selectedCard                 = null;
+    
     private void Awake()
     {
         GameObject player = FindObjectOfType<PlayerCore>().gameObject;
@@ -33,6 +37,16 @@ public class SpellEditorController : MonoBehaviour
 
     void Start()
     {
+        foreach (GameObject obj in hideWhenCardSelected)
+        {
+            obj.SetActive(true);
+        }
+
+        foreach (GameObject obj in showWhenCardSelected)
+        {
+            obj.SetActive(false);
+        }
+
         // testing purposes
         //StartCoroutine(GenerateCards());
 
@@ -68,13 +82,74 @@ public class SpellEditorController : MonoBehaviour
 
     public void HighlightSpellSlot(GameObject go)
     {
-        if(highlighedSpell != null)
-        {
-            highlighedSpell.GetComponent<Image>().color = Color.white;
-        }
+        //if (highlighedSpell != null)
+        //{
+        //    highlighedSpell.GetComponent<Image>().color = Color.white;
+        //}
 
         highlighedSpell = go.GetComponent<SpellSlot>();
-        highlighedSpell.GetComponent<Image>().color = Color.red;
+        //highlighedSpell.GetComponent<Image>().color = Color.red;
+
+        if (selectedCard.GetComponent<CardDisplay>().ValidateCard())
+        {
+            selectedCard.GetComponent<CardDisplay>().ChooseCard();
+            foreach (GameObject obj in hideWhenCardSelected)
+            {
+                obj.SetActive(true);
+            }
+
+            foreach (GameObject obj in showWhenCardSelected)
+            {
+                obj.SetActive(false);
+            }
+        }
+    }
+
+    public void HighlightCard(GameObject card)
+    {
+        if (selectedCard == null)
+        {
+            foreach (GameObject obj in hideWhenCardSelected)
+            {
+                obj.SetActive(false);
+            }
+
+            foreach (GameObject obj in showWhenCardSelected)
+            {
+                obj.SetActive(true);
+            }
+
+            selectedCard = card;
+            foreach (GameObject go in currentCards)
+            {
+                if (go == card)
+                {
+                    go.GetComponent<CardAnimation>().AnimateCard(go.transform.localPosition, selectedPosition.localPosition, Vector3.one, Vector3.one * 0.5f);
+                }
+                else
+                {
+                    go.GetComponent<CardAnimation>().AnimateCard(go.transform.localPosition, spawnPosition.localPosition, Vector3.one, Vector3.zero);
+                }
+            }
+        }
+        else
+        {
+            foreach (GameObject obj in hideWhenCardSelected)
+            {
+                obj.SetActive(true);
+            }
+
+            foreach (GameObject obj in showWhenCardSelected)
+            {
+                obj.SetActive(false);
+            }
+
+            selectedCard = null;
+            for (int i = 0; i < currentCards.Length; i++)
+            {
+                currentCards[i].GetComponent<CardAnimation>().AnimateCard(currentCards[i].transform.localPosition, availableCardPositions[i].localPosition, currentCards[i].transform.localScale, Vector3.one);
+            }
+        }
     }
 
     public void DestroyCards()

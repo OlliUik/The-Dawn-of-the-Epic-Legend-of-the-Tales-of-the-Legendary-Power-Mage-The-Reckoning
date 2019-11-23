@@ -12,6 +12,8 @@ public class Card : ScriptableObject
     [TextArea]
     public string cardDescription                       = null;
 
+    public Sprite cardArtwork                           = null;
+
     // Important 3
     public List<CastRequirement> castRequirements       = new List<CastRequirement>();
     public List<SpellBalance> balances                  = new List<SpellBalance>();
