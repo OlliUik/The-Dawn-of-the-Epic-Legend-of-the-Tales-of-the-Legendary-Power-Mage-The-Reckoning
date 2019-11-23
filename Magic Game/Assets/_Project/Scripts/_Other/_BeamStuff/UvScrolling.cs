@@ -5,11 +5,11 @@ using UnityEngine;
 public class UvScrolling : MonoBehaviour
 {
 
-    [SerializeField] private Material scrollableMaterial;
+    [SerializeField] private Material scrollableMaterial = null;
     [SerializeField] private float scrollSpeed = 8f;
     [SerializeField] private Vector2 direction = new Vector2(1, 0);
 
-    private Vector2 currentOffset;
+    private Vector2 currentOffset = Vector2.zero;
 
     void Start()
     {

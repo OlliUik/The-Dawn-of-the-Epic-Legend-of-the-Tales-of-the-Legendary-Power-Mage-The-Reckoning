@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> enemies;
-    [SerializeField] private float frequency;
-    private float defaultFrequency = 1f;
+    [SerializeField] private List<GameObject> enemies = null;
+    [SerializeField] private float frequency = 1.0f;
+    private float defaultFrequency = 1.0f;
 
     void Start()
     {
@@ -16,10 +16,10 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogWarning("Your inputted frequency value is too low. Now using default value which is 1.");
         }
 
-        StartCoroutine(SpawnEnememy());
+        StartCoroutine(SpawnEnemy());
     }
 
-    IEnumerator SpawnEnememy()
+    IEnumerator SpawnEnemy()
     {
         while (true)
         {

@@ -7,8 +7,8 @@ public class MoisturizeModifier : SpellScriptableModifier
 {
 
     [SerializeField] private float duration = 10f;
-    [SerializeField] private GameObject graphics;
-    [SerializeField] private GameObject waterPoolPrefab;
+    [SerializeField] private GameObject graphics = null;
+    [SerializeField] private GameObject waterPoolPrefab = null;
     [SerializeField] private float size = 1.0f;
 
     // When spell is casted this gets called --> Add this effect to the spell

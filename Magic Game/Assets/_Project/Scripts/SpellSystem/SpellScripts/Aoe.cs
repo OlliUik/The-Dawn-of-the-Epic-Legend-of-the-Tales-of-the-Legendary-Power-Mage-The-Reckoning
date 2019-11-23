@@ -74,6 +74,7 @@ public class Aoe : Spell
         var auraArea = Physics.OverlapSphere(transform.position, radius);
         foreach (var objectHit in auraArea)
         {
+            
             // check if objectHit is enemy
             if (objectHit.transform.tag != caster.tag)
             {
@@ -81,13 +82,10 @@ public class Aoe : Spell
                 if (health != null)
                 {
                     base.DealDamage(health, (damagePerSecond * Time.deltaTime));
+                    if(objectHit.GetComponent<SpellTypeAmount>() != null) objectHit.GetComponent<SpellTypeAmount>().aura = true; //ScoreUI
                 }
 
-                var effectManager = objectHit.GetComponent<StatusEffectManager>();
-                if (effectManager != null)
-                {
-                    base.ApplyStatusEffects(effectManager, statusEffects);
-                }
+                addStatusEffect(statusEffects, objectHit);
 
                 // apply all modifiers here to the enemy inside radius
                 foreach (SpellModifier modifier in modifiers)
@@ -95,6 +93,24 @@ public class Aoe : Spell
                     modifier.AoeCollide(objectHit.gameObject);
                 }
             }
+        }
+    }
+
+    private void addStatusEffect(List<StatusEffect> statusEffects, Collider objectHit)
+    {
+        
+        List<StatusEffect> temp = new List<StatusEffect>();
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            temp.Add(statusEffect.Clone());
+            //Debug.Log(statusEffect.name + " cloned to AoE");
+        }
+
+        var effectManager = objectHit.GetComponent<StatusEffectManager>();
+        if (effectManager != null)
+        {
+            //Debug.Log("AoE Hit " + effectManager.gameObject.name);
+            base.ApplyStatusEffects(effectManager, temp);
         }
     }
 

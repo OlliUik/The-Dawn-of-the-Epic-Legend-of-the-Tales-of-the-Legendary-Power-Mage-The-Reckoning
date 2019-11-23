@@ -13,8 +13,6 @@ public class Meteor : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        bool hitLiving = false;
-
         // DEAL DAMAGE
         Collider[] hitObjects = Physics.OverlapSphere(transform.position, miniAoeRadius);
         foreach (Collider go in hitObjects)
@@ -22,7 +20,6 @@ public class Meteor : MonoBehaviour
             var health = go.gameObject.GetComponent<Health>();
             if (health != null)
             {
-                hitLiving = true;
                 health.Hurt(damageAmount, true);
             }
         }

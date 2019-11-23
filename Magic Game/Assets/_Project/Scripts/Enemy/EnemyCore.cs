@@ -85,7 +85,7 @@ public class EnemyCore : MonoBehaviour
     [SerializeField] protected bool moveWhileCasting = false;
     [SerializeField] protected float standStillAfterCasting = 4.0f;
     [SerializeField] protected int attackAnimation = 0; //Check the animator controller to find out the desired number!
-    [SerializeField] protected Animator animator = null;
+    [SerializeField] public Animator animator = null;
 
     [Header("Core -> Ragdoll")]
     [SerializeField] protected Rigidbody ragdoll = null;
@@ -103,6 +103,9 @@ public class EnemyCore : MonoBehaviour
     protected float paranoidTimer = 0.0f;
     protected float castStandStillTimer = 0.0f;
     protected float ragdollSleepTimer = 0.0f;
+
+    public bool isDead;
+    public GameObject deathAudioPrefab; //audio
 
     #endregion
 
@@ -175,10 +178,12 @@ public class EnemyCore : MonoBehaviour
             if (other.GetComponent<TriggerHurt>().killInstantly)
             {
                 cHealth.Kill();
+                GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown = true;
             }
             else
             {
                 cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
+                GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown = true;
             }
         }
     }
@@ -281,15 +286,55 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
-    public virtual void OnDeath()
+    public void OnDeathScore()
     {
         roundedScore = Mathf.RoundToInt(score * ScoreSystem.scoreSystem.multiplier);
+
+        //Score UI Notifications
+
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().roasted)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Roasted!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().cooleddown)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Cooled Down!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().flooded)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Flooded!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().thunderstruck)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Thunderstruck!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().suckeddry)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Sucked Dry!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().blownaway)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Blown away!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().smackeddown)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Smacked down!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().doubletrouble)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Double Trouble!";
+        }
+        if (GameObject.Find("ScoreUI").GetComponent<ScoreUI>().tripletrouble)
+        {
+            GameObject.Find("ScoreUI").GetComponent<ScoreUI>().notificationString = "Triple Trouble!";
+        }
+
+        //Score Multipliers
 
         if (hasStatusEffect)
         {
             ScoreCalculator.scoreCalc.CountScore(score);
         }
-
         else
         {
             ScoreSystem.scoreSystem.addedScore = roundedScore;
@@ -298,6 +343,12 @@ public class EnemyCore : MonoBehaviour
 
         ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCombo.scoreCombo.combo++;
+        Instantiate(deathAudioPrefab, new Vector3(0, 0, 0), Quaternion.identity); //audio
+    }
+
+    public virtual void OnDeath()
+    {
+        OnDeathScore();
 
         currentState = EState.DISABLED;
         GlobalVariables.teamBadBoys.Remove(this.gameObject);
@@ -306,7 +357,7 @@ public class EnemyCore : MonoBehaviour
         animator.enabled = false;
         animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false, true);
         animator.transform.parent = null;
-
+        isDead = true;
         Destroy(this.gameObject);
     }
 

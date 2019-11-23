@@ -43,6 +43,9 @@ public static class QualityManager
 
     public static void ApplySettings()
     {
+        //Keybinds and sensitivity
+        GlobalVariables.sensitivity = DATA.SENSITIVITY;
+
         //Vsync
         QualitySettings.vSyncCount = DATA.VSYNC_COUNT;
 

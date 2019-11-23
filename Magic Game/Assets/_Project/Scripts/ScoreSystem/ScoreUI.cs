@@ -15,9 +15,9 @@ public class ScoreUI : MonoBehaviour
 
     public Color colorChange = new Color();
 
-    private string scoreString = "Score: {value}";
+    private string scoreString = "{value}";
     private string multiplierString = "Multiplier: {value}x";
-    private string comboString = "Killstreak/combo: {value}";
+    private string comboString = "Killstreak: {value}";
     private string comboTimerString = "{value}";
     private float notificationTimer = 2.0f;
 
@@ -27,6 +27,16 @@ public class ScoreUI : MonoBehaviour
     [SerializeField] private Text comboText = null;
     [SerializeField] private Text comboTimerText = null;
     [SerializeField] private Text notificationText = null;
+
+    public bool roasted;
+    public bool cooleddown;
+    public bool flooded;
+    public bool thunderstruck;
+    public bool suckeddry;
+    public bool smackeddown;
+    public bool blownaway;
+    public bool doubletrouble;
+    public bool tripletrouble;
 
     #endregion
 

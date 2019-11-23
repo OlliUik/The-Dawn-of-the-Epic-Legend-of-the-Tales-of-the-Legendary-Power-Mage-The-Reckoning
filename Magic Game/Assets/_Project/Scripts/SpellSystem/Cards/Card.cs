@@ -12,12 +12,15 @@ public class Card : ScriptableObject
     [TextArea]
     public string cardDescription                       = null;
 
+    public Sprite cardArtwork                           = null;
+
     // Important 3
     public List<CastRequirement> castRequirements       = new List<CastRequirement>();
     public List<SpellBalance> balances                  = new List<SpellBalance>();
     public List<SpellScriptableModifier> modifiers      = new List<SpellScriptableModifier>();
 
-    [Space(10)] // TODO:: HOW TO APPLY ALL GRAPHICS TO SPELL 
+    [Space(10)] // TODO:: HOW TO APPLY ALL GRAPHICS TO SPELL
+    // This is unused since element graphics were added to the spell modifiers itself.
     public GameObject graphicsProjecile                 = null;
     public GameObject graphicsBeam                      = null;
     public GameObject graphicsAoe                       = null;

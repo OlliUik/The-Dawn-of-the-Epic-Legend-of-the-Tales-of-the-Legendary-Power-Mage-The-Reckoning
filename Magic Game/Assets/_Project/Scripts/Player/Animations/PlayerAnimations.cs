@@ -60,6 +60,24 @@ public class PlayerAnimations : MonoBehaviour
         cAnimator.SetFloat("Movement Forward", velocityRotated.y * animationBlendingMultiplier);
         cAnimator.SetFloat("Movement Right", velocityRotated.x * animationBlendingMultiplier);
 
-        cAnimator.SetBool("Is Jumping", !cCharacter.isGrounded);
+        if (!cCharacter.isGrounded)
+        {
+            if (cMovement.bIsWallSliding)
+            {
+                cAnimator.SetFloat("Movement Right", cMovement.wallRightSide ? 1.0f : 0.0f);
+                cAnimator.SetBool("Is Jumping", false);
+                cAnimator.SetBool("Is Wall Running", true);
+            }
+            else
+            {
+                cAnimator.SetBool("Is Jumping", true);
+                cAnimator.SetBool("Is Wall Running", false);
+            }
+        }
+        else
+        {
+            cAnimator.SetBool("Is Jumping", false);
+            cAnimator.SetBool("Is Wall Running", false);
+        }
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class StatusEffectManager : MonoBehaviour
 {
-
     #region Variables
 
     public enum EffectType
@@ -16,6 +15,7 @@ public class StatusEffectManager : MonoBehaviour
         StackingDamage,
         LeechLife,
         Stun,
+        Curse
     };
 
     public List<StatusEffect> affectingEffects = new List<StatusEffect>();
@@ -34,6 +34,7 @@ public class StatusEffectManager : MonoBehaviour
         AppliedEffects.Add(EffectType.StackingDamage, false);
         AppliedEffects.Add(EffectType.LeechLife, false);
         AppliedEffects.Add(EffectType.Stun, false);
+        AppliedEffects.Add(EffectType.Curse, false);
     }
 
     // Loop through all the affecting StatusEffects and call OnTick()
@@ -88,7 +89,5 @@ public class StatusEffectManager : MonoBehaviour
             }
         }
     }
-
     #endregion
-
 }

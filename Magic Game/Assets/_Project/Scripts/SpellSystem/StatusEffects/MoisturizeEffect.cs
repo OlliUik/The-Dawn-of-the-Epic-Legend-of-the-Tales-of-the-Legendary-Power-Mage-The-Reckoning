@@ -8,6 +8,14 @@ public class MoisturizeEffect : StatusEffect
     public GameObject waterPoolPrefab;
     public float size = 1;
 
+    private float timeBetweenTicks = 1.0f;
+    private float timeFromLastRagdoll = 0f;
+
+    public override StatusEffect Clone()
+    {
+        MoisturizeEffect temp = new MoisturizeEffect(duration, graphics, waterPoolPrefab, size);
+        return temp;
+    }
 
     public MoisturizeEffect(float duration, GameObject graphics, GameObject waterPoolPrefab, float size) : base(duration, graphics)
     {
@@ -20,7 +28,7 @@ public class MoisturizeEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
-
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().flooded = true;
         base.OnApply(target, allEffectsInSpell);
 
         endTime = Time.time + duration;
@@ -61,11 +69,40 @@ public class MoisturizeEffect : StatusEffect
                 effectManager.RemoveStatusEffect(effectManager.affectingEffects.Find(x => x.GetType() == typeof(MoisturizeEffect)));
             }
         }
+        if (target.GetComponent<ThunderVariables>() != null)
+        {
+            target.GetComponent<ThunderVariables>().HurtFromMoisture();
+        }
     }
 
     public override void OnLeave()
     {
+        GameObject.Find("ScoreUI").GetComponent<ScoreUI>().flooded = false;
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Moisturize] = false;
         base.OnLeave();
     }
+
+    public override void OnTick()
+    {
+        if (timeFromLastRagdoll > timeBetweenTicks)
+        {
+            RagdollRandom();
+        }
+        else
+        {
+            timeFromLastRagdoll += Time.deltaTime;
+        }
+    }
+
+    public void RagdollRandom()
+    {
+        timeFromLastRagdoll = 0;
+        System.Random r = new System.Random();
+        int ragdollChance = r.Next(0,100);
+        if (ragdollChance > 100 - size*10 )
+        {
+            target.GetComponent<EnemyCore>().EnableRagdoll(true);
+        }
+    }
+
 }

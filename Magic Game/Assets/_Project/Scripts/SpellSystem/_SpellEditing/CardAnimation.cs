@@ -30,6 +30,13 @@ public class CardAnimation : MonoBehaviour
         StartCoroutine(Animation());
     }
 
+    public void AnimateCard(Vector3 startPosition, Vector3 endPosition, Vector3 startScl, Vector3 endScl)
+    {
+        startScale = startScl;
+        endScale = endScl;
+        AnimateCard(startPosition, endPosition);
+    }
+
     IEnumerator Animation()
     {
         Button button = GetComponentInChildren<Button>();

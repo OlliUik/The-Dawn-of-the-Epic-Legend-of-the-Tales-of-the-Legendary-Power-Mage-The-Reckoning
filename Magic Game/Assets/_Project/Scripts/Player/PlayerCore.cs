@@ -36,8 +36,8 @@ public class PlayerCore : MonoBehaviour
     private float ragdollSleepTimer = 0.0f;
     private Vector3 ragdollPrevPosition = Vector3.zero;
     public int activeSpellIndex = 0;
-    public bool openSpellEditingOnStart = false;
 
+    public GameObject physicalDamageAudio;
     #endregion
 
     #region UNITY_DEFAULT_METHODS
@@ -58,9 +58,6 @@ public class PlayerCore : MonoBehaviour
 
     void Start()
     {
-        if(openSpellEditingOnStart)
-            ToggleSpellEditingUI();
-
         canvasManager.ChangeSpell(activeSpellIndex);
 
         //Quaternion spawnRotation = transform.localRotation;
@@ -171,12 +168,12 @@ public class PlayerCore : MonoBehaviour
                                 //Determine spell index
                                 if (Input.GetAxis("Xbox_Fire1") > 0.5f)
                                 {
-                                    activeSpellIndex = 1;
+                                    activeSpellIndex = 0;
                                 }
 
                                 if (Input.GetAxis("Xbox_Fire2") > 0.5f)
                                 {
-                                    activeSpellIndex = 0;
+                                    activeSpellIndex = 1;
                                 }
 
                                 if (Input.GetButtonDown("Xbox_Fire3"))
@@ -208,12 +205,12 @@ public class PlayerCore : MonoBehaviour
                                 //Determine spell index
                                 if (Input.GetAxis("PS_Fire1") > 0)
                                 {
-                                    activeSpellIndex = 1;
+                                    activeSpellIndex = 0;
                                 }
 
                                 if (Input.GetAxis("PS_Fire2") > 0)
                                 {
-                                    activeSpellIndex = 0;
+                                    activeSpellIndex = 1;
                                 }
 
                                 if (Input.GetButtonDown("PS_Fire3"))
@@ -245,12 +242,12 @@ public class PlayerCore : MonoBehaviour
                                 //Determine spell index
                                 if (Input.GetButtonDown("Fire1"))
                                 {
-                                    activeSpellIndex = 1;
+                                    activeSpellIndex = 0;
                                 }
 
                                 if (Input.GetButtonDown("Fire2"))
                                 {
-                                    activeSpellIndex = 0;
+                                    activeSpellIndex = 1;
                                 }
 
                                 if (Input.GetButtonDown("Fire3"))
@@ -332,6 +329,22 @@ public class PlayerCore : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "TriggerKill")
+        {
+            Instantiate(physicalDamageAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio->prefabs
+            if (other.GetComponent<TriggerHurt>().killInstantly)
+            {
+                cHealth.Kill();
+            }
+            else
+            {
+                cHealth.Hurt(other.GetComponent<TriggerHurt>().damage, false);
+            }
+        }
+    }
+
     void OnEnable()
     {
         if (bInputEnabled)
@@ -397,7 +410,7 @@ public class PlayerCore : MonoBehaviour
         ragdollObject.GetComponent<RagdollModifier>().SetKinematic(!b, b);
         ragdollObject.GetComponent<Animator>().enabled = !b;
         ragdollObject.GetComponent<PlayerAnimationHandler>().enabled = !b;
-        
+
         ragdollObject.transform.parent = b ? null : transform;
 
         //ragdollPosition.GetComponent<Rigidbody>().AddForce(cCharacter.velocity, ForceMode.VelocityChange);
@@ -423,7 +436,7 @@ public class PlayerCore : MonoBehaviour
     {
         bIsDead = true;
         GlobalVariables.teamGoodGuys.Remove(this.gameObject);
-
+        GameObject.Find("MusicSource").SetActive(false);
         GlobalVariables.bAnyPlayersAlive = false;
         foreach (GameObject item in GlobalVariables.teamGoodGuys)
         {

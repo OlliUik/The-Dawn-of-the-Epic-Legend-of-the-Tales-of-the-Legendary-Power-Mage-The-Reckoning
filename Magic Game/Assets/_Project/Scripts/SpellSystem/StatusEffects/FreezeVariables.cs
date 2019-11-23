@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * This class will be added to the enemy when the enemy got hit by Freeze spell.
+ */
 public class FreezeVariables : MonoBehaviour
 {
-    
+
     public GameObject copyIceStunParticle;
 
     public float startRunSpeed;                    // what was the speed before started slowing
@@ -13,67 +16,102 @@ public class FreezeVariables : MonoBehaviour
 
     public EnemyVision enemyVision;
     public EnemyNavigation enemyNav;
+    public Spellbook spellbook;
+    private bool isStun = false;
 
-    public void freeze(float slowAmount, GameObject iceStunParticle, int cardAmount)
+    private EnemyCore enemyCore;
+
+    private bool originalCanCast = true;
+    private bool originalMeleeCanCast = true;
+
+    public void freeze(float slowAmount, GameObject iceStunParticle, int cardAmount, bool hasMoisture)
     {
 
-        Debug.Log("Slow");
+        enemyNav = GetComponent<EnemyNavigation>();
+        enemyVision = GetComponent<EnemyVision>();
+        spellbook = GetComponent<Spellbook>();
+        enemyCore = GetComponent<EnemyCore>();
 
         // Enemy slow
-        if (GetComponent<EnemyNavigation>() != null)
+        if (enemyNav != null)
         {
-            startRunSpeed = GetComponent<EnemyNavigation>().runningSpeed;
-            GetComponent<EnemyNavigation>().runningSpeed *= 1 / slowAmount;
-            startWalkSpeed = GetComponent<EnemyNavigation>().walkingSpeed;
-            GetComponent<EnemyNavigation>().walkingSpeed *= 1 / slowAmount;
-            startPanicSpeed = GetComponent<EnemyNavigation>().panicSpeed;
-            GetComponent<EnemyNavigation>().panicSpeed *= 1 / slowAmount;
+            startRunSpeed = enemyNav.runningSpeed;
+            enemyNav.runningSpeed *= 1 / slowAmount;
+            startWalkSpeed = enemyNav.walkingSpeed;
+            enemyNav.walkingSpeed *= 1 / slowAmount;
+            startPanicSpeed = enemyNav.panicSpeed;
+            enemyNav.panicSpeed *= 1 / slowAmount;
+        }
 
-            //If card >= 3 enemy will be stuned
-            if (cardAmount >= 3)
+        //If card >= 3 enemy will be stuned
+        if (cardAmount >= 3 || hasMoisture)
+        {
+            if (enemyCore != null)
             {
-                GetComponent<EnemyNavigation>().runningSpeed = 0;
-                GetComponent<EnemyNavigation>().walkingSpeed = 0;
-                GetComponent<EnemyNavigation>().panicSpeed = 0;
-                //This doesn't work, enemies still able to attack player when stun. They stopped walking/running tho
-                if (GetComponent<EnemyVision>() != null)
+                if (enemyCore is EnemyMelee)
                 {
-                    enemyVision = GetComponent<EnemyVision>();
-                    enemyVision.enabled = false;
-                    if (iceStunParticle != null)
-                    {
-                        copyIceStunParticle = GameObject.Instantiate(iceStunParticle, transform.position, transform.rotation);
-                        copyIceStunParticle.transform.parent = transform;
-                    }
+                    originalMeleeCanCast = ((EnemyMelee)enemyCore).enableAttack;
+                    ((EnemyMelee)enemyCore).enableAttack = false;
+                }
+                enemyCore.enabled = false;
+            }
+            isStun = true;
+            if (enemyNav != null)
+            {
+                enemyNav.runningSpeed = 0;
+                enemyNav.walkingSpeed = 0;
+                enemyNav.panicSpeed = 0;
+                enemyNav.enabled = false;
+            }
+            if (enemyVision != null)
+            {
+                enemyVision.enabled = false;
+                if (iceStunParticle != null)
+                {
+                    copyIceStunParticle = GameObject.Instantiate(iceStunParticle, transform.position, transform.rotation);
+                    copyIceStunParticle.transform.parent = transform;
                 }
             }
-
+            if (spellbook != null)
+            {
+                originalCanCast = spellbook.enableCasting;
+                spellbook.enableCasting = false;
+                spellbook.enabled = false;
+            }
         }
+
     }
 
     private void OnDestroy()
     {
-        //This doesn't work, enemies still able to attack player when stun
-        if (GetComponent<EnemyNavigation>() != null)
+        if (enemyNav != null)
         {
-            GetComponent<EnemyNavigation>().runningSpeed = startRunSpeed;
-            GetComponent<EnemyNavigation>().walkingSpeed = startWalkSpeed;
+            enemyNav.enabled = true;
+            enemyNav.runningSpeed = startRunSpeed;
+            enemyNav.walkingSpeed = startWalkSpeed;
+            enemyNav.panicSpeed = startPanicSpeed;
         }
-
         if (copyIceStunParticle != null)
         {
             GameObject.Destroy(copyIceStunParticle);
             copyIceStunParticle = null;
         }
-        if (enemyNav != null)
-        {
-            enemyNav.enabled = true;
-            enemyNav = null;
-        }
         if (enemyVision != null)
         {
             enemyVision.enabled = true;
-            enemyVision = null;
+        }
+        if (spellbook != null)
+        {
+            spellbook.enabled = true;
+            spellbook.enableCasting = originalCanCast;
+        }
+        if (enemyCore != null)
+        {
+            enemyCore.enabled = true;
+            if (enemyCore is EnemyMelee)
+            {
+                ((EnemyMelee)enemyCore).enableAttack = originalMeleeCanCast;
+            }
         }
     }
 

@@ -4,20 +4,55 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour  
 {
-    [SerializeField] private List<GameObject> enemies;
-    [SerializeField] private float frequency;
-    private float defaultFrequency = 1f;
-    
+    [SerializeField] private List<GameObject> enemies = null;
+    [SerializeField] private float frequency = 1.0f;
+    private float defaultFrequency = 1.0f;
+    protected float debugDrawRadius = 1.0f;
+    [SerializeField] private float distance = 0.0f;
+    private GameObject player = null;
+
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+
         if (frequency < defaultFrequency)
         {
             Debug.LogWarning("Your inputted frequency value is too low. Now using default value which is 1.");
         }
-        StartCoroutine(SpawnEnememy());
+        StartCoroutine(SpawnEnemy());
     }
 
-    IEnumerator SpawnEnememy()
+    // Update is called once per frame
+    void Update()
+    {
+       
+            //if (builder.isDone)
+           // if (room.isDone)
+            {
+                if (enemies != null)
+                {
+                    //spawn when player is close to enemies
+                    if (Vector3.Distance(player.transform.position, GetComponent<Transform>().position) < distance)
+                    {
+                    //enemies.gameObject.SetActive(true);
+                    StartCoroutine(SpawnEnemy());
+                    }
+                }
+            }
+        
+
+    }
+
+    public virtual void OnDrawGizmos()
+    {
+
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, debugDrawRadius);
+
+    }
+
+    IEnumerator SpawnEnemy()
     {
         while(true)
         {
@@ -28,7 +63,8 @@ public class Spawner : MonoBehaviour
             {
                 if (range > 0)
                 {
-                    Instantiate(enemy, GetComponent<Transform>());
+                    GameObject enemyWizard = Instantiate(enemy, GetComponent<Transform>());
+                    enemyWizard.SetActive(true);
                 }
             } else
             {

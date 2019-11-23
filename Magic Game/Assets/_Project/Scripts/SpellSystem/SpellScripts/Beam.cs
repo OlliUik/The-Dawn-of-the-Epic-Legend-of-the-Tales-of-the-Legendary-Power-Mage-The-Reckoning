@@ -24,8 +24,8 @@ public class Beam : Spell
         set { baseRange = value; }
     }
 
-    [SerializeField] private GameObject graphics    = null;
-    private ParticleSystem beamParticles;
+    [SerializeField] private List<GameObject> graphics;
+    private List<ParticleSystem> beamParticles;
     private List<ParticleCollisionEvent> collisionEvents;
 
     public Vector3 startPos                         = Vector3.zero;
@@ -43,22 +43,124 @@ public class Beam : Spell
     private bool colliding                          = false;
     private bool collEndCalled                      = false;
 
+    [SerializeField] private GameObject DefaultParticlePrefab = null;
+    [SerializeField] private GameObject FireElementParticlePrefab = null;
+    [SerializeField] private GameObject WaterElementParticlePrefab = null;
+    [SerializeField] private GameObject IceElementParticlePrefab = null;
+    [SerializeField] private GameObject ElectricElementParticlePrefab = null;
+
     #endregion
 
     #region Unity_Methods
 
+    public enum ElementType{
+        Default,
+        Fire,
+        Water,
+        Ice,
+        Electric
+    }
+
     private void Start()
     {
-        beamParticles = graphics.GetComponent<ParticleSystem>();
+
+        graphics = new List<GameObject>();
+        beamParticles = new List<ParticleSystem>();
+
+        modifiers = GetComponents<SpellModifier>();
+
+        Debug.Log("Spell modifier count " + modifiers.Length);
+        Debug.Log("Spell status effect count " + statusEffects.Count);
+
+        InitElementGraphics();
+
+        for(int i = 0 ; i < graphics.Count ; i++)
+        {
+            //graphics[i] = Instantiate(graphics[i], transform.position, transform.rotation);
+            beamParticles.Add(graphics[i].GetComponent<ParticleSystem>());
+        }
+        
         collisionEvents = new List<ParticleCollisionEvent>();
 
         if(isMaster)
         {
             spellbook = caster.GetComponent<Spellbook>();
         }
-
-        modifiers = GetComponents<SpellModifier>();
+        
         spellType = SpellType.BEAM;
+    }
+
+    private void InitElementGraphics()
+    {
+        Debug.Log("Initialize beam element particles");
+        List<ElementType> elementPrefabs = new List<ElementType>();
+        foreach (SpellModifier modifier in modifiers)
+        {
+            if (modifier.beamElementGraphic != ElementType.Default)
+            {
+                if (!elementPrefabs.Contains(modifier.beamElementGraphic))
+                {
+                    elementPrefabs.Add(modifier.beamElementGraphic);
+                }
+            }
+        }
+        foreach (StatusEffect statusEffect in statusEffects)
+        {
+            if (statusEffect.beamElementGraphic != ElementType.Default)
+            {
+                if (!elementPrefabs.Contains(statusEffect.beamElementGraphic))
+                {
+                    elementPrefabs.Add(statusEffect.beamElementGraphic);
+                }
+            }
+        }
+        if(elementPrefabs.Count == 0)
+        {
+            Debug.Log("Beam element count is 0");
+            if(DefaultParticlePrefab != null)
+            {
+                graphics.Add(DefaultParticlePrefab);
+                DefaultParticlePrefab.SetActive(true);
+            }
+        }
+        else
+        {
+            Debug.Log("Beam element count is not 0");
+            foreach (ElementType elementType in elementPrefabs)
+            {
+                switch (elementType)
+                {
+                    case ElementType.Fire:
+                        if (FireElementParticlePrefab != null)
+                        {
+                            graphics.Add(FireElementParticlePrefab);
+                            FireElementParticlePrefab.SetActive(true);
+                        }
+                        break;
+                    case ElementType.Ice:
+                        if (IceElementParticlePrefab != null)
+                        {
+                            graphics.Add(IceElementParticlePrefab);
+                            IceElementParticlePrefab.SetActive(true);
+                        }
+                        break;
+                    case ElementType.Water:
+                        if (WaterElementParticlePrefab != null)
+                        {
+                            graphics.Add(WaterElementParticlePrefab);
+                            WaterElementParticlePrefab.SetActive(true);
+                        }
+                        break;
+                    case ElementType.Electric:
+                        if (ElectricElementParticlePrefab != null)
+                        {
+                            graphics.Add(ElectricElementParticlePrefab);
+                            ElectricElementParticlePrefab.SetActive(true);
+                        }
+                        break;
+                }
+            }
+        }
     }
 
     private void Update()
@@ -111,7 +213,7 @@ public class Beam : Spell
         UpdateBeam(startPos, direction);
 
         // stop casting here
-        if((Input.GetMouseButtonUp(0) || !Input.GetMouseButton(0)) || (isMaster && spellbook.mana.mana <= 0f))
+        if((Input.GetMouseButtonUp(1) || !Input.GetMouseButton(1)) || (isMaster && spellbook.mana.mana <= 0f))
         {
             CastingEnd();
         
@@ -129,7 +231,10 @@ public class Beam : Spell
         var rb = other.GetComponent<Rigidbody>();
         if(rb != null)
         {
-            ParticlePhysicsExtensions.GetCollisionEvents(beamParticles, other, collisionEvents);
+            foreach(ParticleSystem particleSystem in beamParticles)
+            {
+                ParticlePhysicsExtensions.GetCollisionEvents(particleSystem, other, collisionEvents);
+            }
             for (int i = 0; i < collisionEvents.Count; i++)
             {
                 var health = other.GetComponent<Health>();
@@ -192,26 +297,28 @@ public class Beam : Spell
 
     public void UpdateBeam(Vector3 startPosition, Vector3 direction)
     {
-        if(usingCylinder)
+        foreach(GameObject graphic in graphics)
         {
-            // position
-            Vector3 offset = endPos - startPos;
-            Vector3 position = startPos + (offset * 0.5f);
-            graphics.transform.position = position;
-            
-            // scale
-            Vector3 localScale = graphics.transform.localScale;
-            localScale.y = (endPos - startPos).magnitude * 0.5f;
-            graphics.transform.localScale = localScale;
+            if (usingCylinder)
+            {
+                // position
+                Vector3 offset = endPos - startPos;
+                Vector3 position = startPos + (offset * 0.5f);
+                graphic.transform.position = position;
 
-            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction);
-        }
-        else
-        {
-            graphics.transform.position = startPos;
-            graphics.transform.rotation = Quaternion.FromToRotation(Vector3.right, direction);
-        }
+                // scale
+                Vector3 localScale = graphic.transform.localScale;
+                localScale.y = (endPos - startPos).magnitude * 0.5f;
+                graphic.transform.localScale = localScale;
 
+                graphic.transform.rotation = Quaternion.FromToRotation(Vector3.up, direction);
+            }
+            else
+            {
+                graphic.transform.position = startPos;
+                graphic.transform.rotation = Quaternion.FromToRotation(Vector3.right, direction);
+            }
+        }
     }
 
     //IEnumerator CastBeam(GameObject self, Spellbook spellbook, SpellData data)
@@ -323,17 +430,20 @@ public class Beam : Spell
         GameObject closest = null;
       
         for (int i = 0; i < objectsHit.Length; i++)
+        
         {
             if(closest != null)
             {
                 if((objectsHit[i].gameObject.transform.position - spellbook.transform.position).magnitude < (closest.transform.position - spellbook.transform.position).magnitude)
                 {
                     closest = objectsHit[i].gameObject;
+                    if(objectsHit[i].GetComponent<SpellTypeAmount>() != null) objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
                 }
             }
             else
             {
                 closest = objectsHit[i].gameObject;
+                if (objectsHit[i].GetComponent<SpellTypeAmount>() != null) objectsHit[i].GetComponent<SpellTypeAmount>().beam = true; //ScoreUI
             }
         }
         return closest;
@@ -362,6 +472,11 @@ public class Beam : Spell
 
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(startPos, baseRadius * 0.5f);
+    }
+
+    public override void ModifyRange(float amount)
+    {
+        Range += amount;
     }
 
     #endregion

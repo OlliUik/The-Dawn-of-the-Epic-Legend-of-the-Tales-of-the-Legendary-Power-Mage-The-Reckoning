@@ -8,8 +8,8 @@ public class ThirdPersonCamera : MonoBehaviour
     [Header("Input")]
     [SerializeField] private string horizontalAxis;
     [SerializeField] private string verticalAxis;
-    [SerializeField, Range(0, 20)] private float sensX;
-    [SerializeField, Range(0, 20)] private float sensY;
+    //[SerializeField, Range(0, 20)] private float sensX;
+    //[SerializeField, Range(0, 20)] private float sensY;
 
     [HideInInspector] public float cameraFOV = 0.0f;
     [HideInInspector] public bool isRagdolled = false;
@@ -17,24 +17,25 @@ public class ThirdPersonCamera : MonoBehaviour
     [Header("Public")]
     public GameObject cameraObject = null;
     public bool invertY = false;
-    public Vector2 sensitivity = new Vector2(1.0f, 1.0f);
     public bool slowdownEnabled = false;
     public Vector2 slowdownMaxTurn = new Vector2(25.0f, 25.0f);
 
-    public bool isEnabled { get; private set; } = true;
-    public Vector3 lookDirection { get; private set; } = Vector3.zero;
+    [HideInInspector] public Vector3 lookDirection = Vector3.zero;
 
+    public bool isEnabled { get; private set; } = true;
+    
     [Header("Serialized")]
     [SerializeField] private float cameraFOVLerpSpeed = 10.0f;
     [SerializeField] private Vector3 pivotPoint = Vector3.zero;
     [SerializeField] private Transform pivotTransformRagdolled = null;
     [SerializeField] private Vector3 cameraClosePosition = Vector3.zero;
     [SerializeField] private LayerMask raycastLayerMask = 1;
-    
+
+    //private Vector2 sensitivity = new Vector2(1.0f, 1.0f);
     private Vector3 cameraOffset = Vector3.zero;
     private float cameraFOVLerp = 0.0f;
     private Vector2 minMaxPitch = new Vector2(-85.0f, 85.0f);
-    private Camera cameraComponent = null;
+    public Camera cameraComponent { get; private set; } = null;
     private PostProcessLayer ppLayerComponent = null;
     private InputManager inputManager = null;
 
@@ -108,27 +109,27 @@ public class ThirdPersonCamera : MonoBehaviour
         {
             horizontalAxis = "Mouse X"; //Xbox_Mouse X
             verticalAxis = "Mouse Y"; //Xbox_Mouse Y
-            sensX = 10; //Default value?
-            sensY = 10; //Default value?
-            sensitivity = new Vector2(sensX, sensY);
+            //sensX = 10; //Default value?
+            //sensY = 10; //Default value?
+            //sensitivity = new Vector2(sensX, sensY);
         }
 
         if (inputManager.controllerId == 2)
         {
             horizontalAxis = "PS_Mouse X";
             verticalAxis = "PS_Mouse Y";
-            sensX = 10; //Default value?
-            sensY = 10; //Default value?
-            sensitivity = new Vector2(sensX, sensY);
+            //sensX = 10; //Default value?
+            //sensY = 10; //Default value?
+            //sensitivity = new Vector2(sensX, sensY);
         }
 
         else
         {
             horizontalAxis = "Mouse X";
             verticalAxis = "Mouse Y";
-            sensX = 2; //Default value?
-            sensY = 2; //Default value?
-            sensitivity = new Vector2(sensX, sensY);
+            //sensX = 2; //Default value?
+            //sensY = 2; //Default value?
+            //sensitivity = new Vector2(sensX, sensY);
         }
     }
 
@@ -210,8 +211,8 @@ public class ThirdPersonCamera : MonoBehaviour
         #region CAMERA_TURNING
 
         lookDirection += new Vector3(
-            y * sensitivity.x * (invertY ? 1.0f : -1.0f),
-            x * sensitivity.y,
+            y * GlobalVariables.sensitivity.x * (invertY ? 1.0f : -1.0f),
+            x * GlobalVariables.sensitivity.y,
             0.0f
             );
 
@@ -300,10 +301,9 @@ public class ThirdPersonCamera : MonoBehaviour
                 cameraObject.transform.position = transform.position + pivotPoint + cameraClosePosition + Vector3.Normalize(cameraRaycast) * shortestDistance;
             }
         }
-
-
+        
         Debug.DrawLine(transform.position + pivotPoint + cameraClosePosition, transform.position + pivotPoint + cameraClosePosition + cameraRaycast, Color.yellow);
-
+        
         #endregion
 
         //if (cameraPivot != null)

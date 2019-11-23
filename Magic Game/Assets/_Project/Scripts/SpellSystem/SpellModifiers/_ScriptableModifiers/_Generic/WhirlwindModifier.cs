@@ -8,6 +8,7 @@ public class WhirlwindModifier : SpellScriptableModifier
 
     public WhirlwindVariables variables;
     public GameObject tornadoPrefab;
+    public float extraMana = 0f;
 
     public override void AddSpellModifier(Spell spell)
     {
@@ -18,9 +19,11 @@ public class WhirlwindModifier : SpellScriptableModifier
             compo.variables.strength += variables.strength;
             return;
         }
-
+        
         Whirlwind component = spell.gameObject.AddComponent<Whirlwind>();
         component.tornadoPrefab = tornadoPrefab;
         component.variables = variables;
+        component.extraMana = extraMana;
+        component.SetElementParticles(projectileGraphics, beamGraphics, aoeGraphics);
     }
 }

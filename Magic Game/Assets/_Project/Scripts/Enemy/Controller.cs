@@ -11,16 +11,7 @@ public class Controller : MonoBehaviour
 
     public ThirdPersonCharacter character;
 
-    //public Rigidbody rb;
-
-    bool isGrounded;
-
-
-    private void Start()
-    {
-        //agent.updateRotation = false;
-    }
-
+    
     // Update is called once per frame
     void Update()
     {   
@@ -33,17 +24,6 @@ public class Controller : MonoBehaviour
         {
             character.Move(Vector3.zero, false, false);
         }
-
-
-        //Debug.Log(isGrounded.ToString());
-        //if (agent.isOnOffMeshLink && isGrounded)
-        //{
-            //Debug.Log("is On Off Mesh Link");
-            //Jump();
-            //agent.updatePosition = true;
-
-        //}
-
     }
 }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class StatusEffect
+public abstract class StatusEffect
 {
 
     [HideInInspector] public string name;
@@ -17,8 +17,34 @@ public class StatusEffect
     protected GameObject graphicsCopy;
 
     public GameObject projecttileElementGraphic;
-    public GameObject beamElementGraphic;
+    public Beam.ElementType beamElementGraphic;
     public GameObject aoeElementGraphic;
+
+    public GameObject projectileExplosionGraphic;
+
+    public float extraManaCost = 0f;
+
+    public Mana playerMana;
+
+    #region Cloning
+    public abstract StatusEffect Clone();
+    /*
+    {
+        
+        StatusEffect temp = new StatusEffect(duration, graphics);
+        temp.name = name;
+        temp.target = target;
+        temp.effectManager = effectManager;
+        temp.endTime = endTime;
+        temp.graphicsCopy = graphicsCopy;
+        temp.projecttileElementGraphic = projecttileElementGraphic;
+        temp.beamElementGraphic = beamElementGraphic;
+        temp.aoeElementGraphic = aoeElementGraphic;
+        return temp;
+        
+    }
+    */
+    #endregion
 
     // StatusEffectManager uses this
     public bool IsFinished
@@ -31,6 +57,10 @@ public class StatusEffect
     {
         this.duration = duration;
         this.graphics = graphics;
+        if (GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            playerMana = GameObject.FindGameObjectWithTag("Player").GetComponent<Mana>();
+        }
     }
 
     // This will be called from each entitys own StatusEffectManager when the effect is about to be applied
@@ -41,7 +71,7 @@ public class StatusEffect
         endTime = Time.time + duration;
         this.target = target;
         effectManager = target.GetComponent<StatusEffectManager>();
-        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + Vector3.up * 2, Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
+        graphicsCopy = GameObject.Instantiate(graphics, target.transform.position + Vector3.up , Quaternion.FromToRotation(-graphics.transform.up, Vector3.up));
         graphicsCopy.transform.SetParent(target.transform);
     }
 
@@ -74,11 +104,21 @@ public class StatusEffect
     // Ignite and moisturize use this to check the existing StatusEffect and what are new effects in spell
     public virtual void CheckForCounterEffects(List<StatusEffect> allEffectsInSpell) { }
 
-    public void SetElementParticles(GameObject projecttileParticle, GameObject beamParticle, GameObject aoeParticle)
+    public void SetElementParticles(GameObject projecttileParticle, Beam.ElementType beamParticle, GameObject aoeParticle)
     {
         projecttileElementGraphic = projecttileParticle;
         beamElementGraphic = beamParticle;
         aoeElementGraphic = aoeParticle;
+    }
+
+    public void SetProjectileExplosion(GameObject projectileParticle)
+    {
+        projectileExplosionGraphic = projectileParticle;
+    }
+
+    public bool isEffectable()
+    {
+        return (extraManaCost < playerMana.mana);
     }
 
 }

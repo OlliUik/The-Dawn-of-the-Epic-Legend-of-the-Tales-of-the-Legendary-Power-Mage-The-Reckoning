@@ -10,6 +10,14 @@ public class IgniteEffect : StatusEffect
     private float timeToBurn;
     private Health health;
 
+    public override StatusEffect Clone()
+    {
+        IgniteEffect temp = new IgniteEffect(duration, graphics, damagePerTick, timeBetweenTicks);
+        temp.timeToBurn = timeToBurn;
+        temp.health = health;
+        return temp;
+    }
+
     public IgniteEffect(float duration, GameObject graphics, float damagePerTick, float timeBetweenTicks) : base(duration, graphics)
     {
         name = "Ignite";
@@ -37,6 +45,7 @@ public class IgniteEffect : StatusEffect
 
     public override void OnApply(GameObject target, List<StatusEffect> allEffectsInSpell)
     {
+        GameObject.FindObjectOfType<ScoreUI>().roasted = true;
 
         base.OnApply(target, allEffectsInSpell);
 
@@ -95,6 +104,7 @@ public class IgniteEffect : StatusEffect
     {
         effectManager.AppliedEffects[StatusEffectManager.EffectType.Ignite] = false;
         base.OnLeave();
+        GameObject.FindObjectOfType<ScoreUI>().roasted = false;
     }
 
 }

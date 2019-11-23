@@ -16,6 +16,11 @@ public class SpellSlot : MonoBehaviour
         this.data.spell = data.spell;
         spellSlotText = GetComponentInChildren<Text>();
         spellSlotText.text = this.data.spell.spellType.ToString();
+
+        if (spellSlotText.text == "GENERIC")
+        {
+            spellSlotText.text = "PROJECTILE";
+        }
     }
 
 }

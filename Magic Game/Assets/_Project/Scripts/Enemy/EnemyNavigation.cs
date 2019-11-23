@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityStandardAssets.Characters.ThirdPerson;
+
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyNavigation : MonoBehaviour
 {
     #region VARIABLES
+
+    public ThirdPersonCharacter character { get; private set; } = null;
 
     [Header("Movement Speed")]
     public float walkingSpeed = 5.0f;
@@ -15,21 +19,11 @@ public class EnemyNavigation : MonoBehaviour
     public float runningAcceleration = 8.0f;
     public float panicSpeed = 12.0f;
     public float panicAcceleration = 8.0f;
+
     [Header("Navigation")]
-    //[SerializeField] private bool moveWhileCasting = false;
-    //[SerializeField] private float navigationInterval = 1.0f;
-    //[SerializeField] private float navigationIntervalPlayerLocated = 0.2f;
+    public bool isEnable = true;
     public float minDistanceFromAttackTarget = 2.0f;
     [SerializeField] private float paranoidMoveInterval = 1.0f;
-    //[SerializeField] private float waitAtPatrolPoint = 0.0f;
-    //[SerializeField] private Vector3[] patrolPoints = null;
-
-    //Dictates whether the agentwaits on each node.
-    //[SerializeField]  bool patrolWait;
-
-    //Total time that the patrol wait on each node.
-    //[SerializeField] float totalWaitTime;
-    //[SerializeField] float waitTimer;
 
     [Header("Patroling")]
 
@@ -38,17 +32,18 @@ public class EnemyNavigation : MonoBehaviour
 
     //Probality of waiting on a node.
     [SerializeField] float waitProbalitiy = 0.2f;
+    
+    //List of groups of patrol point. You can turn delete SerializeField . I just use them for testing.
+    [SerializeField]  List<GameObject> patrolGroup = null;
+    //List of patrol points. You can turn delete SerializeField . I just use them for testing.
+    [SerializeField]  List<Waypoint> patrolPoint = null;
 
-    [SerializeField] GameObject patrolPointGroup;
-
-    [SerializeField] List<Waypoint> patrolPoint;
-
-    [SerializeField] Rigidbody rb;
+    [SerializeField] private Rigidbody rb;  
 
     [Header("Jumpforce")]
-    [SerializeField]
-    float x, y, z;
-
+    [SerializeField] private float x = 0.0f;
+    [SerializeField] private float y = 0.0f;
+    [SerializeField] private float z = 0.0f;
 
 
     public float navigationErrorMargin { get; private set; } = 0.5f;
@@ -60,8 +55,8 @@ public class EnemyNavigation : MonoBehaviour
     private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
 
-    [SerializeField]
-    float min, max;
+    [SerializeField] private float min = 0.0f;
+    [SerializeField] private float max = 0.0f;
 
     //patrol's variables
     int navCurrentPoint;
@@ -81,13 +76,44 @@ public class EnemyNavigation : MonoBehaviour
     {
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
+        character = GetComponent<ThirdPersonCharacter>();
         rb = GetComponent<Rigidbody>();
 
+        patrolGroup.AddRange(GameObject.FindGameObjectsWithTag("patrolPointGrouped"));
+
+
         //get list of patrol points in a section.
-        foreach (Transform child in patrolPointGroup.transform)
+        if (patrolGroup != null && isEnable)
         {
-            patrolPoint.Add(child.GetComponent<Waypoint>());
+
+            //foreach (Transform child in patrolPointGroup.transform)
+            // {
+            //     patrolPoint.Add(child.GetComponent<Waypoint>());
+            // }
+
+            GameObject closestPatrolGroup = null;
+            float distance = Mathf.Infinity;
+            Vector3 position = transform.position;
+            foreach (GameObject targetGroup in patrolGroup)
+            {
+                Vector3 diff = targetGroup.transform.position - position;
+                float curDistance = diff.sqrMagnitude;
+                if(curDistance < distance)
+                {
+                    closestPatrolGroup = targetGroup;
+                    distance = curDistance;
+                }
+            }
+
+            if(closestPatrolGroup != null)
+            {
+                foreach (Transform child in closestPatrolGroup.transform)
+                {
+                    patrolPoint.Add(child.GetComponent<Waypoint>());
+                }
+            }
         }
+
 
         //Agent and patrol point checking
         if (cAgent == null)
@@ -111,52 +137,55 @@ public class EnemyNavigation : MonoBehaviour
 
     public void NavigationLoop()
     {
-        switch (cEnemyCore.currentState)
-        {
-            case EnemyCore.EState.IDLE: AIIdle(); break;
-            case EnemyCore.EState.PATROL: AIPatrol(); break;
-            case EnemyCore.EState.ALERTED: AIAlerted(); break;
-            case EnemyCore.EState.PARANOID: AIParanoid(); break;
-            case EnemyCore.EState.SEARCH: AISearch(); break;
-            case EnemyCore.EState.ATTACK: AIAttack(); break;
-            case EnemyCore.EState.CASTING: AICasting(); break;
-            case EnemyCore.EState.ESCAPE: AIEscape(); break;
-            case EnemyCore.EState.PANIC: AIPanic(); break;
-            case EnemyCore.EState.RAGDOLLED: break;
-            default: if (cAgent.hasPath) cAgent.ResetPath(); break;
-        }
+        if (isEnable)
+        {   
+            switch (cEnemyCore.currentState)
+            {
+                case EnemyCore.EState.IDLE: AIidlePatrol(); break;
+                case EnemyCore.EState.PATROL: AIPatrol(); break;
+                case EnemyCore.EState.ALERTED: AIAlerted(); break;
+                case EnemyCore.EState.PARANOID: AIParanoid(); break;
+                case EnemyCore.EState.SEARCH: AISearch(); break;
+                case EnemyCore.EState.ATTACK: AIAttack(); break;
+                case EnemyCore.EState.CASTING: AICasting(); break;
+                case EnemyCore.EState.ESCAPE: AIEscape(); break;
+                case EnemyCore.EState.PANIC: AIPanic(); break;
+                case EnemyCore.EState.RAGDOLLED: break;
+                default: if (cAgent.hasPath) cAgent.ResetPath(); break;
+            }
 
-        if (cEnemyCore.currentState == EnemyCore.EState.IDLE
-            || cEnemyCore.currentState == EnemyCore.EState.PATROL
-            || cEnemyCore.currentState == EnemyCore.EState.PARANOID
-            || cEnemyCore.currentState == EnemyCore.EState.CASTING)
-        {
-            cAgent.speed = walkingSpeed;
-            cAgent.acceleration = walkingAcceleration;
-        }
-        else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
-        {
-            cAgent.speed = panicSpeed;
-            cAgent.acceleration = panicAcceleration;
-        }
-        else
-        {
-            cAgent.speed = runningSpeed;
-            cAgent.acceleration = runningAcceleration;
-        }
+            if (cEnemyCore.currentState == EnemyCore.EState.IDLE
+                || cEnemyCore.currentState == EnemyCore.EState.PATROL
+                || cEnemyCore.currentState == EnemyCore.EState.PARANOID
+                || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+            {
+                cAgent.speed = walkingSpeed;
+                cAgent.acceleration = walkingAcceleration;
+            }
+            else if (cEnemyCore.currentState == EnemyCore.EState.PANIC)
+            {
+                cAgent.speed = panicSpeed;
+                cAgent.acceleration = panicAcceleration;
+            }
+            else
+            {
+                cAgent.speed = runningSpeed;
+                cAgent.acceleration = runningAcceleration;
+            }
 
-        if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
-        {
-            cAgent.stoppingDistance = 1.0f;
-        }
-        else
-        {
-            cAgent.stoppingDistance = 0.0f;
-        }
+            if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.CASTING)
+            {
+                cAgent.stoppingDistance = 1.0f;
+            }
+            else
+            {
+                cAgent.stoppingDistance = 0.0f;
+            }
 
-        //When walking away from player, give more acceleration
-        float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
-        cAgent.acceleration += accel;
+            //When walking away from player, give more acceleration
+            float accel = Vector3.Angle(cAgent.velocity.normalized, (cEnemyCore.cVision.targetLocation - transform.position).normalized) * 0.05f;
+            cAgent.acceleration += accel;
+        }
     }
 
 
@@ -200,16 +229,28 @@ public class EnemyNavigation : MonoBehaviour
 
             }
           */
-
-
-
         // Debug.Log(isGrounded.ToString());
 
-        if (cAgent.isOnOffMeshLink && isGrounded)
-        {
-            rb.velocity = new Vector3(0, 0, 0);
-            Jump();
-            cAgent.updatePosition = true;
+        if (isEnable)
+        {   
+            if(cAgent.isOnNavMesh)
+            {
+                if (cAgent.remainingDistance > cAgent.stoppingDistance)
+                {
+                    character.Move(cAgent.desiredVelocity, false, false);
+                }
+                else
+                {
+                    character.Move(Vector3.zero, false, false);
+                }
+
+                if (cAgent.isOnOffMeshLink && isGrounded)
+                {
+                    Jump();
+                    cAgent.updatePosition = true;
+                }
+            }
+          
         }
 
     }
@@ -246,10 +287,8 @@ public class EnemyNavigation : MonoBehaviour
     #region AI_LOGIC
 
     //Idle is now switching between patrol and idle randomly.
-    void AIIdle()
+    void AIidlePatrol()
     {
-        //Debug.Log("Now Entering Idle/Patrol state");
-
         /*
         if (Vector3.Distance(transform.position, cEnemyCore.spawnPosition) > navigationErrorMargin)
         {
@@ -259,32 +298,36 @@ public class EnemyNavigation : MonoBehaviour
 
         walkingSpeed = 3f;
         //check if we're close to the destination.
-        if (isTravel && cAgent.remainingDistance <= 1.0f)
+        if(cAgent.isOnNavMesh)
         {
-            isTravel = false;
-            //wait?
+            if (isTravel && cAgent.remainingDistance <= 1.0f)
+            {
+                isTravel = false;
+                //wait?
+                if (isWaiting)
+                {
+                    //isWaiting = false;
+                    StartCoroutine(idleTime());
+                }
+                else
+                {
+                    ChangePatrolPoint();
+                    SetDestination();
+                    isWaiting = (Random.value > 0.5f);
+                }
+            }
+
+            //normal wait checking
             if (isWaiting)
             {
-                //isWaiting = false;
-                StartCoroutine(idleTime());
-            }
-            else
-            {
+                //Debug.Log("waiting");
                 ChangePatrolPoint();
                 SetDestination();
+                StartCoroutine(idleTime());
                 isWaiting = (Random.value > 0.5f);
             }
         }
-
-        //normal wait checking
-        if (isWaiting)
-        {
-            //Debug.Log("waiting");
-            ChangePatrolPoint();
-            SetDestination();
-            StartCoroutine(idleTime());
-            isWaiting = (Random.value > 0.5f);
-        }
+      
     }
 
     //unused
@@ -318,116 +361,20 @@ public class EnemyNavigation : MonoBehaviour
         */
     }
 
-    //set the destination of the enemy wizard
-    private void SetDestination()
-    {
-        if (patrolPoint != null)
-        {
 
-            targetVector = patrolPoint[navCurrentPoint].transform.position;
-            cAgent.SetDestination(targetVector);
-            isTravel = true;
-        }
-    }
-
-    //Change the destination of the enemy wizard
-    private void ChangePatrolPoint()
-    {
-        if (UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
-        {
-            patrolForward = !patrolForward;
-        }
-        if (patrolForward)
-        {
-            navCurrentPoint = (navCurrentPoint + 1) % patrolPoint.Count;
-        }
-        else
-        {
-            if (--navCurrentPoint < 0)
-            {
-                navCurrentPoint = patrolPoint.Count - 1;
-            }
-        }
-    }
-
-    //stop and chilling in da castle.
-    IEnumerator idleTime()
-    {
-        //Debug.Log("waiting");
-        float randomNum = Random.Range(min, max);
-        cAgent.isStopped = true;
-        yield return new WaitForSeconds(randomNum);
-        cAgent.isStopped = false;
-
-    }
-
-    // Jumping will occurs when the AI see OffmeshLink as a shortcut. The offmeshlink is invisible.
-    // It is in the jumpingPoint prefab in the Mast's prototype (for now).
-    // ###NOTE### 
-    //  This jumping mechanic will teleport the enemy if its stuck. Stuck mostly happen when the enemy is too clost to the ledge/fence.
-    private void Jump()
-    {
-        Debug.Log("Jumping/Falling & disabled agent");
-        Vector3 direction = new Vector3(0, 0, 0);
-        cAgent.isStopped = true;
-        rb.isKinematic = false;
-        rb.useGravity = true;
-        if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
-        {
-            direction = (targetVector - transform.position).normalized;
-        }
-        else if  (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.SEARCH )
-        {
-            direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
-        }
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        transform.TransformDirection(direction);
-        rb.MoveRotation(rotation);
-        //this.transform.rotation = Quaternion.LookRotation(targetVector.normalized, Vector3.forward);
-        //this.transform.eulerAngles = new  Vector3(0, 0, z);
-        rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
-
-        isGrounded = false;
-    }
-
-
-
-    IEnumerator jumpCoroutine()
-    {
-        yield return new WaitForSeconds(3f);
-    }
-
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag.Equals("Ground"))
-        {
-            Debug.Log("On Ground.");
-            if (!isGrounded && cAgent.isOnNavMesh )
-            {
-                  Debug.Log("Standing & activated agent");
-                  isGrounded = true;
-                  cAgent.isStopped = false;
-                  cAgent.Warp(transform.position);
-                  Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
-
-                if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
-                {
-                    cAgent.SetDestination(targetVector);
-                }
-            }
-        }
-    }
-
-
+    //enemy set the target to player.
     void AIAlerted()
     {
-        cAgent.isStopped = false;
-        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.isStopped = false;
+            cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        }
     }
 
+    //enemy will walk randomly.
     void AIParanoid()
-    {
+    {   
         if (paranoidTimer <= 0.0f)
         {
             paranoidTimer = paranoidMoveInterval;
@@ -437,7 +384,10 @@ public class EnemyNavigation : MonoBehaviour
             randomPosition.y = 0.0f;
             randomPosition.z = Random.Range(-1.0f, 1.0f);
 
-            cAgent.SetDestination(transform.position + randomPosition);
+            if(cAgent.isOnNavMesh)
+            {
+                cAgent.SetDestination(transform.position + randomPosition);
+            }
         }
         else
         {
@@ -445,6 +395,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    //enemy search last known location of the player.
     void AISearch()
     {
         //if (cAgent.remainingDistance < navigationErrorMargin)
@@ -464,8 +415,10 @@ public class EnemyNavigation : MonoBehaviour
         //        //cEnemyCore.currentState = EnemyCore.EState.PARANOID;
         //    }
         //}
-
-        cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.SetDestination(cEnemyCore.cVision.targetLocation);
+        }
 
         if (navErrorTimer < 3.0f && cAgent.velocity.sqrMagnitude < 1.0f)
         {
@@ -498,8 +451,10 @@ public class EnemyNavigation : MonoBehaviour
         //}
     }
 
+    //enemy set attack the target.
     void AIAttack()
-    {
+    {   
+      
         if (cEnemyCore.isRanged)
         {
             float escapeDistance = (cEnemyCore as EnemyRanged).rangedEscapeDistance;
@@ -525,6 +480,7 @@ public class EnemyNavigation : MonoBehaviour
         //}
     }
 
+    //move alway from player before cast a spell.
     void AICasting()
     {
         if (cEnemyCore.MoveWhileCasting)
@@ -542,6 +498,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    //enemy escape from player.
     void AIEscape()
     {
         if (Vector3.Distance(transform.position, cEnemyCore.cVision.targetLocation) < 20.0f)
@@ -550,6 +507,7 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    //similar to  paranoid state.
     void AIPanic()
     {
         if (cAgent.remainingDistance < 2.0f)
@@ -563,5 +521,120 @@ public class EnemyNavigation : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region HELPER_METHOD 
+    //set the destination of the enemy wizard
+    private void SetDestination()
+    {   
+        if(cAgent.isOnNavMesh)
+        {
+            if (patrolPoint != null)
+            {
+                targetVector = patrolPoint[navCurrentPoint].transform.position;
+                cAgent.SetDestination(targetVector);
+                isTravel = true;
+            }
+        }
+       
+
+    }
+
+    //Change the destination of the enemy wizard
+    private void ChangePatrolPoint()
+    {
+        if (UnityEngine.Random.Range(0f, 1f) <= switchProbalitiy)
+        {
+            patrolForward = !patrolForward;
+        }
+        if (patrolForward)
+        {
+            navCurrentPoint = (navCurrentPoint + 1) % patrolPoint.Count;
+        }
+        else
+        {
+            if (--navCurrentPoint < 0)
+            {
+                navCurrentPoint = patrolPoint.Count - 1;
+            }
+        }
+    }
+
+    //stop and chilling in da castle.
+    IEnumerator idleTime()
+    {
+        //Debug.Log("waiting");
+     
+            float randomNum = Random.Range(min, max);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.isStopped = true;
+        }
+            yield return new WaitForSeconds(randomNum);
+        if (cAgent.isOnNavMesh)
+        {
+            cAgent.isStopped = false;
+
+        }
+
+
+
+    }
+
+
+
+    // Jumping will occurs when the AI see OffmeshLink as a shortcut. The offmeshlink is invisible.
+    // It is in the jumpingPoint prefab in the Mast's prototype (for now).
+    // ###NOTE### 
+    //  This jumping mechanic will teleport the enemy if its stuck. Stuck mostly happen when the enemy is too clost to the ledge/fence.
+    private void Jump()
+    {
+        Debug.Log("Jumping/Falling & disabled agent");
+
+        Vector3 direction = new Vector3(0, 0, 0);
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        if (cEnemyCore.currentState == EnemyCore.EState.IDLE)
+        {
+            direction = (targetVector - transform.position).normalized;
+        }
+        else if (cEnemyCore.currentState == EnemyCore.EState.ATTACK || cEnemyCore.currentState == EnemyCore.EState.SEARCH)
+        {
+            direction = (cEnemyCore.cVision.targetLocation - transform.position).normalized;
+        }
+
+        cAgent.isStopped = true;
+        cAgent.updatePosition = false;
+        cAgent.updateRotation = false;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.TransformDirection(direction);
+        rb.MoveRotation(rotation);
+        rb.AddRelativeForce(new Vector3(0, y, z), ForceMode.Impulse);
+        isGrounded = false;
+    }
+
+    //check whether the enemy is on the ground or not.
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Ground"))
+        {
+            Debug.Log("On Ground.");
+            if (!isGrounded)
+            {
+                Debug.Log("Standing & activated agent");
+                isGrounded = true;
+                cAgent.Warp(transform.position);
+                cAgent.isStopped = false;
+
+                Debug.Log("agent.isStopped is " + cAgent.isStopped.ToString());
+
+                if (patrolPoint[navCurrentPoint].transform.position != null && cEnemyCore.currentState == EnemyCore.EState.IDLE)
+                {
+                    cAgent.SetDestination(targetVector);
+                }
+            }
+        }
+    }
     #endregion
 }

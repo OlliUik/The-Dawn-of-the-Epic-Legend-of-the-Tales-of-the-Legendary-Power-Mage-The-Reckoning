@@ -19,26 +19,33 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public int midAirJumps = 0;
     [HideInInspector] public bool enableControls = true;
     [HideInInspector] public bool isRagdolled = false;
+    [HideInInspector] public bool wallRightSide = false;
+    public bool bIsWallSliding { get; private set; } = false;
 
     [Header("Serialized")]
     [SerializeField] private bool bAllowMidairDashing = true;
     [SerializeField] private bool bDashingGivesIFrames = false;
     [SerializeField] private bool bAllowInfiniteWallJumps = true;
     [SerializeField] private float acceleration = 100.0f;
-    [SerializeField] private float airAcceleration = 20.0f;
+    [SerializeField] private float airAcceleration = 15.0f;
     [SerializeField] private float friction = 5.5f;
     [SerializeField] private float airFriction = 1.5f;
     [SerializeField] private float gravity = -30.0f;
     [SerializeField] private float smoothStepDown = 0.5f;
-    [SerializeField] private float jumpForce = 15.0f;
+    [SerializeField] private float jumpForce = 16.0f;
     [SerializeField] private float jumpGraceTime = 0.2f;
     [SerializeField] private float dashSpeed = 20.0f;
     [SerializeField] private float dashJumpForce = 8.0f;
     [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] private float dashCooldown = 1.0f;
+    [SerializeField] private float dashCooldown = 0.5f;
     [SerializeField] private float gravityWallSliding = -1.0f;
+    [SerializeField] private float wallSlidingSpeed = 10.0f;
+    [SerializeField] private float wallSlidingMinMagnitude = 5.0f;
     [SerializeField] private float wallSlidingTime = 2.0f;
     [SerializeField] private float wallJumpForce = 25.0f;
+    [SerializeField] private float wallStickingStrength = 0.08f;
+    [SerializeField] private bool wallSlidingAllowOnlySpecificWalls = false;
+    [SerializeField] private string[] wallSlidingAllowedTags = null;
     [SerializeField] private LayerMask raycastLayerMask = 1;
     [SerializeField] private Transform ragdollTransform = null;
     [SerializeField] private bool bStunned;
@@ -54,10 +61,11 @@ public class PlayerMovement : MonoBehaviour
 
     //Temporary values
     private float dt = 0.0f;
-    private bool bIsWallSliding = false;
     private Vector3 moveDirection = Vector3.zero;
-    private Vector3 moveVector = Vector3.zero;
+    public Vector3 moveVector { get; private set; } = Vector3.zero;
     private Vector3 slopeNormal = Vector3.zero;
+    private Vector3 slopeSideVector = Vector3.zero;
+    private Vector3 slopeDownVector = Vector3.zero;
     private float jgtTimer = 0.0f;
     private float dDurationTimer = 0.0f;
     private float dCooldownTimer = 0.0f;
@@ -112,7 +120,58 @@ public class PlayerMovement : MonoBehaviour
     {
         if (enableControls)
         {
-            Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
+            if (!bIsWallSliding)
+            {
+                Move(movementInput.x, movementInput.y, bJumpingActivated, bDashingActivated);
+            }
+            else
+            {
+                CalculateCooldowns();
+
+                if (wstTimer > 0.0f)
+                {
+                    float wallSlide = Vector3.Dot(Vector3.Project(moveVector, slopeSideVector), slopeSideVector);
+                    Vector3 wallNormal = Vector3.Cross(slopeSideVector, slopeDownVector);
+
+                    if (wallSlide >= 0.0f)
+                    {
+                        //Wall is on left side
+                        wallRightSide = false;
+                    }
+                    else
+                    {
+                        //Wall is on right side
+                        wallRightSide = true;
+                    }
+
+                    moveVector = new Vector3(
+                            (wallRightSide ? -1.0f : 1.0f) * slopeSideVector.x * wallSlidingSpeed,
+                            Mathf.Clamp(moveVector.y + (moveVector.y > 0.0f ? gravity : gravityWallSliding) * Time.fixedDeltaTime, gravityWallSliding, Mathf.Infinity),
+                            (wallRightSide ? -1.0f : 1.0f) * slopeSideVector.z * wallSlidingSpeed
+                            );
+                    cCharacter.Move(moveVector * Time.fixedDeltaTime + -wallNormal * wallStickingStrength);
+
+                    if ((cCharacter.collisionFlags & CollisionFlags.Sides) == 0 || (cCharacter.collisionFlags & CollisionFlags.Below) > 0)
+                    {
+                        bIsWallSliding = false;
+                    }
+
+                    if (bJumpingActivated)
+                    {
+                        //Vector3.Normalize(wallHorizontalNormal + Vector3.up + wallSlideDirection.normalized) * wallJumpForce;
+                        moveVector = (wallNormal + Vector3.up + slopeSideVector * (wallRightSide ? -1.0f : 1.0f)) * wallJumpForce;
+                        cCharacter.Move(moveVector * Time.fixedDeltaTime);
+                        bIsWallSliding = false;
+                    }
+
+                    wstTimer -= Time.fixedDeltaTime;
+                }
+                else
+                {
+                    wstTimer = 0.0f;
+                    bIsWallSliding = false;
+                }
+            }
             bJumpingActivated = false;
             bDashingActivated = false;
         }
@@ -172,11 +231,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Vector2 temp = Vector2.Perpendicular(new Vector2(hit.normal.x, hit.normal.z));
-        Vector3 temp2 = Vector3.Normalize(Vector3.Cross(hit.normal, new Vector3(temp.x, 0.0f, temp.y)));
+        slopeSideVector = new Vector3(temp.x, 0.0f, temp.y).normalized;
+        slopeDownVector = Vector3.Normalize(Vector3.Cross(hit.normal, slopeSideVector));
+
         //Slope normal vector
         Debug.DrawLine(hit.point, hit.point + hit.normal * 0.2f, (Mathf.Abs(Vector3.Angle(Vector3.up, hit.normal)) < cCharacter.slopeLimit ? Color.green : Color.red), 0.5f);
         //Vector pointing down the slope
-        Debug.DrawLine(hit.point, hit.point + temp2 * 0.2f, Color.blue, 0.5f);
+        Debug.DrawLine(hit.point, hit.point + slopeDownVector * 0.2f, Color.blue, 0.5f);
+        //Vector pointing to the side from normal
+        Debug.DrawLine(hit.point, hit.point + slopeSideVector * 0.2f, Color.yellow, 0.5f);
     }
 
     #endregion
@@ -202,6 +265,12 @@ public class PlayerMovement : MonoBehaviour
         cCharacter.gameObject.layer = 31;
         cCharacter.Move(position - transform.position);
         cCharacter.gameObject.layer = physicsLayer;
+    }
+
+    public void Teleport(Vector3 position, Vector3 eulerRotation)
+    {
+        Teleport(position);
+        cTPCamera.lookDirection = eulerRotation;
     }
 
     public void OnDisableRagdoll()
@@ -236,7 +305,25 @@ public class PlayerMovement : MonoBehaviour
 
             if ((cCharacter.collisionFlags & CollisionFlags.Sides) > 0 && wstTimer > 0.0f)
             {
-                bIsWallSliding = true;
+                float wallSlide = Vector3.Dot(Vector3.Project(moveVector, slopeSideVector), slopeSideVector);
+                if (Mathf.Abs(wallSlide) > wallSlidingMinMagnitude)
+                {
+                    if (wallSlidingAllowOnlySpecificWalls)
+                    {
+                        foreach (string s in wallSlidingAllowedTags)
+                        {
+                            if (currentHit.gameObject.tag == s)
+                            {
+                                bIsWallSliding = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        bIsWallSliding = true;
+                    }
+                }
             }
             else
             {
@@ -429,7 +516,8 @@ public class PlayerMovement : MonoBehaviour
         //Stop vertical movement if hitting a ceiling
         if ((cCharacter.collisionFlags & CollisionFlags.Above) != 0 && moveVector.y > 0.0f)
         {
-            moveVector.y = 0.0f;
+            //moveVector.y = 0.0f;
+            moveVector = new Vector3(moveVector.x, 0.0f, moveVector.z);
         }
 
         //Debug stuff
