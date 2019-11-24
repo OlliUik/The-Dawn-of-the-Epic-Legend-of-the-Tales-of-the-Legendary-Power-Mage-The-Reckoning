@@ -60,6 +60,10 @@ public class LightFlicker : MonoBehaviour
         }
     }
 
+    /*
+    
+    //Commented out to save on performance.
+
     private void Update()
     {
         if (!stopFlickering && !isFlickering)
@@ -75,6 +79,7 @@ public class LightFlicker : MonoBehaviour
             }
         }
     }
+    */
 
     private IEnumerator DoFlicker()
     {

@@ -64,7 +64,7 @@ public class SpawnManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No level generator");
+            //Debug.Log("No level generator");
         }
 
 
@@ -85,7 +85,7 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("No level generator");
+                //Debug.Log("No level generator");
             }
         }
         else
@@ -105,7 +105,7 @@ public class SpawnManager : MonoBehaviour
 
                 if (spawnPoints.Count == 0)
                 {
-                    Debug.LogError("No spawn point referenced.");
+                    //Debug.LogError("No spawn point referenced.");
                 }
             }
             else if (gotSpawnPoint)
@@ -116,7 +116,7 @@ public class SpawnManager : MonoBehaviour
                     if (!EnemyIsAlive())
                     {
                         //Begin a new round
-                        Debug.Log("Wave Completed!");
+                        //Debug.Log("Wave Completed!");
                         WaveCompleted();
                     }
                     else
@@ -137,7 +137,7 @@ public class SpawnManager : MonoBehaviour
                                     else
                                     {
                                         enemies.Remove(child);
-                                        Debug.Log("No enemy");
+                                        //Debug.Log("No enemy");
                                     }
                                 }
 
@@ -149,7 +149,7 @@ public class SpawnManager : MonoBehaviour
                             else
                             {
                                 enemies.Remove(child);
-                                Debug.Log("No enemy");
+                                //Debug.Log("No enemy");
                             }
                             
                         }
@@ -231,7 +231,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnWave(Wave _wave)
     {
-        Debug.Log("Spawning Wave: " + _wave.name);
+        //Debug.Log("Spawning Wave: " + _wave.name);
         state = SpawnState.SPAWNING;
 
         for (int i = 0; i < _wave.count; i++)
@@ -247,14 +247,14 @@ public class SpawnManager : MonoBehaviour
     void SpawnEnemy(GameObject[] _enemy)
     {
         int randomRange = Random.Range(0, _enemy.Length);
-        Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
+        //Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
         GameObject spawnPoint = closeSpawn[Random.Range(0, closeSpawn.Count)];
         GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
         Health tempHealth = baddies.GetComponent<Health>();
         if (tempHealth != null)
         {
-            Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
-            Debug.Log("Increased Stat: " + increasedStat);
+            //Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
+            //Debug.Log("Increased Stat: " + increasedStat);
             tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected * crystalMultiplier) + (GlobalVariables.angryBaddiesPoint * crystalMultiplier));
             tempHealth.health = tempHealth.maxHealth;
         }
@@ -263,7 +263,7 @@ public class SpawnManager : MonoBehaviour
 
     void WaveCompleted()
     {
-        Debug.Log("Wave Completed");
+        //Debug.Log("Wave Completed");
 
         state = SpawnState.COUNTING;
         waveCountdown = timeBetweenWaves;
@@ -271,7 +271,7 @@ public class SpawnManager : MonoBehaviour
         if (nextWave + 1 > waves.Length - 1)
         {
             nextWave = 0;
-            Debug.Log("All Waves complete! Looping");
+            //Debug.Log("All Waves complete! Looping");
         }
         else
         {
