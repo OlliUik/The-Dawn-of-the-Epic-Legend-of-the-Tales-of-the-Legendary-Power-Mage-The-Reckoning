@@ -22,7 +22,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private List<GameObject> spawnPoints = new List<GameObject>();
+    public List<GameObject> spawnPoints = new List<GameObject>();
     public Wave[] waves;
     private int nextWave = 0;
     [SerializeField] private float timeBetweenWaves = 5f;
@@ -49,6 +49,7 @@ public class SpawnManager : MonoBehaviour
     private GameObject player = null;
     public LevelGenerator gen;
     private bool gotSpawnPoint = false;
+    private bool gotCloseSpawn = false;
 
     // Start is called before the first frame update
     void Start()
@@ -90,7 +91,7 @@ public class SpawnManager : MonoBehaviour
         }
         else
         {
-            if (!gotSpawnPoint && gen.isDone)
+            if (!gotSpawnPoint && gen.isDone && !gotCloseSpawn)
             {   
                 
                 spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
@@ -102,6 +103,7 @@ public class SpawnManager : MonoBehaviour
                     }
                 }
                 gotSpawnPoint = true;
+                gotCloseSpawn = true;
 
                 if (spawnPoints.Count == 0)
                 {
@@ -122,33 +124,33 @@ public class SpawnManager : MonoBehaviour
                     else
                     {
                         //Debug.Log("Not dead yet.");
-                        foreach (EnemyCore child in enemies)
+                        for (int i = enemies.Count - 1; i >= 0; i--)
                         {
 
                             if (gen != null)
                             {
                                 if (gen.isDone)
                                 {
-                                    if (child != null)
+                                    if (enemies[i] != null)
                                     {
                                         //spawn when player is close to enemies
-                                        checkPlayerDistance(child);
+                                        checkPlayerDistance(enemies[i]);
                                     }
                                     else
                                     {
-                                        enemies.Remove(child);
+                                        enemies.Remove(enemies[i]);
                                         Debug.Log("No enemy");
                                     }
                                 }
 
                             }
-                            else if (child != null)
+                            else if (enemies[i] != null)
                             {
-                                checkPlayerDistance(child);
+                                checkPlayerDistance(enemies[i]);
                             }
                             else
                             {
-                                enemies.Remove(child);
+                                enemies.RemoveAt(i);
                                 Debug.Log("No enemy");
                             }
                             

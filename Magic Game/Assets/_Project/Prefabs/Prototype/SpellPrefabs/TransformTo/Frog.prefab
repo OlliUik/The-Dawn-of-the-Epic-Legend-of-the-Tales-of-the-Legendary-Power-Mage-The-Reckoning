@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 4973646822942239089}
   - component: {fileID: 3406530366504288988}
   - component: {fileID: 7876793285631517656}
-  - component: {fileID: 8352132851822292131}
   m_Layer: 0
   m_Name: Frog
   m_TagString: Untagged
@@ -93,6 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f07fc367f4af2f0428c26b5371cf89af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  time: 0
 --- !u!114 &7876793285631517656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,20 +109,6 @@ MonoBehaviour:
   sliderMaster: {fileID: 0}
   sliderMusic: {fileID: 0}
   sliderSfx: {fileID: 0}
---- !u!114 &8352132851822292131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5193572331166755752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6a6d8df8f79f654a82fa5be1f46e054, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sfxLists:
-  - {fileID: 11400000, guid: 34b1430ebc70e4142b9500a0dc660cd2, type: 2}
 --- !u!1001 &7104555436420836352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -130,6 +116,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1970521837469959020}
     m_Modifications:
+    - target: {fileID: 100000, guid: 3384d84c236b6d2488c259662f2af355, type: 3}
+      propertyPath: m_Name
+      value: FrogPrefab
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3384d84c236b6d2488c259662f2af355, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -185,10 +175,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 3384d84c236b6d2488c259662f2af355, type: 3}
       propertyPath: m_LocalScale.z
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 3384d84c236b6d2488c259662f2af355, type: 3}
-      propertyPath: m_Name
-      value: FrogPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 2300000, guid: 3384d84c236b6d2488c259662f2af355, type: 3}
       propertyPath: m_Materials.Array.data[0]

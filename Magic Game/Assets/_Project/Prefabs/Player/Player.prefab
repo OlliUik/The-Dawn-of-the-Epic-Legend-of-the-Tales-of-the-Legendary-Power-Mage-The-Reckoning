@@ -62,7 +62,7 @@ MonoBehaviour:
   cAnimHandler: {fileID: 0}
   debugText: {fileID: 0}
   activeSpellIndex: 0
-  openSpellEditingOnStart: 0
+  physicalDamageAudio: {fileID: 0}
 --- !u!114 &5021546834307941695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,6 +88,8 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 3073
+  enableCasting: 1
+  failureAudio: {fileID: 0}
 --- !u!114 &5316809420139669611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,15 +104,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalAxis: Mouse X
   verticalAxis: Mouse Y
-  sensX: 0
-  sensY: 0
   cameraFOV: 0
   isRagdolled: 0
   cameraObject: {fileID: 6348975070603861141}
   invertY: 0
-  sensitivity: {x: 2, y: 2}
   slowdownEnabled: 0
   slowdownMaxTurn: {x: 25, y: 25}
+  lookDirection: {x: 0, y: 0, z: 0}
   cameraFOVLerpSpeed: 10
   pivotPoint: {x: 0, y: 1.4, z: 0}
   pivotTransformRagdolled: {fileID: 0}
@@ -160,6 +160,8 @@ MonoBehaviour:
   wallSlidingTime: Infinity
   wallJumpForce: 16
   wallStickingStrength: 0.33
+  wallSlidingAllowOnlySpecificWalls: 0
+  wallSlidingAllowedTags: []
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -180,6 +182,10 @@ MonoBehaviour:
   maxHealth: 100
   iFrameTime: 0.5
   ragdollDamageThreshold: 50
+  scaleWithCrystalsCollected: 0
+  ourStepDadKilled: 0
+  healthAddedByCrystal: 20
+  lizardKingdeath: 40
   health: 0
 --- !u!114 &26209675684781308
 MonoBehaviour:
@@ -364,7 +370,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 1
   m_OcclusionCulling: 1
