@@ -49,6 +49,11 @@ public class LightFlicker : MonoBehaviour
         defaultIntensity = lightSource.intensity;
         defaultRange = lightSource.range;
 
+        /*
+
+        //Can't be bothered to go through every light in every prefab/scene,
+        //so I'll just disable this part to improve performance.
+
         if (controlEmission)
         {
             StartCoroutine(DoFlicker());
@@ -58,6 +63,8 @@ public class LightFlicker : MonoBehaviour
         {
             StartCoroutine(DoFlickerWithoutEmission());
         }
+
+        */
     }
 
     /*

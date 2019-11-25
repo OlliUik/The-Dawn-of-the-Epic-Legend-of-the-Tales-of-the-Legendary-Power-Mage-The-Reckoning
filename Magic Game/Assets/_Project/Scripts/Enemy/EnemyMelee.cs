@@ -177,8 +177,9 @@ public class EnemyMelee : EnemyCore
         GlobalVariables.teamBadBoys.Remove(this.gameObject);
 
         //Detach the enemy model and ragdoll it
-        //animator.enabled = false;
-        //animator.transform.parent = null;
+        animator.enabled = false;
+        animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false, true);
+        animator.transform.parent = null;
 
         Destroy(this.gameObject);
         animator.SetBool("isIdle", false);

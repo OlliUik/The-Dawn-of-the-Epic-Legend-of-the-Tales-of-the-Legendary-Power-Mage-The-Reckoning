@@ -1587,8 +1587,9 @@ MonoBehaviour:
   iFrameTime: 0
   ragdollDamageThreshold: 25
   scaleWithCrystalsCollected: 1
-  ourStepDadisKilled: 0
+  ourStepDadKilled: 0
   healthAddedByCrystal: 20
+  lizardKingdeath: 40
   health: 0
 --- !u!54 &2126360807314379709
 Rigidbody:
@@ -1672,6 +1673,7 @@ MonoBehaviour:
   ragdoll: {fileID: 2045504140758156737}
   spawnAsGoodGuy: 0
   spawnAsConfused: 0
+  isDead: 0
   deathAudioPrefab: {fileID: 4319804096100018453, guid: 3a704379558d3a74f82a579679c941cb,
     type: 3}
 --- !u!114 &5566800658933780519
@@ -1977,13 +1979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armatureName: Armature
-  excludeFromKinematicToggle:
-  - {fileID: 3016251598299653706}
-  - {fileID: 5279840741270209525}
-  - {fileID: 7063434115392945918}
-  - {fileID: 1588241521411818441}
-  - {fileID: 3884743023334492789}
-  - {fileID: 6670363147859074216}
+  excludeFromKinematicToggle: []
   hiddenWhenNotKinematic: []
 --- !u!1 &4910289754750992403
 GameObject:

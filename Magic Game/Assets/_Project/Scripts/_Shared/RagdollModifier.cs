@@ -10,10 +10,25 @@ public class RagdollModifier : MonoBehaviour
     [SerializeField] private List<Transform> hiddenWhenNotKinematic = new List<Transform>();
 
     private List<Transform> armatureBones = new List<Transform>();
+    private Vector3[] armatureDefaultPosition = null;
+    private Quaternion[] armatureDefaultRotation = null;
+    private Vector3[] armatureDefaultScale = null;
 
     void Start()
     {
         GetBones(armatureBones, armatureName);
+
+        armatureDefaultPosition = new Vector3[armatureBones.Count];
+        armatureDefaultRotation = new Quaternion[armatureBones.Count];
+        armatureDefaultScale = new Vector3[armatureBones.Count];
+
+        for (int i = 0; i < armatureBones.Count; i++)
+        {
+            armatureDefaultPosition[i] = armatureBones[i].localPosition;
+            armatureDefaultRotation[i] = armatureBones[i].localRotation;
+            armatureDefaultScale[i] = armatureBones[i].localScale;
+        }
+
         SetDepenetrationValues(armatureBones, 3.0f);
         SetKinematic(true, false);
     }
@@ -70,9 +85,13 @@ public class RagdollModifier : MonoBehaviour
     {
         if (list.Count > 0)
         {
-            foreach (Transform item in list)
+            for (int i = 0; i < list.Count; i++)
             {
-                Rigidbody rigid = item.GetComponent<Rigidbody>();
+                list[i].localPosition = armatureDefaultPosition[i];
+                list[i].localRotation = armatureDefaultRotation[i];
+                list[i].localScale = armatureDefaultScale[i];
+
+                Rigidbody rigid = list[i].GetComponent<Rigidbody>();
                 if (rigid != null)
                 {
                     if (!excludeFromKinematicToggle.Contains(rigid))
