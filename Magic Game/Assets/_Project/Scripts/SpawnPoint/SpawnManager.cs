@@ -22,7 +22,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private List<GameObject> spawnPoints = new List<GameObject>();
+    public List<GameObject> spawnPoints = new List<GameObject>();
     public Wave[] waves;
     private int nextWave = 0;
     [SerializeField] private float timeBetweenWaves = 5f;
