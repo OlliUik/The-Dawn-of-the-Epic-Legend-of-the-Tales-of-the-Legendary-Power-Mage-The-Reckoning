@@ -312,10 +312,13 @@ public class PlayerMovement : MonoBehaviour
                     {
                         foreach (string s in wallSlidingAllowedTags)
                         {
-                            if (currentHit.gameObject.tag == s)
+                            if (currentHit.gameObject != null)
                             {
-                                bIsWallSliding = true;
-                                break;
+                                if (currentHit.gameObject.tag == s)
+                                {
+                                    bIsWallSliding = true;
+                                    break;
+                                }
                             }
                         }
                     }
