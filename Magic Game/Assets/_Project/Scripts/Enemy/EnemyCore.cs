@@ -343,7 +343,7 @@ public class EnemyCore : MonoBehaviour
 
         ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCombo.scoreCombo.combo++;
-        Instantiate(deathAudioPrefab, new Vector3(0, 0, 0), Quaternion.identity); //audio
+        Instantiate(deathAudioPrefab, transform.position, Quaternion.identity); //audio
     }
 
     public virtual void OnDeath()
