@@ -58,6 +58,7 @@ public class SpawnManager : MonoBehaviour
     public LevelGenerator gen;
     private bool gotSpawnPoint = false;
     private bool gotCloseSpawn = false;
+    private bool isUpStaged = false;
 
     // Start is called before the first frame update
     void Start()
@@ -130,6 +131,7 @@ public class SpawnManager : MonoBehaviour
                     }
                     else
                     {
+                        isUpStaged = false;
                         //Debug.Log("Not dead yet.");
                         for (int i = enemies.Count - 1; i >= 0; i--)
                         {
@@ -262,7 +264,7 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("Spawning Wave: " + _wave.name);
         state = SpawnState.SPAWNING;
 
-        for (int i = 0; i < _wave.count; i++)
+        for (int i = 0; i < _wave.count + EnemyGlobalVariables.extraEnemyAmount ; i++)
         {
             SpawnEnemy(_wave.enemy);
             yield return new WaitForSeconds(1f / _wave.rate);
@@ -283,6 +285,7 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
             Debug.Log("Increased Stat: " + increasedStat);
+            tempHealth.maxHealth += EnemyGlobalVariables.enemyExtraHealth;
             tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected * crystalMultiplier) + (GlobalVariables.angryBaddiesPoint * crystalMultiplier));
             tempHealth.health = tempHealth.maxHealth;
         }
@@ -296,14 +299,22 @@ public class SpawnManager : MonoBehaviour
         state = SpawnState.COUNTING;
         waveCountdown = timeBetweenWaves;
 
+        
         if (nextWave + 1 > waves.Length - 1)
         {
             //Do something when the wave is done
             nextWave = 0;
+            if (!isUpStaged)
+            {
+                EnemyGlobalVariables.StageUp();
+                isUpStaged = true;
+                Debug.Log(EnemyGlobalVariables.enemyExtraHealth + " " + EnemyGlobalVariables.extraEnemyAmount);
+            }
             Debug.Log("All Waves complete! Looping");
         }
         else
         {
+        
             nextWave++;
         }
     }
