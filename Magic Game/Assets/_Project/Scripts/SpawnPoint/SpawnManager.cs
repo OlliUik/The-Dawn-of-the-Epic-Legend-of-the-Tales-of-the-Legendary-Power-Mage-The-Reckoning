@@ -43,6 +43,14 @@ public class SpawnManager : MonoBehaviour
     public float increasedStat = 1.0f;
     [SerializeField] private float distance = 0.0f;
     [SerializeField] private float spawnDistanceLimit = 100.0f;
+    [SerializeField] private Vector3 spawnDistanceLimit2 = new Vector3(0,0,0);
+
+    /*
+    [SerializeField] private bool spawnDistanceIsRectangular = false;
+    [SerializeField] private float spawnDistanceLimitX = 0.0f;
+    [SerializeField] private float spawnDistanceLimitY = 0.0f;
+    [SerializeField] private float spawnDistanceLimitZ = 0.0f;
+    */
 
     public List<EnemyCore> enemies;
     public List<GameObject> closeSpawn;
@@ -93,14 +101,13 @@ public class SpawnManager : MonoBehaviour
         {
             if (!gotSpawnPoint && gen.isDone && !gotCloseSpawn)
             {   
-                
+                /*
                 spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
+                */
                 foreach(GameObject child in spawnPoints)
                 {
-                    if((Vector3.Distance(transform.transform.position, child.transform.position) < spawnDistanceLimit))
-                    {
-                        closeSpawn.Add(child.gameObject);
-                    }
+                    //CheckDistance(child);
+                    closeSpawn.Add(child);
                 }
                 gotSpawnPoint = true;
                 gotCloseSpawn = true;
@@ -188,13 +195,34 @@ public class SpawnManager : MonoBehaviour
 
     }
 
+    /*
+    private void CheckDistance(GameObject child)
+    {
+        if (!spawnDistanceIsRectangular)
+        {
+            if ((Vector3.Distance(transform.transform.position, child.transform.position) < spawnDistanceLimit))
+            {
+                closeSpawn.Add(child.gameObject);
+            }
+        }
+        else
+        {
+            if( (Mathf.Abs(transform.position.x - child.transform.position.x) <= spawnDistanceLimitX) &&
+                (Mathf.Abs(transform.position.y - child.transform.position.y) <= spawnDistanceLimitY) &&
+                (Mathf.Abs(transform.position.z - child.transform.position.z) <= spawnDistanceLimitZ)
+                )
+            {
+                closeSpawn.Add(child.gameObject);
+            }
+        }
+    }
+    */
+
 
     void checkPlayerDistance(EnemyCore child)
     {
-        //Debug.Log(Vector3.Distance(player.transform.position, child.transform.position));
         if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
         {
-            //Debug.Log(child.gameObject.name + " should be enabled");
             child.enabled = true;
             child.gameObject.GetComponent<NavMeshAgent>().enabled = true;
             child.gameObject.GetComponent<EnemyNavigation>().enabled = true;
@@ -206,7 +234,6 @@ public class SpawnManager : MonoBehaviour
 
         else
         {   
-            //Debug.Log(child.gameObject.name + " should be disabled");
             child.gameObject.GetComponent<NavMeshAgent>().enabled = false;
             child.gameObject.GetComponent<EnemyNavigation>().enabled = false;
             foreach (SkinnedMeshRenderer render in child.GetComponentsInChildren<SkinnedMeshRenderer>()) { render.enabled = false; }
@@ -222,7 +249,6 @@ public class SpawnManager : MonoBehaviour
         if (searchCountdown <= 0f)
         {
             searchCountdown = 1f;
-            //if (GameObject.FindGameObjectWithTag("Enemy") == null)
             if(enemies.Count == 0)
             {
                 return false;
@@ -272,6 +298,7 @@ public class SpawnManager : MonoBehaviour
 
         if (nextWave + 1 > waves.Length - 1)
         {
+            //Do something when the wave is done
             nextWave = 0;
             Debug.Log("All Waves complete! Looping");
         }
@@ -285,9 +312,19 @@ public class SpawnManager : MonoBehaviour
     public virtual void OnDrawGizmos()
     {
 
-
+        /*
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, spawnDistanceLimit);
-
+        if (!spawnDistanceIsRectangular)
+        {
+            Gizmos.DrawWireSphere(transform.position, spawnDistanceLimit);
+        }
+        else
+        {
+            Gizmos.DrawLine(transform.position - new Vector3(spawnDistanceLimitX,0,0) , transform.position + new Vector3(spawnDistanceLimitX, 0, 0));
+            Gizmos.DrawLine(transform.position - new Vector3(0, spawnDistanceLimitY, 0), transform.position + new Vector3(0, spawnDistanceLimitY, 0));
+            Gizmos.DrawLine(transform.position - new Vector3(0, 0, spawnDistanceLimitZ), transform.position + new Vector3(0, 0, spawnDistanceLimitZ));
+        }
+        */
+        
     }
 }
