@@ -5,7 +5,8 @@ using UnityEngine;
 public class Crystal : MonoBehaviour
 {
     public float rotationSpeed = 5.0f;
-    public GameObject audio; //audio
+    public GameObject audio1;
+    public GameObject audio2;
 
     [SerializeField] private ScoreSystem scoreSystem = null;
     [SerializeField] private Health heathSystem = null;
@@ -31,7 +32,8 @@ public class Crystal : MonoBehaviour
 
             PlayerCore core = other.GetComponent<PlayerCore>();
             GlobalVariables.crystalsCollected++;
-            Instantiate(audio, new Vector3(0, 0, 0), Quaternion.identity); //audio
+            Instantiate(audio1, new Vector3(0, 0, 0), Quaternion.identity);
+            Instantiate(audio2, new Vector3(0, 0, 0), Quaternion.identity);
 
             if (scoreSystem != null)
             {
