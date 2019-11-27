@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
 public class BossTrigger : MonoBehaviour
 {
     [SerializeField] private EnemyCore boss = null;
     [SerializeField] private GameObject particles = null;
+    [SerializeField] private BoxCollider[] col = null;
 
     private void Start()
     {
+        col = GetComponents<BoxCollider>();
         boss.gameObject.SetActive(false);
-        particles.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -21,8 +21,12 @@ public class BossTrigger : MonoBehaviour
             if (boss != null)
             {
                 boss.gameObject.SetActive(true);
-                particles.gameObject.SetActive(true);
-                Destroy(gameObject);
+                Instantiate(particles, boss.transform);
+
+                foreach (BoxCollider box in col)
+                {
+                    Destroy(box);
+                }
             }
 
             else

@@ -156,7 +156,7 @@ public class HUDManager : MonoBehaviour
     {
         if (switcher != null)
         {
-            switcher.ChangeIcon(spellNumber);
+            //switcher.ChangeIcon(spellNumber);
         }
     }
 
