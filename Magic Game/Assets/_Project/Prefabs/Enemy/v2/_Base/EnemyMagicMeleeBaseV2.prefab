@@ -49,6 +49,7 @@ MonoBehaviour:
   ragdoll: {fileID: 756741351151843083}
   spawnAsGoodGuy: 0
   spawnAsConfused: 0
+  isDead: 0
   deathAudioPrefab: {fileID: 3039725761745194106}
   rangedEscapeDistance: 10
   castInBursts: 0
@@ -128,6 +129,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyMagicMeleeBaseV2
       objectReference: {fileID: 0}
+    - target: {fileID: 2339384854749647066, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: headTransform
+      value: 
+      objectReference: {fileID: 1604842760891095973}
+    - target: {fileID: 4981381418530664393, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8717954919458152016, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9027524255367242580, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -183,26 +199,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2339384854749647066, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: headTransform
-      value: 
-      objectReference: {fileID: 1604842760891095973}
-    - target: {fileID: 8717954919458152016, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4981381418530664393, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 697538035819157408, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: cEnemyCore
       value: 
       objectReference: {fileID: 6472148677284980281}
+    - target: {fileID: 1328359400457543574, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 5957405290677733008}
     - target: {fileID: 1795504309547927349, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: excludeFromKinematicToggle.Array.data[0]
@@ -448,31 +454,16 @@ PrefabInstance:
       propertyPath: m_RootBone
       value: 
       objectReference: {fileID: 9199223476762171603}
-    - target: {fileID: 1328359400457543574, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 5957405290677733008}
-    - target: {fileID: 3244304802887523675, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 5957405290677733008}
     - target: {fileID: 636310041950313063, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 4555544728755557504}
-    - target: {fileID: 7404362700234718762, guid: e5d19f36566d2a14a8dd56e2cae10848,
+    - target: {fileID: 3244304802887523675, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: m_ConnectedBody
       value: 
-      objectReference: {fileID: 65858744436470019}
-    - target: {fileID: 8961284007718525416, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 6892381256465641791}
+      objectReference: {fileID: 5957405290677733008}
     - target: {fileID: 4639756122426955465, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: m_ConnectedBody
@@ -483,6 +474,21 @@ PrefabInstance:
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 5957405290677733008}
+    - target: {fileID: 7404362700234718762, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 65858744436470019}
+    - target: {fileID: 7532908810949739528, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 756741351151843083}
+    - target: {fileID: 8961284007718525416, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 6892381256465641791}
     - target: {fileID: 3848170803077306635, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: m_ConnectedBody
@@ -493,21 +499,6 @@ PrefabInstance:
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 756741351151843083}
-    - target: {fileID: 7532908810949739528, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 756741351151843083}
-    - target: {fileID: 4562231763496132134, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 4156729153829371629}
-    - target: {fileID: 2156227099651088968, guid: e5d19f36566d2a14a8dd56e2cae10848,
-        type: 3}
-      propertyPath: m_ConnectedBody
-      value: 
-      objectReference: {fileID: 3868674101138864628}
     - target: {fileID: 1397833543474142126, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: m_ConnectedBody
@@ -533,6 +524,16 @@ PrefabInstance:
       propertyPath: m_ConnectedBody
       value: 
       objectReference: {fileID: 5957405290677733008}
+    - target: {fileID: 4562231763496132134, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 4156729153829371629}
+    - target: {fileID: 2156227099651088968, guid: e5d19f36566d2a14a8dd56e2cae10848,
+        type: 3}
+      propertyPath: m_ConnectedBody
+      value: 
+      objectReference: {fileID: 3868674101138864628}
     - target: {fileID: 770541774387988223, guid: e5d19f36566d2a14a8dd56e2cae10848,
         type: 3}
       propertyPath: m_ConnectedBody
@@ -559,8 +560,7 @@ PrefabInstance:
       propertyPath: ragdoll
       value: 
       objectReference: {fileID: 756741351151843083}
-    m_RemovedComponents:
-    - {fileID: 7235508525435473448, guid: e5d19f36566d2a14a8dd56e2cae10848, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5d19f36566d2a14a8dd56e2cae10848, type: 3}
 --- !u!95 &6636224862420030821 stripped
 Animator:

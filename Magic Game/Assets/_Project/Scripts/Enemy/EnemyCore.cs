@@ -125,6 +125,9 @@ public class EnemyCore : MonoBehaviour
             entitySpawnNumber = GlobalVariables.teamBadBoys.Count;
             status = new StatusEffects(status.isOnFire, spawnAsConfused, status.isFrozen, status.isKnocked);
         }
+
+        // Set variables from EnemyGlobalVariable
+
     }
 
     protected virtual void Start()
