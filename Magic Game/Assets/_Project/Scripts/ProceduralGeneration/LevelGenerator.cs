@@ -59,6 +59,12 @@ public class LevelGenerator : MonoBehaviour
         FinalCheckForOverlaps();
 
         Debug.Log("Level generation finished");
+
+        yield return interval;
+
+        ChestRandomizer cr = FindObjectOfType<ChestRandomizer>();
+        cr.enabled = true;
+        cr.isSearching = true;
     }
 
     private void PlaceFirstSegment()

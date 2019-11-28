@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class ChestRandomizer : MonoBehaviour
 {
+    //DISABLE ALWAYS BEFORE PLAY!!!
+
     #region VARIABLES
 
     public GameObject normalChest = null;
     public GameObject crystalChest = null;
     public List<GameObject> chests = new List<GameObject>();
+    public List<GameObject> crystalChests = new List<GameObject>();
     public bool isSearching = false;
 
     [SerializeField] private int crystalChestCount = 6;
-    [SerializeField] private List<GameObject> crystalChests = new List<GameObject>();
     private LevelGenerator generator = null;
     private GenerationLoop loop = null;
     private List<GameObject> tempList = new List<GameObject>();
