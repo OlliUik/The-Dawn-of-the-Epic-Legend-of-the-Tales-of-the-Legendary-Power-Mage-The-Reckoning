@@ -60,6 +60,7 @@ public class SpellEditorController : MonoBehaviour
     public void UseCrustalButton()
     {
         crystalsLeft--;
+        //Debug.Log("Amount of crystals left: " + crystalsLeft);
         useCrystalButton.gameObject.SetActive(false);
         StartCoroutine(GenerateCards());
     }
@@ -73,7 +74,41 @@ public class SpellEditorController : MonoBehaviour
             cardDisplay.transform.position = availableCardPositions[i].position;
 
             CardDisplay display = cardDisplay.GetComponent<CardDisplay>();
-            display.InitCard(spawnPosition.localPosition, availableCardPositions[i].localPosition, allCards[Random.Range(0, allCards.Count)]);
+
+            bool similarToPrevious;
+            int duplicateRolls = 0;
+
+            do
+            {
+                similarToPrevious = false;
+                display.InitCard(spawnPosition.localPosition, availableCardPositions[i].localPosition, allCards[Random.Range(0, allCards.Count)]);
+
+                if (duplicateRolls < 10)
+                {
+                    for (int x = 0; x < currentCards.Length; x++)
+                    {
+                        if (currentCards[x] == null)
+                        {
+                            break;
+                        }
+
+                        if (display.card == currentCards[x].GetComponent<CardDisplay>().card)
+                        {
+                            duplicateRolls++;
+                            Debug.Log(this + " Duplicate card detected, re-rolling card. Re-rolls: " + duplicateRolls);
+                            similarToPrevious = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log(this + " Reached max duplicate roll amount, breaking do-while loop...");
+                }
+            }
+            while (similarToPrevious);
+
+            //display.InitCard(spawnPosition.localPosition, availableCardPositions[i].localPosition, allCards[Random.Range(0, allCards.Count)]);
             
             currentCards[i] = cardDisplay;
             yield return new WaitForSecondsRealtime(0.2f);
