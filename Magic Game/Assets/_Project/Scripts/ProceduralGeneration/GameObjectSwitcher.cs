@@ -12,12 +12,12 @@ public class GameObjectSwitcher : MonoBehaviour
 
     private void Update()
     {
-        if (a.activeInHierarchy)
+        if (a.activeInHierarchy && a != null)
         {
             b.SetActive(false);
         }
 
-        if (!a.activeInHierarchy)
+        if (!a.activeInHierarchy && b != null)
         {
             b.SetActive(true);
         }

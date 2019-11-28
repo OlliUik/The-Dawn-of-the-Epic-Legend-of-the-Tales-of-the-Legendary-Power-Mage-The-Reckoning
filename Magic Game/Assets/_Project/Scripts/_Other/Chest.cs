@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Chest : MonoBehaviour
 {
+    [SerializeField] private bool isBreakable = false;
     private ChestRandomizer chestRandomizer = null;
     private LevelGenerator levelGenerator = null;
 
@@ -19,6 +20,14 @@ public class Chest : MonoBehaviour
         {
             chestRandomizer.chests.Add(gameObject);
             Destroy(this);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (isBreakable && collision.gameObject.layer == 9)
+        {
+            gameObject.SetActive(false);
         }
     }
 }
