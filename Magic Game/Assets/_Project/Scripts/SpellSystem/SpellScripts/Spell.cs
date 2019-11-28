@@ -161,7 +161,12 @@ public class Spell : MonoBehaviour
     public virtual void ApplyStatusEffects(StatusEffectManager manager, List<StatusEffect> effects)
     {
         // call ApplyStatusEffect in the hitObjects StatusEffectManager and do null checks there
+        List<StatusEffect> tempList = new List<StatusEffect>();
         foreach (StatusEffect effect in effects)
+        {
+            tempList.Add(effect.Clone());
+        }
+        foreach (StatusEffect effect in tempList)
         {
             manager.ApplyStatusEffect(effect, effects);
         }
