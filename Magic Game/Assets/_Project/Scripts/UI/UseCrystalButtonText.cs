@@ -17,7 +17,7 @@ public class UseCrystalButtonText : MonoBehaviour
             }
             else 
             {
-                GetComponent<Text>().text = "Use crystal\n(" + editor.crystalsLeft + " left)";
+                GetComponent<Text>().text = "Consume crystal\n(" + editor.crystalsLeft + " left)";
             }
         }
     }

@@ -38,14 +38,12 @@ public class BossLizardKing : EnemyMagicRanged
     protected override void Awake()
     {
         base.Awake();
-
         isRanged = false;
     }
 
     protected override void Start()
     {
         base.Start();
-
         ApplyRandomPattern();
     }
 
@@ -68,10 +66,13 @@ public class BossLizardKing : EnemyMagicRanged
 
     public override void OnDeath()
     {
+        OnDeathScore();
+
         Debug.Log("boss is dead");
         currentState = EState.DISABLED;
         EnemyCore[] tempEnemies = GameObject.FindObjectsOfType<EnemyCore>();
         GlobalVariables.angryBaddiesPoint += 1;
+        EnemyGlobalVariables.increaseBossScore();
         foreach (EnemyCore child in tempEnemies)
         {
             child.GetComponent<Health>().ourStepDadKilled = true;
@@ -99,6 +100,17 @@ public class BossLizardKing : EnemyMagicRanged
                 animator.GetComponent<RotateTowardsTarget>().targetTransform = cVision.targetGO.transform;
             }
         }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if(EnemyGlobalVariables.isKilled)
+        {
+            transform.GetComponent<BossLizardKing>().score += EnemyGlobalVariables.bossExtraScore;
+            transform.GetComponent<BossLizardKing>().roundedScore = score;
+        }
+        EnemyGlobalVariables.isKilled = false;
     }
 
     private void ApplyRandomPattern()

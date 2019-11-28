@@ -105,12 +105,20 @@ public class Health : MonoBehaviour
             if (ignoreIFrames || iftTimer <= 0.0f)
             {
 
+                //These are for the old stacking damage
                 if(effectManager != null && effectManager.AppliedEffects[StatusEffectManager.EffectType.StackingDamage])
                 {
                     // this is effected by stacking damage
                     var stackingDamage = (StackingDamageEffect)effectManager.affectingEffects.Find(x => x.GetType() == typeof(StackingDamageEffect));
                     amount = stackingDamage.ModifyDamage(amount);
                     Debug.Log(amount);
+                }
+
+                //Curse
+                var curseVariable = GetComponent<CurseVariables>();
+                if (curseVariable != null)
+                {
+                    amount += (amount * (curseVariable.DamageIncreasedPercentage/100));
                 }
 
                 iftTimer = iFrameTime;
