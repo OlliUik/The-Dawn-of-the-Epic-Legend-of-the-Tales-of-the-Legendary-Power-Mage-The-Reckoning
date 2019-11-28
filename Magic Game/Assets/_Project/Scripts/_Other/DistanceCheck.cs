@@ -5,17 +5,17 @@ using UnityEngine.AI;
 
 public class DistanceCheck : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> childrenToHide = null;
-    [SerializeField] private GameObject disableBlock;
-    [SerializeField] private GameObject generator;
+    [SerializeField] private List<GameObject> childrenToHide = null;            // List of the gameobject that will be hidden.
+    [SerializeField] private GameObject disableBlock;                           // A block for making NavMesh not generate on a certain area.
+    [SerializeField] private GameObject generator;                              // Get the generator gameobject automically.
 
 
-    [SerializeField] private float spawnDistanceLimitX = 0.0f;
-    [SerializeField] private float spawnDistanceLimitY = 0.0f;
-    [SerializeField] private float spawnDistanceLimitZ = 0.0f;
+    [SerializeField] private float spawnDistanceLimitX = 0.0f;                  // Checking X axis between player and a prefab that script want to hide.
+    [SerializeField] private float spawnDistanceLimitY = 0.0f;                  // Checking Y axis between player and a prefab that script want to hide.
+    [SerializeField] private float spawnDistanceLimitZ = 0.0f;                  // Checking Z axis between player and a prefab that script want to hide.
 
-    private LevelGenerator gen;
-    private GameObject player = null;
+    private LevelGenerator gen;                                                 // Get levelgenerator component from the gameobject.
+    private GameObject player = null;                                           // Get component of the player
 
     private void Start()
     {
@@ -38,7 +38,8 @@ public class DistanceCheck : MonoBehaviour
 
         gen = FindObjectOfType<LevelGenerator>();
     }
-
+    
+    //Checking of the script visually.
     public virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
@@ -46,6 +47,7 @@ public class DistanceCheck : MonoBehaviour
         Gizmos.DrawLine(transform.position - new Vector3(0, spawnDistanceLimitY, 0), transform.position + new Vector3(0, spawnDistanceLimitY, 0));
         Gizmos.DrawLine(transform.position - new Vector3(0, 0, spawnDistanceLimitZ), transform.position + new Vector3(0, 0, spawnDistanceLimitZ));
     }
+
 
     private void Update()
     {
