@@ -106,6 +106,7 @@ public class EnemyCore : MonoBehaviour
 
     public bool isDead;
     public GameObject deathAudioPrefab; //audio
+    protected GameObject attachedAudio;
 
     #endregion
 
@@ -346,7 +347,7 @@ public class EnemyCore : MonoBehaviour
 
         ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCombo.scoreCombo.combo++;
-        Instantiate(deathAudioPrefab, transform.position, Quaternion.identity); //audio
+
     }
 
     public virtual void OnDeath()
@@ -360,6 +361,10 @@ public class EnemyCore : MonoBehaviour
         animator.enabled = false;
         animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false, true);
         animator.transform.parent = null;
+
+        attachedAudio = Instantiate(deathAudioPrefab, transform.position, Quaternion.identity); //audio
+        attachedAudio.transform.parent = animator.transform;
+
         isDead = true;
         Destroy(this.gameObject);
     }
