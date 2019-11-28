@@ -96,12 +96,15 @@ public class CardDisplay : MonoBehaviour
             editorController.DestroyCards();
 
             // IF PLAYER HAS MORE CRYSTALS ALLOW MORE CARDS
-            editorController.useCrystalButton.gameObject.SetActive(true);
             editorController.useCrystalButton.interactable = editorController.crystalsLeft > 0 ? true : false;
 
-            if(editorController.crystalsLeft <= 0)
+            if (editorController.crystalsLeft <= 0)
             {
                 editorController.CloseSpellEditionMenu();
+            }
+            else
+            {
+                editorController.useCrystalButton.gameObject.SetActive(true);
             }
 
         }

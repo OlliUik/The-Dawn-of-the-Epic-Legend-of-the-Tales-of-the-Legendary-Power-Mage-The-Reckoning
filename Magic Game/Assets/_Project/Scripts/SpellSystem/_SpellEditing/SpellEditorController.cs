@@ -60,6 +60,7 @@ public class SpellEditorController : MonoBehaviour
     public void UseCrustalButton()
     {
         crystalsLeft--;
+        //Debug.Log("Amount of crystals left: " + crystalsLeft);
         useCrystalButton.gameObject.SetActive(false);
         StartCoroutine(GenerateCards());
     }
