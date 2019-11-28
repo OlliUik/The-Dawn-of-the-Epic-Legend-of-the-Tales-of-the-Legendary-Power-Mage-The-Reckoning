@@ -106,6 +106,7 @@ public class EnemyCore : MonoBehaviour
 
     public bool isDead;
     public GameObject deathAudioPrefab; //audio
+    private GameObject attachedAudio;
 
     #endregion
 
@@ -346,7 +347,10 @@ public class EnemyCore : MonoBehaviour
 
         ScoreCombo.scoreCombo.isEnemyKilled = true;
         ScoreCombo.scoreCombo.combo++;
-        Instantiate(deathAudioPrefab, transform.position, Quaternion.identity); //audio
+        
+        attachedAudio = Instantiate(deathAudioPrefab, transform.position, Quaternion.identity); //audio
+        attachedAudio.transform.parent = gameObject.transform;
+
     }
 
     public virtual void OnDeath()

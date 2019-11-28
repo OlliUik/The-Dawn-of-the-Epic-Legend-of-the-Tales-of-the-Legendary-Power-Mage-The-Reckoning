@@ -38,6 +38,7 @@ public class PlayerCore : MonoBehaviour
     public int activeSpellIndex = 0;
 
     public GameObject physicalDamageAudio;
+    private GameObject attachedAudio;
     #endregion
 
     #region UNITY_DEFAULT_METHODS
@@ -333,7 +334,9 @@ public class PlayerCore : MonoBehaviour
     {
         if (other.tag == "TriggerKill")
         {
-            Instantiate(physicalDamageAudio, new Vector3(0, 0, 0), Quaternion.identity); //audio->prefabs
+            Destroy(attachedAudio);
+            attachedAudio = Instantiate(physicalDamageAudio, transform.position, Quaternion.identity); //audio->prefabs
+            attachedAudio.transform.parent = gameObject.transform; // attach audio to be chid of player object.
             if (other.GetComponent<TriggerHurt>().killInstantly)
             {
                 cHealth.Kill();
