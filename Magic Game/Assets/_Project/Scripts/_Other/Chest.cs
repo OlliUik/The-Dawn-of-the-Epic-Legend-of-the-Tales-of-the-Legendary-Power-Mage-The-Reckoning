@@ -27,6 +27,7 @@ public class Chest : MonoBehaviour
     {
         if (isBreakable && collision.gameObject.layer == 9)
         {
+            chestRandomizer.crystalChests.Remove(gameObject.transform.parent.gameObject);
             gameObject.SetActive(false);
         }
     }

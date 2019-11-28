@@ -181,6 +181,9 @@ public class EnemyMelee : EnemyCore
         animator.gameObject.GetComponent<RagdollModifier>().SetKinematic(false, true);
         animator.transform.parent = null;
 
+        attachedAudio = Instantiate(deathAudioPrefab, transform.position, Quaternion.identity); //audio
+        attachedAudio.transform.parent = animator.transform;
+
         Destroy(this.gameObject);
         animator.SetBool("isIdle", false);
         animator.SetBool("isWalking", false);
