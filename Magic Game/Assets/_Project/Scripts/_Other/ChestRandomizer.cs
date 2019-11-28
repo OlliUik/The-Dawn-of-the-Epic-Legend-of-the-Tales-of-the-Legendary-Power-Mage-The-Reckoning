@@ -131,6 +131,7 @@ public class ChestRandomizer : MonoBehaviour
         foreach (GameObject chest in crystalChests)
         {
             GameObject current = Instantiate(normalChest, chest.transform.position, chest.transform.rotation, gameObject.transform);
+            current.SetActive(chest.activeInHierarchy);
             chests.Add(current);
             Destroy(chest);
         }
