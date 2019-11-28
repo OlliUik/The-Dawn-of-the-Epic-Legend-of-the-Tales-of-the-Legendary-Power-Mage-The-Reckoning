@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * 
+ * This is the old version.
+ * Newer version is just a normal SpellModifier
+ * 
+ */
 [System.Serializable]
 public class CurseEffect : StatusEffect
 {
