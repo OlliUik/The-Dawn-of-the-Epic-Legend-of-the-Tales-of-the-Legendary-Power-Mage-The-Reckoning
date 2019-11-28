@@ -13,7 +13,6 @@ public class EnemyGlobalVariables
     public static float enemyExtraHealth = 0f;
     public static float enemyExtraDamage = 0;
     public static int extraEnemyAmount = 0;
-    //public static float extraEnemyRate = 0f;
 
     public static void StageUp()
     {

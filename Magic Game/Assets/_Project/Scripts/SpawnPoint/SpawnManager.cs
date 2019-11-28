@@ -4,61 +4,64 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class SpawnManager : MonoBehaviour
-{
+{   
+    //For checking what it's doing right now.
     public enum SpawnState { SPAWNING, WAITING, COUNTING }
 
+    
+    //Configure each wave 
     [System.Serializable]
     public class Wave
     {
-        public string name;
-        public GameObject[] enemy;
-        public int count;
-        public float rate;
+        public string name;                 //Name of the wave.
+        public GameObject[] enemy;          //Type of enemies that you want to spawn.
+        public int count;                   //Numbers of enemies in each wave.
+        public float rate;                  //It can be spawn more than 1 enemies per spawnPoint.
 
-
+        //Countdown between wave.
         public void setCount(int newCount)
         {
             this.count = newCount;
         }
     }
 
-    public List<GameObject> spawnPoints = new List<GameObject>();
-    public Wave[] waves;
-    private int nextWave = 0;
-    [SerializeField] private float timeBetweenWaves = 5f;
-    public float waveCountdown;
+    public List<GameObject> spawnPoints = new List<GameObject>();            //List of spawnPoints. MUST BE ADDED MANUALLY.
+    public Wave[] waves;                                                     //Numbers of waves.
+    private int nextWave = 0;                                                //index for waves.
+    [SerializeField] private float timeBetweenWaves = 5f;                    //As the name said.
+    public float waveCountdown;                                              
 
-    public float crystalMultiplier = 0.3f;
+    public float crystalMultiplier = 0.3f;                                   //How much the health of enemies when the player pick a crystal.
 
+    //Display count down time.
     public float WaveCountDown
     {
         get { return waveCountdown; }
     }
 
-    private float searchCountdown = 1f;
+    private float searchCountdown = 1f;                                      //Search time before start counting down to the next wave.
 
-    public SpawnState state = SpawnState.COUNTING;
-    public GameObject genbuilder;
-    [SerializeField] private float increaseHealth = 0.2f;
-    public float increasedStat = 1.0f;
-    [SerializeField] private float distance = 0.0f;
-    [SerializeField] private float spawnDistanceLimit = 100.0f;
-    [SerializeField] private Vector3 spawnDistanceLimit2 = new Vector3(0,0,0);
+    public SpawnState state = SpawnState.COUNTING;                           //Default state of the SpawnManager.
+    private GameObject genbuilder;                                           //For getting the level generator automatically.                                       
+    [SerializeField] private float increaseHealth = 0.2f;                    //Ratio of the health that will be increased next wave.
+    public float increasedStat = 1.0f;                                       //For showing the ratio of the current enemies stat.
+    [SerializeField] private float distance = 0.0f;                          //Distance that mesh renderer will be disabled when the player is too far. Originally disable their core too.
+    [SerializeField] private float spawnDistanceLimit = 100.0f;              //Original used for getting spawnPoints only in the range of the spawnManager.    
 
     /*
-    [SerializeField] private bool spawnDistanceIsRectangular = false;
+    [SerializeField] private bool spawnDistanceIsRectangular = false;         
     [SerializeField] private float spawnDistanceLimitX = 0.0f;
     [SerializeField] private float spawnDistanceLimitY = 0.0f;
     [SerializeField] private float spawnDistanceLimitZ = 0.0f;
     */
 
-    public List<EnemyCore> enemies;
-    public List<GameObject> closeSpawn;
-    private GameObject player = null;
-    public LevelGenerator gen;
-    private bool gotSpawnPoint = false;
-    private bool gotCloseSpawn = false;
-    private bool isUpStaged = false;
+    public List<EnemyCore> enemies;                                          //For checking enemies in a spawnManager.
+    //public List<GameObject> closeSpawn;                                    //Keep all the closeSpawn   
+    private GameObject player = null;                                        //Automatically get player component.
+    private LevelGenerator gen;                                              //Get levelgenerator components from a gameobject.
+    private bool gotSpawnPoint = false;                                      //Check whether it got all the desired spawnpoints yet.
+    private bool gotCloseSpawn = false;                                      //Originally, It use to check the filter of nearby spawnPoints within a spawnmanager range.
+    private bool isUpStaged = false;                                         //Check whether the all the wave has ended or not.
 
     // Start is called before the first frame update
     void Start()
@@ -85,7 +88,7 @@ public class SpawnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //Gen the levelgenerator component.
         if (gen == null)
         {
             genbuilder = GameObject.FindGameObjectWithTag("levelbuilder");
@@ -105,11 +108,14 @@ public class SpawnManager : MonoBehaviour
                 /*
                 spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
                 */
+
+                /*
                 foreach(GameObject child in spawnPoints)
                 {
                     //CheckDistance(child);
                     closeSpawn.Add(child);
                 }
+                */
                 gotSpawnPoint = true;
                 gotCloseSpawn = true;
 
@@ -220,31 +226,32 @@ public class SpawnManager : MonoBehaviour
     }
     */
 
-
+    //Turn off mesh renderer when enemy is too far away.
     void checkPlayerDistance(EnemyCore child)
     {
         if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
         {
             child.enabled = true;
-            child.gameObject.GetComponent<NavMeshAgent>().enabled = true;
-            child.gameObject.GetComponent<EnemyNavigation>().enabled = true;
-            child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = true;
-            child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = true;
+            //child.gameObject.GetComponent<NavMeshAgent>().enabled = true;
+            //child.gameObject.GetComponent<EnemyNavigation>().enabled = true;
+            //child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = true;
+            //child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = true;
             foreach (SkinnedMeshRenderer render in child.GetComponentsInChildren<SkinnedMeshRenderer>()) { render.enabled = true; }
 
         }
 
         else
         {   
-            child.gameObject.GetComponent<NavMeshAgent>().enabled = false;
-            child.gameObject.GetComponent<EnemyNavigation>().enabled = false;
+            //child.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            //child.gameObject.GetComponent<EnemyNavigation>().enabled = false;
             foreach (SkinnedMeshRenderer render in child.GetComponentsInChildren<SkinnedMeshRenderer>()) { render.enabled = false; }
-            child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = false;
-            child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = false;
+            //child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = false;
+            //child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = false;
             child.enabled = false;
         }
     }
 
+    //Check whether enemies are alive or not.
     bool EnemyIsAlive()
     {
         searchCountdown -= Time.deltaTime;
@@ -259,6 +266,8 @@ public class SpawnManager : MonoBehaviour
         return true;
     }
 
+
+    //Spawn enemies in a wave.
     IEnumerator SpawnWave(Wave _wave)
     {
         Debug.Log("Spawning Wave: " + _wave.name);
@@ -274,11 +283,12 @@ public class SpawnManager : MonoBehaviour
         yield break;
     }
 
+    //Spawn an enemy with increased stat.
     void SpawnEnemy(GameObject[] _enemy)
     {
         int randomRange = Random.Range(0, _enemy.Length);
         Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
-        GameObject spawnPoint = closeSpawn[Random.Range(0, closeSpawn.Count)];
+        GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
         GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
         Health tempHealth = baddies.GetComponent<Health>();
         if (tempHealth != null)
@@ -292,6 +302,7 @@ public class SpawnManager : MonoBehaviour
         enemies.Add(baddies.GetComponent<EnemyCore>());
     }
 
+    //Proceed to the next wave. or start looping.
     void WaveCompleted()
     {
         Debug.Log("Wave Completed");
@@ -319,11 +330,11 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-
+    /*
     public virtual void OnDrawGizmos()
     {
 
-        /*
+     
         Gizmos.color = Color.blue;
         if (!spawnDistanceIsRectangular)
         {
@@ -335,7 +346,7 @@ public class SpawnManager : MonoBehaviour
             Gizmos.DrawLine(transform.position - new Vector3(0, spawnDistanceLimitY, 0), transform.position + new Vector3(0, spawnDistanceLimitY, 0));
             Gizmos.DrawLine(transform.position - new Vector3(0, 0, spawnDistanceLimitZ), transform.position + new Vector3(0, 0, spawnDistanceLimitZ));
         }
-        */
-        
+       
     }
+    */
 }
