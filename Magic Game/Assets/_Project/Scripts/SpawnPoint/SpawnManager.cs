@@ -286,22 +286,30 @@ public class SpawnManager : MonoBehaviour
 
     //Spawn an enemy with increased stat.
     void SpawnEnemy(GameObject[] _enemy)
-    {
-        int randomRange = Random.Range(0, _enemy.Length);
-        Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
-        GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
-        GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
-        Health tempHealth = baddies.GetComponent<Health>();
-        if (tempHealth != null)
+    {   
+        if(_enemy != null)
         {
-            Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
-            Debug.Log("Increased Stat: " + increasedStat);
-            tempHealth.maxHealth += EnemyGlobalVariables.enemyExtraHealth;
-            tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected * crystalMultiplier) + (GlobalVariables.angryBaddiesPoint * crystalMultiplier));
-            tempHealth.health = tempHealth.maxHealth;
+            int randomRange = Random.Range(0, _enemy.Length);
+            Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
+            GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
+            GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
+            Health tempHealth = baddies.GetComponent<Health>();
+            if (tempHealth != null)
+            {
+                Debug.Log("Crystal increase: " + GlobalVariables.crystalsCollected * crystalMultiplier);
+                Debug.Log("Increased Stat: " + increasedStat);
+                tempHealth.maxHealth += EnemyGlobalVariables.enemyExtraHealth;
+                tempHealth.maxHealth *= (increasedStat + (GlobalVariables.crystalsCollected * crystalMultiplier) + (GlobalVariables.angryBaddiesPoint * crystalMultiplier));
+                tempHealth.health = tempHealth.maxHealth;
+            }
+            enemies.Add(baddies.GetComponent<EnemyCore>());
         }
-        enemies.Add(baddies.GetComponent<EnemyCore>());
+        else
+        {
+            Debug.Log("Add some enemies, will ya?");
+        }
     }
+       
 
     //Proceed to the next wave. or start looping.
     void WaveCompleted()
