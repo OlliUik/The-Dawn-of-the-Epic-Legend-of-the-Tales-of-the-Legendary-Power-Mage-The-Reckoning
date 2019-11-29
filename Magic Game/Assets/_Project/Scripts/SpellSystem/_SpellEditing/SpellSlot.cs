@@ -21,6 +21,11 @@ public class SpellSlot : MonoBehaviour
         {
             spellSlotText.text = "PROJECTILE";
         }
+
+        if (spellSlotText.text == "AOE")
+        {
+            spellSlotText.text = "AURA";
+        }
     }
 
 }
