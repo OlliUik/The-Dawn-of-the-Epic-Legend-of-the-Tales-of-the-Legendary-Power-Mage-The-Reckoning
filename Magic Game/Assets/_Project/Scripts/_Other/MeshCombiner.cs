@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class MeshCombiner : MonoBehaviour
@@ -22,11 +23,64 @@ public class MeshCombiner : MonoBehaviour
         }
     }
 
+    [HideInInspector] public bool isDone = false;
+
     [Tooltip("Increase this value, if you have more materials being used.")]
     [SerializeField] private int materialTempCount = 50;
     [SerializeField][Range(0, 65534)] private int maxVertexCount = 65534;
+    [SerializeField] private bool generateToSceneRoot = false;
 
-    private void Start()
+    private LevelGenerator generator = null;
+
+    private void Awake()
+    {
+        GameObject[] go = GameObject.FindGameObjectsWithTag("levelbuilder");
+
+        if (go != null)
+        {
+            foreach (GameObject g in go) 
+            {
+                if (g.activeInHierarchy)
+                {
+                    generator = g.GetComponent<LevelGenerator>();
+                    if (generator != null) 
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (generator != null)
+        {
+            Debug.Log("Starting coroutine WaitForLevelGeneration.");
+            StartCoroutine(WaitForLevelGeneration());
+        }
+        else 
+        {
+            Debug.LogError(this + " Couldn't find LevelGenerator script!");
+        }
+    }
+
+    IEnumerator WaitForLevelGeneration() 
+    {
+        while (!generator.isDone)
+        {
+            Debug.Log("Waiting while generation has finished...");
+            yield return null;
+        }
+        Debug.Log("Can now combine meshes!");
+        CombineMeshes();
+        yield break;
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("GameObject being destroyed, stopping coroutines...");
+        StopAllCoroutines();
+    }
+
+    private void CombineMeshes()
     {
         //Get all the meshes
         
@@ -282,6 +336,24 @@ public class MeshCombiner : MonoBehaviour
             rend.enabled = false;
         }
 
+        //Move gameobjects under script's transform if "generateToSceneRoot" is false
+
+        if (!generateToSceneRoot) 
+        {
+            for (int i = parent.transform.childCount - 1; i >= 0; i--)
+            {
+                parent.transform.GetChild(i).parent = transform;
+            }
+
+            //foreach (Transform tf in parent.transform)
+            //{
+            //    tf.parent = transform;
+            //}
+
+            Destroy(parent);
+        }
+
+        isDone = true;
         Debug.Log(this + " Meshes combined successfully!");
     }
 }

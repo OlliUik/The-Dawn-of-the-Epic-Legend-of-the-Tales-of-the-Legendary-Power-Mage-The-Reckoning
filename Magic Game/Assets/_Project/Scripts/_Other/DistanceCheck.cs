@@ -16,6 +16,7 @@ public class DistanceCheck : MonoBehaviour
 
     private LevelGenerator gen;                                                 // Get levelgenerator component from the gameobject.
     private GameObject player = null;                                           // Get component of the player
+    private bool meshCombiningDone = false;
 
     private void Start()
     {
@@ -37,6 +38,7 @@ public class DistanceCheck : MonoBehaviour
         }
 
         gen = FindObjectOfType<LevelGenerator>();
+        StartCoroutine(WaitForMeshCombining());
     }
     
     //Checking of the script visually.
@@ -53,20 +55,19 @@ public class DistanceCheck : MonoBehaviour
     {
         if (generator != null && player != null && childrenToHide != null)
         {
-            foreach (GameObject child in childrenToHide)
+            if (meshCombiningDone)
             {
-                if (gen.isDone)
+                foreach (GameObject child in childrenToHide)
                 {
-                    CheckDistance(child);
-                }
+                    if (gen.isDone)
+                    {
+                        CheckDistance(child);
+                    }
 
+                }
             }
         }
-
-
     }
-
-
 
     private void CheckDistance(GameObject child)
     {
@@ -88,6 +89,32 @@ public class DistanceCheck : MonoBehaviour
             disableBlock.SetActive(true);
         }
 
+    }
+
+    IEnumerator WaitForMeshCombining() 
+    {
+        while (!meshCombiningDone)
+        {
+            if (gen.isDone)
+            {
+                meshCombiningDone = true;
+                foreach (GameObject child in childrenToHide)
+                {
+                    if (child.GetComponent<MeshCombiner>() != null)
+                    {
+                        if (!child.GetComponent<MeshCombiner>().isDone)
+                        {
+                            yield return null;
+                            break;
+                        }
+                    }
+                }
+            }
+            else 
+            {
+                yield return null;
+            }
+        }
     }
 
 }
