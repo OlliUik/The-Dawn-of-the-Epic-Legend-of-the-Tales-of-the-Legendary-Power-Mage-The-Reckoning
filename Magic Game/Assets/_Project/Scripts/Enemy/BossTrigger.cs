@@ -6,14 +6,24 @@ public class BossTrigger : MonoBehaviour
 {
     [SerializeField] private EnemyCore boss = null;
     [SerializeField] private GameObject particles = null;
+    [SerializeField] private GameObject portal = null;
     [SerializeField] private BoxCollider[] col = null;
 
     private void Start()
     {
         col = GetComponents<BoxCollider>();
         boss.gameObject.SetActive(false);
+        portal.gameObject.SetActive(false);
     }
-
+    /*
+    private void Update()
+    {
+        if (!GetComponentInChildren<EnemyCore>())
+        {
+            portal.gameObject.SetActive(true);
+        }
+    }
+    */
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
