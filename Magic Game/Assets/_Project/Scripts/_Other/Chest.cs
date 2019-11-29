@@ -5,6 +5,7 @@ using UnityEngine;
 public class Chest : MonoBehaviour
 {
     [SerializeField] private bool isBreakable = false;
+    [SerializeField] private GameObject crystal = null;
     private ChestRandomizer chestRandomizer = null;
     private LevelGenerator levelGenerator = null;
 
@@ -27,6 +28,12 @@ public class Chest : MonoBehaviour
     {
         if (isBreakable && collision.gameObject.layer == 9)
         {
+            if (crystal != null)
+            {
+                Instantiate(crystal, transform.position + Vector3.up * 1.0f, transform.rotation, null);
+            }
+
+            chestRandomizer.crystalChests.Remove(gameObject.transform.parent.gameObject);
             gameObject.SetActive(false);
         }
     }

@@ -29,6 +29,7 @@ public class SpawnManager : MonoBehaviour
     public Wave[] waves;                                                     //Numbers of waves.
     private int nextWave = 0;                                                //index for waves.
     [SerializeField] private float timeBetweenWaves = 5f;                    //As the name said.
+    [SerializeField] private float secondsRate = 1f;                          //seconds between the spawning.
     public float waveCountdown;                                              
 
     public float crystalMultiplier = 0.3f;                                   //How much the health of enemies when the player pick a crystal.
@@ -276,7 +277,7 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < _wave.count + EnemyGlobalVariables.extraEnemyAmount ; i++)
         {
             SpawnEnemy(_wave.enemy);
-            yield return new WaitForSeconds(1f / _wave.rate);
+            yield return new WaitForSeconds(secondsRate / _wave.rate);
         }
 
         state = SpawnState.WAITING;

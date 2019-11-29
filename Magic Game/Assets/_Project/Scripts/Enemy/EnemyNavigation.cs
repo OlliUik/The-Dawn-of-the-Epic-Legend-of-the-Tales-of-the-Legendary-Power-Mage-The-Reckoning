@@ -464,8 +464,12 @@ public class EnemyNavigation : MonoBehaviour
             }
         }
 
-        Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
-        cAgent.SetDestination(nearTargetLocation);
+        if(cAgent.isOnNavMesh && cEnemyCore.cVision.bCanSeeTarget)
+        {
+            Vector3 nearTargetLocation = cEnemyCore.cVision.targetLocation + Vector3.Normalize(transform.position - cEnemyCore.cVision.targetLocation) * minDistanceFromAttackTarget;
+            cAgent.SetDestination(nearTargetLocation);
+        }
+       
 
         //if (!cEnemyCore.MoveWhileCasting)
         //{

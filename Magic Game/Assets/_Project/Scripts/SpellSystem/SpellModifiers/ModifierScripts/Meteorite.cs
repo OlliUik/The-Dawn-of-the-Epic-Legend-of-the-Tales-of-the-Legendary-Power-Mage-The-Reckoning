@@ -10,11 +10,27 @@ public class Meteorite : SpellModifier
     public float aoeRadius = 5f;
     public GameObject meteorPrefab;
     public int aoeAmount = 16;
+    public float beamMiniCooldown = 0.2f;
+
+    private float currentBeamCooldown = 0f;
+    private bool canBeam = true;
 
     private void Start()
     {
         MeteorManager.Instance.explosionForce = explosionForce;
         MeteorManager.Instance.meteorScale = meteorScale;
+    }
+
+    private void Update()
+    {
+        if(currentBeamCooldown >= beamMiniCooldown)
+        {
+            canBeam = true;
+        }
+        else
+        {
+            currentBeamCooldown += Time.deltaTime;
+        }
     }
 
     public override void OnSpellCast(Spell spell)
@@ -40,8 +56,13 @@ public class Meteorite : SpellModifier
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
-        GameObject meteor = Instantiate(meteorPrefab, hitInfo.transform.position + new Vector3(0, 16, 0), Quaternion.identity);
-        meteor.transform.localScale = new Vector3(meteorScale, meteorScale, meteorScale);
+        if (canBeam)
+        {
+            currentBeamCooldown = 0f;
+            canBeam = false;
+            GameObject meteor = Instantiate(meteorPrefab, hitInfo.point + new Vector3(0, 16, 0), Quaternion.identity);
+            meteor.transform.localScale = new Vector3(meteorScale, meteorScale, meteorScale);
+        }
     }
 
 }

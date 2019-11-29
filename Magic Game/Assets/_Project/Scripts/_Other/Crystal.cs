@@ -53,7 +53,7 @@ public class Crystal : MonoBehaviour
                 core.GetHUD().spellEditingController.crystalsLeft++;
                 core.GetHUD().crystalDisplay.CrystalsCollected++;
                 Debug.Log("Got a crystal!");
-                //core.ToggleSpellEditingUI();
+                core.ToggleSpellEditingUI();
                 core.cHealth.UpdateMaxHealth();
             }
             Destroy(gameObject);
