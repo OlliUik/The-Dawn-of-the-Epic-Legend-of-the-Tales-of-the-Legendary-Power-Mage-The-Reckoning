@@ -99,7 +99,7 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("No level generator");
+                Debug.LogWarning("No level generator");
             }
         }
         else
