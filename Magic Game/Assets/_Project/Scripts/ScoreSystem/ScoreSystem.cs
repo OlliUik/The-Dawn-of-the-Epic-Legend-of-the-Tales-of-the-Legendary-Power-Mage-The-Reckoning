@@ -66,7 +66,7 @@ public class ScoreSystem : MonoBehaviour
                 case ERank.GMCMU: return "Godsent Megahero, the Chosen Master of the Universe";
                 case ERank.TEGIOTD: return "The Extreme Grandmaster, the Immortal Omniguru and the Total Dominator";
                 case ERank.TMHBGIPOMFF: return "The Most High Being: God of Infinite Power and the Overlord of the Multiverse - the Final Form";
-                default: return "Noob";
+                default: return "Muggle";
             }
         }
 
