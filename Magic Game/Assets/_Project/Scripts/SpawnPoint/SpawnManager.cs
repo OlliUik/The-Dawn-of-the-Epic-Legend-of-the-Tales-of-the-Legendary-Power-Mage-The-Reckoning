@@ -25,7 +25,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public List<GameObject> spawnPoints = new List<GameObject>();            //List of spawnPoints. MUST BE ADDED MANUALLY.
+    public List<GameObject> spawnPoints ;            //List of spawnPoints. MUST BE ADDED MANUALLY.
     public Wave[] waves;                                                     //Numbers of waves.
     private int nextWave = 0;                                                //index for waves.
     [SerializeField] private float timeBetweenWaves = 5f;                    //As the name said.
@@ -80,9 +80,7 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.Log("No level generator");
         }
-
-
-        
+        spawnPoints = new List<GameObject>();
         waveCountdown = timeBetweenWaves;
     }
 
@@ -105,7 +103,7 @@ public class SpawnManager : MonoBehaviour
         else
         {
             if (!gotSpawnPoint && gen.isDone && !gotCloseSpawn)
-            {   
+            {
                 /*
                 spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("spawnPoint"));
                 */
@@ -117,6 +115,13 @@ public class SpawnManager : MonoBehaviour
                     closeSpawn.Add(child);
                 }
                 */
+
+                    foreach (Transform child in transform)
+                    {
+                       spawnPoints.Add(child.gameObject);
+                    }
+              
+               
                 gotSpawnPoint = true;
                 gotCloseSpawn = true;
 
@@ -229,10 +234,11 @@ public class SpawnManager : MonoBehaviour
 
     //Turn off mesh renderer when enemy is too far away.
     void checkPlayerDistance(EnemyCore child)
-    {
+    {   
+        /*
         if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
         {
-            child.enabled = true;
+            // child.enabled = true;
             //child.gameObject.GetComponent<NavMeshAgent>().enabled = true;
             //child.gameObject.GetComponent<EnemyNavigation>().enabled = true;
             //child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = true;
@@ -248,8 +254,9 @@ public class SpawnManager : MonoBehaviour
             foreach (SkinnedMeshRenderer render in child.GetComponentsInChildren<SkinnedMeshRenderer>()) { render.enabled = false; }
             //child.gameObject.GetComponentInChildren<EnemyAnimations>().enabled = false;
             //child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = false;
-            child.enabled = false;
+            //child.enabled = false;
         }
+        */
     }
 
     //Check whether enemies are alive or not.
