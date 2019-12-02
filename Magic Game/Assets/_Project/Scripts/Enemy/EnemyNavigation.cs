@@ -54,6 +54,7 @@ public class EnemyNavigation : MonoBehaviour
     private float navErrorTimer = 0.0f;
     private float paranoidTimer = 0.0f;
     private EnemyCore cEnemyCore = null;
+    private LineRenderer lineRenderer;
 
     [SerializeField] private float min = 0.0f;
     [SerializeField] private float max = 0.0f;
@@ -74,6 +75,7 @@ public class EnemyNavigation : MonoBehaviour
 
     void Start()
     {
+        //lineRenderer = GetComponent<LineRenderer>();
         cEnemyCore = GetComponent<EnemyCore>();
         cAgent = GetComponent<NavMeshAgent>();
         character = GetComponent<ThirdPersonCharacter>();
@@ -231,6 +233,7 @@ public class EnemyNavigation : MonoBehaviour
           */
         // Debug.Log(isGrounded.ToString());
 
+
         if (isEnable)
         {   
             if(cAgent.isOnNavMesh)
@@ -250,9 +253,20 @@ public class EnemyNavigation : MonoBehaviour
                     cAgent.updatePosition = true;
                 }
             }
-          
         }
 
+        /*
+        if(cAgent.hasPath)
+        {
+            lineRenderer.positionCount = cAgent.path.corners.Length;
+            lineRenderer.SetPositions(cAgent.path.corners);
+            lineRenderer.enabled = true;
+        }
+        else
+        {
+            lineRenderer.enabled = false;
+        }
+        */
     }
 
     /*
