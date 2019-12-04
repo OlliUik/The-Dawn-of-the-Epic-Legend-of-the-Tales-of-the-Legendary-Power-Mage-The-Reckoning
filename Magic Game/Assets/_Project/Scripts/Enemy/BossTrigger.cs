@@ -7,23 +7,27 @@ public class BossTrigger : MonoBehaviour
     [SerializeField] private EnemyCore boss = null;
     [SerializeField] private GameObject particles = null;
     [SerializeField] private GameObject portal = null;
+    [SerializeField] private GameObject elevator = null;
+    [SerializeField] private Transform elevatorTarget = null;
     [SerializeField] private BoxCollider[] col = null;
 
     private void Start()
     {
         col = GetComponents<BoxCollider>();
+        particles.transform.position = boss.transform.position + (Vector3.up * 2);
+        particles.gameObject.SetActive(false);
         boss.gameObject.SetActive(false);
         portal.gameObject.SetActive(false);
     }
-    /*
+
     private void Update()
     {
-        if (!GetComponentInChildren<EnemyCore>())
+        if (boss.isDead)
         {
             portal.gameObject.SetActive(true);
         }
     }
-    */
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -31,7 +35,9 @@ public class BossTrigger : MonoBehaviour
             if (boss != null)
             {
                 boss.gameObject.SetActive(true);
-                Instantiate(particles, boss.transform);
+                particles.gameObject.SetActive(true);
+                elevator.transform.position = elevatorTarget.position;
+                elevator.GetComponent<MovingObject>().enabled = false;
 
                 foreach (BoxCollider box in col)
                 {
