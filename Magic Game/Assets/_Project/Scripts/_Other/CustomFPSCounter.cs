@@ -10,22 +10,36 @@ public class CustomFPSCounter : MonoBehaviour
 
     public Text fpsText = null;
 
+    private bool isToggled = false;
     private int frameCount = 0;
     private float dt = 0.0f;
     private float fps = 0.0f;
 
     private void Update()
     {
-        frameCount++;
-        dt += Time.unscaledDeltaTime;
-
-        if (dt > 1.0f / updateRate)
+        if (Input.GetKeyUp(KeyCode.F1))
         {
-            fps = frameCount / dt;
-            frameCount = 0;
-            dt -= 1.0f / updateRate;
+            isToggled = !isToggled;
         }
 
-        fpsText.text = formatedString.Replace("{value}", System.Math.Round(fps, 1).ToString("0.0"));
+        if (isToggled)
+        {
+            frameCount++;
+            dt += Time.unscaledDeltaTime;
+
+            if (dt > 1.0f / updateRate)
+            {
+                fps = frameCount / dt;
+                frameCount = 0;
+                dt -= 1.0f / updateRate;
+            }
+
+            fpsText.text = formatedString.Replace("{value}", System.Math.Round(fps, 1).ToString("0.0"));
+        }
+
+        else
+        {
+            fpsText.text = null;
+        }
     }
 }

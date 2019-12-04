@@ -30,30 +30,30 @@ public class ScoreSystem : MonoBehaviour
 
         public enum ERank
         {
-            NB,
-            WC,
-            EL,
-            ME,
-            TBFD,
-            EKSME,
-            KHUC,
-            TEDDW,
-            SLHHDL,
-            A3M,
-            GMCMU,
-            TEGIOTD,
-            TMHBGIPOMFF
+            M = 0, // doesn't really matter to have value because it's the lowest rank from 0 to next rank.
+            WC = 100000,
+            EL = 150000,
+            ME = 200000,
+            TBFD = 250000,
+            EKSME = 300000,
+            KHUC = 350000,
+            TEDDW = 400000,
+            SLHHDL = 450000,
+            A3M = 500000,
+            GMCMU = 550000,
+            TEGIOTD = 600000,
+            TMHBGIPOMFF = 650000
         }
         private Rank()
         {
-            currentRank = ERank.NB;
+            currentRank = ERank.M;
         }
 
         public string getRankText()
         {
             switch (currentRank)
             {
-                case ERank.NB: return "Noob";
+                case ERank.M: return "Muggle";
                 case ERank.WC: return "Wild Child";
                 case ERank.EL: return "Epic Legend";
                 case ERank.ME: return "Master Exploder";
@@ -66,7 +66,7 @@ public class ScoreSystem : MonoBehaviour
                 case ERank.GMCMU: return "Godsent Megahero, the Chosen Master of the Universe";
                 case ERank.TEGIOTD: return "The Extreme Grandmaster, the Immortal Omniguru and the Total Dominator";
                 case ERank.TMHBGIPOMFF: return "The Most High Being: God of Infinite Power and the Overlord of the Multiverse - the Final Form";
-                default: return "Noob";
+                default: return "Muggle";
             }
         }
 
@@ -136,46 +136,47 @@ public class ScoreSystem : MonoBehaviour
     ///<summary>Keep update of the player's rank base on current score.</summary>
     private void RankUpdate()
     {
-        if (score < 10000)
+        if (score < (int)Rank.ERank.WC)
         {
-            rankInfo.currentRank = Rank.ERank.NB;
-        } else if (score >= 10000 && score < 100000)
+            rankInfo.currentRank = Rank.ERank.M;
+        } else if (score < (int)Rank.ERank.EL)
         {
             rankInfo.currentRank = Rank.ERank.WC;
-        } else if (score >= 100000 && score < 150000)
+        } else if (score < (int)Rank.ERank.ME)
         {
             rankInfo.currentRank = Rank.ERank.EL;
-        } else if (score >= 150000 && score < 200000)
+        } else if (score < (int)Rank.ERank.TBFD)
         {
             rankInfo.currentRank = Rank.ERank.ME;
-        } else if (score >= 200000 && score < 250000)
+        } else if (score < (int)Rank.ERank.EKSME)
         {
             rankInfo.currentRank = Rank.ERank.TBFD;
-        } else if (score >= 250000 && score < 300000)
+        } else if (score < (int)Rank.ERank.KHUC)
         {
             rankInfo.currentRank = Rank.ERank.EKSME;
-        } else if (score >= 300000 && score < 350000)
+        } else if (score < (int)Rank.ERank.TEDDW)
         {
             rankInfo.currentRank = Rank.ERank.KHUC;
-        } else if (score >= 350000 && score < 400000)
+        } else if (score < (int)Rank.ERank.SLHHDL)
         {
             rankInfo.currentRank = Rank.ERank.TEDDW;
-        } else if (score >= 400000 && score < 450000)
+        } else if (score < (int)Rank.ERank.A3M)
         {
             rankInfo.currentRank = Rank.ERank.SLHHDL;
-        } else if (score >= 450000 && score < 500000)
+        } else if (score < (int)Rank.ERank.GMCMU)
         {
             rankInfo.currentRank = Rank.ERank.A3M;
-        } else if (score >= 550000 && score < 600000)
+        } else if (score < (int)Rank.ERank.TEGIOTD)
         {
             rankInfo.currentRank = Rank.ERank.GMCMU;
-        } else if (score >= 600000 && score < 650000)
+        } else if (score < (int)Rank.ERank.TMHBGIPOMFF)
         {
             rankInfo.currentRank = Rank.ERank.TEGIOTD;
-        } else if (score >= 650000)
+        } else if (score >= (int)Rank.ERank.TMHBGIPOMFF)
         {
             rankInfo.currentRank = Rank.ERank.TMHBGIPOMFF;
         }
+
     }
 
     #endregion

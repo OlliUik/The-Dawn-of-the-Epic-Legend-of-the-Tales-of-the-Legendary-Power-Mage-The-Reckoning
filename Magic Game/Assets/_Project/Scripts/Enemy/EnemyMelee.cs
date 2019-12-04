@@ -161,10 +161,10 @@ public class EnemyMelee : EnemyCore
                 animator.SetBool("isWalking", false);
                 animator.SetBool("isAttack", false);
             }
-            else if (!cNavigation.cAgent.isStopped)
+
+            if (!cNavigation.cAgent.isStopped)
             {
                 animator.SetBool("isIdle", false);
-                animator.SetBool("isWalking", true);
             }
         }
     }

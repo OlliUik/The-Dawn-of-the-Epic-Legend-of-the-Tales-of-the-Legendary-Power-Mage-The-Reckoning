@@ -311,6 +311,7 @@ public class LevelGenerator : MonoBehaviour
                     {
                         Debug.LogError("FUCK YOU OVERLAP");
                         ResetLevelGenerator();
+                        return;
                     }
                 }
             }

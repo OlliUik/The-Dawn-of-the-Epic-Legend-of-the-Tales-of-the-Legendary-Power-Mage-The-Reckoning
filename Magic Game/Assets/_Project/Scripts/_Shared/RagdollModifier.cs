@@ -41,9 +41,9 @@ public class RagdollModifier : MonoBehaviour
         {
             if (item.name == armatureName)
             {
-                Debug.Log("Found the armature, looping through all of its child transforms...");
+                //Debug.Log("Found the armature, looping through all of its child transforms...");
                 GetAllChildren(item, armatureBones);
-                Debug.Log("Found " + armatureBones.Count + " bones.");
+                //Debug.Log("Found " + armatureBones.Count + " bones.");
             }
         }
     }
@@ -72,7 +72,7 @@ public class RagdollModifier : MonoBehaviour
                     rigid.maxDepenetrationVelocity = amount;
                 }
             }
-            Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
+            //Debug.Log("Set ragdoll's rigidbodies' maxDepenetrationVelocity to " + amount + ".");
         }
     }
 
@@ -101,7 +101,7 @@ public class RagdollModifier : MonoBehaviour
                     }
                 }
             }
-            Debug.Log("Set ragdoll's rigidbodies' isKinematic to " + (setKinematic ? "true." : "false."));
+            //Debug.Log("Set ragdoll's rigidbodies' isKinematic to " + (setKinematic ? "true." : "false."));
         }
 
         foreach (Transform item in hiddenWhenNotKinematic)

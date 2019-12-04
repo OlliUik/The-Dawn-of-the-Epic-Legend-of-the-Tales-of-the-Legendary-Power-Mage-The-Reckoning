@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class EndTrigger : MonoBehaviour
 {
+    public GameObject audio;
+
     private GenerationLoop loop = null;
 
     private void Start()
@@ -17,6 +19,7 @@ public class EndTrigger : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            Instantiate(audio, new Vector3(0, 0, 0), Quaternion.identity);
             loop.isGenerating = true;
             Destroy(gameObject);
         }
