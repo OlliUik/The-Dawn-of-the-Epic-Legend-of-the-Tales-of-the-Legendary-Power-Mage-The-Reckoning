@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class DistanceCheck : MonoBehaviour
 {
-    private List<GameObject> childrenToHide = null;            // List of the gameobject that will be hidden.
+    private List<GameObject> childrenToHide = new List<GameObject>();            // List of the gameobject that will be hidden.
     private GameObject disableBlock;                           // A block for making NavMesh not generate on a certain area.
     private GameObject generator;                              // Get the generator gameobject automically.
 
