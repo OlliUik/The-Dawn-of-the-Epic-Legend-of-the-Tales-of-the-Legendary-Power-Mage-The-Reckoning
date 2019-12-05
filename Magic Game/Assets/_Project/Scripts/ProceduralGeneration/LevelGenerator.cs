@@ -24,6 +24,7 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
+        timeUntilFinished -= Time.realtimeSinceStartup;
         layerMask = LayerMask.GetMask("Segment");
         StartCoroutine("GenerateLevel");
     }
@@ -34,8 +35,6 @@ public class LevelGenerator : MonoBehaviour
 
     private IEnumerator GenerateLevel()
     {
-        timeUntilFinished -= Time.realtimeSinceStartup;
-
         WaitForFixedUpdate interval = new WaitForFixedUpdate();
 
         PlaceFirstSegment();
