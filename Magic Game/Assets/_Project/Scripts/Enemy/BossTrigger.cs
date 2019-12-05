@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BossTrigger : MonoBehaviour
 {
-    [SerializeField] private EnemyCore boss = null;
+    //  [SerializeField] private EnemyCore boss = null;
+    [SerializeField] private BossLizardKing boss;
     [SerializeField] private GameObject particles = null;
     [SerializeField] private GameObject portal = null;
     [SerializeField] private GameObject elevator = null;
@@ -16,13 +17,16 @@ public class BossTrigger : MonoBehaviour
         col = GetComponents<BoxCollider>();
         particles.transform.position = boss.transform.position + (Vector3.up * 2);
         particles.gameObject.SetActive(false);
+        boss = FindObjectOfType<BossLizardKing>();
         boss.gameObject.SetActive(false);
         portal.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if (boss.isDead)
+        //if (boss.isDead)
+        //if(boss.isDead)
+        if(boss == null)
         {
             portal.gameObject.SetActive(true);
         }
