@@ -16,6 +16,7 @@ public class LevelGenerator : MonoBehaviour
     private List<Segment> placedSegments = new List<Segment>();
     private List<Doorway> availableDoorways = new List<Doorway>();
     private LayerMask layerMask = 0;
+    private float timeUntilFinished = 0.0f;
 
     #endregion
 
@@ -23,6 +24,7 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
+        timeUntilFinished -= Time.realtimeSinceStartup;
         layerMask = LayerMask.GetMask("Segment");
         StartCoroutine("GenerateLevel");
     }
@@ -58,7 +60,8 @@ public class LevelGenerator : MonoBehaviour
 
         FinalCheckForOverlaps();
 
-        Debug.Log("Level generation finished");
+        timeUntilFinished += Time.realtimeSinceStartup;
+        Debug.Log("Level generation finished! Time: " + timeUntilFinished);
 
         yield return interval;
 
