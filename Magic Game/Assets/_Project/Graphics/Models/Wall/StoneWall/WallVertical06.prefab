@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 3515982949446002230}
   - component: {fileID: 8102066931416719191}
   - component: {fileID: 8869583368755519702}
-  - component: {fileID: 6838182199938856558}
   - component: {fileID: 41892022155542068}
+  - component: {fileID: 2219309089775623402}
+  - component: {fileID: 9092672560805156947}
+  - component: {fileID: 2811240632949274672}
   m_Layer: 0
   m_Name: WallVertical06
   m_TagString: Untagged
@@ -80,20 +82,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6838182199938856558
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6540106038556529329}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300000, guid: 468a5f4538f9a844bb389ffd51e5ecbb, type: 2}
 --- !u!114 &41892022155542068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,3 +98,42 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!65 &2219309089775623402
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540106038556529329}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.140339, y: 40.199066, z: 2}
+  m_Center: {x: 0.02999878, y: 19.900558, z: 0.018798828}
+--- !u!65 &9092672560805156947
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540106038556529329}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.140339, y: 0.9937515, z: 3}
+  m_Center: {x: 0.02999878, y: 25.564564, z: 0.018798828}
+--- !u!65 &2811240632949274672
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540106038556529329}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.140339, y: 0.8968487, z: 3}
+  m_Center: {x: 0.02999878, y: 17.56314, z: 0.018798828}

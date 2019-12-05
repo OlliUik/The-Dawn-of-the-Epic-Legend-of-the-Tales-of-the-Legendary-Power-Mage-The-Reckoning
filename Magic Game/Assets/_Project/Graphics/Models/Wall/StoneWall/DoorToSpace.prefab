@@ -9,6 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1737500087633957067}
+  - component: {fileID: 8587988670938582403}
+  - component: {fileID: 8315569567177908132}
+  - component: {fileID: 3232438129026464985}
+  - component: {fileID: 4594424424424880964}
+  - component: {fileID: 467153371951888294}
   m_Layer: 25
   m_Name: DoorToSpace
   m_TagString: Untagged
@@ -39,6 +44,71 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 30.000002, y: 0, z: 90.00001}
+--- !u!65 &8587988670938582403
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545518505746389974}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 23.892954, z: 13.029898}
+  m_Center: {x: -1.005418e-12, y: 27.973293, z: 5.048505}
+--- !u!65 &8315569567177908132
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545518505746389974}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 16.55661, z: 2.2777634}
+  m_Center: {x: -1.0054178e-12, y: 7.778305, z: -0.33340538}
+--- !u!65 &3232438129026464985
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545518505746389974}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.7551479, z: 1.8272114}
+  m_Center: {x: -1.1877159e-12, y: 15.179036, z: 1.6804562}
+--- !u!65 &4594424424424880964
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545518505746389974}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 16.55661, z: 2.3385677}
+  m_Center: {x: 2.9455175e-12, y: 7.778305, z: 10.359888}
+--- !u!65 &467153371951888294
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545518505746389974}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.7678528, z: 1.9916573}
+  m_Center: {x: 2.0619825e-12, y: 15.172684, z: 8.23454}
 --- !u!1001 &168296928447657122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46,11 +116,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 6946664602211523752, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
-        type: 3}
-      propertyPath: m_Name
-      value: PillarHalf02 (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 5821628492597077519, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -116,12 +181,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000005
       objectReference: {fileID: 0}
+    - target: {fileID: 6946664602211523752, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
+        type: 3}
+      propertyPath: m_Name
+      value: PillarHalf02 (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 1146334207250595279, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eaea0c5dddd94774185c1c0d4de60b72, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2731397659127556600, guid: 7b397030bb9a42242b4ee7aec5fa8d3e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7b397030bb9a42242b4ee7aec5fa8d3e, type: 3}
 --- !u!4 &5953615148762780333 stripped
 Transform:
@@ -136,11 +207,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 353299279175797123, guid: d6e34cdb8e7d5bb48886216db510f453,
-        type: 3}
-      propertyPath: m_Name
-      value: PillarHalf01 (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 7287967510727807087, guid: d6e34cdb8e7d5bb48886216db510f453,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -206,12 +272,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000005
       objectReference: {fileID: 0}
+    - target: {fileID: 353299279175797123, guid: d6e34cdb8e7d5bb48886216db510f453,
+        type: 3}
+      propertyPath: m_Name
+      value: PillarHalf01 (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 9190464543612581625, guid: d6e34cdb8e7d5bb48886216db510f453,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eaea0c5dddd94774185c1c0d4de60b72, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7093939863667132246, guid: d6e34cdb8e7d5bb48886216db510f453, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d6e34cdb8e7d5bb48886216db510f453, type: 3}
 --- !u!4 &7479297585779264383 stripped
 Transform:
@@ -226,11 +298,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 6946664602211523752, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
-        type: 3}
-      propertyPath: m_Name
-      value: PillarHalf02 (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 5821628492597077519, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -296,12 +363,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000005
       objectReference: {fileID: 0}
+    - target: {fileID: 6946664602211523752, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
+        type: 3}
+      propertyPath: m_Name
+      value: PillarHalf02 (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 1146334207250595279, guid: 7b397030bb9a42242b4ee7aec5fa8d3e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eaea0c5dddd94774185c1c0d4de60b72, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2731397659127556600, guid: 7b397030bb9a42242b4ee7aec5fa8d3e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7b397030bb9a42242b4ee7aec5fa8d3e, type: 3}
 --- !u!4 &4992865051767655170 stripped
 Transform:
@@ -316,11 +389,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 5100812693673224038, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
-        type: 3}
-      propertyPath: m_Name
-      value: WallStrip05
-      objectReference: {fileID: 0}
     - target: {fileID: 8079978039013413843, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -376,12 +444,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5100812693673224038, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
+        type: 3}
+      propertyPath: m_Name
+      value: WallStrip05
+      objectReference: {fileID: 0}
     - target: {fileID: 5541328101544990280, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eaea0c5dddd94774185c1c0d4de60b72, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6160908323253323838, guid: 6c4f87e4712520f4fb14d9801f5ff9c0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6c4f87e4712520f4fb14d9801f5ff9c0, type: 3}
 --- !u!4 &7753464696016803206 stripped
 Transform:
@@ -396,11 +470,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 6357255468475736954, guid: 03a46998b9ff39c468d475c7c5831852,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorToSpace03
-      objectReference: {fileID: 0}
     - target: {fileID: 418755853986412315, guid: 03a46998b9ff39c468d475c7c5831852,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -466,12 +535,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.000001
       objectReference: {fileID: 0}
+    - target: {fileID: 6357255468475736954, guid: 03a46998b9ff39c468d475c7c5831852,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorToSpace03
+      objectReference: {fileID: 0}
     - target: {fileID: 5722096645515005708, guid: 03a46998b9ff39c468d475c7c5831852,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eaea0c5dddd94774185c1c0d4de60b72, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4356190858641980618, guid: 03a46998b9ff39c468d475c7c5831852, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 03a46998b9ff39c468d475c7c5831852, type: 3}
 --- !u!4 &3214091916202108698 stripped
 Transform:
@@ -486,11 +561,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 3387118798541118270, guid: c11026de362e604478c345dae8a9f094,
-        type: 3}
-      propertyPath: m_Name
-      value: SpaceWall
-      objectReference: {fileID: 0}
     - target: {fileID: 77819254348923193, guid: c11026de362e604478c345dae8a9f094,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -546,7 +616,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 3387118798541118270, guid: c11026de362e604478c345dae8a9f094,
+        type: 3}
+      propertyPath: m_Name
+      value: SpaceWall
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8915676041721364882, guid: c11026de362e604478c345dae8a9f094, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c11026de362e604478c345dae8a9f094, type: 3}
 --- !u!4 &7922525286919554758 stripped
 Transform:
@@ -561,11 +637,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 353299279175797123, guid: d6e34cdb8e7d5bb48886216db510f453,
-        type: 3}
-      propertyPath: m_Name
-      value: PillarHalf01 (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 7287967510727807087, guid: d6e34cdb8e7d5bb48886216db510f453,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -631,12 +702,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000005
       objectReference: {fileID: 0}
+    - target: {fileID: 353299279175797123, guid: d6e34cdb8e7d5bb48886216db510f453,
+        type: 3}
+      propertyPath: m_Name
+      value: PillarHalf01 (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 9190464543612581625, guid: d6e34cdb8e7d5bb48886216db510f453,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eaea0c5dddd94774185c1c0d4de60b72, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7093939863667132246, guid: d6e34cdb8e7d5bb48886216db510f453, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d6e34cdb8e7d5bb48886216db510f453, type: 3}
 --- !u!4 &618026843997584788 stripped
 Transform:
@@ -651,11 +728,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1737500087633957067}
     m_Modifications:
-    - target: {fileID: 5100812693673224038, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
-        type: 3}
-      propertyPath: m_Name
-      value: WallStrip05 (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 8079978039013413843, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -711,12 +783,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 1.6420001
       objectReference: {fileID: 0}
+    - target: {fileID: 5100812693673224038, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
+        type: 3}
+      propertyPath: m_Name
+      value: WallStrip05 (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 5541328101544990280, guid: 6c4f87e4712520f4fb14d9801f5ff9c0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eaea0c5dddd94774185c1c0d4de60b72, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6160908323253323838, guid: 6c4f87e4712520f4fb14d9801f5ff9c0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6c4f87e4712520f4fb14d9801f5ff9c0, type: 3}
 --- !u!4 &484189825046926049 stripped
 Transform:
