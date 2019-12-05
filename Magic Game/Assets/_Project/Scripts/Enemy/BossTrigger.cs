@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BossTrigger : MonoBehaviour
 {
-    [SerializeField] private EnemyCore boss = null;
+    [SerializeField] private GameObject boss = null;
     [SerializeField] private GameObject particles = null;
     [SerializeField] private GameObject portal = null;
     [SerializeField] private GameObject elevator = null;
@@ -22,7 +22,7 @@ public class BossTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (boss.isDead)
+        if (boss == null)
         {
             portal.gameObject.SetActive(true);
         }
