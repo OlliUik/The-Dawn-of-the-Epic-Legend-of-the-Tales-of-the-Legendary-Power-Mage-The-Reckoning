@@ -59,6 +59,17 @@ public class LevelGenerator : MonoBehaviour
         }
 
         FinalCheckForOverlaps();
+        
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject.GetComponent<ReplaceAfterGeneration>() != null)
+            {
+                while (child.gameObject.activeInHierarchy)
+                {
+                    yield return null;
+                }
+            }
+        }
 
         timeUntilFinished += Time.realtimeSinceStartup;
         Debug.Log("Level generation finished! Time: " + timeUntilFinished);
