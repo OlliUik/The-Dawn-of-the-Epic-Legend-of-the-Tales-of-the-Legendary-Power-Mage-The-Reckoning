@@ -5,9 +5,9 @@ using UnityEngine.AI;
 
 public class DistanceCheck : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> childrenToHide = null;            // List of the gameobject that will be hidden.
-    [SerializeField] private GameObject disableBlock;                           // A block for making NavMesh not generate on a certain area.
-    [SerializeField] private GameObject generator;                              // Get the generator gameobject automically.
+    private List<GameObject> childrenToHide = null;            // List of the gameobject that will be hidden.
+    private GameObject disableBlock;                           // A block for making NavMesh not generate on a certain area.
+    private GameObject generator;                              // Get the generator gameobject automically.
 
 
     [SerializeField] private float spawnDistanceLimitX = 0.0f;                  // Checking X axis between player and a prefab that script want to hide.
