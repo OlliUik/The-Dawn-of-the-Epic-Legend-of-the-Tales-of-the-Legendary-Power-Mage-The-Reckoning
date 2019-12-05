@@ -59,7 +59,9 @@ public class LevelGenerator : MonoBehaviour
         }
 
         FinalCheckForOverlaps();
-        
+
+        Debug.Log("Overlaps checked, instantiating rooms...");
+
         foreach (Transform child in transform)
         {
             if (child.gameObject.GetComponent<ReplaceAfterGeneration>() != null)
