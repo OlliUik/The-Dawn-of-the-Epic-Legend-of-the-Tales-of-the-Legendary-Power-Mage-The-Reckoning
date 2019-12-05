@@ -16,7 +16,6 @@ public class BossTrigger : MonoBehaviour
         col = GetComponents<BoxCollider>();
         particles.transform.position = boss.transform.position + (Vector3.up * 2);
         particles.gameObject.SetActive(false);
-        boss = FindObjectOfType<BossLizardKing>();
         boss.gameObject.SetActive(false);
         portal.gameObject.SetActive(false);
     }
