@@ -21,6 +21,11 @@ public class GenerationLoop : MonoBehaviour
         {
             currentGenerator = Instantiate(generator, transform);
         }
+
+        if (!currentGenerator.activeInHierarchy)
+        {
+            currentGenerator.SetActive(true);
+        }
     }
 
     private void Update()

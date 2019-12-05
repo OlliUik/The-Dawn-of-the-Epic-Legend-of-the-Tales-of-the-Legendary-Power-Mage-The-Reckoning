@@ -13,7 +13,7 @@ public class ErrorMessage : MonoBehaviour
     void Start()
     {
         keyPressDelayTemp = keyPressDelay;
-        errorText.text = "Uh oh! Something went wrong!\n\nError code: " + GlobalVariables.errorCode;
+        errorText.text = "Uh oh! Something went wrong!\n\nError: " + GlobalVariables.errorCode;
     }
 
     void Update()

@@ -296,9 +296,9 @@ public class SpawnManager : MonoBehaviour
     {   
         if(_enemy != null)
         {
-            int randomRange = Random.Range(0, _enemy.Length);
+            int randomRange = Random.Range(0, _enemy.Length - 1);
             Debug.Log("Spawning Enemy:" + _enemy[randomRange].name);
-            GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
+            GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count - 1)];
             GameObject baddies = Instantiate(_enemy[randomRange], spawnPoint.transform.position, spawnPoint.transform.rotation);
             Health tempHealth = baddies.GetComponent<Health>();
             if (tempHealth != null)

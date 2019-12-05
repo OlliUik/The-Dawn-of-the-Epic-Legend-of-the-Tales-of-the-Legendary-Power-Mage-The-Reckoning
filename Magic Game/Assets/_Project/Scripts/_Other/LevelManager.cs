@@ -4,9 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    private float loadSafetyTime = 15.0f;
-    private float loadSafetyTimeTemp;
-
     void Awake()
     {
         //Remove all entities from global entity lists during level load
@@ -29,8 +26,6 @@ public class LevelManager : MonoBehaviour
         //Reset the amount of crystals collected when a new level is loaded
         GlobalVariables.crystalsCollected = 0;
 
-        loadSafetyTimeTemp = loadSafetyTime;
-
         if (Time.timeScale != 1.0f)
         {
             Time.timeScale = 1.0f;
@@ -42,7 +37,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            ErrorScene("DEAD-BEEF");
+            ErrorScene("Scene not found.");
         }
     }
 
@@ -52,15 +47,11 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         //yield return new WaitForSecondsRealtime(0.5f);
 
+        GlobalVariables.teamGoodGuys.Clear();
         GlobalVariables.teamBadBoys.Clear();
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelName);
         while (!asyncLoad.isDone)
         {
-            loadSafetyTimeTemp -= Time.deltaTime;
-            if (loadSafetyTimeTemp < 0.0f)
-            {
-                ErrorScene("D007-D007");
-            }
             yield return null;
         }
     }
