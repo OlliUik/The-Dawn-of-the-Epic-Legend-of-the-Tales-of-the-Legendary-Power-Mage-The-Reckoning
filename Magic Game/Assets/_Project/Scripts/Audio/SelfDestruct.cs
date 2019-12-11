@@ -16,7 +16,7 @@ void Start()
     void Update()
     {
         {
-            Destroy(gameObject, 7); //5 is how many seconds you want before the object deletes itself
+            Destroy(gameObject, 4); //5 is how many seconds you want before the object deletes itself
  }
     }
 }
