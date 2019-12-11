@@ -8,10 +8,32 @@ public class TransformEnemyTo : SpellModifier
     public GameObject transformPrefab { get; set; }
     public float duration;
     public GameObject transformationParticles { get; set; }
+    public float extraMana = 0f;
+    public Mana castersMana;
+
+    public override void OnSpellCast(Spell spell)
+    {
+        base.OnSpellCast(spell);
+        castersMana = spell.caster.GetComponent<Mana>();
+    }
 
     public override void AoeCollide(GameObject hitObject)
     {
-        InitTransformation(hitObject);
+        //Debug.Log("Frog AoE activate:\nPlayer mana: "+ castersMana.mana + "\nRequired mana: " + extraMana);
+        if ( extraMana != 0 && castersMana != null && hitObject.GetComponent<EnemyCore>() != null)
+        {
+            //Debug.Log("Frog extra mana condition");
+            if (castersMana.mana >= extraMana)
+            {
+                Debug.Log("Frog extra mana condition");
+                castersMana.UseMana(extraMana);
+                InitTransformation(hitObject);
+            }
+        }
+        else
+        {
+            InitTransformation(hitObject);
+        }
     }
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
@@ -26,7 +48,7 @@ public class TransformEnemyTo : SpellModifier
 
     private void InitTransformation(GameObject orginal)
     {
-        if(orginal.GetComponent<EnemyCore>())
+        if(orginal.GetComponent<EnemyCore>() != null)
         {
             if (orginal.GetComponent<Rigidbody>() != null && orginal.transform.GetComponent<Transformation>() == null && orginal.transform.parent == null)
             {
