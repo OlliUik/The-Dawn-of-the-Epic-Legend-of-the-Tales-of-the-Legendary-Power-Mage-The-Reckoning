@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 5842695640646216894}
   - component: {fileID: 7120108252784368564}
   - component: {fileID: 8210304906995366349}
-  m_Layer: 0
+  - component: {fileID: 3308805682680950589}
+  m_Layer: 15
   m_Name: Railing01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,3 +93,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.2668469, y: 0.95148087, z: 0.59207094}
   m_Center: {x: -0.13221687, y: 0.47565985, z: 0.29602307}
+--- !u!208 &3308805682680950589
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6384456865699506487}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.133, y: 0.476, z: 0.296}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.132, y: 0.476, z: 0.296}
+  m_TimeToStationary: 0.5
