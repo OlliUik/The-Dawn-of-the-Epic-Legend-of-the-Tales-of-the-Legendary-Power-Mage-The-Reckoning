@@ -33,16 +33,16 @@ public class ScoreSystem : MonoBehaviour
             M = 0, // doesn't really matter to have value because it's the lowest rank from 0 to next rank.
             WC = 100000,
             EL = 150000,
-            ME = 200000,
-            TBFD = 250000,
-            EKSME = 300000,
-            KHUC = 350000,
-            TEDDW = 400000,
-            SLHHDL = 450000,
-            A3M = 500000,
-            GMCMU = 550000,
-            TEGIOTD = 600000,
-            TMHBGIPOMFF = 650000
+            ME = 270000,
+            TBFD = 330000,
+            EKSME = 420000,
+            KHUC = 510000,
+            TEDDW = 660000,
+            SLHHDL = 770000,
+            A3M = 880000,
+            GMCMU = 990000,
+            TEGIOTD = 1000000,
+            TMHBGIPOMFF = 1110000
         }
         private Rank()
         {
