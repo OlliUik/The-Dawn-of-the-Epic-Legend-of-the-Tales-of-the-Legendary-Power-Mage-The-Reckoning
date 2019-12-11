@@ -10,6 +10,9 @@ public class TransformEnemyTo : SpellModifier
     public GameObject transformationParticles { get; set; }
     public float extraMana = 0f;
     public Mana castersMana;
+    public bool aoeUseExtraMana = true;
+    public bool beamUseExtraMana = true;
+    public bool projectileUseExtraMana = true;
 
     public override void OnSpellCast(Spell spell)
     {
@@ -19,10 +22,9 @@ public class TransformEnemyTo : SpellModifier
 
     public override void AoeCollide(GameObject hitObject)
     {
-        //Debug.Log("Frog AoE activate:\nPlayer mana: "+ castersMana.mana + "\nRequired mana: " + extraMana);
+        /*
         if ( extraMana != 0 && castersMana != null && hitObject.GetComponent<EnemyCore>() != null)
         {
-            //Debug.Log("Frog extra mana condition");
             if (castersMana.mana >= extraMana)
             {
                 Debug.Log("Frog extra mana condition");
@@ -34,16 +36,35 @@ public class TransformEnemyTo : SpellModifier
         {
             InitTransformation(hitObject);
         }
+        */
+        CheckAndInitTransformation(hitObject, aoeUseExtraMana);
     }
 
     public override void BeamCollide(RaycastHit hitInfo, Vector3 direction, float distance)
     {
-        InitTransformation(hitInfo.collider.gameObject);
+        CheckAndInitTransformation(hitInfo.collider.gameObject, beamUseExtraMana);
     }
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        InitTransformation(collision.gameObject);
+        CheckAndInitTransformation(collision.gameObject, projectileUseExtraMana);
+    }
+
+    private void CheckAndInitTransformation(GameObject original, bool extraCheck)
+    {
+        if (extraCheck && extraMana != 0 && castersMana != null && original.GetComponent<EnemyCore>() != null)
+        {
+            if (castersMana.mana >= extraMana)
+            {
+                Debug.Log("Frog extra mana condition");
+                castersMana.UseMana(extraMana);
+                InitTransformation(original);
+            }
+        }
+        else
+        {
+            InitTransformation(original);
+        }
     }
 
     private void InitTransformation(GameObject orginal)
