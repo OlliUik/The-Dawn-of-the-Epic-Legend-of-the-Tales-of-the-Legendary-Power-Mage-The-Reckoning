@@ -50,26 +50,26 @@ public class TransformEnemyTo : SpellModifier
         CheckAndInitTransformation(collision.gameObject, projectileUseExtraMana);
     }
 
-    private void CheckAndInitTransformation(GameObject original, bool extraCheck)
+    private void CheckAndInitTransformation(GameObject orginal, bool extraCheck)
     {
-        if (extraCheck && extraMana != 0 && castersMana != null && original.GetComponent<EnemyCore>() != null)
+        if (extraCheck && extraMana != 0 && castersMana != null && orginal.GetComponent<EnemyCore>() != null && orginal.GetComponent<BossLizardKing>() == null)
         {
             if (castersMana.mana >= extraMana)
             {
                 Debug.Log("Frog extra mana condition");
                 castersMana.UseMana(extraMana);
-                InitTransformation(original);
+                InitTransformation(orginal);
             }
         }
         else
         {
-            InitTransformation(original);
+            InitTransformation(orginal);
         }
     }
 
     private void InitTransformation(GameObject orginal)
     {
-        if(orginal.GetComponent<EnemyCore>() != null)
+        if(orginal.GetComponent<EnemyCore>() != null && orginal.GetComponent<BossLizardKing>() == null)
         {
             if (orginal.GetComponent<Rigidbody>() != null && orginal.transform.GetComponent<Transformation>() == null && orginal.transform.parent == null)
             {
