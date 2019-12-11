@@ -20,6 +20,7 @@ public class GenerationLoop : MonoBehaviour
         if (generator != null)
         {
             currentGenerator = Instantiate(generator, transform);
+            player.GetComponent<PlayerCore>().GetHUD().ActivateGeneration(currentGenerator.GetComponent<LevelGenerator>());
         }
     }
 
@@ -34,8 +35,8 @@ public class GenerationLoop : MonoBehaviour
         if (currentGenerator == null)
         {
             player.GetComponent<PlayerMovement>().Teleport(startPos, startRot);
-            player.GetComponent<PlayerCore>().GetHUD().ActivateGeneration();
             currentGenerator = Instantiate(generator, transform);
+            player.GetComponent<PlayerCore>().GetHUD().ActivateGeneration(currentGenerator.GetComponent<LevelGenerator>());
         }
     }
 }
