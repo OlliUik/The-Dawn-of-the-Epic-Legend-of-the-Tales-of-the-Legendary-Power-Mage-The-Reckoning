@@ -71,6 +71,8 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+
         timeUntilFinished += Time.realtimeSinceStartup;
         Debug.Log("Level generation finished! Time: " + timeUntilFinished);
 
@@ -330,7 +332,7 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
-        GetComponent<NavMeshSurface>().BuildNavMesh();
+        
         isDone = true;
     }
 

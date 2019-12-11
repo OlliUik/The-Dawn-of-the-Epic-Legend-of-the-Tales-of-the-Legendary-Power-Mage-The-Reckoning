@@ -10,6 +10,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject goPause = null;
     [SerializeField] private GameObject goGameOver = null;
     [SerializeField] private GameObject goHPAndManaBars = null;
+    [SerializeField] private GameObject goGenerationScreen = null;
     [SerializeField] private Image healthBar = null;
     [SerializeField] private Text healthTextCurrent = null;
     [SerializeField] private Text healthTextMax = null;
@@ -30,6 +31,7 @@ public class HUDManager : MonoBehaviour
     private float hurtFlashReduceAmount = 0.5f;
     private float hurtFlashMaxAlpha = 0.2f;
     private PlayerCore cPlayerCore = null;
+    private LevelGenerator cGenerator = null;
 
     #endregion
 
@@ -115,6 +117,15 @@ public class HUDManager : MonoBehaviour
 
     public bool FlipPauseState(PlayerCore pc)
     {
+        if (cGenerator != null)
+        {
+            if (!cGenerator.isDone)
+            {
+                Debug.LogWarning(this + " Tried to flip pause state while generating level!");
+                return bIsPaused;
+            }
+        }
+        
         cPlayerCore = pc;
         bIsPaused = !bIsPaused;
         goPause.SetActive(bIsPaused);
@@ -126,6 +137,15 @@ public class HUDManager : MonoBehaviour
 
     public bool FlipSpellEditingState(PlayerCore pc)
     {
+        if (cGenerator != null)
+        {
+            if (!cGenerator.isDone)
+            {
+                Debug.LogWarning(this + " Tried to flip spell editing state while generating level!");
+                return bIsEditingSpells;
+            }
+        }
+
         cPlayerCore = pc;
         bIsEditingSpells = !bIsEditingSpells;
         spellEditingUI.SetActive(bIsEditingSpells);
@@ -143,6 +163,22 @@ public class HUDManager : MonoBehaviour
         }
         
         return bIsEditingSpells;
+    }
+
+    public bool ActivateGeneration(LevelGenerator gen)
+    {
+        if (gen != null)
+        {
+            cGenerator = gen;
+        }
+
+        if (cGenerator != null && goGenerationScreen != null)
+        {
+            goGenerationScreen.SetActive(true);
+            StartCoroutine(WaitForGeneration());
+            return true;
+        }
+        return false;
     }
 
     //Use previous caller if no PlayerInput is specified
@@ -182,6 +218,21 @@ public class HUDManager : MonoBehaviour
         {
             healthBar.color = Color.Lerp(Color.red, Color.yellow, Mathf.PingPong(Time.timeSinceLevelLoad, 1.0f));
             yield return new WaitForEndOfFrame();
+        }
+    }
+
+    IEnumerator WaitForGeneration()
+    {
+        if (cGenerator != null)
+        {
+            while (!cGenerator.isDone)
+            {
+                //fadeIn.color = Color.black;
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.5f);
+            fadeIn.color = Color.black;
+            goGenerationScreen.SetActive(false);
         }
     }
 

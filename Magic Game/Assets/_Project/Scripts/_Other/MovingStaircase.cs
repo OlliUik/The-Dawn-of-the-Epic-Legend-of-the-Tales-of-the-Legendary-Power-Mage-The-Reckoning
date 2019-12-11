@@ -18,7 +18,7 @@ public class MovingStaircase : MonoBehaviour
     {
         originY = transform.localEulerAngles.y;
         originalWait = waitingTime;
-        Debug.Log(originY);
+        //Debug.Log(originY);
     }
 
     private void Update()

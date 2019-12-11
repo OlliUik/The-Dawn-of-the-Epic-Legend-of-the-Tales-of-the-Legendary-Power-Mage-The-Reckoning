@@ -237,6 +237,11 @@ public class EnemyCore : MonoBehaviour
         }
     }
 
+    public void SetRagdollSleepTimer(float sleepTimer)
+    {
+        ragdollSleepTimer = sleepTimer;
+    }
+
     public Vector3 PredictTargetPosition(Vector3 selfPosition, float spellSpeed, Vector3 targetPosition, Vector3 targetVelocity)
     {
         Vector3 predictedPosition = targetPosition;
