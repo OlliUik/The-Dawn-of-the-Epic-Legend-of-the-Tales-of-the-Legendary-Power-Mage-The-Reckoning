@@ -39,7 +39,10 @@ public class Tornado : MonoBehaviour
             {
                 if ( rb.gameObject.GetComponent<EnemyCore>() != null && rb.gameObject.GetComponent<BossLizardKing>() == null)
                 {
-                    rb.gameObject.GetComponent<EnemyCore>().EnableRagdoll(true);
+                    if (rb.gameObject.GetComponent<EnemyCore>().currentState != EnemyCore.EState.RAGDOLLED)
+                        rb.gameObject.GetComponent<EnemyCore>().EnableRagdoll(true);
+                    else
+                        rb.gameObject.GetComponent<EnemyCore>().SetRagdollSleepTimer(2f);
                 }
                 var difference = transform.position - rb.transform.position;
 
