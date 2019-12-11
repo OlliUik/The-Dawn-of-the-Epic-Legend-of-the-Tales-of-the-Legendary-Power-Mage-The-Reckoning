@@ -53,7 +53,7 @@ public class MeshCombiner : MonoBehaviour
 
         if (generator != null)
         {
-            Debug.Log("Starting coroutine WaitForLevelGeneration.");
+            //Debug.Log("Starting coroutine WaitForLevelGeneration.");
             StartCoroutine(WaitForLevelGeneration());
         }
         else 
@@ -66,17 +66,17 @@ public class MeshCombiner : MonoBehaviour
     {
         while (!generator.isDone)
         {
-            Debug.Log("Waiting while generation has finished...");
+            //Debug.Log("Waiting while generation has finished...");
             yield return null;
         }
-        Debug.Log("Can now combine meshes!");
+        //Debug.Log("Can now combine meshes!");
         CombineMeshes();
         yield break;
     }
 
     private void OnDestroy()
     {
-        Debug.Log("GameObject being destroyed, stopping coroutines...");
+        //Debug.Log("GameObject being destroyed, stopping coroutines...");
         StopAllCoroutines();
     }
 
@@ -354,6 +354,6 @@ public class MeshCombiner : MonoBehaviour
         }
 
         isDone = true;
-        Debug.Log(this + " Meshes combined successfully!");
+        //Debug.Log(this + " Meshes combined successfully!");
     }
 }

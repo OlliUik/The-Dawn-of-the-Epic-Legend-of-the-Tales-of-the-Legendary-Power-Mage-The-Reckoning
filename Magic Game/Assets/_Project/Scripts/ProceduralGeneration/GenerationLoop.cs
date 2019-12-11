@@ -12,7 +12,7 @@ public class GenerationLoop : MonoBehaviour
     private Vector3 startPos = Vector3.zero;
     private Vector3 startRot = Vector3.zero;
 
-    private void Start()
+    private void Awake()
     {
         startPos = player.transform.position;
         startRot = player.GetComponent<ThirdPersonCamera>().lookDirection;
@@ -34,6 +34,7 @@ public class GenerationLoop : MonoBehaviour
         if (currentGenerator == null)
         {
             player.GetComponent<PlayerMovement>().Teleport(startPos, startRot);
+            player.GetComponent<PlayerCore>().GetHUD().ActivateGeneration();
             currentGenerator = Instantiate(generator, transform);
         }
     }
