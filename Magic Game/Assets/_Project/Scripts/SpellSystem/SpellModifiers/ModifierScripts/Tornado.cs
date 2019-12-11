@@ -37,7 +37,7 @@ public class Tornado : MonoBehaviour
         {
             if(rb != null)
             {
-                if ( rb.gameObject.GetComponent<EnemyCore>() != null)
+                if ( rb.gameObject.GetComponent<EnemyCore>() != null && rb.gameObject.GetComponent<BossLizardKing>() == null)
                 {
                     rb.gameObject.GetComponent<EnemyCore>().EnableRagdoll(true);
                 }
