@@ -42,6 +42,11 @@ public class CreditsScroller : MonoBehaviour, IDragHandler, IEndDragHandler
         }
     }
 
+    public void Reset()
+    {
+        contentPos = new Vector2(0f, startPos);
+    }
+
     public void OnDrag(PointerEventData eventData)
     {
         isDraged = true;
