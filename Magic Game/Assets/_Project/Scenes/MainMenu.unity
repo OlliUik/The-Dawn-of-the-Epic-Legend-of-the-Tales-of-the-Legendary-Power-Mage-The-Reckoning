@@ -2423,7 +2423,6 @@ RectTransform:
   - {fileID: 1081311168}
   - {fileID: 237037129}
   - {fileID: 1524320204}
-  - {fileID: 356968117}
   - {fileID: 1194915784}
   - {fileID: 1079331295}
   - {fileID: 1544586335}
@@ -2789,6 +2788,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 320076824}
   m_CullTransparentMesh: 0
+--- !u!1 &320103234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 320103235}
+  - component: {fileID: 320103237}
+  - component: {fileID: 320103236}
+  m_Layer: 5
+  m_Name: Box
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &320103235
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320103234}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 356968117}
+  - {fileID: 2141578578}
+  m_Father: {fileID: 830981328}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 455.45, y: -3370}
+  m_SizeDelta: {x: 2048, y: 6056.811}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &320103236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320103234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 1
+  m_VerticalFit: 2
+--- !u!114 &320103237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320103234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: -400
+    m_Bottom: 0
+  m_ChildAlignment: 1
+  m_Spacing: -400
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
 --- !u!1 &324637160
 GameObject:
   m_ObjectHideFlags: 0
@@ -3311,6 +3386,7 @@ GameObject:
   - component: {fileID: 356968117}
   - component: {fileID: 356968119}
   - component: {fileID: 356968118}
+  - component: {fileID: 356968120}
   m_Layer: 5
   m_Name: Logo
   m_TagString: Untagged
@@ -3329,12 +3405,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.30088785, y: 0.30088785, z: 0.30088785}
   m_Children: []
-  m_Father: {fileID: 281077209}
-  m_RootOrder: 8
+  m_Father: {fileID: 320103235}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 790, y: 408}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1024, y: -240}
   m_SizeDelta: {x: 2048, y: 1280}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &356968118
@@ -3357,7 +3433,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 89a4dd0c413beee4f81fb296994a5e6a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c7fb779b10d559043ad9ae3c84509d42, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3374,6 +3450,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356968116}
   m_CullTransparentMesh: 0
+--- !u!114 &356968120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356968116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &383056735
 GameObject:
   m_ObjectHideFlags: 0
@@ -6868,13 +6964,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2141578578}
+  - {fileID: 320103235}
   m_Father: {fileID: 224377663}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -455.00003, y: -320}
+  m_AnchoredPosition: {x: -455.00003, y: 0}
   m_SizeDelta: {x: -0.9000244, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &831773465
@@ -9506,12 +9602,12 @@ RectTransform:
   m_Children:
   - {fileID: 166465072}
   m_Father: {fileID: 281077209}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -724.00006, y: -396.00006}
-  m_SizeDelta: {x: 1800, y: 402}
+  m_AnchoredPosition: {x: -729, y: -376}
+  m_SizeDelta: {x: 2171.1, y: 776.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1079331296
 MonoBehaviour:
@@ -9531,7 +9627,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -9540,8 +9636,9 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
+    m_HighlightedSprite: {fileID: 21300000, guid: ff04e3457a683bb4184626e872694d8b,
+      type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 19c12918591d79c41a79cd570bb7a956, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -9619,7 +9716,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 10ace7dc7fd0b6f47b07918266468804, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8cc52988744922f4abbb7534d774590c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -13154,7 +13251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1194915784
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13167,7 +13264,7 @@ RectTransform:
   m_LocalScale: {x: 6.070471, y: 1.8988248, z: 1.8988248}
   m_Children: []
   m_Father: {fileID: 281077209}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -15894,7 +15991,7 @@ RectTransform:
   m_Children:
   - {fileID: 224377663}
   m_Father: {fileID: 281077209}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -15982,8 +16079,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d90481201deb87b4faf820874ff660a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: 1
-  displayText: {fileID: 2141578578}
+  scrollSpeed: 2.5
+  contentBox: {fileID: 320103235}
 --- !u!114 &1544586340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20741,17 +20838,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2141578577}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 830981328}
-  m_RootOrder: 0
+  m_Father: {fileID: 320103235}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 455.45, y: -2459.1}
-  m_SizeDelta: {x: 910.9, y: 4918.1284}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 1024, y: -3268.4055}
+  m_SizeDelta: {x: 910.9, y: 5576.811}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2141578579
 MonoBehaviour:
@@ -20786,25 +20883,27 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\n<size=55>Spring Developers</size>\r\n\n<i>- Design/Writing \r-</i>\n\r\nSamuel
-    V\xE4\xE4n\xE4nen \r\n\r\nOlli Uikkanen \r\n\r\n\n\r\n<i>- Programming \r-</i>\r\n\r\nMauno
-    Kiiskinen(Lead) \r\n\r\nAntti-Jussi Oravainen \r\n\r\nTuomo Heikkinen\n\nVilja
-    Kettunen \r\n\r\n  \r\n\r\n<i>- Visual Arts \r-</i>\r\n\r\nAki Liimatainen(Lead)
-    \r\n\r\nJohanna Kasurinen \r\n\r\nKonsta Huovinen \r\n\r\nSampo Tahvanainen \r\n
-    \  \r\n\r\n<i>- Audio \r-</i>\n \r\nTuomas Suokko(Voice) \r\n\r\nMarkus Liimatainen
-    \r\n\n\n  \r\n<i>- Production -</i> \r\n\r\nSamuel V\xE4\xE4n\xE4nen \r\n  \r\nQuality
-    Assurance/Testing \r\n.\u2026.\u2026 \r\n\r\n  \r\n\r\n \r\n  \r\n\r\n<size=55>Autumn
-    Developers</size>\r \r\n\r\n<i>- Design/Writing \r-</i> \r\n\r\nSamuel V\xE4\xE4n\xE4nen
-    \r\n\r\n  \r\n\r\n<i>- Programming \r-</i>\r\r\n\r\nAntti-Jussi Oravainen(Lead)
-    \r\n\r\nTuomo Heikkinen \r\n\nPappim Pipatkasrira \r\n\r\nTheeruth Borisuth \r\n\nNon
-    Puthikanon \r\n   \r\n\n\r\n<i>- Visual Arts \r-</i> \r\n\r\nAki Liimatainen(Lead)
-    \r\n\r\nJohanna Kasurinen \r\n\r\nKonsta Huovinen \r\n\r\nSampo Tahvanainen \r\n\nJusa
-    Keski-Pet\xE4j\xE4 \r\n   \r\n\n\r\n<i>- Audio \r-</i>\n \r\nTuomo Heikkinen \r\n\r\nSamuel
-    V\xE4\xE4n\xE4nen \r\n\r\nNon Puthikanon \r\n  \r\n\n\n<i>- Production \r-</i>\r\n\r\nSharad
+  m_Text: "\n<size=55>Spring Developers</size>\r\n\n<i>- Design/Writing \r-</i>\r\n\r\nOlli
+    Uikkanen \r\n\nSamuel V\xE4\xE4n\xE4nen \n\r\n\n\r\n<i>- Programming \r-</i>\r\n\r\nMauno
+    Kiiskinen (Lead) \r\n\r\nAntti-Jussi Oravainen \r\n\r\nTuomo Heikkinen\n\nVilja
+    Kettunen \r\n\r\n  \r\n\r\n<i>- Visual Arts \r-</i>\r\n\r\nAki Liimatainen (Lead)
+    \r\n\r\nJohanna Kasurinen \r\n\r\nKonsta Huovinen \r\n\r\nSampo Tahvanainen \r\n\n\n\r\n<i>-
+    Audio \r-</i>\n \r\n\rTuomo Heikkinen\n\r\nMarkus Liimatainen \r\n\nSamuel V\xE4\xE4n\xE4nen
+    \r\n\nTuomas Suokko (Voice)\n\n\n  \r\n<i>- Production -</i> \r\n\r\nSamuel V\xE4\xE4n\xE4nen
+    \r\n\n  \r\n<i>- Quality Assurance/Testing \r-</i>\n\nSamuel V\xE4\xE4n\xE4nen
+    \r\n\r\nOlli Uikkanen \r\n\r\n  \r\n\r\n \r\n  \r\n\r\n<size=55>Autumn Developers</size>\r
+    \r\n\r\n<i>- Design/Writing \r-</i> \r\n\r\nSamuel V\xE4\xE4n\xE4nen \r\n\r\n
+    \ \r\n\r\n<i>- Programming \r-</i>\r\r\n\r\nAntti-Jussi Oravainen (Lead) \r\n\r\nTuomo
+    Heikkinen \r\n\nPappim Pipatkasrira \r\n\r\nTheeruth Borisuth \r\n\nNon Puthikanon
+    \r\n   \r\n\n\r\n<i>- Visual Arts \r-</i> \r\n\r\nAki Liimatainen (Lead) \r\n\r\nJohanna
+    Kasurinen \r\n\r\nKonsta Huovinen \r\n\r\nSampo Tahvanainen \r\n\nJusa Keski-Pet\xE4j\xE4
+    \r\n   \r\n\n\r\n<i>- Audio \r-</i>\n \r\nTuomo Heikkinen \r\n\r\nSamuel V\xE4\xE4n\xE4nen
+    \r\n\r\nNon Puthikanon\n\nMarkus Liimatainen \r\n  \r\n\n\n<i>- Production \r-</i>\r\n\r\nSharad
     Poudel \r\n\n\n  \r\n<i>- Quality Assurance/Testing -</i> \r\n\r\nSharad Poudel
-    \r\n\r\nJohanna Kasurinen \r\n\r\nKonsta Huovinen \r\n\r\n  \r\n\r\n<i>- Special
-    Thanks -</i> \r\n\r\nIGDA Finland Kajaani Hub \r\n\nKajaani University of Applied
-    Sciences, Finland. \r\n"
+    \r\n\r\nJohanna Kasurinen \r\n\r\nKonsta Huovinen \r\n\n\n\r\n<i>-  Marketing
+    \r-</i> \r\n\nSampo Tahvanainen\n \r\nSharad Poudel \n\r\n\n\n<i>- Special Thanks
+    -</i> \r\n\r\nIGDA Finland Kajaani Hub \r\n\nKajaani University of Applied Sciences,
+    Finland. \r\n"
 --- !u!222 &2141578580
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20822,11 +20921,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2141578577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1001 &1099741608371797546
 PrefabInstance:
   m_ObjectHideFlags: 0

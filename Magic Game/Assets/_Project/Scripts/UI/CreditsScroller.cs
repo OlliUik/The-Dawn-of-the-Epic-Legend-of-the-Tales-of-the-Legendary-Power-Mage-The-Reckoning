@@ -9,18 +9,20 @@ public class CreditsScroller : MonoBehaviour, IDragHandler, IEndDragHandler
     private Vector2 contentPos;
     private float contentSize;
     private float startPos;
+    private float viewPortSize;
     private ScrollRect scrollRect;
 
     private bool isDraged = false;
     [SerializeField] private float scrollSpeed = 1;
-    [SerializeField] private RectTransform displayText;
+    [SerializeField] private RectTransform contentBox;
 
     // Start is called before the first frame update
     void Start()
     {
         scrollRect = GetComponent<ScrollRect>();
         contentPos = scrollRect.content.localPosition;
-        contentSize = displayText.rect.height;
+        contentSize = contentBox.rect.height;
+        viewPortSize = scrollRect.viewport.rect.height;
         startPos = contentPos.y;
     }
 
@@ -33,12 +35,12 @@ public class CreditsScroller : MonoBehaviour, IDragHandler, IEndDragHandler
             scrollRect.content.localPosition = contentPos;
         }
 
-        if (contentPos.y > (startPos + (contentSize + Mathf.Abs(startPos))))
+        if (contentPos.y > (startPos + ((contentSize + viewPortSize) + 35)))
         {
             contentPos = new Vector2(0f, startPos);
         } else if (contentPos.y < startPos)
         {
-            contentPos = new Vector2(0f, startPos + (contentSize + Mathf.Abs(startPos)) - 35);
+            contentPos = new Vector2(0f, startPos + ((contentSize + viewPortSize) - 35));
         }
     }
 
