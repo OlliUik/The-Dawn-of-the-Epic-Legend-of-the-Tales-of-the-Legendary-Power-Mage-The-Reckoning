@@ -33,15 +33,15 @@ public class CreditsScroller : MonoBehaviour, IDragHandler, IEndDragHandler
     // Update is called once per frame
     void Update()
     {
-        if (contentPos.y > (startPos + (contentSize + (viewPortSize))))
+        contentPos = scrollRect.content.localPosition;
+
+        if (contentPos.y > (startPos + (contentSize + viewPortSize)))
         {
-            contentPos = new Vector2(0f, startPos);
-            scrollRect.content.localPosition = contentPos;
+            scrollRect.content.localPosition = new Vector2(0f, startPos);
         }
         else if (contentPos.y < startPos - viewPortSize)
         {
-            contentPos = new Vector2(0f, startPos + (contentSize + viewPortSize));
-            scrollRect.content.localPosition = contentPos;
+            scrollRect.content.localPosition = new Vector2(0f, startPos + (contentSize + viewPortSize));
         }
 
         if (!isDraged)
@@ -51,8 +51,6 @@ public class CreditsScroller : MonoBehaviour, IDragHandler, IEndDragHandler
                 waitCounter -= Time.deltaTime;
             } else
             {
-                contentPos = scrollRect.content.localPosition;
-
                 cscrolleSpeed = Mathf.Lerp(cscrolleSpeed, scrollSpeed, Time.deltaTime);
                 contentPos = new Vector2(0f, contentPos.y + cscrolleSpeed);
                 scrollRect.content.localPosition = contentPos;
@@ -62,7 +60,9 @@ public class CreditsScroller : MonoBehaviour, IDragHandler, IEndDragHandler
 
     public void Reset()
     {
-        contentPos = new Vector2(0f, startPos);
+        waitCounter = 0;
+        cscrolleSpeed = 0;
+        scrollRect.content.localPosition = new Vector2(0f, startPos);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -70,12 +70,10 @@ public class CreditsScroller : MonoBehaviour, IDragHandler, IEndDragHandler
         isDraged = true;
         waitCounter = waitTime;
         cscrolleSpeed = 0;
-        contentPos = scrollRect.content.localPosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        contentPos = scrollRect.content.localPosition;
         isDraged = false;
     }
 }
