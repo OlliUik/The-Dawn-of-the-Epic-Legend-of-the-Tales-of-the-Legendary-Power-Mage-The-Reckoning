@@ -5,7 +5,7 @@ using UnityEngine;
 public class SelfDestructEnemy : MonoBehaviour
 {
 
-    [SerializeField] EnemyCore enemy;
+    private EnemyCore enemy;
 // Start is called before the first frame update
      void Start()
     {
