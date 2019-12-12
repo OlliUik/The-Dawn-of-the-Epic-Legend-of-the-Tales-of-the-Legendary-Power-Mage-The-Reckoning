@@ -335,21 +335,6 @@ MonoBehaviour:
   modelRotationOffset: {x: 0, y: 0, z: 0}
   animationSpeedMultiplier: 5
   animationBlendingMultiplier: 4
---- !u!114 &745140739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2855780931279682104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 519313d90012e1e498196261990ed93d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animationWeightThreshold: 0.5
-  audioPrefab: {fileID: 4097383918908376589, guid: d04449003dd799847baf0980ff59d149,
-    type: 3}
 --- !u!114 &2307447049640960598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,6 +351,20 @@ MonoBehaviour:
   excludeFromKinematicToggle: []
   hiddenWhenNotKinematic:
   - {fileID: 2855780931279906304}
+--- !u!114 &1551029833454639955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2855780931279682104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 519313d90012e1e498196261990ed93d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationWeightThreshold: 0.5
+  audioPrefab: {fileID: 0}
 --- !u!54 &1648869953
 Rigidbody:
   m_ObjectHideFlags: 0

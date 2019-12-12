@@ -1011,9 +1011,9 @@ GameObject:
   - component: {fileID: 1806718285934655662}
   - component: {fileID: 1806718285941610364}
   - component: {fileID: 5013753281395460208}
-  - component: {fileID: 5702540529262410315}
   - component: {fileID: 8350750168343275405}
   - component: {fileID: 3673610902756616254}
+  - component: {fileID: 1929896984015388174}
   m_Layer: 0
   m_Name: MeleeEnemy
   m_TagString: Untagged
@@ -1074,21 +1074,6 @@ MonoBehaviour:
   animationSpeedMultiplier: 0.15
   animationBlendingMultiplier: 0.15
   rotationOffset: 0
---- !u!114 &5702540529262410315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1806718285934355662}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 519313d90012e1e498196261990ed93d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animationWeightThreshold: 0.5
-  audioPrefab: {fileID: 243950367109901844, guid: ea33fe8c59a02d544a1a3af02f3a356e,
-    type: 3}
 --- !u!114 &8350750168343275405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1117,7 +1102,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dad934269689d041ab02901bcc8c894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 0}
+--- !u!114 &1929896984015388174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806718285934355662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 519313d90012e1e498196261990ed93d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationWeightThreshold: 0.5
+  audioPrefab: {fileID: 0}
 --- !u!1 &1806718285934355664
 GameObject:
   m_ObjectHideFlags: 0
