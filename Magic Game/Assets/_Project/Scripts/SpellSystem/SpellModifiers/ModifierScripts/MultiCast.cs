@@ -13,7 +13,7 @@ public class MultiCast : SpellModifier
     public override void OnSpellCast(Spell spell)
     {
 
-        if(spell.spellType == SpellType.GENERIC)
+        if(spell.spellType == SpellType.GENERIC || spell.spellType == SpellType.PROJECTILE)
         {
             for (int i = 0; i < copyCount; i++)
             {
