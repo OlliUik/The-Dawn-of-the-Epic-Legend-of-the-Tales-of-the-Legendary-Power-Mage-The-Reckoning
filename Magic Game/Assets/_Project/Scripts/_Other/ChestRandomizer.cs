@@ -117,7 +117,7 @@ public class ChestRandomizer : MonoBehaviour
         {
             if (crystalChest != null)
             {
-                GameObject current = Instantiate(crystalChest, chest.transform.position, chest.transform.rotation, gameObject.transform);
+                GameObject current = Instantiate(crystalChest, chest.transform.position, chest.transform.rotation, generator.transform);
                 crystalChests.Add(current);
                 Destroy(chest);
             }
@@ -130,7 +130,7 @@ public class ChestRandomizer : MonoBehaviour
     {
         foreach (GameObject chest in crystalChests)
         {
-            GameObject current = Instantiate(normalChest, chest.transform.position, chest.transform.rotation, gameObject.transform);
+            GameObject current = Instantiate(normalChest, chest.transform.position, chest.transform.rotation, generator.transform);
             current.SetActive(chest.activeInHierarchy);
             chests.Add(current);
             Destroy(chest);

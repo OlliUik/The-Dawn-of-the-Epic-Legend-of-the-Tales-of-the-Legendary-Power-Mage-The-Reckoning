@@ -30,7 +30,7 @@ public class FootstepSoundGenerator : MonoBehaviour
 
     public void Footstep(AnimationEvent evt)
     {
-        if (audioSource != null)
+        if (audioSource != null && audioSource.enabled)
         {
             if (evt.animatorClipInfo.weight > animationWeightThreshold)
             {

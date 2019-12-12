@@ -29,6 +29,9 @@ public class GenerationLoop : MonoBehaviour
         if (isGenerating)
         {
             Destroy(currentGenerator);
+            Destroy(GetComponent<ChestRandomizer>());
+            ChestRandomizer cr = Instantiate(GetComponent<ChestRandomizer>());
+            cr.enabled = false;
             isGenerating = false;
         }
 
