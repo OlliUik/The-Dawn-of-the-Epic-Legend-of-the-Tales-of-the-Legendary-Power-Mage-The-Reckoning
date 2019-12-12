@@ -235,7 +235,7 @@ public class SpawnManager : MonoBehaviour
     //Turn off mesh renderer when enemy is too far away.
     void checkPlayerDistance(EnemyCore child)
     {   
-        /*
+        
         if (Vector3.Distance(player.transform.position, child.transform.position) < distance)
         {
             // child.enabled = true;
@@ -256,7 +256,7 @@ public class SpawnManager : MonoBehaviour
             //child.gameObject.GetComponentInChildren<EnemyAnimations>().gameObject.GetComponent<Animator>().enabled = false;
             //child.enabled = false;
         }
-        */
+        
     }
 
     //Check whether enemies are alive or not.
