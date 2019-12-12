@@ -15,6 +15,8 @@ public class Meteorite : SpellModifier
     private float currentBeamCooldown = 0f;
     private bool canBeam = true;
 
+    private float meteorHeight = 10;
+
     private void Start()
     {
         MeteorManager.Instance.explosionForce = explosionForce;
@@ -41,7 +43,7 @@ public class Meteorite : SpellModifier
             for (int i = 0; i < aoeAmount; i++)
             {
                 float angle = i * Mathf.PI * 2f / aoeAmount;
-                Vector3 newPos = new Vector3(((Mathf.Cos(angle) * aoeRadius) * meteorScale) , 0, Mathf.Sin(angle) * aoeRadius) + transform.position + new Vector3(0, transform.position.y + 16, 0);
+                Vector3 newPos = new Vector3(((Mathf.Cos(angle) * aoeRadius) * meteorScale) , 0, Mathf.Sin(angle) * aoeRadius) + transform.position + new Vector3(0, transform.position.y + meteorHeight, 0);
                 GameObject meteor = Instantiate(meteorPrefab, newPos, Quaternion.identity);
                 meteor.transform.localScale = new Vector3(meteorScale, meteorScale, meteorScale);
             }
@@ -50,7 +52,7 @@ public class Meteorite : SpellModifier
 
     public override void ProjectileCollide(Collision collision, Vector3 direction)
     {
-        GameObject meteor = Instantiate(meteorPrefab, collision.contacts[0].point + new Vector3(0,16,0), Quaternion.identity);
+        GameObject meteor = Instantiate(meteorPrefab, collision.contacts[0].point + new Vector3(0, meteorHeight, 0), Quaternion.identity);
         meteor.transform.localScale = new Vector3(meteorScale, meteorScale, meteorScale);
     }
 
@@ -60,7 +62,7 @@ public class Meteorite : SpellModifier
         {
             currentBeamCooldown = 0f;
             canBeam = false;
-            GameObject meteor = Instantiate(meteorPrefab, hitInfo.point + new Vector3(0, 16, 0), Quaternion.identity);
+            GameObject meteor = Instantiate(meteorPrefab, hitInfo.point + new Vector3(0, meteorHeight, 0), Quaternion.identity);
             meteor.transform.localScale = new Vector3(meteorScale, meteorScale, meteorScale);
         }
     }
