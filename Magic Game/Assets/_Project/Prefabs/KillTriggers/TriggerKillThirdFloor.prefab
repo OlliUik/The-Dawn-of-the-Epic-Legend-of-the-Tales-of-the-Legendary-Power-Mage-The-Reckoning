@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1644498961283381800}
   - component: {fileID: 4600924398438062939}
+  - component: {fileID: 1357564038234785285}
   m_Layer: 0
   m_Name: Diagonal
-  m_TagString: Untagged
+  m_TagString: TriggerKill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,11 +40,25 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2402489872507567488}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 49.308582, y: 14.801529, z: 110.336105}
   m_Center: {x: -23.42764, y: -9.263649, z: -15.926567}
+--- !u!114 &1357564038234785285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2402489872507567488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200bb66833ce60f4b89ba3ae49930ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  killInstantly: 1
+  damage: 25
 --- !u!1 &4650334808650534385
 GameObject:
   m_ObjectHideFlags: 0
